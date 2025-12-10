@@ -37,6 +37,12 @@
                         Command="{Binding DisconnectCommand}" 
                         IsVisible="{Binding IsConnected}"
                         HorizontalAlignment="Left"/>
+                
+                <Button Content="🔄 Refresh" 
+                        Command="{Binding RefreshResourcesCommand}" 
+                        IsVisible="{Binding IsConnected}"
+                        ToolTip.Tip="Refresh resources"
+                        HorizontalAlignment="Left"/>
             </StackPanel>
         </Border>
 
@@ -85,6 +91,11 @@
                     <!-- Map Preview Tab -->
                     <TabItem Header="Map Preview">
                         <ContentControl Content="{Binding MapPreviewViewModel}"/>
+                    </TabItem>
+                    
+                    <!-- Workspace Management Tab -->
+                    <TabItem Header="Workspaces">
+                        <ContentControl Content="{Binding WorkspaceManagementViewModel}"/>
                     </TabItem>
                     
                     <!-- Details Tab -->

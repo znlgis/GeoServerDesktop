@@ -1,0 +1,105 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:GeoServerDesktop.App.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="GeoServerDesktop.App.Views.WorkspaceManagementView"
+             x:DataType="vm:WorkspaceManagementViewModel">
+
+    <Design.DataContext>
+        <vm:WorkspaceManagementViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="0,0,0,1">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="Workspace Management" 
+                           FontSize="18" 
+                           FontWeight="Bold" 
+                           VerticalAlignment="Center"/>
+                <Button Content="🔄 Refresh" 
+                        Command="{Binding LoadWorkspacesCommand}"
+                        ToolTip.Tip="Reload workspaces"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Content -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto,300">
+            <!-- Workspace List -->
+            <Border Grid.Column="0" Padding="10">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" 
+                               Text="Existing Workspaces" 
+                               FontWeight="Bold" 
+                               Margin="0,0,0,10"/>
+                    <ListBox ItemsSource="{Binding Workspaces}"
+                             SelectedItem="{Binding SelectedWorkspace}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" Padding="5"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+            </Border>
+
+            <Separator Grid.Column="1" Width="1" Background="#CCCCCC"/>
+
+            <!-- Actions Panel -->
+            <Border Grid.Column="2" Padding="10">
+                <StackPanel Spacing="15">
+                    <TextBlock Text="Actions" FontWeight="Bold" FontSize="16"/>
+
+                    <!-- Create Workspace -->
+                    <Border Background="#F5F5F5" 
+                            Padding="10" 
+                            BorderBrush="#CCCCCC" 
+                            BorderThickness="1"
+                            CornerRadius="4">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="Create New Workspace" FontWeight="Bold"/>
+                            <TextBox Text="{Binding NewWorkspaceName}" 
+                                     Watermark="Enter workspace name"/>
+                            <Button Content="Create" 
+                                    Command="{Binding CreateWorkspaceCommand}"
+                                    HorizontalAlignment="Stretch"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Delete Workspace -->
+                    <Border Background="#FFF5F5" 
+                            Padding="10" 
+                            BorderBrush="#FFCCCC" 
+                            BorderThickness="1"
+                            CornerRadius="4">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="Delete Workspace" FontWeight="Bold" Foreground="#CC0000"/>
+                            <TextBlock Text="Warning: This will delete the selected workspace." 
+                                       TextWrapping="Wrap"
+                                       FontSize="12"
+                                       Foreground="#666666"/>
+                            <Button Content="Delete Selected" 
+                                    Command="{Binding DeleteWorkspaceCommand}"
+                                    Background="#FFCCCC"
+                                    HorizontalAlignment="Stretch"
+                                    IsEnabled="{Binding !!SelectedWorkspace}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Loading Indicator -->
+                    <StackPanel Spacing="10" IsVisible="{Binding IsLoading}">
+                        <TextBlock Text="Processing..." HorizontalAlignment="Center"/>
+                        <ProgressBar IsIndeterminate="True"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Status Bar -->
+        <Border Grid.Row="2" Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="0,1,0,0">
+            <TextBlock Text="{Binding StatusMessage}" VerticalAlignment="Center"/>
+        </Border>
+    </Grid>
+</UserControl>
