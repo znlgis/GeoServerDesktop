@@ -2,7 +2,25 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    
+    <!-- NuGet Package Metadata -->
+    <PackageId>GeoServerDesktop.GeoServerClient</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>znlgis</Authors>
+    <Company>znlgis</Company>
+    <Description>A .NET Standard 2.0 library providing a complete REST API client for GeoServer. Includes HTTP layer with authentication, strongly-typed models for all GeoServer resources, and high-level service APIs for workspace, data store, layer, style management and more.</Description>
+    <PackageTags>geoserver;rest-api;geospatial;gis;wms;wfs;client-library</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/znlgis/GeoServerDesktop</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/znlgis/GeoServerDesktop</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
