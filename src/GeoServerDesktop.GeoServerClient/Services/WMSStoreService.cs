@@ -82,7 +82,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// 删除 WMS 存储
         /// </summary>
         /// <param name="workspaceName">工作空间的名称</param>
-        /// <param name="wmsStoreName">WMS 存储的名称 to delete</param>
+        /// <param name="wmsStoreName">WMS 存储的名称</param>
         /// <param name="recurse">Whether to recursively delete all WMS layers in the store</param>
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteWMSStoreAsync(string workspaceName, string wmsStoreName, bool recurse = false)

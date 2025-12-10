@@ -90,7 +90,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// </summary>
         /// <param name="workspaceName">工作空间的名称</param>
         /// <param name="wmtsStoreName">WMTS 存储的名称</param>
-        /// <param name="wmtsLayerName">WMTS 图层的名称 to delete</param>
+        /// <param name="wmtsLayerName">WMTS 图层的名称</param>
         /// <param name="recurse">Whether to recursively delete all resources associated with the WMTS layer</param>
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteWMTSLayerAsync(string workspaceName, string wmtsStoreName, string wmtsLayerName, bool recurse = false)

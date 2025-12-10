@@ -39,7 +39,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// </summary>
         /// <param name="workspace">Workspace name</param>
         /// <param name="coverageView">Coverage view name</param>
-        /// <returns>Coverage view details</returns>
+        /// <returns>覆盖范围视图详细信息</returns>
         public async Task<CoverageViewWrapper> GetCoverageViewAsync(string workspace, string coverageView)
         {
             var response = await _httpClient.GetAsync($"/rest/workspaces/{workspace}/coverageviews/{coverageView}.json");

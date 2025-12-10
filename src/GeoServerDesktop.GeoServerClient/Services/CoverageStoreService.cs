@@ -83,7 +83,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// 删除覆盖范围 store
         /// </summary>
         /// <param name="workspaceName">工作空间的名称</param>
-        /// <param name="coverageStoreName">覆盖范围的名称 store to delete</param>
+        /// <param name="coverageStoreName">覆盖范围存储的名称</param>
         /// <param name="recurse">Whether to recursively delete all coverages in the store</param>
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteCoverageStoreAsync(string workspaceName, string coverageStoreName, bool recurse = false)
