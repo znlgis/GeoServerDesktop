@@ -5,7 +5,7 @@ using System;
 namespace GeoServerDesktop.GeoServerClient.Configuration
 {
     /// <summary>
-    /// Factory for creating GeoServer client service instances
+    /// 用于创建 GeoServer 客户端服务实例的工厂类
     /// </summary>
     public class GeoServerClientFactory
     {
@@ -13,16 +13,16 @@ namespace GeoServerDesktop.GeoServerClient.Configuration
         private IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the GeoServerClientFactory class
+        /// 初始化 GeoServerClientFactory 类的新实例
         /// </summary>
-        /// <param name="options">Configuration options</param>
+        /// <param name="options">配置选项</param>
         public GeoServerClientFactory(GeoServerClientOptions options)
         {
             _options = options ?? throw new ArgumentNullException(nameof(options));
         }
 
         /// <summary>
-        /// Gets or creates the HTTP client instance
+        /// 获取或创建 HTTP 客户端实例
         /// </summary>
         private IGeoServerHttpClient GetHttpClient()
         {
@@ -34,412 +34,412 @@ namespace GeoServerDesktop.GeoServerClient.Configuration
         }
 
         /// <summary>
-        /// Creates a new WorkspaceService instance
+        /// 创建新的 WorkspaceService 实例
         /// </summary>
-        /// <returns>WorkspaceService instance</returns>
+        /// <returns>WorkspaceService 实例</returns>
         public WorkspaceService CreateWorkspaceService()
         {
             return new WorkspaceService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new DataStoreService instance
+        /// 创建新的 DataStoreService 实例
         /// </summary>
-        /// <returns>DataStoreService instance</returns>
+        /// <returns>DataStoreService 实例</returns>
         public DataStoreService CreateDataStoreService()
         {
             return new DataStoreService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new LayerService instance
+        /// 创建新的 LayerService 实例
         /// </summary>
-        /// <returns>LayerService instance</returns>
+        /// <returns>LayerService 实例</returns>
         public LayerService CreateLayerService()
         {
             return new LayerService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new StyleService instance
+        /// 创建新的 StyleService 实例
         /// </summary>
-        /// <returns>StyleService instance</returns>
+        /// <returns>StyleService 实例</returns>
         public StyleService CreateStyleService()
         {
             return new StyleService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new LayerGroupService instance
+        /// 创建新的 LayerGroupService 实例
         /// </summary>
-        /// <returns>LayerGroupService instance</returns>
+        /// <returns>LayerGroupService 实例</returns>
         public LayerGroupService CreateLayerGroupService()
         {
             return new LayerGroupService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new FeatureTypeService instance
+        /// 创建新的 FeatureTypeService 实例
         /// </summary>
-        /// <returns>FeatureTypeService instance</returns>
+        /// <returns>FeatureTypeService 实例</returns>
         public FeatureTypeService CreateFeatureTypeService()
         {
             return new FeatureTypeService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new PreviewService instance
+        /// 创建新的 PreviewService 实例
         /// </summary>
-        /// <returns>PreviewService instance</returns>
+        /// <returns>PreviewService 实例</returns>
         public PreviewService CreatePreviewService()
         {
             return new PreviewService(_options.BaseUrl);
         }
 
         /// <summary>
-        /// Creates a new NamespaceService instance
+        /// 创建新的 NamespaceService 实例
         /// </summary>
-        /// <returns>NamespaceService instance</returns>
+        /// <returns>NamespaceService 实例</returns>
         public NamespaceService CreateNamespaceService()
         {
             return new NamespaceService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new CoverageStoreService instance
+        /// 创建新的 CoverageStoreService 实例
         /// </summary>
-        /// <returns>CoverageStoreService instance</returns>
+        /// <returns>CoverageStoreService 实例</returns>
         public CoverageStoreService CreateCoverageStoreService()
         {
             return new CoverageStoreService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new CoverageService instance
+        /// 创建新的 CoverageService 实例
         /// </summary>
-        /// <returns>CoverageService instance</returns>
+        /// <returns>CoverageService 实例</returns>
         public CoverageService CreateCoverageService()
         {
             return new CoverageService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new AboutService instance
+        /// 创建新的 AboutService 实例
         /// </summary>
-        /// <returns>AboutService instance</returns>
+        /// <returns>AboutService 实例</returns>
         public AboutService CreateAboutService()
         {
             return new AboutService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new SettingsService instance
+        /// 创建新的 SettingsService 实例
         /// </summary>
-        /// <returns>SettingsService instance</returns>
+        /// <returns>SettingsService 实例</returns>
         public SettingsService CreateSettingsService()
         {
             return new SettingsService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new ReloadService instance
+        /// 创建新的 ReloadService 实例
         /// </summary>
-        /// <returns>ReloadService instance</returns>
+        /// <returns>ReloadService 实例</returns>
         public ReloadService CreateReloadService()
         {
             return new ReloadService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new WMSStoreService instance
+        /// 创建新的 WMSStoreService 实例
         /// </summary>
-        /// <returns>WMSStoreService instance</returns>
+        /// <returns>WMSStoreService 实例</returns>
         public WMSStoreService CreateWMSStoreService()
         {
             return new WMSStoreService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new WMSLayerService instance
+        /// 创建新的 WMSLayerService 实例
         /// </summary>
-        /// <returns>WMSLayerService instance</returns>
+        /// <returns>WMSLayerService 实例</returns>
         public WMSLayerService CreateWMSLayerService()
         {
             return new WMSLayerService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new WMTSStoreService instance
+        /// 创建新的 WMTSStoreService 实例
         /// </summary>
-        /// <returns>WMTSStoreService instance</returns>
+        /// <returns>WMTSStoreService 实例</returns>
         public WMTSStoreService CreateWMTSStoreService()
         {
             return new WMTSStoreService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new WMTSLayerService instance
+        /// 创建新的 WMTSLayerService 实例
         /// </summary>
-        /// <returns>WMTSLayerService instance</returns>
+        /// <returns>WMTSLayerService 实例</returns>
         public WMTSLayerService CreateWMTSLayerService()
         {
             return new WMTSLayerService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new LoggingService instance
+        /// 创建新的 LoggingService 实例
         /// </summary>
-        /// <returns>LoggingService instance</returns>
+        /// <returns>LoggingService 实例</returns>
         public LoggingService CreateLoggingService()
         {
             return new LoggingService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new ResourceService instance
+        /// 创建新的 ResourceService 实例
         /// </summary>
-        /// <returns>ResourceService instance</returns>
+        /// <returns>ResourceService 实例</returns>
         public ResourceService CreateResourceService()
         {
             return new ResourceService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new WMSSettingsService instance
+        /// 创建新的 WMSSettingsService 实例
         /// </summary>
-        /// <returns>WMSSettingsService instance</returns>
+        /// <returns>WMSSettingsService 实例</returns>
         public WMSSettingsService CreateWMSSettingsService()
         {
             return new WMSSettingsService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new WFSSettingsService instance
+        /// 创建新的 WFSSettingsService 实例
         /// </summary>
-        /// <returns>WFSSettingsService instance</returns>
+        /// <returns>WFSSettingsService 实例</returns>
         public WFSSettingsService CreateWFSSettingsService()
         {
             return new WFSSettingsService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new WCSSettingsService instance
+        /// 创建新的 WCSSettingsService 实例
         /// </summary>
-        /// <returns>WCSSettingsService instance</returns>
+        /// <returns>WCSSettingsService 实例</returns>
         public WCSSettingsService CreateWCSSettingsService()
         {
             return new WCSSettingsService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new WMTSSettingsService instance
+        /// 创建新的 WMTSSettingsService 实例
         /// </summary>
-        /// <returns>WMTSSettingsService instance</returns>
+        /// <returns>WMTSSettingsService 实例</returns>
         public WMTSSettingsService CreateWMTSSettingsService()
         {
             return new WMTSSettingsService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new SecurityService instance
+        /// 创建新的 SecurityService 实例
         /// </summary>
-        /// <returns>SecurityService instance</returns>
+        /// <returns>SecurityService 实例</returns>
         public SecurityService CreateSecurityService()
         {
             return new SecurityService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new UserGroupService instance
+        /// 创建新的 UserGroupService 实例
         /// </summary>
-        /// <returns>UserGroupService instance</returns>
+        /// <returns>UserGroupService 实例</returns>
         public UserGroupService CreateUserGroupService()
         {
             return new UserGroupService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new RoleService instance
+        /// 创建新的 RoleService 实例
         /// </summary>
-        /// <returns>RoleService instance</returns>
+        /// <returns>RoleService 实例</returns>
         public RoleService CreateRoleService()
         {
             return new RoleService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new FontService instance
+        /// 创建新的 FontService 实例
         /// </summary>
-        /// <returns>FontService instance</returns>
+        /// <returns>FontService 实例</returns>
         public FontService CreateFontService()
         {
             return new FontService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new TemplateService instance
+        /// 创建新的 TemplateService 实例
         /// </summary>
-        /// <returns>TemplateService instance</returns>
+        /// <returns>TemplateService 实例</returns>
         public TemplateService CreateTemplateService()
         {
             return new TemplateService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new GWCLayerService instance
+        /// 创建新的 GWCLayerService 实例
         /// </summary>
-        /// <returns>GWCLayerService instance</returns>
+        /// <returns>GWCLayerService 实例</returns>
         public GWCLayerService CreateGWCLayerService()
         {
             return new GWCLayerService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new DiskQuotaService instance
+        /// 创建新的 DiskQuotaService 实例
         /// </summary>
-        /// <returns>DiskQuotaService instance</returns>
+        /// <returns>DiskQuotaService 实例</returns>
         public DiskQuotaService CreateDiskQuotaService()
         {
             return new DiskQuotaService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new GridsetService instance
+        /// 创建新的 GridsetService 实例
         /// </summary>
-        /// <returns>GridsetService instance</returns>
+        /// <returns>GridsetService 实例</returns>
         public GridsetService CreateGridsetService()
         {
             return new GridsetService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new ImporterService instance
+        /// 创建新的 ImporterService 实例
         /// </summary>
-        /// <returns>ImporterService instance</returns>
+        /// <returns>ImporterService 实例</returns>
         public ImporterService CreateImporterService()
         {
             return new ImporterService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new MonitoringService instance
+        /// 创建新的 MonitoringService 实例
         /// </summary>
-        /// <returns>MonitoringService instance</returns>
+        /// <returns>MonitoringService 实例</returns>
         public MonitoringService CreateMonitoringService()
         {
             return new MonitoringService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new TransformService instance
+        /// 创建新的 TransformService 实例
         /// </summary>
-        /// <returns>TransformService instance</returns>
+        /// <returns>TransformService 实例</returns>
         public TransformService CreateTransformService()
         {
             return new TransformService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new URLCheckService instance
+        /// 创建新的 URLCheckService 实例
         /// </summary>
-        /// <returns>URLCheckService instance</returns>
+        /// <returns>URLCheckService 实例</returns>
         public URLCheckService CreateURLCheckService()
         {
             return new URLCheckService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new AuthenticationFilterService instance
+        /// 创建新的 AuthenticationFilterService 实例
         /// </summary>
-        /// <returns>AuthenticationFilterService instance</returns>
+        /// <returns>AuthenticationFilterService 实例</returns>
         public AuthenticationFilterService CreateAuthenticationFilterService()
         {
             return new AuthenticationFilterService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new AuthenticationProviderService instance
+        /// 创建新的 AuthenticationProviderService 实例
         /// </summary>
-        /// <returns>AuthenticationProviderService instance</returns>
+        /// <returns>AuthenticationProviderService 实例</returns>
         public AuthenticationProviderService CreateAuthenticationProviderService()
         {
             return new AuthenticationProviderService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new FilterChainService instance
+        /// 创建新的 FilterChainService 实例
         /// </summary>
-        /// <returns>FilterChainService instance</returns>
+        /// <returns>FilterChainService 实例</returns>
         public FilterChainService CreateFilterChainService()
         {
             return new FilterChainService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new PasswordService instance
+        /// 创建新的 PasswordService 实例
         /// </summary>
-        /// <returns>PasswordService instance</returns>
+        /// <returns>PasswordService 实例</returns>
         public PasswordService CreatePasswordService()
         {
             return new PasswordService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new KeystoreService instance
+        /// 创建新的 KeystoreService 实例
         /// </summary>
-        /// <returns>KeystoreService instance</returns>
+        /// <returns>KeystoreService 实例</returns>
         public KeystoreService CreateKeystoreService()
         {
             return new KeystoreService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new BlobstoreService instance
+        /// 创建新的 BlobstoreService 实例
         /// </summary>
-        /// <returns>BlobstoreService instance</returns>
+        /// <returns>BlobstoreService 实例</returns>
         public BlobstoreService CreateBlobstoreService()
         {
             return new BlobstoreService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new StructuredCoverageService instance
+        /// 创建新的 StructuredCoverageService 实例
         /// </summary>
-        /// <returns>StructuredCoverageService instance</returns>
+        /// <returns>StructuredCoverageService 实例</returns>
         public StructuredCoverageService CreateStructuredCoverageService()
         {
             return new StructuredCoverageService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new CoverageViewService instance
+        /// 创建新的 CoverageViewService 实例
         /// </summary>
-        /// <returns>CoverageViewService instance</returns>
+        /// <returns>CoverageViewService 实例</returns>
         public CoverageViewService CreateCoverageViewService()
         {
             return new CoverageViewService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new WPSSettingsService instance
+        /// 创建新的 WPSSettingsService 实例
         /// </summary>
-        /// <returns>WPSSettingsService instance</returns>
+        /// <returns>WPSSettingsService 实例</returns>
         public WPSSettingsService CreateWPSSettingsService()
         {
             return new WPSSettingsService(GetHttpClient());
         }
 
         /// <summary>
-        /// Creates a new CSWSettingsService instance
+        /// 创建新的 CSWSettingsService 实例
         /// </summary>
-        /// <returns>CSWSettingsService instance</returns>
+        /// <returns>CSWSettingsService 实例</returns>
         public CSWSettingsService CreateCSWSettingsService()
         {
             return new CSWSettingsService(GetHttpClient());
         }
 
         /// <summary>
-        /// Disposes the factory and its resources
+        /// 释放工厂及其资源
         /// </summary>
         public void Dispose()
         {
