@@ -499,4 +499,160 @@ namespace GeoServerDesktop.GeoServerClient.Models
         [JsonProperty("maxRequestSizePixels")]
         public long? MaxRequestSizePixels { get; set; }
     }
+
+    /// <summary>
+    /// Represents WPS service settings
+    /// </summary>
+    public class WPSSettings
+    {
+        /// <summary>
+        /// Gets or sets the WPS service wrapper
+        /// </summary>
+        [JsonProperty("wps")]
+        public WPSServiceConfig WPS { get; set; }
+    }
+
+    /// <summary>
+    /// WPS service configuration
+    /// </summary>
+    public class WPSServiceConfig
+    {
+        /// <summary>
+        /// Gets or sets whether the service is enabled
+        /// </summary>
+        [JsonProperty("enabled")]
+        public bool? Enabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets the service name
+        /// </summary>
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the service title
+        /// </summary>
+        [JsonProperty("title")]
+        public string Title { get; set; }
+
+        /// <summary>
+        /// Gets or sets the service abstract
+        /// </summary>
+        [JsonProperty("abstrct")]
+        public string Abstract { get; set; }
+
+        /// <summary>
+        /// Gets or sets the maintainer
+        /// </summary>
+        [JsonProperty("maintainer")]
+        public string Maintainer { get; set; }
+
+        /// <summary>
+        /// Gets or sets the online resource
+        /// </summary>
+        [JsonProperty("onlineResource")]
+        public string OnlineResource { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether to cite compliant
+        /// </summary>
+        [JsonProperty("citeCompliant")]
+        public bool? CiteCompliant { get; set; }
+
+        /// <summary>
+        /// Gets or sets the schema base URL
+        /// </summary>
+        [JsonProperty("schemaBaseURL")]
+        public string SchemaBaseURL { get; set; }
+
+        /// <summary>
+        /// Gets or sets the connection timeout in seconds
+        /// </summary>
+        [JsonProperty("connectionTimeout")]
+        public int? ConnectionTimeout { get; set; }
+
+        /// <summary>
+        /// Gets or sets the resource expiration timeout
+        /// </summary>
+        [JsonProperty("resourceExpirationTimeout")]
+        public int? ResourceExpirationTimeout { get; set; }
+
+        /// <summary>
+        /// Gets or sets the maximum synchronous processes
+        /// </summary>
+        [JsonProperty("maxSynchronousProcesses")]
+        public int? MaxSynchronousProcesses { get; set; }
+
+        /// <summary>
+        /// Gets or sets the maximum asynchronous processes
+        /// </summary>
+        [JsonProperty("maxAsynchronousProcesses")]
+        public int? MaxAsynchronousProcesses { get; set; }
+    }
+
+    /// <summary>
+    /// Represents CSW service settings
+    /// </summary>
+    public class CSWSettings
+    {
+        /// <summary>
+        /// Gets or sets the CSW service wrapper
+        /// </summary>
+        [JsonProperty("csw")]
+        public CSWServiceConfig CSW { get; set; }
+    }
+
+    /// <summary>
+    /// CSW service configuration
+    /// </summary>
+    public class CSWServiceConfig
+    {
+        /// <summary>
+        /// Gets or sets whether the service is enabled
+        /// </summary>
+        [JsonProperty("enabled")]
+        public bool? Enabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets the service name
+        /// </summary>
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the service title
+        /// </summary>
+        [JsonProperty("title")]
+        public string Title { get; set; }
+
+        /// <summary>
+        /// Gets or sets the service abstract
+        /// </summary>
+        [JsonProperty("abstrct")]
+        public string Abstract { get; set; }
+
+        /// <summary>
+        /// Gets or sets the maintainer
+        /// </summary>
+        [JsonProperty("maintainer")]
+        public string Maintainer { get; set; }
+
+        /// <summary>
+        /// Gets or sets the online resource
+        /// </summary>
+        [JsonProperty("onlineResource")]
+        public string OnlineResource { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether to cite compliant
+        /// </summary>
+        [JsonProperty("citeCompliant")]
+        public bool? CiteCompliant { get; set; }
+
+        /// <summary>
+        /// Gets or sets the schema base URL
+        /// </summary>
+        [JsonProperty("schemaBaseURL")]
+        public string SchemaBaseURL { get; set; }
+    }
 }

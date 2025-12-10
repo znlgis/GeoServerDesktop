@@ -200,4 +200,232 @@ namespace GeoServerDesktop.GeoServerClient.Models
         [JsonProperty("role")]
         public Role Role { get; set; }
     }
+
+    /// <summary>
+    /// Represents an authentication filter configuration
+    /// </summary>
+    public class AuthenticationFilter
+    {
+        /// <summary>
+        /// Gets or sets the filter name
+        /// </summary>
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the filter class name
+        /// </summary>
+        [JsonProperty("className")]
+        public string ClassName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the filter configuration
+        /// </summary>
+        [JsonProperty("config")]
+        public Dictionary<string, object> Config { get; set; }
+    }
+
+    /// <summary>
+    /// Wrapper for authentication filter list
+    /// </summary>
+    public class AuthenticationFilterListWrapper
+    {
+        /// <summary>
+        /// Gets or sets the list of filters
+        /// </summary>
+        [JsonProperty("filters")]
+        public List<string> Filters { get; set; }
+    }
+
+    /// <summary>
+    /// Wrapper for authentication filter response
+    /// </summary>
+    public class AuthenticationFilterWrapper
+    {
+        /// <summary>
+        /// Gets or sets the filter
+        /// </summary>
+        [JsonProperty("filter")]
+        public AuthenticationFilter Filter { get; set; }
+    }
+
+    /// <summary>
+    /// Represents an authentication provider configuration
+    /// </summary>
+    public class AuthenticationProvider
+    {
+        /// <summary>
+        /// Gets or sets the provider name
+        /// </summary>
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the provider class name
+        /// </summary>
+        [JsonProperty("className")]
+        public string ClassName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the provider configuration
+        /// </summary>
+        [JsonProperty("config")]
+        public Dictionary<string, object> Config { get; set; }
+    }
+
+    /// <summary>
+    /// Wrapper for authentication provider list
+    /// </summary>
+    public class AuthenticationProviderListWrapper
+    {
+        /// <summary>
+        /// Gets or sets the list of providers
+        /// </summary>
+        [JsonProperty("providers")]
+        public List<string> Providers { get; set; }
+    }
+
+    /// <summary>
+    /// Wrapper for authentication provider response
+    /// </summary>
+    public class AuthenticationProviderWrapper
+    {
+        /// <summary>
+        /// Gets or sets the provider
+        /// </summary>
+        [JsonProperty("provider")]
+        public AuthenticationProvider Provider { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a security filter chain configuration
+    /// </summary>
+    public class FilterChain
+    {
+        /// <summary>
+        /// Gets or sets the chain name
+        /// </summary>
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the chain pattern
+        /// </summary>
+        [JsonProperty("pattern")]
+        public string Pattern { get; set; }
+
+        /// <summary>
+        /// Gets or sets the list of filters in the chain
+        /// </summary>
+        [JsonProperty("filters")]
+        public List<string> Filters { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether the chain is disabled
+        /// </summary>
+        [JsonProperty("disabled")]
+        public bool? Disabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether to allow session creation
+        /// </summary>
+        [JsonProperty("allowSessionCreation")]
+        public bool? AllowSessionCreation { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether SSL is required
+        /// </summary>
+        [JsonProperty("requireSSL")]
+        public bool? RequireSSL { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether to match HTTP method
+        /// </summary>
+        [JsonProperty("matchHTTPMethod")]
+        public bool? MatchHTTPMethod { get; set; }
+    }
+
+    /// <summary>
+    /// Wrapper for filter chain list
+    /// </summary>
+    public class FilterChainListWrapper
+    {
+        /// <summary>
+        /// Gets or sets the list of chains
+        /// </summary>
+        [JsonProperty("filterChains")]
+        public List<FilterChain> Chains { get; set; }
+    }
+
+    /// <summary>
+    /// Wrapper for filter chain response
+    /// </summary>
+    public class FilterChainWrapper
+    {
+        /// <summary>
+        /// Gets or sets the filter chain
+        /// </summary>
+        [JsonProperty("filterChain")]
+        public FilterChain Chain { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a password change request
+    /// </summary>
+    public class PasswordChangeRequest
+    {
+        /// <summary>
+        /// Gets or sets the new password
+        /// </summary>
+        [JsonProperty("newPassword")]
+        public string NewPassword { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a keystore entry
+    /// </summary>
+    public class KeystoreEntry
+    {
+        /// <summary>
+        /// Gets or sets the alias
+        /// </summary>
+        [JsonProperty("alias")]
+        public string Alias { get; set; }
+
+        /// <summary>
+        /// Gets or sets the entry type
+        /// </summary>
+        [JsonProperty("type")]
+        public string Type { get; set; }
+
+        /// <summary>
+        /// Gets or sets the algorithm
+        /// </summary>
+        [JsonProperty("algorithm")]
+        public string Algorithm { get; set; }
+    }
+
+    /// <summary>
+    /// Wrapper for keystore information
+    /// </summary>
+    public class KeystoreInfo
+    {
+        /// <summary>
+        /// Gets or sets the keystore type
+        /// </summary>
+        [JsonProperty("type")]
+        public string Type { get; set; }
+
+        /// <summary>
+        /// Gets or sets the keystore provider
+        /// </summary>
+        [JsonProperty("provider")]
+        public string Provider { get; set; }
+
+        /// <summary>
+        /// Gets or sets the list of aliases
+        /// </summary>
+        [JsonProperty("aliases")]
+        public List<KeystoreEntry> Aliases { get; set; }
+    }
 }

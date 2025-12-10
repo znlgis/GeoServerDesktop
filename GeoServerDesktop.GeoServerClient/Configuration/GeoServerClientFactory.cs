@@ -349,6 +349,96 @@ namespace GeoServerDesktop.GeoServerClient.Configuration
         }
 
         /// <summary>
+        /// Creates a new AuthenticationFilterService instance
+        /// </summary>
+        /// <returns>AuthenticationFilterService instance</returns>
+        public AuthenticationFilterService CreateAuthenticationFilterService()
+        {
+            return new AuthenticationFilterService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new AuthenticationProviderService instance
+        /// </summary>
+        /// <returns>AuthenticationProviderService instance</returns>
+        public AuthenticationProviderService CreateAuthenticationProviderService()
+        {
+            return new AuthenticationProviderService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new FilterChainService instance
+        /// </summary>
+        /// <returns>FilterChainService instance</returns>
+        public FilterChainService CreateFilterChainService()
+        {
+            return new FilterChainService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new PasswordService instance
+        /// </summary>
+        /// <returns>PasswordService instance</returns>
+        public PasswordService CreatePasswordService()
+        {
+            return new PasswordService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new KeystoreService instance
+        /// </summary>
+        /// <returns>KeystoreService instance</returns>
+        public KeystoreService CreateKeystoreService()
+        {
+            return new KeystoreService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new BlobstoreService instance
+        /// </summary>
+        /// <returns>BlobstoreService instance</returns>
+        public BlobstoreService CreateBlobstoreService()
+        {
+            return new BlobstoreService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new StructuredCoverageService instance
+        /// </summary>
+        /// <returns>StructuredCoverageService instance</returns>
+        public StructuredCoverageService CreateStructuredCoverageService()
+        {
+            return new StructuredCoverageService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new CoverageViewService instance
+        /// </summary>
+        /// <returns>CoverageViewService instance</returns>
+        public CoverageViewService CreateCoverageViewService()
+        {
+            return new CoverageViewService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new WPSSettingsService instance
+        /// </summary>
+        /// <returns>WPSSettingsService instance</returns>
+        public WPSSettingsService CreateWPSSettingsService()
+        {
+            return new WPSSettingsService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new CSWSettingsService instance
+        /// </summary>
+        /// <returns>CSWSettingsService instance</returns>
+        public CSWSettingsService CreateCSWSettingsService()
+        {
+            return new CSWSettingsService(GetHttpClient());
+        }
+
+        /// <summary>
         /// Disposes the factory and its resources
         /// </summary>
         public void Dispose()
