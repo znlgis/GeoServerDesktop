@@ -1,6 +1,7 @@
 using GeoServerDesktop.GeoServerClient.Http;
 using GeoServerDesktop.GeoServerClient.Models;
 using Newtonsoft.Json;
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,7 +34,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/datastores/{dataStoreName}/featuretypes.json");
             var wrapper = JsonConvert.DeserializeObject<FeatureTypeListWrapper>(response);
-            return wrapper?.FeatureTypeList?.FeatureTypes ?? new FeatureType[0];
+            return wrapper?.FeatureTypeList?.FeatureTypes ?? Array.Empty<FeatureType>();
         }
 
         /// <summary>
@@ -91,7 +92,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>Task representing the asynchronous operation</returns>
         public async Task DeleteFeatureTypeAsync(string workspaceName, string dataStoreName, string featureTypeName, bool recurse = false)
         {
-            var path = $"/rest/workspaces/{workspaceName}/datastores/{dataStoreName}/featuretypes/{featureTypeName}?recurse={recurse.ToString().ToLower()}";
+            var path = $"/rest/workspaces/{workspaceName}/datastores/{dataStoreName}/featuretypes/{featureTypeName}?recurse={recurse.ToString().ToLowerInvariant()}";
             await _httpClient.DeleteAsync(path);
         }
     }

@@ -98,6 +98,11 @@
                         <ContentControl Content="{Binding WorkspaceManagementViewModel}"/>
                     </TabItem>
                     
+                    <!-- Style Management Tab -->
+                    <TabItem Header="Styles">
+                        <ContentControl Content="{Binding StyleManagementViewModel}"/>
+                    </TabItem>
+                    
                     <!-- Details Tab -->
                     <TabItem Header="Details">
                         <Border Padding="10">

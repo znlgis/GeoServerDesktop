@@ -47,6 +47,17 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
+        /// Gets the SLD content for a specific style
+        /// </summary>
+        /// <param name="styleName">Name of the style</param>
+        /// <returns>SLD content as string</returns>
+        public async Task<string> GetStyleSldAsync(string styleName)
+        {
+            var response = await _httpClient.GetAsync($"/rest/styles/{styleName}.sld");
+            return response;
+        }
+
+        /// <summary>
         /// Creates a new style
         /// </summary>
         /// <param name="styleName">Name of the style to create</param>

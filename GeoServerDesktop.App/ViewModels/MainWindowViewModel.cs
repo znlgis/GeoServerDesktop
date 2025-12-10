@@ -41,12 +41,16 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private WorkspaceManagementViewModel _workspaceManagementViewModel;
 
+    [ObservableProperty]
+    private StyleManagementViewModel _styleManagementViewModel;
+
     public MainWindowViewModel()
     {
         _connectionService = new GeoServerConnectionService();
         _connectionService.ConnectionStatusChanged += OnConnectionStatusChanged;
         _mapPreviewViewModel = new MapPreviewViewModel();
         _workspaceManagementViewModel = new WorkspaceManagementViewModel(_connectionService);
+        _styleManagementViewModel = new StyleManagementViewModel(_connectionService);
     }
 
     partial void OnSelectedNodeChanged(ResourceTreeNode? value)
