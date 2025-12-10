@@ -3,79 +3,79 @@ using Newtonsoft.Json;
 namespace GeoServerDesktop.GeoServerClient.Models
 {
     /// <summary>
-    /// Represents a GeoServer data store
+    /// 表示 GeoServer 数据存储
     /// </summary>
     public class DataStore
     {
         /// <summary>
-        /// Name of the data store
+        /// 数据存储的名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Type of the data store (e.g., PostGIS, Shapefile)
+        /// 数据存储的类型（例如 PostGIS、Shapefile）
         /// </summary>
         [JsonProperty("type")]
         public string Type { get; set; }
 
         /// <summary>
-        /// Whether the data store is enabled
+        /// 数据存储是否启用
         /// </summary>
         [JsonProperty("enabled")]
         public bool? Enabled { get; set; }
 
         /// <summary>
-        /// Workspace the data store belongs to
+        /// 数据存储所属的工作空间
         /// </summary>
         [JsonProperty("workspace")]
         public WorkspaceReference Workspace { get; set; }
 
         /// <summary>
-        /// Connection parameters for the data store
+        /// 数据存储的连接参数
         /// </summary>
         [JsonProperty("connectionParameters")]
         public ConnectionParameters ConnectionParameters { get; set; }
 
         /// <summary>
-        /// Link to the data store resource
+        /// 数据存储资源的链接
         /// </summary>
         [JsonProperty("href")]
         public string Href { get; set; }
     }
 
     /// <summary>
-    /// Reference to a workspace
+    /// 对工作空间的引用
     /// </summary>
     public class WorkspaceReference
     {
         /// <summary>
-        /// Name of the workspace
+        /// 工作空间的名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Link to the workspace
+        /// 工作空间的链接
         /// </summary>
         [JsonProperty("href")]
         public string Href { get; set; }
     }
 
     /// <summary>
-    /// Connection parameters for a data store
+    /// 数据存储的连接参数
     /// </summary>
     public class ConnectionParameters
     {
         /// <summary>
-        /// Entry collection for connection parameters
+        /// 连接参数的条目集合
         /// </summary>
         [JsonProperty("entry")]
         public ConnectionParameterEntry[] Entries { get; set; }
     }
 
     /// <summary>
-    /// Single connection parameter entry
+    /// 单个连接参数条目
     /// </summary>
     public class ConnectionParameterEntry
     {
