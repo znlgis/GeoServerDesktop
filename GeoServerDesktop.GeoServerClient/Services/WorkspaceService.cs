@@ -62,6 +62,20 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
+        /// Updates a workspace
+        /// </summary>
+        /// <param name="workspaceName">Name of the workspace to update</param>
+        /// <param name="newWorkspaceName">New name for the workspace</param>
+        /// <returns>Task representing the asynchronous operation</returns>
+        public async Task UpdateWorkspaceAsync(string workspaceName, string newWorkspaceName)
+        {
+            var workspace = new { workspace = new { name = newWorkspaceName } };
+            var json = JsonConvert.SerializeObject(workspace);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            await _httpClient.PutAsync($"/rest/workspaces/{workspaceName}", content);
+        }
+
+        /// <summary>
         /// Deletes a workspace
         /// </summary>
         /// <param name="workspaceName">Name of the workspace to delete</param>

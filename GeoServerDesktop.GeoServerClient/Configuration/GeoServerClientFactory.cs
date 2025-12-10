@@ -205,6 +205,150 @@ namespace GeoServerDesktop.GeoServerClient.Configuration
         }
 
         /// <summary>
+        /// Creates a new WMSSettingsService instance
+        /// </summary>
+        /// <returns>WMSSettingsService instance</returns>
+        public WMSSettingsService CreateWMSSettingsService()
+        {
+            return new WMSSettingsService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new WFSSettingsService instance
+        /// </summary>
+        /// <returns>WFSSettingsService instance</returns>
+        public WFSSettingsService CreateWFSSettingsService()
+        {
+            return new WFSSettingsService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new WCSSettingsService instance
+        /// </summary>
+        /// <returns>WCSSettingsService instance</returns>
+        public WCSSettingsService CreateWCSSettingsService()
+        {
+            return new WCSSettingsService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new WMTSSettingsService instance
+        /// </summary>
+        /// <returns>WMTSSettingsService instance</returns>
+        public WMTSSettingsService CreateWMTSSettingsService()
+        {
+            return new WMTSSettingsService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new SecurityService instance
+        /// </summary>
+        /// <returns>SecurityService instance</returns>
+        public SecurityService CreateSecurityService()
+        {
+            return new SecurityService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new UserGroupService instance
+        /// </summary>
+        /// <returns>UserGroupService instance</returns>
+        public UserGroupService CreateUserGroupService()
+        {
+            return new UserGroupService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new RoleService instance
+        /// </summary>
+        /// <returns>RoleService instance</returns>
+        public RoleService CreateRoleService()
+        {
+            return new RoleService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new FontService instance
+        /// </summary>
+        /// <returns>FontService instance</returns>
+        public FontService CreateFontService()
+        {
+            return new FontService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new TemplateService instance
+        /// </summary>
+        /// <returns>TemplateService instance</returns>
+        public TemplateService CreateTemplateService()
+        {
+            return new TemplateService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new GWCLayerService instance
+        /// </summary>
+        /// <returns>GWCLayerService instance</returns>
+        public GWCLayerService CreateGWCLayerService()
+        {
+            return new GWCLayerService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new DiskQuotaService instance
+        /// </summary>
+        /// <returns>DiskQuotaService instance</returns>
+        public DiskQuotaService CreateDiskQuotaService()
+        {
+            return new DiskQuotaService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new GridsetService instance
+        /// </summary>
+        /// <returns>GridsetService instance</returns>
+        public GridsetService CreateGridsetService()
+        {
+            return new GridsetService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new ImporterService instance
+        /// </summary>
+        /// <returns>ImporterService instance</returns>
+        public ImporterService CreateImporterService()
+        {
+            return new ImporterService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new MonitoringService instance
+        /// </summary>
+        /// <returns>MonitoringService instance</returns>
+        public MonitoringService CreateMonitoringService()
+        {
+            return new MonitoringService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new TransformService instance
+        /// </summary>
+        /// <returns>TransformService instance</returns>
+        public TransformService CreateTransformService()
+        {
+            return new TransformService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new URLCheckService instance
+        /// </summary>
+        /// <returns>URLCheckService instance</returns>
+        public URLCheckService CreateURLCheckService()
+        {
+            return new URLCheckService(GetHttpClient());
+        }
+
+        /// <summary>
         /// Disposes the factory and its resources
         /// </summary>
         public void Dispose()
