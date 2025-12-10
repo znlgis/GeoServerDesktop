@@ -100,20 +100,20 @@ Project Version: GeoServerDesktop (as of December 2024)
 
 ---
 
-### 5. WMS Stores (`/rest/workspaces/{workspace}/wmsstores`) ⚪
+### 5. WMS Stores (`/rest/workspaces/{workspace}/wmsstores`) ✅
 
-**Status**: Not Implemented  
-**Service**: Not created
+**Status**: Fully Implemented  
+**Service**: `WMSStoreService.cs`
 
 | Operation | Endpoint | HTTP Method | Implemented | Notes |
 |-----------|----------|-------------|-------------|-------|
-| List WMS stores | `/rest/workspaces/{ws}/wmsstores.json` | GET | ⚪ | - |
-| Get WMS store | `/rest/workspaces/{ws}/wmsstores/{ws}.json` | GET | ⚪ | - |
-| Create WMS store | `/rest/workspaces/{ws}/wmsstores` | POST | ⚪ | - |
-| Update WMS store | `/rest/workspaces/{ws}/wmsstores/{ws}` | PUT | ⚪ | - |
-| Delete WMS store | `/rest/workspaces/{ws}/wmsstores/{ws}` | DELETE | ⚪ | - |
+| List WMS stores | `/rest/workspaces/{ws}/wmsstores.json` | GET | ✅ | All WMS stores |
+| Get WMS store | `/rest/workspaces/{ws}/wmsstores/{ws}.json` | GET | ✅ | Store details |
+| Create WMS store | `/rest/workspaces/{ws}/wmsstores` | POST | ✅ | With capabilities URL |
+| Update WMS store | `/rest/workspaces/{ws}/wmsstores/{ws}` | PUT | ✅ | Modify configuration |
+| Delete WMS store | `/rest/workspaces/{ws}/wmsstores/{ws}` | DELETE | ✅ | With recurse |
 
-**Implementation Degree**: 0%  
+**Implementation Degree**: 100%  
 **Priority**: Medium (cascaded WMS support)
 
 ---
@@ -172,20 +172,20 @@ Project Version: GeoServerDesktop (as of December 2024)
 
 ---
 
-### 9. WMS Layers (`/rest/workspaces/{workspace}/wmsstores/{wmsstore}/wmslayers`) ⚪
+### 9. WMS Layers (`/rest/workspaces/{workspace}/wmsstores/{wmsstore}/wmslayers`) ✅
 
-**Status**: Not Implemented  
-**Service**: Not created
+**Status**: Fully Implemented  
+**Service**: `WMSLayerService.cs`
 
 | Operation | Endpoint | HTTP Method | Implemented | Notes |
 |-----------|----------|-------------|-------------|-------|
-| List WMS layers | `/rest/workspaces/{ws}/wmsstores/{wms}/wmslayers.json` | GET | ⚪ | - |
-| Get WMS layer | `/rest/workspaces/{ws}/wmsstores/{wms}/wmslayers/{l}.json` | GET | ⚪ | - |
-| Create WMS layer | `/rest/workspaces/{ws}/wmsstores/{wms}/wmslayers` | POST | ⚪ | - |
-| Update WMS layer | `/rest/workspaces/{ws}/wmsstores/{wms}/wmslayers/{l}` | PUT | ⚪ | - |
-| Delete WMS layer | `/rest/workspaces/{ws}/wmsstores/{wms}/wmslayers/{l}` | DELETE | ⚪ | - |
+| List WMS layers | `/rest/workspaces/{ws}/wmsstores/{wms}/wmslayers.json` | GET | ✅ | All WMS layers |
+| Get WMS layer | `/rest/workspaces/{ws}/wmsstores/{wms}/wmslayers/{l}.json` | GET | ✅ | Layer details |
+| Create WMS layer | `/rest/workspaces/{ws}/wmsstores/{wms}/wmslayers` | POST | ✅ | Publish from remote |
+| Update WMS layer | `/rest/workspaces/{ws}/wmsstores/{wms}/wmslayers/{l}` | PUT | ✅ | Modify configuration |
+| Delete WMS layer | `/rest/workspaces/{ws}/wmsstores/{wms}/wmslayers/{l}` | DELETE | ✅ | With recurse |
 
-**Implementation Degree**: 0%  
+**Implementation Degree**: 100%  
 **Priority**: Medium
 
 ---
@@ -300,19 +300,19 @@ Project Version: GeoServerDesktop (as of December 2024)
 
 ---
 
-### 15. Settings (`/rest/settings`) ⚪
+### 15. Settings (`/rest/settings`) ✅
 
-**Status**: Not Implemented  
-**Service**: Not created
+**Status**: Fully Implemented  
+**Service**: `SettingsService.cs`
 
 | Operation | Endpoint | HTTP Method | Implemented | Notes |
 |-----------|----------|-------------|-------------|-------|
-| Get global settings | `/rest/settings.json` | GET | ⚪ | Global config |
-| Update settings | `/rest/settings` | PUT | ⚪ | Modify config |
-| Get contact info | `/rest/settings/contact.json` | GET | ⚪ | Contact details |
-| Update contact info | `/rest/settings/contact` | PUT | ⚪ | Modify contact |
+| Get global settings | `/rest/settings.json` | GET | ✅ | Global config |
+| Update settings | `/rest/settings` | PUT | ✅ | Modify config |
+| Get contact info | `/rest/settings/contact.json` | GET | ✅ | Contact details |
+| Update contact info | `/rest/settings/contact` | PUT | ✅ | Modify contact |
 
-**Implementation Degree**: 0%  
+**Implementation Degree**: 100%  
 **Priority**: Medium (configuration management)
 
 ---
@@ -332,17 +332,17 @@ Project Version: GeoServerDesktop (as of December 2024)
 
 ---
 
-### 17. Reload/Reset (`/rest/reload`) ⚪
+### 17. Reload/Reset (`/rest/reload`) ✅
 
-**Status**: Not Implemented  
-**Service**: Not created
+**Status**: Fully Implemented  
+**Service**: `ReloadService.cs`
 
 | Operation | Endpoint | HTTP Method | Implemented | Notes |
 |-----------|----------|-------------|-------------|-------|
-| Reload catalog | `/rest/reload` | POST | ⚪ | Reload configuration |
-| Reset | `/rest/reset` | POST | ⚪ | Full reset |
+| Reload catalog | `/rest/reload` | POST | ✅ | Reload configuration |
+| Reset | `/rest/reset` | POST | ✅ | Full reset |
 
-**Implementation Degree**: 0%  
+**Implementation Degree**: 100%  
 **Priority**: Low (administrative operation)
 
 ---
@@ -666,15 +666,15 @@ Project Version: GeoServerDesktop (as of December 2024)
 
 | Category | Total APIs | Implemented | Partially Implemented | Not Implemented | Coverage |
 |----------|------------|-------------|----------------------|----------------|----------|
-| **Core Resources** | 13 | 10 | 0 | 3 | 77% |
-| **System/Config** | 4 | 1 | 0 | 3 | 25% |
+| **Core Resources** | 13 | 12 | 0 | 1 | 92% |
+| **System/Config** | 4 | 3 | 0 | 1 | 75% |
 | **Service Config** | 4 | 0 | 0 | 4 | 0% |
 | **Security** | 3 | 0 | 0 | 3 | 0% |
 | **Resource Mgmt** | 4 | 0 | 0 | 4 | 0% |
 | **GeoWebCache** | 3 | 0 | 0 | 3 | 0% |
 | **Extensions** | 4 | 0 | 0 | 4 | 0% |
 | **Preview** | 1 | 0 | 1 | 0 | 50% |
-| **TOTAL** | **36** | **11** | **1** | **24** | **33%** |
+| **TOTAL** | **36** | **15** | **1** | **20** | **44%** |
 
 ### Service-Level Summary
 
@@ -690,14 +690,14 @@ Project Version: GeoServerDesktop (as of December 2024)
 | CoverageStoreService | ✅ Implemented | 6/6 operations | 100% |
 | CoverageService | ✅ Implemented | 5/5 operations | 100% |
 | AboutService | ✅ Implemented | 3/3 operations | 100% |
+| WMSStoreService | ✅ Implemented | 5/5 operations | 100% |
+| WMSLayerService | ✅ Implemented | 5/5 operations | 100% |
+| SettingsService | ✅ Implemented | 4/4 operations | 100% |
+| ReloadService | ✅ Implemented | 2/2 operations | 100% |
 | PreviewService | 🟡 Partial | WMS URL generation | 50% |
-| WMSStoreService | ⚪ Missing | 0/5 operations | 0% |
-| WMSLayerService | ⚪ Missing | 0/5 operations | 0% |
 | WMTSStoreService | ⚪ Missing | 0/5 operations | 0% |
 | WMTSLayerService | ⚪ Missing | 0/5 operations | 0% |
-| SettingsService | ⚪ Missing | 0/4 operations | 0% |
 | LoggingService | ⚪ Missing | 0/2 operations | 0% |
-| ReloadService | ⚪ Missing | 0/2 operations | 0% |
 | ServiceConfigService | ⚪ Missing | 0/4 services | 0% |
 | SecurityService | ⚪ Missing | 0/25+ operations | 0% |
 | ResourceService | ⚪ Missing | 0/3 operations | 0% |
@@ -722,8 +722,8 @@ Project Version: GeoServerDesktop (as of December 2024)
 
 ### Medium Priority (Important Features)
 
-5. **SettingsService** - Global configuration management
-6. **WMSStoreService + WMSLayerService** - Cascaded WMS support
+5. ~~**SettingsService**~~ ✅ **COMPLETED** - Global configuration management
+6. ~~**WMSStoreService + WMSLayerService**~~ ✅ **COMPLETED** - Cascaded WMS support
 7. **ServiceConfigService** - WMS/WFS/WCS service configuration
 8. **ResourceService** - File management
 9. **GeoWebCacheService** - Tile caching
@@ -733,7 +733,7 @@ Project Version: GeoServerDesktop (as of December 2024)
 
 11. **WMTSStoreService + WMTSLayerService** - WMTS cascade
 12. **LoggingService** - Log configuration
-13. **ReloadService** - Catalog reload
+13. ~~**ReloadService**~~ ✅ **COMPLETED** - Catalog reload
 14. **FontService** - Font management
 15. **TemplateService** - Feature templates
 16. **MonitoringService** - Request monitoring
@@ -798,27 +798,30 @@ Project Version: GeoServerDesktop (as of December 2024)
 
 ## Conclusion
 
-The GeoServerDesktop project has successfully implemented the **core vector and raster data management** REST APIs with a coverage of approximately **33%** of the total GeoServer REST API surface. The implemented services follow best practices and provide a solid foundation.
+The GeoServerDesktop project has successfully implemented the **core vector and raster data management plus cascaded WMS support** REST APIs with a coverage of approximately **44%** of the total GeoServer REST API surface. The implemented services follow best practices and provide a solid foundation.
 
 **Key Accomplishments:**
-- 11 services fully implemented with high operation coverage
+- 15 services fully implemented with high operation coverage
 - Clean architecture with proper separation
 - Comprehensive feature type and layer management
 - Style management with SLD support
-- **NEW**: Complete raster data support via coverage stores and coverages
-- **NEW**: Namespace management for URI mapping
-- **NEW**: System diagnostics and version information
+- Complete raster data support via coverage stores and coverages
+- **NEW**: Cascaded WMS store and layer support
+- **NEW**: Global settings and configuration management
+- **NEW**: Catalog reload and reset operations
+- Namespace management for URI mapping
+- System diagnostics and version information
 
 **Next Steps for Full Coverage:**
 - Implement security and user management
-- Add system administration endpoints (settings, logging)
+- Add service configuration endpoints (WMS/WFS/WCS settings)
 - Consider GeoWebCache integration for performance
-- Add WMS/WMTS store services for cascaded layers
+- Add resource management for file operations
 
-The current implementation is **production-ready for both vector and raster data workflows** but requires additional services for comprehensive GeoServer management including security, service configuration, and advanced features.
+The current implementation is **production-ready for vector data, raster data, and cascaded WMS workflows** but requires additional services for comprehensive GeoServer management including security, service configuration, and advanced features.
 
 ---
 
-*Document Version: 1.1*  
+*Document Version: 1.2*  
 *Last Updated: December 2024*  
 *Based on: GeoServer 2.x REST API Documentation*

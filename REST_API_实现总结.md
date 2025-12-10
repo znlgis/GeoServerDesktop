@@ -70,28 +70,28 @@
 | 2 | Namespaces（命名空间） | NamespaceService | ✅ 已实现 | 100% |
 | 3 | DataStores（数据存储） | DataStoreService | ✅ 已实现 | 85% |
 | 4 | CoverageStores（栅格数据存储） | CoverageStoreService | ✅ 已实现 | 100% |
-| 5 | WMSStores（WMS存储） | - | ⚪ 未实现 | 0% |
+| 5 | WMSStores（WMS存储） | WMSStoreService | ✅ 已实现 | 100% |
 | 6 | WMTSStores（WMTS存储） | - | ⚪ 未实现 | 0% |
 | 7 | FeatureTypes（要素类型） | FeatureTypeService | ✅ 已实现 | 100% |
 | 8 | Coverages（栅格图层） | CoverageService | ✅ 已实现 | 100% |
-| 9 | WMSLayers（WMS图层） | - | ⚪ 未实现 | 0% |
+| 9 | WMSLayers（WMS图层） | WMSLayerService | ✅ 已实现 | 100% |
 | 10 | WMTSLayers（WMTS图层） | - | ⚪ 未实现 | 0% |
 | 11 | Layers（图层） | LayerService | ✅ 已实现 | 70% |
 | 12 | LayerGroups（图层组） | LayerGroupService | ✅ 已实现 | 70% |
 | 13 | Styles（样式） | StyleService | ✅ 已实现 | 75% |
 
-**核心资源覆盖率**: 77% (10/13 已实现)
+**核心资源覆盖率**: 92% (12/13 已实现)
 
 ### 系统和配置 API（4个）
 
 | 序号 | API 类别 | 服务类 | 实现状态 | 完成度 |
 |------|---------|--------|---------|--------|
 | 14 | About（系统信息） | AboutService | ✅ 已实现 | 100% |
-| 15 | Settings（全局设置） | - | ⚪ 未实现 | 0% |
+| 15 | Settings（全局设置） | SettingsService | ✅ 已实现 | 100% |
 | 16 | Logging（日志配置） | - | ⚪ 未实现 | 0% |
-| 17 | Reload/Reset（重载） | - | ⚪ 未实现 | 0% |
+| 17 | Reload/Reset（重载） | ReloadService | ✅ 已实现 | 100% |
 
-**系统配置覆盖率**: 25% (1/4 已实现)
+**系统配置覆盖率**: 75% (3/4 已实现)
 
 ### 服务配置 API（4个）
 
@@ -152,31 +152,35 @@
 
 | 分类 | 总API数 | 已实现 | 部分实现 | 未实现 | 覆盖率 |
 |------|---------|--------|----------|--------|--------|
-| **核心资源** | 13 | 10 | 0 | 3 | 77% |
-| **系统配置** | 4 | 1 | 0 | 3 | 25% |
+| **核心资源** | 13 | 12 | 0 | 1 | 92% |
+| **系统配置** | 4 | 3 | 0 | 1 | 75% |
 | **服务配置** | 4 | 0 | 0 | 4 | 0% |
 | **安全管理** | 3 | 0 | 0 | 3 | 0% |
 | **资源管理** | 4 | 0 | 1 | 3 | 12.5% |
 | **GeoWebCache** | 3 | 0 | 0 | 3 | 0% |
 | **扩展功能** | 4 | 0 | 0 | 4 | 0% |
-| **总计** | **35** | **11** | **1** | **23** | **33%** |
+| **总计** | **35** | **15** | **1** | **19** | **44%** |
 
 ### 服务实现统计
 
-**已完全实现的服务（11个）**：
+**已完全实现的服务（15个）**：
 1. WorkspaceService - 工作空间管理（4/5 操作，80%）
-2. NamespaceService - 命名空间管理（5/5 操作，100%）✨ 新增
+2. NamespaceService - 命名空间管理（5/5 操作，100%）
 3. DataStoreService - 矢量数据存储（5/7 操作，85%）
-4. CoverageStoreService - 栅格数据存储（6/6 操作，100%）✨ 新增
-5. FeatureTypeService - 要素类型管理（5/5 操作，100%）
-6. CoverageService - 栅格图层管理（5/5 操作，100%）✨ 新增
-7. LayerService - 图层管理（4/6 操作，70%）
-8. LayerGroupService - 图层组管理（5/10 操作，70%）
-9. StyleService - 样式管理（6/11 操作，75%）
-10. AboutService - 系统信息（3/3 操作，100%）✨ 新增
-11. PreviewService - WMS预览（部分实现，50%）
+4. CoverageStoreService - 栅格数据存储（6/6 操作，100%）
+5. WMSStoreService - WMS存储管理（5/5 操作，100%）✨ 新增
+6. FeatureTypeService - 要素类型管理（5/5 操作，100%）
+7. CoverageService - 栅格图层管理（5/5 操作，100%）
+8. WMSLayerService - WMS图层管理（5/5 操作，100%）✨ 新增
+9. LayerService - 图层管理（4/6 操作，70%）
+10. LayerGroupService - 图层组管理（5/10 操作，70%）
+11. StyleService - 样式管理（6/11 操作，75%）
+12. AboutService - 系统信息（3/3 操作，100%）
+13. SettingsService - 全局设置（4/4 操作，100%）✨ 新增
+14. ReloadService - 目录重载（2/2 操作，100%）✨ 新增
+15. PreviewService - WMS预览（部分实现，50%）
 
-**新增操作总数**：19 个 REST API 操作
+**新增操作总数**：16 个 REST API 操作
 
 ## 实现亮点
 
@@ -189,20 +193,28 @@
    - 图层和图层组管理
    - SLD 样式管理
 
-2. **栅格数据工作流**（本次新增）
+2. **栅格数据工作流**
    - 栅格数据存储配置
    - GeoTIFF 等格式文件上传
    - 栅格图层发布和配置
    - 完整的元数据支持
 
-3. **命名空间管理**（本次新增）
+3. **级联WMS工作流**✨ 新增
+   - WMS存储配置和连接
+   - 远程WMS服务集成
+   - WMS图层发布和管理
+   - 完整的认证支持
+
+4. **命名空间管理**
    - URI 映射管理
    - 前缀和命名空间配置
 
-4. **系统诊断**（本次新增）
+5. **系统管理**
    - 版本信息查询
    - 已安装模块清单
    - 系统资源状态监控
+   - 全局设置管理 ✨ 新增
+   - 目录重载和缓存重置 ✨ 新增
 
 ### 🎯 架构优势
 
@@ -230,8 +242,8 @@
 
 ### 中优先级（重要功能）
 
-5. **SettingsService** - 全局配置管理
-6. **WMSStoreService + WMSLayerService** - 级联 WMS 支持
+5. ~~**SettingsService**~~ ✅ 已完成
+6. ~~**WMSStoreService + WMSLayerService**~~ ✅ 已完成
 7. **ServiceConfigService** - WMS/WFS/WCS 服务配置
 8. **ResourceService** - 文件管理
 9. **GeoWebCacheService** - 瓦片缓存
@@ -241,7 +253,7 @@
 
 11. **WMTSStoreService + WMTSLayerService** - WMTS 级联
 12. **LoggingService** - 日志配置
-13. **ReloadService** - 目录重载
+13. ~~**ReloadService**~~ ✅ 已完成
 14. 其他扩展功能
 
 ## 项目成熟度评估
@@ -258,10 +270,12 @@
 **适合使用**：
 - 矢量数据管理（PostGIS、Shapefile等）
 - 栅格数据管理（GeoTIFF等）
+- 级联WMS服务集成 ✨ 新增
 - 图层发布和配置
 - 样式管理和 SLD 编辑
 - 工作空间和命名空间管理
-- 系统信息查询
+- 全局设置管理 ✨ 新增
+- 系统信息查询和目录重载 ✨ 新增
 
 **暂不支持**：
 - 用户和权限管理
@@ -283,13 +297,16 @@
 
 通过本次实现，GeoServerDesktop 项目：
 
-1. **API 覆盖率**从 19% 提升到 33%
-2. **核心资源覆盖率**从 46% 提升到 77%
-3. **新增 4 个完整服务**，共 19 个 REST API 操作
-4. **完善了栅格数据支持**，实现了完整的矢量+栅格数据工作流
-5. **提供了详细的 API 对比文档**，便于后续开发参考
+1. **API 覆盖率**从 33% 提升到 44%
+2. **核心资源覆盖率**从 77% 提升到 92%
+3. **系统配置覆盖率**从 25% 提升到 75%
+4. **新增 4 个完整服务**，共 16 个 REST API 操作
+5. **完善了级联WMS支持**，实现了远程WMS服务集成
+6. **提供了全局配置管理**，支持系统设置和联系信息
+7. **实现了目录管理**，支持重载和重置操作
+8. **提供了详细的 API 对比文档**，便于后续开发参考
 
-项目现在已经是一个功能完善、架构清晰、文档齐全的 GeoServer 桌面管理工具，**可用于生产环境的矢量和栅格数据管理任务**。
+项目现在已经是一个功能更加完善、架构清晰、文档齐全的 GeoServer 桌面管理工具，**可用于生产环境的矢量数据、栅格数据和级联WMS管理任务**。
 
 ---
 
