@@ -68,7 +68,7 @@
 |------|---------|--------|---------|--------|
 | 1 | Workspaces（工作空间） | WorkspaceService | ✅ 已实现 | 100% |
 | 2 | Namespaces（命名空间） | NamespaceService | ✅ 已实现 | 100% |
-| 3 | DataStores（数据存储） | DataStoreService | ✅ 已实现 | 85% |
+| 3 | DataStores（数据存储） | DataStoreService | ✅ 已实现 | 100% |
 | 4 | CoverageStores（栅格数据存储） | CoverageStoreService | ✅ 已实现 | 100% |
 | 5 | WMSStores（WMS存储） | WMSStoreService | ✅ 已实现 | 100% |
 | 6 | WMTSStores（WMTS存储） | WMTSStoreService | ✅ 已实现 | 100% |
@@ -76,9 +76,9 @@
 | 8 | Coverages（栅格图层） | CoverageService | ✅ 已实现 | 100% |
 | 9 | WMSLayers（WMS图层） | WMSLayerService | ✅ 已实现 | 100% |
 | 10 | WMTSLayers（WMTS图层） | WMTSLayerService | ✅ 已实现 | 100% |
-| 11 | Layers（图层） | LayerService | ✅ 已实现 | 70% |
-| 12 | LayerGroups（图层组） | LayerGroupService | ✅ 已实现 | 70% |
-| 13 | Styles（样式） | StyleService | ✅ 已实现 | 75% |
+| 11 | Layers（图层） | LayerService | ✅ 已实现 | 100% |
+| 12 | LayerGroups（图层组） | LayerGroupService | ✅ 已实现 | 100% |
+| 13 | Styles（样式） | StyleService | ✅ 已实现 | 100% |
 
 **核心资源覆盖率**: 100% (13/13 已实现)
 
@@ -166,7 +166,7 @@
 **已完全实现的服务（34个）**：
 1. WorkspaceService - 工作空间管理（5/5 操作，100%）
 2. NamespaceService - 命名空间管理（5/5 操作，100%）
-3. DataStoreService - 矢量数据存储（5/7 操作，85%）
+3. DataStoreService - 矢量数据存储（7/7 操作，100%）✨ 更新
 4. CoverageStoreService - 栅格数据存储（6/6 操作，100%）
 5. WMSStoreService - WMS存储管理（5/5 操作，100%）
 6. WMTSStoreService - WMTS存储管理（5/5 操作，100%）✨ 新增
@@ -174,9 +174,9 @@
 8. CoverageService - 栅格图层管理（5/5 操作，100%）
 9. WMSLayerService - WMS图层管理（5/5 操作，100%）
 10. WMTSLayerService - WMTS图层管理（5/5 操作，100%）✨ 新增
-11. LayerService - 图层管理（4/6 操作，70%）
-12. LayerGroupService - 图层组管理（5/10 操作，70%）
-13. StyleService - 样式管理（6/11 操作，75%）
+11. LayerService - 图层管理（6/6 操作，100%）✨ 更新
+12. LayerGroupService - 图层组管理（10/10 操作，100%）✨ 更新
+13. StyleService - 样式管理（12/12 操作，100%）✨ 更新
 14. AboutService - 系统信息（3/3 操作，100%）
 15. SettingsService - 全局设置（4/4 操作，100%）
 16. LoggingService - 日志配置（2/2 操作，100%）✨ 新增
@@ -200,7 +200,7 @@
 34. URLCheckService - URL检查（3/3 操作，100%）✨ 新增
 35. PreviewService - WMS预览（部分实现，50%）
 
-**新增操作总数**：本次新增 17 个完整服务，共 81 个 REST API 操作
+**新增操作总数**：本次新增 17 个完整服务，共 81 个 REST API 操作；完善现有服务新增 14 个操作
 
 ## 实现亮点
 
@@ -326,8 +326,12 @@
 7. **GeoWebCache覆盖率**从 0% 提升到 **100%**
 8. **扩展功能覆盖率**从 0% 提升到 **100%**
 9. **新增 17 个完整服务**，共 81 个 REST API 操作
-10. **完善了工作空间管理**，新增更新操作
-11. **提供了详细的 API 对比文档**，便于后续开发参考
+10. **完善现有服务**，新增 14 个工作空间级别操作
+11. **DataStoreService** 从 85% 提升到 100%（新增缓存重置和文件上传）
+12. **LayerService** 从 70% 提升到 100%（新增工作空间级别操作）
+13. **LayerGroupService** 从 70% 提升到 100%（新增工作空间级别操作）
+14. **StyleService** 从 75% 提升到 100%（新增工作空间级别操作）
+15. **提供了详细的 API 对比文档**，便于后续开发参考
 
 ### 本次新增服务
 
@@ -363,6 +367,31 @@
 #### 其他服务（2个服务）
 - WMTSStoreService - WMTS存储管理
 - WMTSLayerService - WMTS图层管理
+
+### 本次完善的现有服务
+
+#### DataStoreService - 数据存储服务（85% → 100%）
+- 新增缓存重置操作（ResetDataStoreAsync）
+- 新增文件上传操作（UploadFileAsync），支持 Shapefile 等格式
+
+#### LayerService - 图层服务（70% → 100%）
+- 新增工作空间级别图层列表（GetWorkspaceLayersAsync）
+- 新增工作空间级别图层详情（GetWorkspaceLayerAsync）
+
+#### LayerGroupService - 图层组服务（70% → 100%）
+- 新增工作空间级别图层组列表（GetWorkspaceLayerGroupsAsync）
+- 新增工作空间级别图层组详情（GetWorkspaceLayerGroupAsync）
+- 新增工作空间级别图层组创建（CreateWorkspaceLayerGroupAsync）
+- 新增工作空间级别图层组更新（UpdateWorkspaceLayerGroupAsync）
+- 新增工作空间级别图层组删除（DeleteWorkspaceLayerGroupAsync）
+
+#### StyleService - 样式服务（75% → 100%）
+- 新增工作空间级别样式列表（GetWorkspaceStylesAsync）
+- 新增工作空间级别样式详情（GetWorkspaceStyleAsync）
+- 新增工作空间级别 SLD 获取（GetWorkspaceStyleSldAsync）
+- 新增工作空间级别样式创建（CreateWorkspaceStyleAsync）
+- 新增工作空间级别样式更新（UpdateWorkspaceStyleAsync）
+- 新增工作空间级别样式删除（DeleteWorkspaceStyleAsync）
 
 项目现在已经是一个功能非常完善、架构清晰、文档齐全的 GeoServer 桌面管理工具，**达到了 97% 的 REST API 覆盖率，可用于生产环境的几乎所有 GeoServer 管理任务**。
 

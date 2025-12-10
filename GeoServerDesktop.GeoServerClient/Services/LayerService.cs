@@ -71,5 +71,30 @@ namespace GeoServerDesktop.GeoServerClient.Services
             var path = $"/rest/layers/{layerName}?recurse={recurse.ToString().ToLower()}";
             await _httpClient.DeleteAsync(path);
         }
+
+        /// <summary>
+        /// Gets a list of layers in a specific workspace
+        /// </summary>
+        /// <param name="workspaceName">Name of the workspace</param>
+        /// <returns>Array of layers in the workspace</returns>
+        public async Task<Layer[]> GetWorkspaceLayersAsync(string workspaceName)
+        {
+            var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/layers.json");
+            var wrapper = JsonConvert.DeserializeObject<LayerListWrapper>(response);
+            return wrapper?.LayerList?.Layers ?? new Layer[0];
+        }
+
+        /// <summary>
+        /// Gets details for a specific layer in a workspace
+        /// </summary>
+        /// <param name="workspaceName">Name of the workspace</param>
+        /// <param name="layerName">Name of the layer</param>
+        /// <returns>Layer details</returns>
+        public async Task<Layer> GetWorkspaceLayerAsync(string workspaceName, string layerName)
+        {
+            var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/layers/{layerName}.json");
+            var wrapper = JsonConvert.DeserializeObject<LayerWrapper>(response);
+            return wrapper?.Layer;
+        }
     }
 }

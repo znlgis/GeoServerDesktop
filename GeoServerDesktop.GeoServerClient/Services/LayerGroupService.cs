@@ -82,5 +82,70 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             await _httpClient.DeleteAsync($"/rest/layergroups/{layerGroupName}");
         }
+
+        /// <summary>
+        /// Gets a list of layer groups in a specific workspace
+        /// </summary>
+        /// <param name="workspaceName">Name of the workspace</param>
+        /// <returns>Array of layer groups in the workspace</returns>
+        public async Task<LayerGroup[]> GetWorkspaceLayerGroupsAsync(string workspaceName)
+        {
+            var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/layergroups.json");
+            var wrapper = JsonConvert.DeserializeObject<LayerGroupListWrapper>(response);
+            return wrapper?.LayerGroupList?.LayerGroups ?? new LayerGroup[0];
+        }
+
+        /// <summary>
+        /// Gets details for a specific layer group in a workspace
+        /// </summary>
+        /// <param name="workspaceName">Name of the workspace</param>
+        /// <param name="layerGroupName">Name of the layer group</param>
+        /// <returns>Layer group details</returns>
+        public async Task<LayerGroup> GetWorkspaceLayerGroupAsync(string workspaceName, string layerGroupName)
+        {
+            var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/layergroups/{layerGroupName}.json");
+            var wrapper = JsonConvert.DeserializeObject<LayerGroupWrapper>(response);
+            return wrapper?.LayerGroup;
+        }
+
+        /// <summary>
+        /// Creates a new layer group in a specific workspace
+        /// </summary>
+        /// <param name="workspaceName">Name of the workspace</param>
+        /// <param name="layerGroup">Layer group configuration</param>
+        /// <returns>Task representing the asynchronous operation</returns>
+        public async Task CreateWorkspaceLayerGroupAsync(string workspaceName, LayerGroup layerGroup)
+        {
+            var wrapper = new { layerGroup = layerGroup };
+            var json = JsonConvert.SerializeObject(wrapper);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            await _httpClient.PostAsync($"/rest/workspaces/{workspaceName}/layergroups", content);
+        }
+
+        /// <summary>
+        /// Updates an existing layer group in a workspace
+        /// </summary>
+        /// <param name="workspaceName">Name of the workspace</param>
+        /// <param name="layerGroupName">Name of the layer group</param>
+        /// <param name="layerGroup">Updated layer group configuration</param>
+        /// <returns>Task representing the asynchronous operation</returns>
+        public async Task UpdateWorkspaceLayerGroupAsync(string workspaceName, string layerGroupName, LayerGroup layerGroup)
+        {
+            var wrapper = new { layerGroup = layerGroup };
+            var json = JsonConvert.SerializeObject(wrapper);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            await _httpClient.PutAsync($"/rest/workspaces/{workspaceName}/layergroups/{layerGroupName}", content);
+        }
+
+        /// <summary>
+        /// Deletes a layer group from a workspace
+        /// </summary>
+        /// <param name="workspaceName">Name of the workspace</param>
+        /// <param name="layerGroupName">Name of the layer group to delete</param>
+        /// <returns>Task representing the asynchronous operation</returns>
+        public async Task DeleteWorkspaceLayerGroupAsync(string workspaceName, string layerGroupName)
+        {
+            await _httpClient.DeleteAsync($"/rest/workspaces/{workspaceName}/layergroups/{layerGroupName}");
+        }
     }
 }

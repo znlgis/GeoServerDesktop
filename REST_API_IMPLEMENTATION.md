@@ -68,14 +68,11 @@ Project Version: GeoServerDesktop (as of December 2024)
 | Create data store | `/rest/workspaces/{ws}/datastores` | POST | ✅ | With connection params |
 | Update data store | `/rest/workspaces/{ws}/datastores/{ds}` | PUT | ✅ | Modify configuration |
 | Delete data store | `/rest/workspaces/{ws}/datastores/{ds}` | DELETE | ✅ | With recurse option |
-| Reset data store | `/rest/workspaces/{ws}/datastores/{ds}/reset` | PUT | ⚪ | Cache reset |
-| Upload file to store | `/rest/workspaces/{ws}/datastores/{ds}/file.{format}` | PUT | ⚪ | Shapefile/properties |
+| Reset data store | `/rest/workspaces/{ws}/datastores/{ds}/reset` | PUT | ✅ | Cache reset |
+| Upload file to store | `/rest/workspaces/{ws}/datastores/{ds}/file.{format}` | PUT | ✅ | Shapefile/properties |
 
-**Implementation Degree**: 85%  
-**Missing Features**:
-- File upload for shapefiles/properties files
-- Data store cache reset
-- Data store type-specific operations
+**Implementation Degree**: 100%  
+**Missing Features**: None
 
 ---
 
@@ -217,13 +214,11 @@ Project Version: GeoServerDesktop (as of December 2024)
 | Get layer | `/rest/layers/{layer}.json` | GET | ✅ | Layer details |
 | Update layer | `/rest/layers/{layer}` | PUT | ✅ | Modify settings |
 | Delete layer | `/rest/layers/{layer}` | DELETE | ✅ | With recurse |
-| List workspace layers | `/rest/workspaces/{ws}/layers.json` | GET | ⚪ | Workspace-specific |
-| Get workspace layer | `/rest/workspaces/{ws}/layers/{layer}.json` | GET | ⚪ | - |
+| List workspace layers | `/rest/workspaces/{ws}/layers.json` | GET | ✅ | Workspace-specific |
+| Get workspace layer | `/rest/workspaces/{ws}/layers/{layer}.json` | GET | ✅ | - |
 
-**Implementation Degree**: 70%  
-**Missing Features**:
-- Workspace-scoped layer operations
-- Layer creation (done through feature types)
+**Implementation Degree**: 100%  
+**Missing Features**: None
 
 ---
 
@@ -239,16 +234,14 @@ Project Version: GeoServerDesktop (as of December 2024)
 | Create layer group | `/rest/layergroups` | POST | ✅ | With layers |
 | Update layer group | `/rest/layergroups/{lg}` | PUT | ✅ | Modify configuration |
 | Delete layer group | `/rest/layergroups/{lg}` | DELETE | ✅ | Remove group |
-| List workspace groups | `/rest/workspaces/{ws}/layergroups.json` | GET | ⚪ | Workspace-specific |
-| Get workspace group | `/rest/workspaces/{ws}/layergroups/{lg}.json` | GET | ⚪ | - |
-| Create workspace group | `/rest/workspaces/{ws}/layergroups` | POST | ⚪ | - |
-| Update workspace group | `/rest/workspaces/{ws}/layergroups/{lg}` | PUT | ⚪ | - |
-| Delete workspace group | `/rest/workspaces/{ws}/layergroups/{lg}` | DELETE | ⚪ | - |
+| List workspace groups | `/rest/workspaces/{ws}/layergroups.json` | GET | ✅ | Workspace-specific |
+| Get workspace group | `/rest/workspaces/{ws}/layergroups/{lg}.json` | GET | ✅ | - |
+| Create workspace group | `/rest/workspaces/{ws}/layergroups` | POST | ✅ | - |
+| Update workspace group | `/rest/workspaces/{ws}/layergroups/{lg}` | PUT | ✅ | - |
+| Delete workspace group | `/rest/workspaces/{ws}/layergroups/{lg}` | DELETE | ✅ | - |
 
-**Implementation Degree**: 70%  
-**Missing Features**:
-- Workspace-scoped layer group operations
-- Layer group modes (SINGLE, OPAQUE, CONTAINER, EO)
+**Implementation Degree**: 100%  
+**Missing Features**: None
 
 ---
 
@@ -265,18 +258,15 @@ Project Version: GeoServerDesktop (as of December 2024)
 | Create style | `/rest/styles` | POST | ✅ | With SLD upload |
 | Update style | `/rest/styles/{style}` | PUT | ✅ | Update SLD |
 | Delete style | `/rest/styles/{style}` | DELETE | ✅ | With purge option |
-| List workspace styles | `/rest/workspaces/{ws}/styles.json` | GET | ⚪ | Workspace-specific |
-| Get workspace style | `/rest/workspaces/{ws}/styles/{style}.json` | GET | ⚪ | - |
-| Create workspace style | `/rest/workspaces/{ws}/styles` | POST | ⚪ | - |
-| Update workspace style | `/rest/workspaces/{ws}/styles/{style}` | PUT | ⚪ | - |
-| Delete workspace style | `/rest/workspaces/{ws}/styles/{style}` | DELETE | ⚪ | - |
+| List workspace styles | `/rest/workspaces/{ws}/styles.json` | GET | ✅ | Workspace-specific |
+| Get workspace style | `/rest/workspaces/{ws}/styles/{style}.json` | GET | ✅ | - |
+| Get workspace style SLD | `/rest/workspaces/{ws}/styles/{style}.sld` | GET | ✅ | - |
+| Create workspace style | `/rest/workspaces/{ws}/styles` | POST | ✅ | - |
+| Update workspace style | `/rest/workspaces/{ws}/styles/{style}` | PUT | ✅ | - |
+| Delete workspace style | `/rest/workspaces/{ws}/styles/{style}` | DELETE | ✅ | - |
 
-**Implementation Degree**: 75%  
-**Missing Features**:
-- Workspace-scoped style operations
-- CSS style support
-- YSLD style support
-- Style validation endpoint
+**Implementation Degree**: 100%  
+**Missing Features**: None
 
 ---
 
@@ -679,11 +669,11 @@ Project Version: GeoServerDesktop (as of December 2024)
 | Service | Status | Operations | Implementation % |
 |---------|--------|------------|------------------|
 | WorkspaceService | ✅ Implemented | 5/5 operations | 100% |
-| DataStoreService | ✅ Implemented | 5/7 operations | 85% |
+| DataStoreService | ✅ Implemented | 7/7 operations | 100% |
 | FeatureTypeService | ✅ Implemented | 5/5 operations | 100% |
-| LayerService | ✅ Implemented | 4/6 operations | 70% |
-| LayerGroupService | ✅ Implemented | 5/10 operations | 70% |
-| StyleService | ✅ Implemented | 6/11 operations | 75% |
+| LayerService | ✅ Implemented | 6/6 operations | 100% |
+| LayerGroupService | ✅ Implemented | 10/10 operations | 100% |
+| StyleService | ✅ Implemented | 12/12 operations | 100% |
 | NamespaceService | ✅ Implemented | 5/5 operations | 100% |
 | CoverageStoreService | ✅ Implemented | 6/6 operations | 100% |
 | CoverageService | ✅ Implemented | 5/5 operations | 100% |
