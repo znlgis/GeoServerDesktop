@@ -6,25 +6,25 @@ using System.Threading.Tasks;
 namespace GeoServerDesktop.GeoServerClient.Services
 {
     /// <summary>
-    /// Service for retrieving GeoServer system information
+    /// 用于检索 GeoServer 系统信息的服务
     /// </summary>
     public class AboutService
     {
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the AboutService class
+        /// 初始化 AboutService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public AboutService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
         }
 
         /// <summary>
-        /// Gets GeoServer version information
+        /// 获取 GeoServer 版本信息
         /// </summary>
-        /// <returns>Version information including GeoServer, GeoTools, and GeoWebCache versions</returns>
+        /// <returns>版本信息，包括 GeoServer、GeoTools 和 GeoWebCache 版本</returns>
         public async Task<VersionInfoWrapper> GetVersionAsync()
         {
             var response = await _httpClient.GetAsync("/rest/about/version.json");
@@ -32,9 +32,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Gets the list of installed GeoServer modules and their versions
+        /// 获取已安装的 GeoServer 模块及其版本的列表
         /// </summary>
-        /// <returns>Manifest information for all installed modules</returns>
+        /// <returns>所有已安装模块的清单信息</returns>
         public async Task<ManifestsWrapper> GetManifestsAsync()
         {
             var response = await _httpClient.GetAsync("/rest/about/manifests.json");
@@ -42,9 +42,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Gets current system status including memory usage and JVM information
+        /// 获取当前系统状态，包括内存使用情况和 JVM 信息
         /// </summary>
-        /// <returns>System status information</returns>
+        /// <returns>系统状态信息</returns>
         public async Task<SystemStatusWrapper> GetSystemStatusAsync()
         {
             var response = await _httpClient.GetAsync("/rest/about/system-status.json");
