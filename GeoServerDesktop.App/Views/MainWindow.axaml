@@ -3,18 +3,82 @@
         xmlns:vm="using:GeoServerDesktop.App.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
         x:Class="GeoServerDesktop.App.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="GeoServerDesktop.App">
+        Title="GeoServer Desktop"
+        Width="1200"
+        Height="800">
 
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Top Connection Panel -->
+        <Border Grid.Row="0" Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="0,0,0,1">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="Base URL:" VerticalAlignment="Center"/>
+                <TextBox Text="{Binding BaseUrl}" Width="300" IsEnabled="{Binding !IsConnected}"/>
+                
+                <TextBlock Text="Username:" VerticalAlignment="Center"/>
+                <TextBox Text="{Binding Username}" Width="100" IsEnabled="{Binding !IsConnected}"/>
+                
+                <TextBlock Text="Password:" VerticalAlignment="Center"/>
+                <TextBox Text="{Binding Password}" Width="100" PasswordChar="*" IsEnabled="{Binding !IsConnected}"/>
+                
+                <Button Content="Connect" 
+                        Command="{Binding ConnectCommand}" 
+                        IsVisible="{Binding !IsConnected}"
+                        HorizontalAlignment="Left"/>
+                
+                <Button Content="Disconnect" 
+                        Command="{Binding DisconnectCommand}" 
+                        IsVisible="{Binding IsConnected}"
+                        HorizontalAlignment="Left"/>
+            </StackPanel>
+        </Border>
 
+        <!-- Main Content Area -->
+        <Grid Grid.Row="1" ColumnDefinitions="300,*">
+            <!-- Left Panel - Resource Tree -->
+            <Border Grid.Column="0" BorderBrush="#CCCCCC" BorderThickness="0,0,1,0" Padding="5">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="Resources" FontWeight="Bold" Margin="0,0,0,10"/>
+                    <TreeView ItemsSource="{Binding ResourceTree}">
+                        <TreeView.ItemTemplate>
+                            <TreeDataTemplate ItemsSource="{Binding Children}">
+                                <TextBlock Text="{Binding Name}"/>
+                            </TreeDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </DockPanel>
+            </Border>
+
+            <!-- Right Panel - Details -->
+            <Border Grid.Column="1" Padding="10">
+                <StackPanel>
+                    <TextBlock Text="Welcome to GeoServer Desktop" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
+                    <TextBlock Text="Connect to a GeoServer instance to begin managing resources." TextWrapping="Wrap"/>
+                    
+                    <StackPanel Margin="0,30,0,0" IsVisible="{Binding IsConnected}">
+                        <TextBlock Text="Connected to GeoServer" FontWeight="Bold" Margin="0,0,0,10"/>
+                        <TextBlock Text="{Binding BaseUrl}" Margin="0,0,0,20"/>
+                        
+                        <TextBlock Text="Features:" FontWeight="Bold" Margin="0,0,0,10"/>
+                        <TextBlock Text="• Manage workspaces, data stores, and layers" Margin="20,0,0,5"/>
+                        <TextBlock Text="• Upload and manage styles" Margin="20,0,0,5"/>
+                        <TextBlock Text="• Create and organize layer groups" Margin="20,0,0,5"/>
+                        <TextBlock Text="• Preview layers with WMS integration" Margin="20,0,0,5"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Status Bar -->
+        <Border Grid.Row="2" Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="0,1,0,0">
+            <TextBlock Text="{Binding StatusMessage}" VerticalAlignment="Center"/>
+        </Border>
+    </Grid>
 </Window>
