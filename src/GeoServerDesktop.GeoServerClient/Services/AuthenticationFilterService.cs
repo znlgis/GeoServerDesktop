@@ -15,9 +15,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the AuthenticationFilterService class
+        /// 初始化 AuthenticationFilterService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public AuthenticationFilterService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -48,7 +48,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// Creates a new authentication filter
         /// </summary>
         /// <param name="filter">Authentication filter to create</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task CreateFilterAsync(AuthenticationFilter filter)
         {
             var wrapper = new { filter = filter };
@@ -62,7 +62,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// </summary>
         /// <param name="filterName">Filter name</param>
         /// <param name="filter">Updated filter information</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task UpdateFilterAsync(string filterName, AuthenticationFilter filter)
         {
             var wrapper = new { filter = filter };
@@ -75,7 +75,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// Deletes an authentication filter
         /// </summary>
         /// <param name="filterName">Filter name to delete</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task DeleteFilterAsync(string filterName)
         {
             await _httpClient.DeleteAsync($"/rest/security/authFilters/{filterName}");

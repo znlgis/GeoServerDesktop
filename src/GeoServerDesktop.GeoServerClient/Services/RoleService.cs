@@ -15,9 +15,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the RoleService class
+        /// 初始化 RoleService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public RoleService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -49,7 +49,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// </summary>
         /// <param name="rolename">Role name</param>
         /// <param name="username">Username</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task AssociateRoleAsync(string rolename, string username)
         {
             await _httpClient.PostAsync($"/rest/security/roles/role/{rolename}/user/{username}", null);
@@ -60,7 +60,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// </summary>
         /// <param name="rolename">Role name</param>
         /// <param name="username">Username</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task DissociateRoleAsync(string rolename, string username)
         {
             await _httpClient.DeleteAsync($"/rest/security/roles/role/{rolename}/user/{username}");

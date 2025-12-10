@@ -15,9 +15,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the TransformService class
+        /// 初始化 TransformService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public TransformService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -48,7 +48,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// </summary>
         /// <param name="transformName">Transform name</param>
         /// <param name="xsltContent">XSLT content</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task CreateTransformAsync(string transformName, string xsltContent)
         {
             var content = new StringContent(xsltContent, Encoding.UTF8, "application/xslt+xml");
@@ -59,7 +59,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// Deletes a transform
         /// </summary>
         /// <param name="transformName">Transform name</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task DeleteTransformAsync(string transformName)
         {
             await _httpClient.DeleteAsync($"/rest/transforms/{transformName}");

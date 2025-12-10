@@ -15,18 +15,18 @@ namespace GeoServerDesktop.GeoServerClient.Services
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the DiskQuotaService class
+        /// 初始化 DiskQuotaService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public DiskQuotaService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
         }
 
         /// <summary>
-        /// Gets the disk quota configuration
+        /// 获取磁盘配额配置
         /// </summary>
-        /// <returns>Disk quota configuration</returns>
+        /// <returns>磁盘配额配置</returns>
         public async Task<DiskQuotaConfig> GetDiskQuotaAsync()
         {
             var response = await _httpClient.GetAsync("/gwc/rest/diskquota.json");
@@ -34,10 +34,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Updates the disk quota configuration
+        /// 更新磁盘配额配置
         /// </summary>
         /// <param name="config">Updated disk quota configuration</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task UpdateDiskQuotaAsync(DiskQuotaConfig config)
         {
             var json = JsonConvert.SerializeObject(config);

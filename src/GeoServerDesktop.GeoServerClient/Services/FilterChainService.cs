@@ -15,9 +15,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the FilterChainService class
+        /// 初始化 FilterChainService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public FilterChainService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -34,10 +34,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Gets details for a specific filter chain
+        /// 获取特定过滤器的详细信息 chain
         /// </summary>
         /// <param name="chainName">Chain name</param>
-        /// <returns>Filter chain details</returns>
+        /// <returns>过滤器链详细信息</returns>
         public async Task<FilterChainWrapper> GetFilterChainAsync(string chainName)
         {
             var response = await _httpClient.GetAsync($"/rest/security/filterChains/{chainName}.json");
@@ -45,11 +45,11 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Updates an existing filter chain
+        /// 更新现有的过滤器 chain
         /// </summary>
         /// <param name="chainName">Chain name</param>
         /// <param name="chain">Updated chain information</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task UpdateFilterChainAsync(string chainName, FilterChain chain)
         {
             var wrapper = new { filterChain = chain };

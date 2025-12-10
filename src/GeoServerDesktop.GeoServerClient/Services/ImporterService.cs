@@ -15,9 +15,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the ImporterService class
+        /// 初始化 ImporterService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public ImporterService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -60,7 +60,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// Deletes an import context
         /// </summary>
         /// <param name="importId">Import ID</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task DeleteImportAsync(int importId)
         {
             await _httpClient.DeleteAsync($"/rest/imports/{importId}");
@@ -83,7 +83,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <param name="taskId">Task ID</param>
         /// <param name="data">Data to upload</param>
         /// <param name="contentType">Content type</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task UploadDataAsync(int importId, int taskId, byte[] data, string contentType = "application/octet-stream")
         {
             var content = new ByteArrayContent(data);

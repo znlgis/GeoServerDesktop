@@ -10,26 +10,26 @@ using System.Threading.Tasks;
 namespace GeoServerDesktop.GeoServerClient.Services
 {
     /// <summary>
-    /// Service for managing GeoServer coverage stores (raster data stores)
+    /// 用于管理 GeoServer 覆盖范围存储的服务 (raster data stores)
     /// </summary>
     public class CoverageStoreService
     {
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the CoverageStoreService class
+        /// 初始化 CoverageStoreService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public CoverageStoreService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
         }
 
         /// <summary>
-        /// Gets a list of coverage stores in a workspace
+        /// 获取工作空间中的覆盖范围存储列表
         /// </summary>
-        /// <param name="workspaceName">Name of the workspace</param>
-        /// <returns>Array of coverage stores</returns>
+        /// <param name="workspaceName">工作空间的名称</param>
+        /// <returns>覆盖范围存储数组</returns>
         public async Task<CoverageStore[]> GetCoverageStoresAsync(string workspaceName)
         {
             var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/coveragestores.json");
@@ -38,11 +38,11 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Gets details for a specific coverage store
+        /// 获取特定覆盖范围的详细信息 store
         /// </summary>
-        /// <param name="workspaceName">Name of the workspace</param>
-        /// <param name="coverageStoreName">Name of the coverage store</param>
-        /// <returns>Coverage store details</returns>
+        /// <param name="workspaceName">工作空间的名称</param>
+        /// <param name="coverageStoreName">覆盖范围的名称 store</param>
+        /// <returns>覆盖范围存储详细信息</returns>
         public async Task<CoverageStore> GetCoverageStoreAsync(string workspaceName, string coverageStoreName)
         {
             var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/coveragestores/{coverageStoreName}.json");
@@ -51,11 +51,11 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Creates a new coverage store
+        /// 创建新的覆盖范围 store
         /// </summary>
-        /// <param name="workspaceName">Name of the workspace</param>
-        /// <param name="coverageStore">Coverage store configuration</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <param name="workspaceName">工作空间的名称</param>
+        /// <param name="coverageStore">覆盖范围存储配置</param>
+        /// <returns>表示异步操作的任务</returns>
         public async Task CreateCoverageStoreAsync(string workspaceName, CoverageStore coverageStore)
         {
             var wrapper = new { coverageStore = coverageStore };
@@ -65,12 +65,12 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Updates an existing coverage store
+        /// 更新现有的覆盖范围 store
         /// </summary>
-        /// <param name="workspaceName">Name of the workspace</param>
-        /// <param name="coverageStoreName">Name of the coverage store</param>
-        /// <param name="coverageStore">Updated coverage store configuration</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <param name="workspaceName">工作空间的名称</param>
+        /// <param name="coverageStoreName">覆盖范围的名称 store</param>
+        /// <param name="coverageStore">更新的覆盖范围存储配置</param>
+        /// <returns>表示异步操作的任务</returns>
         public async Task UpdateCoverageStoreAsync(string workspaceName, string coverageStoreName, CoverageStore coverageStore)
         {
             var wrapper = new { coverageStore = coverageStore };
@@ -80,12 +80,12 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Deletes a coverage store
+        /// 删除覆盖范围 store
         /// </summary>
-        /// <param name="workspaceName">Name of the workspace</param>
-        /// <param name="coverageStoreName">Name of the coverage store to delete</param>
+        /// <param name="workspaceName">工作空间的名称</param>
+        /// <param name="coverageStoreName">覆盖范围的名称 store to delete</param>
         /// <param name="recurse">Whether to recursively delete all coverages in the store</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task DeleteCoverageStoreAsync(string workspaceName, string coverageStoreName, bool recurse = false)
         {
             var recurseValue = recurse ? "true" : "false";
@@ -96,11 +96,11 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <summary>
         /// Uploads a file to create or update a coverage store
         /// </summary>
-        /// <param name="workspaceName">Name of the workspace</param>
-        /// <param name="coverageStoreName">Name of the coverage store</param>
+        /// <param name="workspaceName">工作空间的名称</param>
+        /// <param name="coverageStoreName">覆盖范围的名称 store</param>
         /// <param name="fileContent">Content of the file to upload</param>
         /// <param name="extension">File extension (e.g., "geotiff", "worldimage")</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task UploadCoverageFileAsync(string workspaceName, string coverageStoreName, byte[] fileContent, string extension)
         {
             var content = new ByteArrayContent(fileContent);

@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 namespace GeoServerDesktop.GeoServerClient.Services
 {
     /// <summary>
-    /// Service for managing GeoServer WMTS layers (layers from cascaded WMTS services)
+    /// 用于管理 GeoServer WMTS 图层的服务 (layers from cascaded WMTS services)
     /// </summary>
     public class WMTSLayerService
     {
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the WMTSLayerService class
+        /// 初始化 WMTSLayerService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public WMTSLayerService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -27,9 +27,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <summary>
         /// Gets a list of WMTS layers in a WMTS store
         /// </summary>
-        /// <param name="workspaceName">Name of the workspace</param>
-        /// <param name="wmtsStoreName">Name of the WMTS store</param>
-        /// <returns>Array of WMTS layers</returns>
+        /// <param name="workspaceName">工作空间的名称</param>
+        /// <param name="wmtsStoreName">WMTS 存储的名称</param>
+        /// <returns>WMTS 图层数组</returns>
         public async Task<WMTSLayer[]> GetWMTSLayersAsync(string workspaceName, string wmtsStoreName)
         {
             var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/wmtsstores/{wmtsStoreName}/wmtslayers.json");
@@ -38,12 +38,12 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Gets details for a specific WMTS layer
+        /// 获取特定 WMTS 图层的详细信息
         /// </summary>
-        /// <param name="workspaceName">Name of the workspace</param>
-        /// <param name="wmtsStoreName">Name of the WMTS store</param>
-        /// <param name="wmtsLayerName">Name of the WMTS layer</param>
-        /// <returns>WMTS layer details</returns>
+        /// <param name="workspaceName">工作空间的名称</param>
+        /// <param name="wmtsStoreName">WMTS 存储的名称</param>
+        /// <param name="wmtsLayerName">WMTS 图层的名称</param>
+        /// <returns>WMTS 图层详细信息</returns>
         public async Task<WMTSLayer> GetWMTSLayerAsync(string workspaceName, string wmtsStoreName, string wmtsLayerName)
         {
             var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/wmtsstores/{wmtsStoreName}/wmtslayers/{wmtsLayerName}.json");
@@ -54,10 +54,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <summary>
         /// Publishes a new WMTS layer from the cascaded WMTS store
         /// </summary>
-        /// <param name="workspaceName">Name of the workspace</param>
-        /// <param name="wmtsStoreName">Name of the WMTS store</param>
-        /// <param name="wmtsLayer">WMTS layer configuration</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <param name="workspaceName">工作空间的名称</param>
+        /// <param name="wmtsStoreName">WMTS 存储的名称</param>
+        /// <param name="wmtsLayer">WMTS 图层配置</param>
+        /// <returns>表示异步操作的任务</returns>
         /// <remarks>
         /// The nativeName should match a layer name available in the remote WMTS service.
         /// </remarks>
@@ -70,13 +70,13 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Updates an existing WMTS layer
+        /// 更新现有的 WMTS 图层
         /// </summary>
-        /// <param name="workspaceName">Name of the workspace</param>
-        /// <param name="wmtsStoreName">Name of the WMTS store</param>
-        /// <param name="wmtsLayerName">Name of the WMTS layer</param>
-        /// <param name="wmtsLayer">Updated WMTS layer configuration</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <param name="workspaceName">工作空间的名称</param>
+        /// <param name="wmtsStoreName">WMTS 存储的名称</param>
+        /// <param name="wmtsLayerName">WMTS 图层的名称</param>
+        /// <param name="wmtsLayer">Updated WMTS 图层配置</param>
+        /// <returns>表示异步操作的任务</returns>
         public async Task UpdateWMTSLayerAsync(string workspaceName, string wmtsStoreName, string wmtsLayerName, WMTSLayer wmtsLayer)
         {
             var wrapper = new { wmtsLayer = wmtsLayer };
@@ -86,13 +86,13 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Deletes a WMTS layer
+        /// 删除 WMTS 图层
         /// </summary>
-        /// <param name="workspaceName">Name of the workspace</param>
-        /// <param name="wmtsStoreName">Name of the WMTS store</param>
-        /// <param name="wmtsLayerName">Name of the WMTS layer to delete</param>
+        /// <param name="workspaceName">工作空间的名称</param>
+        /// <param name="wmtsStoreName">WMTS 存储的名称</param>
+        /// <param name="wmtsLayerName">WMTS 图层的名称 to delete</param>
         /// <param name="recurse">Whether to recursively delete all resources associated with the WMTS layer</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task DeleteWMTSLayerAsync(string workspaceName, string wmtsStoreName, string wmtsLayerName, bool recurse = false)
         {
             var recurseValue = recurse ? "true" : "false";

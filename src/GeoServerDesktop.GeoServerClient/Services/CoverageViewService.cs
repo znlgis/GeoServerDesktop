@@ -15,9 +15,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the CoverageViewService class
+        /// 初始化 CoverageViewService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public CoverageViewService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -35,7 +35,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Gets details for a specific coverage view
+        /// 获取特定覆盖范围的详细信息 view
         /// </summary>
         /// <param name="workspace">Workspace name</param>
         /// <param name="coverageView">Coverage view name</param>
@@ -47,11 +47,11 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Creates a new coverage view
+        /// 创建新的覆盖范围 view
         /// </summary>
         /// <param name="workspace">Workspace name</param>
         /// <param name="coverageView">Coverage view to create</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task CreateCoverageViewAsync(string workspace, CoverageView coverageView)
         {
             var wrapper = new { coverageView = coverageView };
@@ -61,12 +61,12 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Updates an existing coverage view
+        /// 更新现有的覆盖范围 view
         /// </summary>
         /// <param name="workspace">Workspace name</param>
         /// <param name="coverageViewName">Coverage view name</param>
         /// <param name="coverageView">Updated coverage view information</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task UpdateCoverageViewAsync(string workspace, string coverageViewName, CoverageView coverageView)
         {
             var wrapper = new { coverageView = coverageView };
@@ -76,11 +76,11 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Deletes a coverage view
+        /// 删除覆盖范围 view
         /// </summary>
         /// <param name="workspace">Workspace name</param>
         /// <param name="coverageView">Coverage view name to delete</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task DeleteCoverageViewAsync(string workspace, string coverageView)
         {
             await _httpClient.DeleteAsync($"/rest/workspaces/{workspace}/coverageviews/{coverageView}");

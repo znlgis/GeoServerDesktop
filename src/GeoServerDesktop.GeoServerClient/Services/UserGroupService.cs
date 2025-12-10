@@ -15,9 +15,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the UserGroupService class
+        /// 初始化 UserGroupService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public UserGroupService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -44,10 +44,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Gets details for a specific user
+        /// 获取特定用户的详细信息
         /// </summary>
         /// <param name="username">Username</param>
-        /// <returns>User details</returns>
+        /// <returns>用户详细信息</returns>
         public async Task<UserWrapper> GetUserAsync(string username)
         {
             var response = await _httpClient.GetAsync($"/rest/security/usergroup/users/{username}.json");
@@ -55,10 +55,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Creates a new user
+        /// 创建新的用户
         /// </summary>
         /// <param name="user">User to create</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task CreateUserAsync(User user)
         {
             var wrapper = new { user = user };
@@ -68,11 +68,11 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Updates an existing user
+        /// 更新现有的用户
         /// </summary>
         /// <param name="username">Username</param>
         /// <param name="user">Updated user information</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task UpdateUserAsync(string username, User user)
         {
             var wrapper = new { user = user };
@@ -82,10 +82,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Deletes a user
+        /// 删除用户
         /// </summary>
         /// <param name="username">Username</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task DeleteUserAsync(string username)
         {
             await _httpClient.DeleteAsync($"/rest/security/usergroup/users/{username}");
@@ -102,10 +102,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Gets details for a specific group
+        /// 获取特定组的详细信息
         /// </summary>
         /// <param name="groupname">Group name</param>
-        /// <returns>Group details</returns>
+        /// <returns>组详细信息</returns>
         public async Task<GroupWrapper> GetGroupAsync(string groupname)
         {
             var response = await _httpClient.GetAsync($"/rest/security/usergroup/groups/{groupname}.json");
@@ -113,10 +113,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Creates a new group
+        /// 创建新的组
         /// </summary>
         /// <param name="group">Group to create</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task CreateGroupAsync(UserGroup group)
         {
             var wrapper = new { group = group };
@@ -126,10 +126,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Deletes a group
+        /// 删除组
         /// </summary>
         /// <param name="groupname">Group name</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task DeleteGroupAsync(string groupname)
         {
             await _httpClient.DeleteAsync($"/rest/security/usergroup/groups/{groupname}");
