@@ -3,50 +3,50 @@ using System.Threading.Tasks;
 namespace GeoServerDesktop.App.Services
 {
     /// <summary>
-    /// Interface for managing application settings
+    /// 用于管理应用程序设置的接口
     /// </summary>
     public interface ISettingsService
     {
         /// <summary>
-        /// Loads settings from storage
+        /// 从存储中加载设置
         /// </summary>
-        /// <returns>Settings object</returns>
+        /// <returns>设置对象</returns>
         Task<AppSettings> LoadSettingsAsync();
 
         /// <summary>
-        /// Saves settings to storage
+        /// 将设置保存到存储
         /// </summary>
-        /// <param name="settings">Settings to save</param>
+        /// <param name="settings">要保存的设置</param>
         Task SaveSettingsAsync(AppSettings settings);
     }
 
     /// <summary>
-    /// Application settings
+    /// 应用程序设置
     /// </summary>
     public class AppSettings
     {
         /// <summary>
-        /// Last used GeoServer base URL
+        /// 最后使用的 GeoServer 基础 URL
         /// </summary>
         public string? LastBaseUrl { get; set; }
 
         /// <summary>
-        /// Last used username
+        /// 最后使用的用户名
         /// </summary>
         public string? LastUsername { get; set; }
 
         /// <summary>
-        /// Whether to remember connection settings
+        /// 是否记住连接设置
         /// </summary>
         public bool RememberConnection { get; set; }
 
         /// <summary>
-        /// Window width
+        /// 窗口宽度
         /// </summary>
         public double WindowWidth { get; set; } = 1200;
 
         /// <summary>
-        /// Window height
+        /// 窗口高度
         /// </summary>
         public double WindowHeight { get; set; } = 800;
     }

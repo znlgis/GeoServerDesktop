@@ -10,40 +10,76 @@ using System.Threading.Tasks;
 
 namespace GeoServerDesktop.App.ViewModels;
 
+/// <summary>
+/// 主窗口的视图模型
+/// </summary>
 public partial class MainWindowViewModel : ViewModelBase
 {
     private readonly IGeoServerConnectionService _connectionService;
 
+    /// <summary>
+    /// GeoServer 服务器的基础 URL
+    /// </summary>
     [ObservableProperty]
     private string _baseUrl = "http://localhost:8080/geoserver";
 
+    /// <summary>
+    /// 用户名
+    /// </summary>
     [ObservableProperty]
     private string _username = "admin";
 
+    /// <summary>
+    /// 密码
+    /// </summary>
     [ObservableProperty]
     private string _password = "geoserver";
 
+    /// <summary>
+    /// 是否已连接到 GeoServer
+    /// </summary>
     [ObservableProperty]
     private bool _isConnected;
 
+    /// <summary>
+    /// 状态消息
+    /// </summary>
     [ObservableProperty]
     private string _statusMessage = "Not connected";
 
+    /// <summary>
+    /// 资源树集合
+    /// </summary>
     [ObservableProperty]
     private ObservableCollection<ResourceTreeNode> _resourceTree = new();
 
+    /// <summary>
+    /// 当前选中的节点
+    /// </summary>
     [ObservableProperty]
     private ResourceTreeNode? _selectedNode;
 
+    /// <summary>
+    /// 地图预览视图模型
+    /// </summary>
     [ObservableProperty]
     private MapPreviewViewModel _mapPreviewViewModel;
 
+    /// <summary>
+    /// 工作空间管理视图模型
+    /// </summary>
     [ObservableProperty]
     private WorkspaceManagementViewModel _workspaceManagementViewModel;
 
+    /// <summary>
+    /// 样式管理视图模型
+    /// </summary>
     [ObservableProperty]
     private StyleManagementViewModel _styleManagementViewModel;
 
+    /// <summary>
+    /// 初始化 MainWindowViewModel 类的新实例
+    /// </summary>
     public MainWindowViewModel()
     {
         _connectionService = new GeoServerConnectionService();
@@ -53,20 +89,27 @@ public partial class MainWindowViewModel : ViewModelBase
         _styleManagementViewModel = new StyleManagementViewModel(_connectionService);
     }
 
+    /// <summary>
+    /// 当选中的节点发生变化时调用
+    /// </summary>
     partial void OnSelectedNodeChanged(ResourceTreeNode? value)
     {
-        // When a layer is selected, preview it
+        // 当选中图层时，预览它
         if (value?.Type == ResourceType.Layer && IsConnected)
         {
             _ = PreviewLayerAsync(value);
         }
     }
 
+    /// <summary>
+    /// 预览图层
+    /// </summary>
+    /// <param name="layerNode">图层节点</param>
     private async Task PreviewLayerAsync(ResourceTreeNode layerNode)
     {
         try
         {
-            // Find workspace name from tree hierarchy
+            // 从树层次结构中查找工作空间名称
             var dataStoreNode = GetParentNode(ResourceTree[0], layerNode);
             if (dataStoreNode == null) return;
 
@@ -85,6 +128,9 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// 连接到 GeoServer 的命令
+    /// </summary>
     [RelayCommand]
     private async Task ConnectAsync()
     {
@@ -111,6 +157,9 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// 断开与 GeoServer 连接的命令
+    /// </summary>
     [RelayCommand]
     private void Disconnect()
     {
@@ -119,6 +168,9 @@ public partial class MainWindowViewModel : ViewModelBase
         StatusMessage = "Disconnected";
     }
 
+    /// <summary>
+    /// 刷新资源的命令
+    /// </summary>
     [RelayCommand]
     private async Task RefreshResourcesAsync()
     {
@@ -136,11 +188,17 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// 连接状态变化时的处理程序
+    /// </summary>
     private void OnConnectionStatusChanged(object? sender, bool isConnected)
     {
         IsConnected = isConnected;
     }
 
+    /// <summary>
+    /// 加载资源树
+    /// </summary>
     private async Task LoadResourceTreeAsync()
     {
         try
@@ -154,7 +212,7 @@ public partial class MainWindowViewModel : ViewModelBase
                 IsExpanded = true
             };
 
-            // Add Workspaces
+            // 添加工作空间容器
             var workspacesContainer = new ResourceTreeNode
             {
                 Name = "Workspaces",
@@ -174,7 +232,7 @@ public partial class MainWindowViewModel : ViewModelBase
                     Tag = workspace
                 };
                 
-                // Add placeholder nodes for lazy loading
+                // 添加用于延迟加载的占位符节点
                 var dataStoresContainer = new ResourceTreeNode
                 {
                     Name = "Data Stores",
@@ -188,7 +246,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
             rootNode.Children.Add(workspacesContainer);
 
-            // Add Styles container
+            // 添加样式容器
             var stylesContainer = new ResourceTreeNode
             {
                 Name = "Styles",
@@ -196,7 +254,7 @@ public partial class MainWindowViewModel : ViewModelBase
             };
             rootNode.Children.Add(stylesContainer);
 
-            // Add Layer Groups container
+            // 添加图层组容器
             var layerGroupsContainer = new ResourceTreeNode
             {
                 Name = "Layer Groups",
@@ -213,8 +271,9 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     /// <summary>
-    /// Loads data stores for a workspace
+    /// 加载工作空间的数据存储
     /// </summary>
+    /// <param name="workspaceNode">工作空间节点</param>
     public async Task LoadDataStoresAsync(ResourceTreeNode workspaceNode)
     {
         if (workspaceNode.Type != ResourceType.Workspace)
@@ -240,7 +299,7 @@ public partial class MainWindowViewModel : ViewModelBase
                         Tag = dataStore
                     };
                     
-                    // Add placeholder for layers
+                    // 添加图层的占位符
                     var layersContainer = new ResourceTreeNode
                     {
                         Name = "Layers",
@@ -260,8 +319,9 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     /// <summary>
-    /// Loads layers for a data store
+    /// 加载数据存储的图层
     /// </summary>
+    /// <param name="dataStoreNode">数据存储节点</param>
     public async Task LoadLayersAsync(ResourceTreeNode dataStoreNode)
     {
         if (dataStoreNode.Type != ResourceType.DataStore)
@@ -269,7 +329,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
         try
         {
-            // Get workspace name from parent
+            // 从父节点获取工作空间名称
             var workspaceNode = GetParentNode(ResourceTree[0], dataStoreNode);
             if (workspaceNode == null || workspaceNode.Type != ResourceType.Workspace)
                 return;
@@ -303,6 +363,12 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// 获取节点的父节点
+    /// </summary>
+    /// <param name="root">根节点</param>
+    /// <param name="target">目标节点</param>
+    /// <returns>父节点，如果未找到则返回 null</returns>
     private ResourceTreeNode? GetParentNode(ResourceTreeNode root, ResourceTreeNode target)
     {
         if (root.Children.Contains(target))

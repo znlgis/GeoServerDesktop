@@ -3,60 +3,60 @@ using Newtonsoft.Json;
 namespace GeoServerDesktop.GeoServerClient.Models
 {
     /// <summary>
-    /// Represents a GeoServer workspace
+    /// 表示 GeoServer 工作空间
     /// </summary>
     public class Workspace
     {
         /// <summary>
-        /// Name of the workspace
+        /// 工作空间的名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Whether this workspace is isolated
+        /// 此工作空间是否隔离
         /// </summary>
         [JsonProperty("isolated")]
         public bool? Isolated { get; set; }
 
         /// <summary>
-        /// Link to the workspace resource
+        /// 工作空间资源的链接
         /// </summary>
         [JsonProperty("href")]
         public string Href { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for a single workspace response
+    /// 单个工作空间响应的包装器
     /// </summary>
     public class WorkspaceWrapper
     {
         /// <summary>
-        /// The workspace data
+        /// 工作空间数据
         /// </summary>
         [JsonProperty("workspace")]
         public Workspace Workspace { get; set; }
     }
 
     /// <summary>
-    /// List of workspaces
+    /// 工作空间列表
     /// </summary>
     public class WorkspaceList
     {
         /// <summary>
-        /// Array of workspaces
+        /// 工作空间数组
         /// </summary>
         [JsonProperty("workspace")]
         public Workspace[] Workspaces { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for workspace list response
+    /// 工作空间列表响应的包装器
     /// </summary>
     public class WorkspaceListWrapper
     {
         /// <summary>
-        /// The workspace list data
+        /// 工作空间列表数据
         /// </summary>
         [JsonProperty("workspaces")]
         public WorkspaceList WorkspaceList { get; set; }

@@ -9,25 +9,25 @@ using System.Threading.Tasks;
 namespace GeoServerDesktop.GeoServerClient.Services
 {
     /// <summary>
-    /// Service for managing GeoServer namespaces
+    /// 用于管理 GeoServer 命名空间的服务
     /// </summary>
     public class NamespaceService
     {
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the NamespaceService class
+        /// 初始化 NamespaceService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public NamespaceService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
         }
 
         /// <summary>
-        /// Gets a list of all namespaces
+        /// 获取所有命名空间的列表
         /// </summary>
-        /// <returns>Array of namespaces</returns>
+        /// <returns>命名空间数组</returns>
         public async Task<Namespace[]> GetNamespacesAsync()
         {
             var response = await _httpClient.GetAsync("/rest/namespaces.json");
@@ -36,10 +36,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Gets details for a specific namespace
+        /// 获取特定命名空间的详细信息
         /// </summary>
-        /// <param name="namespacePrefix">Prefix of the namespace</param>
-        /// <returns>Namespace details</returns>
+        /// <param name="namespacePrefix">命名空间的前缀</param>
+        /// <returns>命名空间详细信息</returns>
         public async Task<Namespace> GetNamespaceAsync(string namespacePrefix)
         {
             var response = await _httpClient.GetAsync($"/rest/namespaces/{namespacePrefix}.json");
@@ -48,11 +48,11 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Creates a new namespace
+        /// 创建新的命名空间
         /// </summary>
-        /// <param name="namespacePrefix">Prefix for the namespace</param>
-        /// <param name="uri">URI for the namespace</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <param name="namespacePrefix">命名空间的前缀</param>
+        /// <param name="uri">命名空间的 URI</param>
+        /// <returns>表示异步操作的任务</returns>
         public async Task CreateNamespaceAsync(string namespacePrefix, string uri)
         {
             var ns = new { @namespace = new { prefix = namespacePrefix, uri = uri } };
@@ -62,11 +62,11 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Updates an existing namespace
+        /// 更新现有的命名空间
         /// </summary>
-        /// <param name="namespacePrefix">Prefix of the namespace to update</param>
-        /// <param name="uri">New URI for the namespace</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <param name="namespacePrefix">要更新的命名空间前缀</param>
+        /// <param name="uri">命名空间的新 URI</param>
+        /// <returns>表示异步操作的任务</returns>
         public async Task UpdateNamespaceAsync(string namespacePrefix, string uri)
         {
             var ns = new { @namespace = new { prefix = namespacePrefix, uri = uri } };
@@ -76,10 +76,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Deletes a namespace
+        /// 删除命名空间
         /// </summary>
-        /// <param name="namespacePrefix">Prefix of the namespace to delete</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <param name="namespacePrefix">要删除的命名空间前缀</param>
+        /// <returns>表示异步操作的任务</returns>
         public async Task DeleteNamespaceAsync(string namespacePrefix)
         {
             await _httpClient.DeleteAsync($"/rest/namespaces/{namespacePrefix}");

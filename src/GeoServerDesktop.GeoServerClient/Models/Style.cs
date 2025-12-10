@@ -3,84 +3,84 @@ using Newtonsoft.Json;
 namespace GeoServerDesktop.GeoServerClient.Models
 {
     /// <summary>
-    /// Represents a GeoServer style
+    /// 表示 GeoServer 样式
     /// </summary>
     public class Style
     {
         /// <summary>
-        /// Name of the style
+        /// 样式的名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Format of the style (e.g., sld)
+        /// 样式的格式（例如 sld）
         /// </summary>
         [JsonProperty("format")]
         public string Format { get; set; }
 
         /// <summary>
-        /// Version of the style format
+        /// 样式格式的版本
         /// </summary>
         [JsonProperty("languageVersion")]
         public LanguageVersion LanguageVersion { get; set; }
 
         /// <summary>
-        /// Filename of the style
+        /// 样式的文件名
         /// </summary>
         [JsonProperty("filename")]
         public string Filename { get; set; }
 
         /// <summary>
-        /// Link to the style resource
+        /// 样式资源的链接
         /// </summary>
         [JsonProperty("href")]
         public string Href { get; set; }
     }
 
     /// <summary>
-    /// Style language version
+    /// 样式语言版本
     /// </summary>
     public class LanguageVersion
     {
         /// <summary>
-        /// Version string
+        /// 版本字符串
         /// </summary>
         [JsonProperty("version")]
         public string Version { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for a single style response
+    /// 单个样式响应的包装器
     /// </summary>
     public class StyleWrapper
     {
         /// <summary>
-        /// The style data
+        /// 样式数据
         /// </summary>
         [JsonProperty("style")]
         public Style Style { get; set; }
     }
 
     /// <summary>
-    /// List of styles
+    /// 样式列表
     /// </summary>
     public class StyleList
     {
         /// <summary>
-        /// Array of styles
+        /// 样式数组
         /// </summary>
         [JsonProperty("style")]
         public Style[] Styles { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for style list response
+    /// 样式列表响应的包装器
     /// </summary>
     public class StyleListWrapper
     {
         /// <summary>
-        /// The style list data
+        /// 样式列表数据
         /// </summary>
         [JsonProperty("styles")]
         public StyleList StyleList { get; set; }

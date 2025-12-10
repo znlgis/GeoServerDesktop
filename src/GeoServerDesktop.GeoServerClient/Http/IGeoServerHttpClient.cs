@@ -5,38 +5,38 @@ using System.Threading.Tasks;
 namespace GeoServerDesktop.GeoServerClient.Http
 {
     /// <summary>
-    /// Interface for GeoServer HTTP client operations
+    /// GeoServer HTTP 客户端操作的接口
     /// </summary>
     public interface IGeoServerHttpClient : IDisposable
     {
         /// <summary>
-        /// Executes a GET request to the specified path
+        /// 对指定路径执行 GET 请求
         /// </summary>
-        /// <param name="path">Relative path to the REST endpoint</param>
-        /// <returns>Response content as string</returns>
+        /// <param name="path">REST 端点的相对路径</param>
+        /// <returns>响应内容字符串</returns>
         Task<string> GetAsync(string path);
 
         /// <summary>
-        /// Executes a POST request to the specified path
+        /// 对指定路径执行 POST 请求
         /// </summary>
-        /// <param name="path">Relative path to the REST endpoint</param>
-        /// <param name="content">Request content</param>
-        /// <returns>Response content as string</returns>
+        /// <param name="path">REST 端点的相对路径</param>
+        /// <param name="content">请求内容</param>
+        /// <returns>响应内容字符串</returns>
         Task<string> PostAsync(string path, HttpContent content);
 
         /// <summary>
-        /// Executes a PUT request to the specified path
+        /// 对指定路径执行 PUT 请求
         /// </summary>
-        /// <param name="path">Relative path to the REST endpoint</param>
-        /// <param name="content">Request content</param>
-        /// <returns>Response content as string</returns>
+        /// <param name="path">REST 端点的相对路径</param>
+        /// <param name="content">请求内容</param>
+        /// <returns>响应内容字符串</returns>
         Task<string> PutAsync(string path, HttpContent content);
 
         /// <summary>
-        /// Executes a DELETE request to the specified path
+        /// 对指定路径执行 DELETE 请求
         /// </summary>
-        /// <param name="path">Relative path to the REST endpoint</param>
-        /// <returns>Response content as string</returns>
+        /// <param name="path">REST 端点的相对路径</param>
+        /// <returns>响应内容字符串</returns>
         Task<string> DeleteAsync(string path);
     }
 }

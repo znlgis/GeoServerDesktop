@@ -5,28 +5,28 @@ using System.Threading.Tasks;
 namespace GeoServerDesktop.GeoServerClient.Services
 {
     /// <summary>
-    /// Service for reloading and resetting GeoServer catalog and configuration
+    /// 用于重新加载和重置 GeoServer 目录和配置的服务
     /// </summary>
     public class ReloadService
     {
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the ReloadService class
+        /// 初始化 ReloadService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public ReloadService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
         }
 
         /// <summary>
-        /// Reloads the GeoServer catalog from the file system
+        /// 从文件系统重新加载 GeoServer 目录
         /// </summary>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         /// <remarks>
-        /// This operation reloads the catalog and all its resources from the data directory.
-        /// It is useful after manual modifications to configuration files.
+        /// 此操作从数据目录重新加载目录及其所有资源。
+        /// 在手动修改配置文件后很有用。
         /// </remarks>
         public async Task ReloadCatalogAsync()
         {
@@ -35,12 +35,12 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Resets all store, raster, and schema caches
+        /// 重置所有存储、栅格和模式缓存
         /// </summary>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         /// <remarks>
-        /// This operation clears all caches but does not reload the catalog.
-        /// It is useful when external data sources have changed.
+        /// 此操作清除所有缓存，但不重新加载目录。
+        /// 在外部数据源发生更改时很有用。
         /// </remarks>
         public async Task ResetAsync()
         {

@@ -8,25 +8,25 @@ using System.Threading.Tasks;
 namespace GeoServerDesktop.GeoServerClient.Services
 {
     /// <summary>
-    /// Service for managing GeoServer layers
+    /// 用于管理 GeoServer 图层的服务
     /// </summary>
     public class LayerService
     {
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the LayerService class
+        /// 初始化 LayerService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public LayerService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
         }
 
         /// <summary>
-        /// Gets a list of all layers
+        /// 获取所有图层的列表
         /// </summary>
-        /// <returns>Array of layers</returns>
+        /// <returns>图层数组</returns>
         public async Task<Layer[]> GetLayersAsync()
         {
             var response = await _httpClient.GetAsync("/rest/layers.json");
@@ -35,10 +35,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Gets details for a specific layer
+        /// 获取特定图层的详细信息
         /// </summary>
-        /// <param name="layerName">Name of the layer</param>
-        /// <returns>Layer details</returns>
+        /// <param name="layerName">图层的名称</param>
+        /// <returns>图层详细信息</returns>
         public async Task<Layer> GetLayerAsync(string layerName)
         {
             var response = await _httpClient.GetAsync($"/rest/layers/{layerName}.json");
@@ -47,11 +47,11 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Updates an existing layer
+        /// 更新现有的图层
         /// </summary>
-        /// <param name="layerName">Name of the layer</param>
-        /// <param name="layer">Updated layer configuration</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <param name="layerName">图层的名称</param>
+        /// <param name="layer">更新后的图层配置</param>
+        /// <returns>表示异步操作的任务</returns>
         public async Task UpdateLayerAsync(string layerName, Layer layer)
         {
             var wrapper = new { layer = layer };
@@ -61,11 +61,11 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Deletes a layer
+        /// 删除图层
         /// </summary>
-        /// <param name="layerName">Name of the layer to delete</param>
-        /// <param name="recurse">Whether to recursively delete all resources associated with the layer</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <param name="layerName">要删除的图层名称</param>
+        /// <param name="recurse">是否递归删除与图层相关的所有资源</param>
+        /// <returns>表示异步操作的任务</returns>
         public async Task DeleteLayerAsync(string layerName, bool recurse = false)
         {
             var path = $"/rest/layers/{layerName}?recurse={recurse.ToString().ToLower()}";
@@ -73,10 +73,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Gets a list of layers in a specific workspace
+        /// 获取特定工作空间中的图层列表
         /// </summary>
-        /// <param name="workspaceName">Name of the workspace</param>
-        /// <returns>Array of layers in the workspace</returns>
+        /// <param name="workspaceName">工作空间的名称</param>
+        /// <returns>工作空间中的图层数组</returns>
         public async Task<Layer[]> GetWorkspaceLayersAsync(string workspaceName)
         {
             var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/layers.json");
@@ -85,11 +85,11 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Gets details for a specific layer in a workspace
+        /// 获取工作空间中特定图层的详细信息
         /// </summary>
-        /// <param name="workspaceName">Name of the workspace</param>
-        /// <param name="layerName">Name of the layer</param>
-        /// <returns>Layer details</returns>
+        /// <param name="workspaceName">工作空间的名称</param>
+        /// <param name="layerName">图层的名称</param>
+        /// <returns>图层详细信息</returns>
         public async Task<Layer> GetWorkspaceLayerAsync(string workspaceName, string layerName)
         {
             var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/layers/{layerName}.json");

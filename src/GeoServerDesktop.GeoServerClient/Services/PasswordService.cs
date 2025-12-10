@@ -8,26 +8,26 @@ using System.Threading.Tasks;
 namespace GeoServerDesktop.GeoServerClient.Services
 {
     /// <summary>
-    /// Service for managing user passwords
+    /// 用于管理用户密码的服务
     /// </summary>
     public class PasswordService
     {
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the PasswordService class
+        /// 初始化 PasswordService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public PasswordService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
         }
 
         /// <summary>
-        /// Changes the password for the current user
+        /// 更改当前用户的密码
         /// </summary>
-        /// <param name="newPassword">New password</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <param name="newPassword">新密码</param>
+        /// <returns>表示异步操作的任务</returns>
         public async Task ChangePasswordAsync(string newPassword)
         {
             var request = new PasswordChangeRequest { NewPassword = newPassword };

@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 namespace GeoServerDesktop.App.Services
 {
     /// <summary>
-    /// Service for managing application settings stored in JSON
+    /// 用于管理存储在 JSON 中的应用程序设置的服务
     /// </summary>
     public class SettingsService : ISettingsService
     {
         private readonly string _settingsPath;
 
         /// <summary>
-        /// Initializes a new instance of the SettingsService class
+        /// 初始化 SettingsService 类的新实例
         /// </summary>
         public SettingsService()
         {
@@ -24,9 +24,9 @@ namespace GeoServerDesktop.App.Services
         }
 
         /// <summary>
-        /// Loads settings from storage
+        /// 从存储中加载设置
         /// </summary>
-        /// <returns>Settings object</returns>
+        /// <returns>设置对象</returns>
         public async Task<AppSettings> LoadSettingsAsync()
         {
             if (!File.Exists(_settingsPath))
@@ -46,9 +46,9 @@ namespace GeoServerDesktop.App.Services
         }
 
         /// <summary>
-        /// Saves settings to storage
+        /// 将设置保存到存储
         /// </summary>
-        /// <param name="settings">Settings to save</param>
+        /// <param name="settings">要保存的设置</param>
         public async Task SaveSettingsAsync(AppSettings settings)
         {
             var json = JsonSerializer.Serialize(settings, new JsonSerializerOptions

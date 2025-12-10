@@ -3,78 +3,78 @@ using Newtonsoft.Json;
 namespace GeoServerDesktop.GeoServerClient.Models
 {
     /// <summary>
-    /// Represents a GeoServer layer
+    /// 表示 GeoServer 图层
     /// </summary>
     public class Layer
     {
         /// <summary>
-        /// Name of the layer
+        /// 图层的名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Type of the layer (e.g., VECTOR, RASTER)
+        /// 图层的类型（例如 VECTOR、RASTER）
         /// </summary>
         [JsonProperty("type")]
         public string Type { get; set; }
 
         /// <summary>
-        /// Default style for the layer
+        /// 图层的默认样式
         /// </summary>
         [JsonProperty("defaultStyle")]
         public StyleReference DefaultStyle { get; set; }
 
         /// <summary>
-        /// Resource associated with the layer
+        /// 与图层关联的资源
         /// </summary>
         [JsonProperty("resource")]
         public ResourceReference Resource { get; set; }
 
         /// <summary>
-        /// Link to the layer resource
+        /// 图层资源的链接
         /// </summary>
         [JsonProperty("href")]
         public string Href { get; set; }
     }
 
     /// <summary>
-    /// Reference to a style
+    /// 对样式的引用
     /// </summary>
     public class StyleReference
     {
         /// <summary>
-        /// Name of the style
+        /// 样式的名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Link to the style
+        /// 样式的链接
         /// </summary>
         [JsonProperty("href")]
         public string Href { get; set; }
     }
 
     /// <summary>
-    /// Reference to a resource (feature type or coverage)
+    /// 对资源（要素类型或覆盖）的引用
     /// </summary>
     public class ResourceReference
     {
         /// <summary>
-        /// Class of the resource
+        /// 资源的类
         /// </summary>
         [JsonProperty("@class")]
         public string Class { get; set; }
 
         /// <summary>
-        /// Name of the resource
+        /// 资源的名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Link to the resource
+        /// 资源的链接
         /// </summary>
         [JsonProperty("href")]
         public string Href { get; set; }

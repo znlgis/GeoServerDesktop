@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace GeoServerDesktop.GeoServerClient.Http
 {
     /// <summary>
-    /// HTTP client for GeoServer REST API operations
+    /// 用于 GeoServer REST API 操作的 HTTP 客户端
     /// </summary>
     public class GeoServerHttpClient : IGeoServerHttpClient
     {
@@ -18,9 +18,9 @@ namespace GeoServerDesktop.GeoServerClient.Http
         private bool _disposed;
 
         /// <summary>
-        /// Initializes a new instance of the GeoServerHttpClient class
+        /// 初始化 GeoServerHttpClient 类的新实例
         /// </summary>
-        /// <param name="options">Configuration options</param>
+        /// <param name="options">配置选项</param>
         public GeoServerHttpClient(GeoServerClientOptions options)
         {
             if (options == null)
@@ -35,7 +35,7 @@ namespace GeoServerDesktop.GeoServerClient.Http
                 Timeout = TimeSpan.FromSeconds(options.TimeoutSeconds)
             };
 
-            // Set up basic authentication
+            // 设置基本身份验证
             if (!string.IsNullOrWhiteSpace(options.Username))
             {
                 var authToken = Convert.ToBase64String(
@@ -44,16 +44,16 @@ namespace GeoServerDesktop.GeoServerClient.Http
                     new AuthenticationHeaderValue("Basic", authToken);
             }
 
-            // Set default headers for JSON
+            // 设置 JSON 的默认头
             _httpClient.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
         /// <summary>
-        /// Executes a GET request to the specified path
+        /// 对指定路径执行 GET 请求
         /// </summary>
-        /// <param name="path">Relative path to the REST endpoint</param>
-        /// <returns>Response content as string</returns>
+        /// <param name="path">REST 端点的相对路径</param>
+        /// <returns>响应内容字符串</returns>
         public async Task<string> GetAsync(string path)
         {
             var url = BuildUrl(path);
@@ -62,11 +62,11 @@ namespace GeoServerDesktop.GeoServerClient.Http
         }
 
         /// <summary>
-        /// Executes a POST request to the specified path
+        /// 对指定路径执行 POST 请求
         /// </summary>
-        /// <param name="path">Relative path to the REST endpoint</param>
-        /// <param name="content">Request content</param>
-        /// <returns>Response content as string</returns>
+        /// <param name="path">REST 端点的相对路径</param>
+        /// <param name="content">请求内容</param>
+        /// <returns>响应内容字符串</returns>
         public async Task<string> PostAsync(string path, HttpContent content)
         {
             var url = BuildUrl(path);
@@ -75,11 +75,11 @@ namespace GeoServerDesktop.GeoServerClient.Http
         }
 
         /// <summary>
-        /// Executes a PUT request to the specified path
+        /// 对指定路径执行 PUT 请求
         /// </summary>
-        /// <param name="path">Relative path to the REST endpoint</param>
-        /// <param name="content">Request content</param>
-        /// <returns>Response content as string</returns>
+        /// <param name="path">REST 端点的相对路径</param>
+        /// <param name="content">请求内容</param>
+        /// <returns>响应内容字符串</returns>
         public async Task<string> PutAsync(string path, HttpContent content)
         {
             var url = BuildUrl(path);
@@ -88,10 +88,10 @@ namespace GeoServerDesktop.GeoServerClient.Http
         }
 
         /// <summary>
-        /// Executes a DELETE request to the specified path
+        /// 对指定路径执行 DELETE 请求
         /// </summary>
-        /// <param name="path">Relative path to the REST endpoint</param>
-        /// <returns>Response content as string</returns>
+        /// <param name="path">REST 端点的相对路径</param>
+        /// <returns>响应内容字符串</returns>
         public async Task<string> DeleteAsync(string path)
         {
             var url = BuildUrl(path);
@@ -99,12 +99,18 @@ namespace GeoServerDesktop.GeoServerClient.Http
             return await ProcessResponse(response);
         }
 
+        /// <summary>
+        /// 构建完整的 URL
+        /// </summary>
         private string BuildUrl(string path)
         {
             path = path?.TrimStart('/') ?? string.Empty;
             return $"{_baseUrl}/{path}";
         }
 
+        /// <summary>
+        /// 处理 HTTP 响应
+        /// </summary>
         private async Task<string> ProcessResponse(HttpResponseMessage response)
         {
             var content = await response.Content.ReadAsStringAsync();
@@ -121,7 +127,7 @@ namespace GeoServerDesktop.GeoServerClient.Http
         }
 
         /// <summary>
-        /// Disposes the HTTP client
+        /// 释放 HTTP 客户端资源
         /// </summary>
         public void Dispose()
         {
@@ -129,6 +135,10 @@ namespace GeoServerDesktop.GeoServerClient.Http
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// 释放资源的受保护方法
+        /// </summary>
+        /// <param name="disposing">是否释放托管资源</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)
