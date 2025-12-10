@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:GeoServerDesktop.App.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="GeoServerDesktop.App.Views.PlaceholderView"
+             x:DataType="vm:PlaceholderViewModel">
+    
+    <Border Background="White" Padding="40">
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="600">
+            <TextBlock Text="{Binding Title}" 
+                       FontSize="28" 
+                       FontWeight="Bold" 
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,20"/>
+            <TextBlock Text="{Binding Message}" 
+                       FontSize="16" 
+                       TextWrapping="Wrap"
+                       HorizontalAlignment="Center"
+                       TextAlignment="Center"
+                       Foreground="#666666"/>
+        </StackPanel>
+    </Border>
+</UserControl>
