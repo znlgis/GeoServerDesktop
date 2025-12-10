@@ -97,6 +97,42 @@ namespace GeoServerDesktop.GeoServerClient.Configuration
         }
 
         /// <summary>
+        /// Creates a new NamespaceService instance
+        /// </summary>
+        /// <returns>NamespaceService instance</returns>
+        public NamespaceService CreateNamespaceService()
+        {
+            return new NamespaceService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new CoverageStoreService instance
+        /// </summary>
+        /// <returns>CoverageStoreService instance</returns>
+        public CoverageStoreService CreateCoverageStoreService()
+        {
+            return new CoverageStoreService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new CoverageService instance
+        /// </summary>
+        /// <returns>CoverageService instance</returns>
+        public CoverageService CreateCoverageService()
+        {
+            return new CoverageService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new AboutService instance
+        /// </summary>
+        /// <returns>AboutService instance</returns>
+        public AboutService CreateAboutService()
+        {
+            return new AboutService(GetHttpClient());
+        }
+
+        /// <summary>
         /// Disposes the factory and its resources
         /// </summary>
         public void Dispose()
