@@ -2,8 +2,8 @@
 
 ## 总体进度
 - **总文件数**: 85 个 C# 文件
-- **已完成**: 41 个文件 (48.2%)
-- **待完成**: 44 个文件 (51.8%)
+- **已完成**: 45 个文件 (52.9%)
+- **待完成**: 40 个文件 (47.1%)
 
 ## 已完成文件列表 (41个)
 
@@ -60,20 +60,22 @@
 23. Services/PasswordService.cs - 密码管理服务
 24. Services/SettingsService.cs - 全局设置服务
 
-## 待完成文件列表 (44个)
+### Models (新完成 4个) ✅
+29. Models/Coverage.cs - 覆盖范围模型 ✅
+30. Models/Extensions.cs - 扩展模型 ✅
+31. Models/Logging.cs - 日志模型 ✅
+32. Models/ResourceManagement.cs - 资源管理模型 ✅
 
-### Models (11个)
-1. Models/Coverage.cs - 覆盖范围模型
-2. Models/Extensions.cs - 扩展模型
-3. Models/GeoWebCache.cs - GeoWebCache 模型
-4. Models/Logging.cs - 日志模型
-5. Models/ResourceManagement.cs - 资源管理模型
-6. Models/Security.cs - 安全模型
-7. Models/ServiceSettings.cs - 服务设置模型
-8. Models/Settings.cs - 设置模型
-9. Models/SystemInfo.cs - 系统信息模型
-10. Models/WMSStore.cs - WMS 存储模型
-11. Models/WMTSStore.cs - WMTS 存储模型
+## 待完成文件列表 (40个)
+
+### Models (7个)
+1. Models/GeoWebCache.cs - GeoWebCache 模型
+2. Models/Security.cs - 安全模型
+3. Models/ServiceSettings.cs - 服务设置模型
+4. Models/Settings.cs - 设置模型
+5. Models/SystemInfo.cs - 系统信息模型
+6. Models/WMSStore.cs - WMS 存储模型
+7. Models/WMTSStore.cs - WMTS 存储模型
 
 ### Services (33个)
 1. Services/AuthenticationFilterService.cs - 认证过滤器服务
@@ -145,5 +147,6 @@
 4. 其他专业功能可以根据实际需求逐步完成
 
 ---
-**最后更新**: 2025-12-10
-**更新者**: GitHub Copilot
+**最后更新**: 2025-12-10  
+**更新者**: GitHub Copilot  
+**本次更新**: 完成了 4 个 Models 文件的中文注释优化（Coverage.cs, Extensions.cs, Logging.cs, ResourceManagement.cs），进度从 48.2% 提升到 52.9%

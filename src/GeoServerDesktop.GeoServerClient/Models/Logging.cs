@@ -3,42 +3,42 @@ using Newtonsoft.Json;
 namespace GeoServerDesktop.GeoServerClient.Models
 {
     /// <summary>
-    /// Represents GeoServer logging configuration
+    /// 表示 GeoServer 日志配置
     /// </summary>
     public class LoggingSettings
     {
         /// <summary>
-        /// Gets or sets the logging configuration
+        /// 获取或设置日志配置数据
         /// </summary>
         [JsonProperty("logging")]
         public LoggingConfig Logging { get; set; }
     }
 
     /// <summary>
-    /// Represents logging configuration details
+    /// 表示日志配置详细信息
     /// </summary>
     public class LoggingConfig
     {
         /// <summary>
-        /// Gets or sets the logging level
+        /// 获取或设置日志级别
         /// </summary>
         [JsonProperty("level")]
         public string Level { get; set; }
 
         /// <summary>
-        /// Gets or sets the logging location (file path)
+        /// 获取或设置日志位置（文件路径）
         /// </summary>
         [JsonProperty("location")]
         public string Location { get; set; }
 
         /// <summary>
-        /// Gets or sets whether to log to stdout
+        /// 获取或设置是否记录到标准输出
         /// </summary>
         [JsonProperty("stdOutLogging")]
         public bool? StdOutLogging { get; set; }
 
         /// <summary>
-        /// Gets or sets whether to enable logging to file
+        /// 获取或设置是否启用文件日志
         /// </summary>
         [JsonProperty("fileLogging")]
         public bool? FileLogging { get; set; }
