@@ -133,20 +133,53 @@
 ## 完成情况总结
 
 ### 质量保证
-- ✅ 所有已完成文件通过代码构建
-- ✅ 所有已完成文件通过代码审查
-- ✅ 所有已完成文件通过安全扫描
+- ✅ 所有已完成文件通过代码构建（无警告无错误）
+- ✅ 所有已完成文件通过代码审查（无审查意见）
+- ✅ 所有已完成文件通过安全扫描（无安全警报）
 - ✅ 保持 XML 文档结构完整
-- ✅ 无功能性代码更改
+- ✅ 无功能性代码更改，仅优化注释
+
+### 本次会话完成情况（2025-12-10）
+**新完成文件 (5个)**:
+1. Coverage.cs - 包含 14 个类，共 60+ 条注释翻译
+2. Extensions.cs - 包含 13 个类，共 55+ 条注释翻译  
+3. Logging.cs - 包含 2 个类，共 7 条注释翻译
+4. ResourceManagement.cs - 包含 3 个类，共 8 条注释翻译
+5. Settings.cs - 包含 4 个类，共 28 条注释翻译
+
+**总计**: 本次完成约 160+ 条中文注释翻译，涵盖核心配置、日志、资源管理、覆盖范围等重要功能模块。
+
+### 注释翻译风格指南
+为保持一致性，已建立以下翻译规范：
+- "Gets or sets" → "获取或设置"
+- "Represents" → "表示"
+- "Wrapper for" → "的包装器用于" 或 "XXX响应的包装器"
+- "whether" → "是否"
+- 技术术语保持原文：URL、HTTP、ID、WMS、WMTS、WFS 等
+- 类名和属性名保持英文不翻译
 
 ### 下一步建议
 根据实际使用情况和需求，可以按优先级继续完成剩余文件的中文注释：
-1. 如果项目使用 Coverage 相关功能，优先完成 Coverage* 相关的 Models 和 Services
-2. 如果需要安全功能，优先完成 Security, Authentication* 相关的 Models 和 Services
-3. 如果需要 Web 服务配置，优先完成 *SettingsService 相关文件
-4. 其他专业功能可以根据实际需求逐步完成
+
+**优先级 1 - 常用核心功能 (建议优先完成)**:
+1. SystemInfo.cs - 系统信息模型 (202行)
+2. WMSStore.cs / WMTSStore.cs - Web服务存储模型 (244+238行)
+3. ServiceSettings.cs - 服务设置模型
+
+**优先级 2 - 高级功能 (根据项目需求)**:
+1. Security.cs - 安全模型 (431行，如果项目需要安全功能)
+2. GeoWebCache.cs - GeoWebCache 模型 (413行，如果使用缓存功能)
+
+**优先级 3 - Services 服务文件 (33个)**:
+- 如果项目使用 Coverage 相关功能，优先完成 CoverageService、CoverageStoreService、CoverageViewService
+- 如果需要安全功能，优先完成 SecurityService、AuthenticationFilterService、AuthenticationProviderService、RoleService、UserGroupService
+- 如果需要 Web 服务配置，优先完成 *SettingsService 相关文件（WMS、WFS、WCS、WMTS、WPS、CSW）
+- 其他专业功能可以根据实际需求逐步完成
+
+### 工具支持
+已创建自动化工具脚本 `/tmp/batch_translate.py` 可辅助批量翻译，但建议人工审核确保质量。
 
 ---
 **最后更新**: 2025-12-10  
 **更新者**: GitHub Copilot  
-**本次更新**: 完成了 5 个 Models 文件的中文注释优化（Coverage.cs, Extensions.cs, Logging.cs, ResourceManagement.cs, Settings.cs），进度从 48.2% 提升到 54.1%。Settings.cs 包含全局设置和联系信息相关类，共完成 28 个注释翻译。
+**本次更新**: 完成了 5 个 Models 文件的中文注释优化（Coverage.cs, Extensions.cs, Logging.cs, ResourceManagement.cs, Settings.cs），进度从 48.2% 提升到 54.1%。本次共翻译约 160+ 条注释，所有更改已通过构建、代码审查和安全扫描验证。
