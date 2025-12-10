@@ -2,6 +2,9 @@
 
 namespace GeoServerDesktop.App.ViewModels;
 
+/// <summary>
+/// 所有视图模型的基类
+/// </summary>
 public abstract class ViewModelBase : ObservableObject
 {
 }

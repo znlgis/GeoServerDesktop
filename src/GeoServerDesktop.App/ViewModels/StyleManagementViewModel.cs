@@ -9,37 +9,59 @@ using System.Threading.Tasks;
 namespace GeoServerDesktop.App.ViewModels
 {
     /// <summary>
-    /// ViewModel for style management
+    /// 样式管理的视图模型
     /// </summary>
     public partial class StyleManagementViewModel : ViewModelBase
     {
         private readonly IGeoServerConnectionService _connectionService;
 
+        /// <summary>
+        /// 样式列表
+        /// </summary>
         [ObservableProperty]
         private ObservableCollection<string> _styles = new();
 
+        /// <summary>
+        /// 选中的样式
+        /// </summary>
         [ObservableProperty]
         private string? _selectedStyle;
 
+        /// <summary>
+        /// 新样式名称
+        /// </summary>
         [ObservableProperty]
         private string _newStyleName = string.Empty;
 
+        /// <summary>
+        /// SLD 内容
+        /// </summary>
         [ObservableProperty]
         private string _sldContent = string.Empty;
 
+        /// <summary>
+        /// 状态消息
+        /// </summary>
         [ObservableProperty]
         private string _statusMessage = "Ready";
 
+        /// <summary>
+        /// 是否正在加载
+        /// </summary>
         [ObservableProperty]
         private bool _isLoading;
 
+        /// <summary>
+        /// 初始化 StyleManagementViewModel 类的新实例
+        /// </summary>
+        /// <param name="connectionService">GeoServer 连接服务</param>
         public StyleManagementViewModel(IGeoServerConnectionService connectionService)
         {
             _connectionService = connectionService;
         }
 
         /// <summary>
-        /// Loads the list of styles
+        /// 加载样式列表
         /// </summary>
         [RelayCommand]
         private async Task LoadStylesAsync()
@@ -77,7 +99,7 @@ namespace GeoServerDesktop.App.ViewModels
         }
 
         /// <summary>
-        /// Loads the SLD content for the selected style
+        /// 加载选中样式的 SLD 内容
         /// </summary>
         [RelayCommand]
         private async Task LoadStyleContentAsync()
@@ -111,7 +133,7 @@ namespace GeoServerDesktop.App.ViewModels
         }
 
         /// <summary>
-        /// Uploads a new style or updates an existing one
+        /// 上传新样式或更新现有样式
         /// </summary>
         [RelayCommand]
         private async Task UploadStyleAsync()
@@ -135,7 +157,7 @@ namespace GeoServerDesktop.App.ViewModels
             {
                 var styleService = _connectionService.GetStyleService();
                 
-                // Check if style exists
+                // 检查样式是否存在
                 var existingStyles = await styleService.GetStylesAsync();
                 bool styleExists = false;
                 foreach (var style in existingStyles)
@@ -149,18 +171,18 @@ namespace GeoServerDesktop.App.ViewModels
 
                 if (styleExists)
                 {
-                    // Update existing style
+                    // 更新现有样式
                     await styleService.UpdateStyleAsync(NewStyleName, SldContent);
                     StatusMessage = $"Style '{NewStyleName}' updated successfully";
                 }
                 else
                 {
-                    // Create new style
+                    // 创建新样式
                     await styleService.CreateStyleAsync(NewStyleName, SldContent);
                     StatusMessage = $"Style '{NewStyleName}' created successfully";
                 }
 
-                // Reload styles
+                // 重新加载样式
                 await LoadStylesAsync();
             }
             catch (Exception ex)
@@ -174,7 +196,7 @@ namespace GeoServerDesktop.App.ViewModels
         }
 
         /// <summary>
-        /// Deletes the selected style
+        /// 删除选中的样式
         /// </summary>
         [RelayCommand]
         private async Task DeleteStyleAsync()
@@ -197,7 +219,7 @@ namespace GeoServerDesktop.App.ViewModels
                 SelectedStyle = null;
                 SldContent = string.Empty;
                 
-                // Reload styles
+                // 重新加载样式
                 await LoadStylesAsync();
             }
             catch (Exception ex)
@@ -211,7 +233,7 @@ namespace GeoServerDesktop.App.ViewModels
         }
 
         /// <summary>
-        /// Creates a sample SLD for testing
+        /// 创建示例 SLD 用于测试
         /// </summary>
         [RelayCommand]
         private void CreateSampleSld()

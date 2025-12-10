@@ -8,38 +8,62 @@ using GeoServerLayer = GeoServerDesktop.GeoServerClient.Models.Layer;
 namespace GeoServerDesktop.App.ViewModels
 {
     /// <summary>
-    /// ViewModel for map preview functionality
+    /// 地图预览功能的视图模型
     /// </summary>
     public partial class MapPreviewViewModel : ViewModelBase
     {
+        /// <summary>
+        /// 地图实例
+        /// </summary>
         [ObservableProperty]
         private Map? _map;
 
+        /// <summary>
+        /// 状态消息
+        /// </summary>
         [ObservableProperty]
         private string _statusMessage = "Map preview ready. WMS layer integration available.";
 
+        /// <summary>
+        /// 是否正在加载
+        /// </summary>
         [ObservableProperty]
         private bool _isLoading;
 
+        /// <summary>
+        /// 当前图层
+        /// </summary>
         [ObservableProperty]
         private GeoServerLayer? _currentLayer;
 
+        /// <summary>
+        /// 当前工作空间
+        /// </summary>
         [ObservableProperty]
         private string? _currentWorkspace;
 
+        /// <summary>
+        /// GeoServer 基础 URL
+        /// </summary>
         [ObservableProperty]
         private string? _baseUrl;
 
+        /// <summary>
+        /// 预览 URL
+        /// </summary>
         [ObservableProperty]
         private string? _previewUrl;
 
+        /// <summary>
+        /// 初始化 MapPreviewViewModel 类的新实例
+        /// </summary>
         public MapPreviewViewModel()
         {
             InitializeMap();
         }
 
         /// <summary>
-        /// Initializes the map with default settings
+        /// 使用默认设置初始化地图
         /// </summary>
         private void InitializeMap()
         {
@@ -48,11 +72,11 @@ namespace GeoServerDesktop.App.ViewModels
         }
 
         /// <summary>
-        /// Loads a WMS layer for preview
+        /// 加载 WMS 图层进行预览
         /// </summary>
-        /// <param name="geoServerBaseUrl">GeoServer base URL</param>
-        /// <param name="workspace">Workspace name</param>
-        /// <param name="layerName">Layer name</param>
+        /// <param name="geoServerBaseUrl">GeoServer 基础 URL</param>
+        /// <param name="workspace">工作空间名称</param>
+        /// <param name="layerName">图层名称</param>
         public async Task LoadWmsLayerAsync(string geoServerBaseUrl, string workspace, string layerName)
         {
             IsLoading = true;
@@ -65,9 +89,9 @@ namespace GeoServerDesktop.App.ViewModels
                 
                 var layerFullName = string.IsNullOrWhiteSpace(workspace) ? layerName : $"{workspace}:{layerName}";
 
-                // Generate WMS preview URL
+                // 生成 WMS 预览 URL
                 var wmsUrl = $"{geoServerBaseUrl.TrimEnd('/')}/wms";
-                var bbox = "-180,-90,180,90"; // World extent
+                var bbox = "-180,-90,180,90"; // 世界范围
                 var width = 800;
                 var height = 600;
                 
@@ -88,7 +112,7 @@ namespace GeoServerDesktop.App.ViewModels
         }
 
         /// <summary>
-        /// Clears the current layer preview
+        /// 清除当前图层预览
         /// </summary>
         [RelayCommand]
         private void ClearLayers()
@@ -100,7 +124,7 @@ namespace GeoServerDesktop.App.ViewModels
         }
 
         /// <summary>
-        /// Resets the map view
+        /// 重置地图视图
         /// </summary>
         [RelayCommand]
         private void ZoomToExtent()

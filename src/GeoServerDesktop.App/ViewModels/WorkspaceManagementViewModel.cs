@@ -8,34 +8,53 @@ using System.Threading.Tasks;
 namespace GeoServerDesktop.App.ViewModels
 {
     /// <summary>
-    /// ViewModel for workspace management
+    /// 工作空间管理的视图模型
     /// </summary>
     public partial class WorkspaceManagementViewModel : ViewModelBase
     {
         private readonly IGeoServerConnectionService _connectionService;
 
+        /// <summary>
+        /// 工作空间列表
+        /// </summary>
         [ObservableProperty]
         private ObservableCollection<string> _workspaces = new();
 
+        /// <summary>
+        /// 选中的工作空间
+        /// </summary>
         [ObservableProperty]
         private string? _selectedWorkspace;
 
+        /// <summary>
+        /// 新工作空间名称
+        /// </summary>
         [ObservableProperty]
         private string _newWorkspaceName = string.Empty;
 
+        /// <summary>
+        /// 状态消息
+        /// </summary>
         [ObservableProperty]
         private string _statusMessage = "Ready";
 
+        /// <summary>
+        /// 是否正在加载
+        /// </summary>
         [ObservableProperty]
         private bool _isLoading;
 
+        /// <summary>
+        /// 初始化 WorkspaceManagementViewModel 类的新实例
+        /// </summary>
+        /// <param name="connectionService">GeoServer 连接服务</param>
         public WorkspaceManagementViewModel(IGeoServerConnectionService connectionService)
         {
             _connectionService = connectionService;
         }
 
         /// <summary>
-        /// Loads the list of workspaces
+        /// 加载工作空间列表
         /// </summary>
         [RelayCommand]
         private async Task LoadWorkspacesAsync()
@@ -73,7 +92,7 @@ namespace GeoServerDesktop.App.ViewModels
         }
 
         /// <summary>
-        /// Creates a new workspace
+        /// 创建新的工作空间
         /// </summary>
         [RelayCommand]
         private async Task CreateWorkspaceAsync()
@@ -95,7 +114,7 @@ namespace GeoServerDesktop.App.ViewModels
                 StatusMessage = $"Workspace '{NewWorkspaceName}' created successfully";
                 NewWorkspaceName = string.Empty;
                 
-                // Reload workspaces
+                // 重新加载工作空间
                 await LoadWorkspacesAsync();
             }
             catch (Exception ex)
@@ -109,7 +128,7 @@ namespace GeoServerDesktop.App.ViewModels
         }
 
         /// <summary>
-        /// Deletes the selected workspace
+        /// 删除选中的工作空间
         /// </summary>
         [RelayCommand]
         private async Task DeleteWorkspaceAsync()
@@ -131,7 +150,7 @@ namespace GeoServerDesktop.App.ViewModels
                 StatusMessage = $"Workspace '{SelectedWorkspace}' deleted successfully";
                 SelectedWorkspace = null;
                 
-                // Reload workspaces
+                // 重新加载工作空间
                 await LoadWorkspacesAsync();
             }
             catch (Exception ex)
