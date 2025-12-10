@@ -93,7 +93,8 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>Task representing the asynchronous operation</returns>
         public async Task DeleteCoverageAsync(string workspaceName, string coverageStoreName, string coverageName, bool recurse = false)
         {
-            var path = $"/rest/workspaces/{workspaceName}/coveragestores/{coverageStoreName}/coverages/{coverageName}?recurse={recurse.ToString().ToLowerInvariant()}";
+            var recurseValue = recurse ? "true" : "false";
+            var path = $"/rest/workspaces/{workspaceName}/coveragestores/{coverageStoreName}/coverages/{coverageName}?recurse={recurseValue}";
             await _httpClient.DeleteAsync(path);
         }
     }
