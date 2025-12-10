@@ -97,6 +97,114 @@ namespace GeoServerDesktop.GeoServerClient.Configuration
         }
 
         /// <summary>
+        /// Creates a new NamespaceService instance
+        /// </summary>
+        /// <returns>NamespaceService instance</returns>
+        public NamespaceService CreateNamespaceService()
+        {
+            return new NamespaceService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new CoverageStoreService instance
+        /// </summary>
+        /// <returns>CoverageStoreService instance</returns>
+        public CoverageStoreService CreateCoverageStoreService()
+        {
+            return new CoverageStoreService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new CoverageService instance
+        /// </summary>
+        /// <returns>CoverageService instance</returns>
+        public CoverageService CreateCoverageService()
+        {
+            return new CoverageService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new AboutService instance
+        /// </summary>
+        /// <returns>AboutService instance</returns>
+        public AboutService CreateAboutService()
+        {
+            return new AboutService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new SettingsService instance
+        /// </summary>
+        /// <returns>SettingsService instance</returns>
+        public SettingsService CreateSettingsService()
+        {
+            return new SettingsService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new ReloadService instance
+        /// </summary>
+        /// <returns>ReloadService instance</returns>
+        public ReloadService CreateReloadService()
+        {
+            return new ReloadService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new WMSStoreService instance
+        /// </summary>
+        /// <returns>WMSStoreService instance</returns>
+        public WMSStoreService CreateWMSStoreService()
+        {
+            return new WMSStoreService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new WMSLayerService instance
+        /// </summary>
+        /// <returns>WMSLayerService instance</returns>
+        public WMSLayerService CreateWMSLayerService()
+        {
+            return new WMSLayerService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new WMTSStoreService instance
+        /// </summary>
+        /// <returns>WMTSStoreService instance</returns>
+        public WMTSStoreService CreateWMTSStoreService()
+        {
+            return new WMTSStoreService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new WMTSLayerService instance
+        /// </summary>
+        /// <returns>WMTSLayerService instance</returns>
+        public WMTSLayerService CreateWMTSLayerService()
+        {
+            return new WMTSLayerService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new LoggingService instance
+        /// </summary>
+        /// <returns>LoggingService instance</returns>
+        public LoggingService CreateLoggingService()
+        {
+            return new LoggingService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new ResourceService instance
+        /// </summary>
+        /// <returns>ResourceService instance</returns>
+        public ResourceService CreateResourceService()
+        {
+            return new ResourceService(GetHttpClient());
+        }
+
+        /// <summary>
         /// Disposes the factory and its resources
         /// </summary>
         public void Dispose()
