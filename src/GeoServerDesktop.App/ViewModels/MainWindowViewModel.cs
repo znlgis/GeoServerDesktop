@@ -78,6 +78,12 @@ public partial class MainWindowViewModel : ViewModelBase
     private StyleManagementViewModel _styleManagementViewModel;
 
     /// <summary>
+    /// 数据存储管理视图模型
+    /// </summary>
+    [ObservableProperty]
+    private StoresManagementViewModel _storesManagementViewModel;
+
+    /// <summary>
     /// 当前显示的视图
     /// </summary>
     [ObservableProperty]
@@ -93,6 +99,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _mapPreviewViewModel = new MapPreviewViewModel();
         _workspaceManagementViewModel = new WorkspaceManagementViewModel(_connectionService);
         _styleManagementViewModel = new StyleManagementViewModel(_connectionService);
+        _storesManagementViewModel = new StoresManagementViewModel(_connectionService);
         
         // 设置默认视图为欢迎页面
         _currentView = CreateWelcomeViewModel();
@@ -686,8 +693,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private ViewModelBase CreateStoresViewModel()
     {
-        return new PlaceholderViewModel("Data Stores", 
-            "Data store management interface will be displayed here. This allows you to configure connections to PostGIS, Shapefiles, and other data sources.");
+        return StoresManagementViewModel;
     }
 
     private ViewModelBase CreateLayersViewModel()
