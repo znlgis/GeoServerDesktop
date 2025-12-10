@@ -4,48 +4,48 @@ using System.Collections.Generic;
 namespace GeoServerDesktop.GeoServerClient.Models
 {
     /// <summary>
-    /// Wrapper for fonts list
+    /// 字体列表的包装器
     /// </summary>
     public class FontListWrapper
     {
         /// <summary>
-        /// Gets or sets the list of fonts
+        /// 获取或设置字体列表
         /// </summary>
         [JsonProperty("fonts")]
         public List<string> Fonts { get; set; }
     }
 
     /// <summary>
-    /// Represents a feature template
+    /// 表示要素模板
     /// </summary>
     public class Template
     {
         /// <summary>
-        /// Gets or sets the template name
+        /// 获取或设置模板名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the template content
+        /// 获取或设置模板内容
         /// </summary>
         [JsonProperty("content")]
         public string Content { get; set; }
 
         /// <summary>
-        /// Gets or sets the template type (e.g., header, footer, content)
+        /// 获取或设置模板类型（例如：header、footer、content）
         /// </summary>
         [JsonProperty("type")]
         public string Type { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for templates list
+    /// 模板列表的包装器
     /// </summary>
     public class TemplateListWrapper
     {
         /// <summary>
-        /// Gets or sets the list of templates
+        /// 获取或设置模板列表
         /// </summary>
         [JsonProperty("templates")]
         public List<string> Templates { get; set; }
