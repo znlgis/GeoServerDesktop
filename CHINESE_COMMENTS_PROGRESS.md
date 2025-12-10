@@ -7,7 +7,7 @@
 
 ## 已完成文件列表 (41个)
 
-### GeoServerDesktop.App (13个文件) ✅ 100%完成
+### GeoServerDesktop.App (17个文件) ✅ 100%完成
 1. Program.cs - 程序入口
 2. App.axaml.cs - 应用程序类
 3. ViewLocator.cs - 视图定位器
@@ -26,7 +26,7 @@
 16. Views/StyleManagementView.axaml.cs - 样式管理视图
 17. Views/WorkspaceManagementView.axaml.cs - 工作空间管理视图
 
-### GeoServerDesktop.GeoServerClient (28个文件)
+### GeoServerDesktop.GeoServerClient (24个文件)
 
 #### Configuration (2个)
 1. Configuration/GeoServerClientOptions.cs - 客户端配置选项
@@ -46,7 +46,7 @@
 11. Models/LayerGroup.cs - 图层组模型
 12. Models/Namespace.cs - 命名空间模型
 
-#### Services (16个)
+#### Services (12个)
 13. Services/WorkspaceService.cs - 工作空间服务
 14. Services/DataStoreService.cs - 数据存储服务
 15. Services/FeatureTypeService.cs - 要素类型服务
