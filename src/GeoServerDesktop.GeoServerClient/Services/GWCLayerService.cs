@@ -15,9 +15,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the GWCLayerService class
+        /// 初始化 GWCLayerService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public GWCLayerService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -49,7 +49,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// </summary>
         /// <param name="layerName">Layer name</param>
         /// <param name="seedRequest">Seed request configuration</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task SeedLayerAsync(string layerName, SeedRequest seedRequest)
         {
             var json = JsonConvert.SerializeObject(seedRequest);
@@ -60,7 +60,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <summary>
         /// Truncates the cache for all layers (mass truncate)
         /// </summary>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task TruncateAllLayersAsync()
         {
             var truncateRequest = new { truncateAll = true };

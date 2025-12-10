@@ -15,9 +15,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the WMSSettingsService class
+        /// 初始化 WMSSettingsService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public WMSSettingsService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -26,7 +26,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <summary>
         /// Gets the global WMS service settings
         /// </summary>
-        /// <returns>WMS settings</returns>
+        /// <returns>WMS 设置</returns>
         public async Task<WMSSettings> GetWMSSettingsAsync()
         {
             var response = await _httpClient.GetAsync("/rest/services/wms/settings.json");
@@ -36,8 +36,8 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <summary>
         /// Updates the global WMS service settings
         /// </summary>
-        /// <param name="settings">Updated WMS settings</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <param name="settings">Updated WMS 设置</param>
+        /// <returns>表示异步操作的任务</returns>
         public async Task UpdateWMSSettingsAsync(WMSSettings settings)
         {
             var json = JsonConvert.SerializeObject(settings);
@@ -49,7 +49,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// Gets the WMS service settings for a specific workspace
         /// </summary>
         /// <param name="workspace">Workspace name</param>
-        /// <returns>WMS settings for the workspace</returns>
+        /// <returns>WMS 设置 for the workspace</returns>
         public async Task<WMSSettings> GetWorkspaceWMSSettingsAsync(string workspace)
         {
             var response = await _httpClient.GetAsync($"/rest/services/wms/workspaces/{workspace}/settings.json");
@@ -60,8 +60,8 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// Updates the WMS service settings for a specific workspace
         /// </summary>
         /// <param name="workspace">Workspace name</param>
-        /// <param name="settings">Updated WMS settings</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <param name="settings">Updated WMS 设置</param>
+        /// <returns>表示异步操作的任务</returns>
         public async Task UpdateWorkspaceWMSSettingsAsync(string workspace, WMSSettings settings)
         {
             var json = JsonConvert.SerializeObject(settings);

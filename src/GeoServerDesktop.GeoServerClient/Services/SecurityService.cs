@@ -15,9 +15,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the SecurityService class
+        /// 初始化 SecurityService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public SecurityService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -39,7 +39,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// </summary>
         /// <param name="resource">Resource path</param>
         /// <param name="acl">Access control list to set</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task SetACLAsync(string resource, SecurityACL acl)
         {
             var json = JsonConvert.SerializeObject(acl);
@@ -51,7 +51,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// Deletes the access control list for a specific resource
         /// </summary>
         /// <param name="resource">Resource path</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task DeleteACLAsync(string resource)
         {
             await _httpClient.DeleteAsync($"/rest/security/acl/{resource}");

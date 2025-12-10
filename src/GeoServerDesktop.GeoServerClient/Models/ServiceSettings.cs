@@ -3,654 +3,654 @@ using Newtonsoft.Json;
 namespace GeoServerDesktop.GeoServerClient.Models
 {
     /// <summary>
-    /// Represents WMS service settings
+    /// 表示 WMS 服务设置
     /// </summary>
     public class WMSSettings
     {
         /// <summary>
-        /// Gets or sets the WMS service wrapper
+        /// 获取或设置 WMS 服务包装器
         /// </summary>
         [JsonProperty("wms")]
         public WMSServiceConfig WMS { get; set; }
     }
 
     /// <summary>
-    /// WMS service configuration
+    /// WMS 服务配置
     /// </summary>
     public class WMSServiceConfig
     {
         /// <summary>
-        /// Gets or sets whether the service is enabled
+        /// 获取或设置服务是否启用
         /// </summary>
         [JsonProperty("enabled")]
         public bool? Enabled { get; set; }
 
         /// <summary>
-        /// Gets or sets the service name
+        /// 获取或设置服务名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the service title
+        /// 获取或设置服务标题
         /// </summary>
         [JsonProperty("title")]
         public string Title { get; set; }
 
         /// <summary>
-        /// Gets or sets the service abstract
+        /// 获取或设置服务摘要
         /// </summary>
         [JsonProperty("abstrct")]
         public string Abstract { get; set; }
 
         /// <summary>
-        /// Gets or sets the maintainer
+        /// 获取或设置维护者
         /// </summary>
         [JsonProperty("maintainer")]
         public string Maintainer { get; set; }
 
         /// <summary>
-        /// Gets or sets the online resource
+        /// 获取或设置在线资源
         /// </summary>
         [JsonProperty("onlineResource")]
         public string OnlineResource { get; set; }
 
         /// <summary>
-        /// Gets or sets whether to cite compliant
+        /// 获取或设置是否符合引用规范
         /// </summary>
         [JsonProperty("citeCompliant")]
         public bool? CiteCompliant { get; set; }
 
         /// <summary>
-        /// Gets or sets the schema base URL
+        /// 获取或设置架构基础 URL
         /// </summary>
         [JsonProperty("schemaBaseURL")]
         public string SchemaBaseURL { get; set; }
 
         /// <summary>
-        /// Gets or sets whether verbose is enabled
+        /// 获取或设置是否启用详细模式
         /// </summary>
         [JsonProperty("verbose")]
         public bool? Verbose { get; set; }
 
         /// <summary>
-        /// Gets or sets metadata link
+        /// 获取或设置元数据链接
         /// </summary>
         [JsonProperty("metadataLink")]
         public MetadataLink MetadataLink { get; set; }
 
         /// <summary>
-        /// Gets or sets the watermark configuration
+        /// 获取或设置水印配置
         /// </summary>
         [JsonProperty("watermark")]
         public Watermark Watermark { get; set; }
 
         /// <summary>
-        /// Gets or sets whether dynamic styling is enabled
+        /// 获取或设置是否禁用动态样式
         /// </summary>
         [JsonProperty("dynamicStylingDisabled")]
         public bool? DynamicStylingDisabled { get; set; }
 
         /// <summary>
-        /// Gets or sets the maximum rendering time in seconds
+        /// 获取或设置最大请求内存
         /// </summary>
         [JsonProperty("maxRequestMemory")]
         public int? MaxRequestMemory { get; set; }
 
         /// <summary>
-        /// Gets or sets the maximum rendering errors
+        /// 获取或设置最大渲染错误数
         /// </summary>
         [JsonProperty("maxRenderingErrors")]
         public int? MaxRenderingErrors { get; set; }
 
         /// <summary>
-        /// Gets or sets the SRS list
+        /// 获取或设置空间参考系统列表
         /// </summary>
         [JsonProperty("srs")]
         public SRSList SRS { get; set; }
     }
 
     /// <summary>
-    /// Represents WFS service settings
+    /// 表示 WFS 服务设置
     /// </summary>
     public class WFSSettings
     {
         /// <summary>
-        /// Gets or sets the WFS service wrapper
+        /// 获取或设置 WFS 服务包装器
         /// </summary>
         [JsonProperty("wfs")]
         public WFSServiceConfig WFS { get; set; }
     }
 
     /// <summary>
-    /// WFS service configuration
+    /// WFS 服务配置
     /// </summary>
     public class WFSServiceConfig
     {
         /// <summary>
-        /// Gets or sets whether the service is enabled
+        /// 获取或设置服务是否启用
         /// </summary>
         [JsonProperty("enabled")]
         public bool? Enabled { get; set; }
 
         /// <summary>
-        /// Gets or sets the service name
+        /// 获取或设置服务名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the service title
+        /// 获取或设置服务标题
         /// </summary>
         [JsonProperty("title")]
         public string Title { get; set; }
 
         /// <summary>
-        /// Gets or sets the service abstract
+        /// 获取或设置服务摘要
         /// </summary>
         [JsonProperty("abstrct")]
         public string Abstract { get; set; }
 
         /// <summary>
-        /// Gets or sets the maintainer
+        /// 获取或设置维护者
         /// </summary>
         [JsonProperty("maintainer")]
         public string Maintainer { get; set; }
 
         /// <summary>
-        /// Gets or sets the online resource
+        /// 获取或设置在线资源
         /// </summary>
         [JsonProperty("onlineResource")]
         public string OnlineResource { get; set; }
 
         /// <summary>
-        /// Gets or sets whether to cite compliant
+        /// 获取或设置是否符合引用规范
         /// </summary>
         [JsonProperty("citeCompliant")]
         public bool? CiteCompliant { get; set; }
 
         /// <summary>
-        /// Gets or sets the schema base URL
+        /// 获取或设置架构基础 URL
         /// </summary>
         [JsonProperty("schemaBaseURL")]
         public string SchemaBaseURL { get; set; }
 
         /// <summary>
-        /// Gets or sets whether verbose is enabled
+        /// 获取或设置是否启用详细模式
         /// </summary>
         [JsonProperty("verbose")]
         public bool? Verbose { get; set; }
 
         /// <summary>
-        /// Gets or sets the GML2 output format
+        /// 获取或设置 GML2 输出格式
         /// </summary>
         [JsonProperty("gml2")]
         public GMLFormat GML2 { get; set; }
 
         /// <summary>
-        /// Gets or sets the GML3 output format
+        /// 获取或设置 GML3 输出格式
         /// </summary>
         [JsonProperty("gml3")]
         public GMLFormat GML3 { get; set; }
 
         /// <summary>
-        /// Gets or sets the maximum number of features
+        /// 获取或设置最大要素数
         /// </summary>
         [JsonProperty("maxFeatures")]
         public int? MaxFeatures { get; set; }
 
         /// <summary>
-        /// Gets or sets the service level
+        /// 获取或设置服务级别
         /// </summary>
         [JsonProperty("serviceLevel")]
         public string ServiceLevel { get; set; }
 
         /// <summary>
-        /// Gets or sets whether feature bounding is enabled
+        /// 获取或设置是否启用要素边界
         /// </summary>
         [JsonProperty("featureBounding")]
         public bool? FeatureBounding { get; set; }
 
         /// <summary>
-        /// Gets or sets whether canonical schema location is enabled
+        /// 获取或设置是否启用规范架构位置
         /// </summary>
         [JsonProperty("canonicalSchemaLocation")]
         public bool? CanonicalSchemaLocation { get; set; }
 
         /// <summary>
-        /// Gets or sets whether to encode feature member
+        /// 获取或设置是否编码要素成员
         /// </summary>
         [JsonProperty("encodeFeatureMember")]
         public bool? EncodeFeatureMember { get; set; }
 
         /// <summary>
-        /// Gets or sets whether hits ignore max features
+        /// 获取或设置命中是否忽略最大要素数
         /// </summary>
         [JsonProperty("hitsIgnoreMaxFeatures")]
         public bool? HitsIgnoreMaxFeatures { get; set; }
     }
 
     /// <summary>
-    /// Represents WCS service settings
+    /// 表示 WCS 服务设置
     /// </summary>
     public class WCSSettings
     {
         /// <summary>
-        /// Gets or sets the WCS service wrapper
+        /// 获取或设置 WCS 服务包装器
         /// </summary>
         [JsonProperty("wcs")]
         public WCSServiceConfig WCS { get; set; }
     }
 
     /// <summary>
-    /// WCS service configuration
+    /// WCS 服务配置
     /// </summary>
     public class WCSServiceConfig
     {
         /// <summary>
-        /// Gets or sets whether the service is enabled
+        /// 获取或设置服务是否启用
         /// </summary>
         [JsonProperty("enabled")]
         public bool? Enabled { get; set; }
 
         /// <summary>
-        /// Gets or sets the service name
+        /// 获取或设置服务名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the service title
+        /// 获取或设置服务标题
         /// </summary>
         [JsonProperty("title")]
         public string Title { get; set; }
 
         /// <summary>
-        /// Gets or sets the service abstract
+        /// 获取或设置服务摘要
         /// </summary>
         [JsonProperty("abstrct")]
         public string Abstract { get; set; }
 
         /// <summary>
-        /// Gets or sets the maintainer
+        /// 获取或设置维护者
         /// </summary>
         [JsonProperty("maintainer")]
         public string Maintainer { get; set; }
 
         /// <summary>
-        /// Gets or sets the online resource
+        /// 获取或设置在线资源
         /// </summary>
         [JsonProperty("onlineResource")]
         public string OnlineResource { get; set; }
 
         /// <summary>
-        /// Gets or sets whether to cite compliant
+        /// 获取或设置是否符合引用规范
         /// </summary>
         [JsonProperty("citeCompliant")]
         public bool? CiteCompliant { get; set; }
 
         /// <summary>
-        /// Gets or sets the schema base URL
+        /// 获取或设置架构基础 URL
         /// </summary>
         [JsonProperty("schemaBaseURL")]
         public string SchemaBaseURL { get; set; }
 
         /// <summary>
-        /// Gets or sets whether verbose is enabled
+        /// 获取或设置是否启用详细模式
         /// </summary>
         [JsonProperty("verbose")]
         public bool? Verbose { get; set; }
 
         /// <summary>
-        /// Gets or sets the maximum input memory in KB
+        /// 获取或设置最大输入内存（KB）
         /// </summary>
         [JsonProperty("maxInputMemory")]
         public int? MaxInputMemory { get; set; }
 
         /// <summary>
-        /// Gets or sets the maximum output memory in KB
+        /// 获取或设置最大输出内存（KB）
         /// </summary>
         [JsonProperty("maxOutputMemory")]
         public int? MaxOutputMemory { get; set; }
 
         /// <summary>
-        /// Gets or sets whether subsampling is enabled
+        /// 获取或设置是否启用子采样
         /// </summary>
         [JsonProperty("subsamplingEnabled")]
         public bool? SubsamplingEnabled { get; set; }
 
         /// <summary>
-        /// Gets or sets whether overview policy
+        /// 获取或设置概览策略
         /// </summary>
         [JsonProperty("overviewPolicy")]
         public string OverviewPolicy { get; set; }
 
         /// <summary>
-        /// Gets or sets the resource consumption limits
+        /// 获取或设置资源消耗限制
         /// </summary>
         [JsonProperty("resourceConsumptionLimits")]
         public ResourceConsumptionLimits ResourceConsumptionLimits { get; set; }
     }
 
     /// <summary>
-    /// Represents WMTS service settings
+    /// 表示 WMTS 服务设置
     /// </summary>
     public class WMTSSettings
     {
         /// <summary>
-        /// Gets or sets the WMTS service wrapper
+        /// 获取或设置 WMTS 服务包装器
         /// </summary>
         [JsonProperty("wmts")]
         public WMTSServiceConfig WMTS { get; set; }
     }
 
     /// <summary>
-    /// WMTS service configuration
+    /// WMTS 服务配置
     /// </summary>
     public class WMTSServiceConfig
     {
         /// <summary>
-        /// Gets or sets whether the service is enabled
+        /// 获取或设置服务是否启用
         /// </summary>
         [JsonProperty("enabled")]
         public bool? Enabled { get; set; }
 
         /// <summary>
-        /// Gets or sets the service name
+        /// 获取或设置服务名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the service title
+        /// 获取或设置服务标题
         /// </summary>
         [JsonProperty("title")]
         public string Title { get; set; }
 
         /// <summary>
-        /// Gets or sets the service abstract
+        /// 获取或设置服务摘要
         /// </summary>
         [JsonProperty("abstrct")]
         public string Abstract { get; set; }
 
         /// <summary>
-        /// Gets or sets the maintainer
+        /// 获取或设置维护者
         /// </summary>
         [JsonProperty("maintainer")]
         public string Maintainer { get; set; }
 
         /// <summary>
-        /// Gets or sets the online resource
+        /// 获取或设置在线资源
         /// </summary>
         [JsonProperty("onlineResource")]
         public string OnlineResource { get; set; }
 
         /// <summary>
-        /// Gets or sets whether to cite compliant
+        /// 获取或设置是否符合引用规范
         /// </summary>
         [JsonProperty("citeCompliant")]
         public bool? CiteCompliant { get; set; }
 
         /// <summary>
-        /// Gets or sets whether verbose is enabled
+        /// 获取或设置是否启用详细模式
         /// </summary>
         [JsonProperty("verbose")]
         public bool? Verbose { get; set; }
     }
 
     /// <summary>
-    /// Represents metadata link information
+    /// 表示元数据链接信息
     /// </summary>
     public class MetadataLink
     {
         /// <summary>
-        /// Gets or sets the metadata type
+        /// 获取或设置元数据类型
         /// </summary>
         [JsonProperty("type")]
         public string Type { get; set; }
 
         /// <summary>
-        /// Gets or sets the metadata URL
+        /// 获取或设置元数据 URL
         /// </summary>
         [JsonProperty("metadataType")]
         public string MetadataType { get; set; }
 
         /// <summary>
-        /// Gets or sets the content
+        /// 获取或设置内容
         /// </summary>
         [JsonProperty("content")]
         public string Content { get; set; }
     }
 
     /// <summary>
-    /// Represents watermark configuration
+    /// 表示水印配置
     /// </summary>
     public class Watermark
     {
         /// <summary>
-        /// Gets or sets whether watermark is enabled
+        /// 获取或设置是否启用水印
         /// </summary>
         [JsonProperty("enabled")]
         public bool? Enabled { get; set; }
 
         /// <summary>
-        /// Gets or sets the watermark position
+        /// 获取或设置水印位置
         /// </summary>
         [JsonProperty("position")]
         public string Position { get; set; }
 
         /// <summary>
-        /// Gets or sets the transparency (0-100)
+        /// 获取或设置透明度（0-100）
         /// </summary>
         [JsonProperty("transparency")]
         public int? Transparency { get; set; }
 
         /// <summary>
-        /// Gets or sets the watermark URL
+        /// 获取或设置水印 URL
         /// </summary>
         [JsonProperty("url")]
         public string Url { get; set; }
     }
 
     /// <summary>
-    /// Represents SRS list
+    /// 表示空间参考系统列表
     /// </summary>
     public class SRSList
     {
         /// <summary>
-        /// Gets or sets the list of SRS codes
+        /// 获取或设置空间参考系统代码列表
         /// </summary>
         [JsonProperty("string")]
         public string[] Strings { get; set; }
     }
 
     /// <summary>
-    /// Represents GML format configuration
+    /// 表示 GML 格式配置
     /// </summary>
     public class GMLFormat
     {
         /// <summary>
-        /// Gets or sets whether to override GML attributes
+        /// 获取或设置是否覆盖 GML 属性
         /// </summary>
         [JsonProperty("overrideGMLAttributes")]
         public bool? OverrideGMLAttributes { get; set; }
 
         /// <summary>
-        /// Gets or sets the SRS name style
+        /// 获取或设置空间参考系统名称样式
         /// </summary>
         [JsonProperty("srsNameStyle")]
         public string SrsNameStyle { get; set; }
     }
 
     /// <summary>
-    /// Represents resource consumption limits
+    /// 表示资源消耗限制
     /// </summary>
     public class ResourceConsumptionLimits
     {
         /// <summary>
-        /// Gets or sets the maximum dimension values
+        /// 获取或设置最大维度值
         /// </summary>
         [JsonProperty("maxDimensions")]
         public int? MaxDimensions { get; set; }
 
         /// <summary>
-        /// Gets or sets the maximum request size in pixels
+        /// 获取或设置最大请求大小（像素）
         /// </summary>
         [JsonProperty("maxRequestSizePixels")]
         public long? MaxRequestSizePixels { get; set; }
     }
 
     /// <summary>
-    /// Represents WPS service settings
+    /// 表示 WPS 服务设置
     /// </summary>
     public class WPSSettings
     {
         /// <summary>
-        /// Gets or sets the WPS service wrapper
+        /// 获取或设置 WPS 服务包装器
         /// </summary>
         [JsonProperty("wps")]
         public WPSServiceConfig WPS { get; set; }
     }
 
     /// <summary>
-    /// WPS service configuration
+    /// WPS 服务配置
     /// </summary>
     public class WPSServiceConfig
     {
         /// <summary>
-        /// Gets or sets whether the service is enabled
+        /// 获取或设置服务是否启用
         /// </summary>
         [JsonProperty("enabled")]
         public bool? Enabled { get; set; }
 
         /// <summary>
-        /// Gets or sets the service name
+        /// 获取或设置服务名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the service title
+        /// 获取或设置服务标题
         /// </summary>
         [JsonProperty("title")]
         public string Title { get; set; }
 
         /// <summary>
-        /// Gets or sets the service abstract
+        /// 获取或设置服务摘要
         /// </summary>
         [JsonProperty("abstrct")]
         public string Abstract { get; set; }
 
         /// <summary>
-        /// Gets or sets the maintainer
+        /// 获取或设置维护者
         /// </summary>
         [JsonProperty("maintainer")]
         public string Maintainer { get; set; }
 
         /// <summary>
-        /// Gets or sets the online resource
+        /// 获取或设置在线资源
         /// </summary>
         [JsonProperty("onlineResource")]
         public string OnlineResource { get; set; }
 
         /// <summary>
-        /// Gets or sets whether to cite compliant
+        /// 获取或设置是否符合引用规范
         /// </summary>
         [JsonProperty("citeCompliant")]
         public bool? CiteCompliant { get; set; }
 
         /// <summary>
-        /// Gets or sets the schema base URL
+        /// 获取或设置架构基础 URL
         /// </summary>
         [JsonProperty("schemaBaseURL")]
         public string SchemaBaseURL { get; set; }
 
         /// <summary>
-        /// Gets or sets the connection timeout in seconds
+        /// 获取或设置连接超时（秒）
         /// </summary>
         [JsonProperty("connectionTimeout")]
         public int? ConnectionTimeout { get; set; }
 
         /// <summary>
-        /// Gets or sets the resource expiration timeout
+        /// 获取或设置资源过期超时
         /// </summary>
         [JsonProperty("resourceExpirationTimeout")]
         public int? ResourceExpirationTimeout { get; set; }
 
         /// <summary>
-        /// Gets or sets the maximum synchronous processes
+        /// 获取或设置最大同步进程数
         /// </summary>
         [JsonProperty("maxSynchronousProcesses")]
         public int? MaxSynchronousProcesses { get; set; }
 
         /// <summary>
-        /// Gets or sets the maximum asynchronous processes
+        /// 获取或设置最大异步进程数
         /// </summary>
         [JsonProperty("maxAsynchronousProcesses")]
         public int? MaxAsynchronousProcesses { get; set; }
     }
 
     /// <summary>
-    /// Represents CSW service settings
+    /// 表示 CSW 服务设置
     /// </summary>
     public class CSWSettings
     {
         /// <summary>
-        /// Gets or sets the CSW service wrapper
+        /// 获取或设置 CSW 服务包装器
         /// </summary>
         [JsonProperty("csw")]
         public CSWServiceConfig CSW { get; set; }
     }
 
     /// <summary>
-    /// CSW service configuration
+    /// CSW 服务配置
     /// </summary>
     public class CSWServiceConfig
     {
         /// <summary>
-        /// Gets or sets whether the service is enabled
+        /// 获取或设置服务是否启用
         /// </summary>
         [JsonProperty("enabled")]
         public bool? Enabled { get; set; }
 
         /// <summary>
-        /// Gets or sets the service name
+        /// 获取或设置服务名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the service title
+        /// 获取或设置服务标题
         /// </summary>
         [JsonProperty("title")]
         public string Title { get; set; }
 
         /// <summary>
-        /// Gets or sets the service abstract
+        /// 获取或设置服务摘要
         /// </summary>
         [JsonProperty("abstrct")]
         public string Abstract { get; set; }
 
         /// <summary>
-        /// Gets or sets the maintainer
+        /// 获取或设置维护者
         /// </summary>
         [JsonProperty("maintainer")]
         public string Maintainer { get; set; }
 
         /// <summary>
-        /// Gets or sets the online resource
+        /// 获取或设置在线资源
         /// </summary>
         [JsonProperty("onlineResource")]
         public string OnlineResource { get; set; }
 
         /// <summary>
-        /// Gets or sets whether to cite compliant
+        /// 获取或设置是否符合引用规范
         /// </summary>
         [JsonProperty("citeCompliant")]
         public bool? CiteCompliant { get; set; }
 
         /// <summary>
-        /// Gets or sets the schema base URL
+        /// 获取或设置架构基础 URL
         /// </summary>
         [JsonProperty("schemaBaseURL")]
         public string SchemaBaseURL { get; set; }

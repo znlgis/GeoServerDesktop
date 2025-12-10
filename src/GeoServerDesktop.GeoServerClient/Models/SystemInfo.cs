@@ -3,198 +3,198 @@ using Newtonsoft.Json;
 namespace GeoServerDesktop.GeoServerClient.Models
 {
     /// <summary>
-    /// Represents GeoServer version information
+    /// 表示 GeoServer 版本信息
     /// </summary>
     public class VersionInfo
     {
         /// <summary>
-        /// Gets or sets the GeoServer version
+        /// 获取或设置 GeoServer 版本
         /// </summary>
         [JsonProperty("version")]
         public string Version { get; set; }
 
         /// <summary>
-        /// Gets or sets the GeoTools version
+        /// 获取或设置 GeoTools 版本
         /// </summary>
         [JsonProperty("geotools")]
         public string GeoTools { get; set; }
 
         /// <summary>
-        /// Gets or sets the GeoWebCache version
+        /// 获取或设置 GeoWebCache 版本
         /// </summary>
         [JsonProperty("geowebcache")]
         public string GeoWebCache { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for version information response
+    /// 版本信息响应的包装器
     /// </summary>
     public class VersionInfoWrapper
     {
         /// <summary>
-        /// Gets or sets the about information
+        /// 获取或设置关于信息
         /// </summary>
         [JsonProperty("about")]
         public AboutInfo About { get; set; }
     }
 
     /// <summary>
-    /// Represents about information
+    /// 表示关于信息
     /// </summary>
     public class AboutInfo
     {
         /// <summary>
-        /// Gets or sets the resource information
+        /// 获取或设置资源信息
         /// </summary>
         [JsonProperty("resource")]
         public ResourceInfo[] Resources { get; set; }
     }
 
     /// <summary>
-    /// Represents resource information
+    /// 表示资源信息
     /// </summary>
     public class ResourceInfo
     {
         /// <summary>
-        /// Gets or sets the resource name
+        /// 获取或设置资源名称
         /// </summary>
         [JsonProperty("@name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the resource value
+        /// 获取或设置资源值
         /// </summary>
         [JsonProperty("$")]
         public string Value { get; set; }
     }
 
     /// <summary>
-    /// Represents system status information
+    /// 表示系统状态信息
     /// </summary>
     public class SystemStatus
     {
         /// <summary>
-        /// Gets or sets the memory information
+        /// 获取或设置内存信息
         /// </summary>
         [JsonProperty("metrics")]
         public Metrics Metrics { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for system status response
+    /// 系统状态响应的包装器
     /// </summary>
     public class SystemStatusWrapper
     {
         /// <summary>
-        /// Gets or sets the system status
+        /// 获取或设置系统状态
         /// </summary>
         [JsonProperty("systemStatus")]
         public SystemStatus SystemStatus { get; set; }
     }
 
     /// <summary>
-    /// Represents system metrics
+    /// 表示系统指标
     /// </summary>
     public class Metrics
     {
         /// <summary>
-        /// Gets or sets memory usage
+        /// 获取或设置内存使用情况
         /// </summary>
         [JsonProperty("memory")]
         public MemoryInfo Memory { get; set; }
 
         /// <summary>
-        /// Gets or sets JVM information
+        /// 获取或设置 JVM 信息
         /// </summary>
         [JsonProperty("jvm")]
         public JvmInfo Jvm { get; set; }
     }
 
     /// <summary>
-    /// Represents memory information
+    /// 表示内存信息
     /// </summary>
     public class MemoryInfo
     {
         /// <summary>
-        /// Gets or sets total memory
+        /// 获取或设置总内存
         /// </summary>
         [JsonProperty("total")]
         public long Total { get; set; }
 
         /// <summary>
-        /// Gets or sets free memory
+        /// 获取或设置空闲内存
         /// </summary>
         [JsonProperty("free")]
         public long Free { get; set; }
 
         /// <summary>
-        /// Gets or sets used memory
+        /// 获取或设置已使用内存
         /// </summary>
         [JsonProperty("used")]
         public long Used { get; set; }
 
         /// <summary>
-        /// Gets or sets maximum memory
+        /// 获取或设置最大内存
         /// </summary>
         [JsonProperty("max")]
         public long Max { get; set; }
     }
 
     /// <summary>
-    /// Represents JVM information
+    /// 表示 JVM 信息
     /// </summary>
     public class JvmInfo
     {
         /// <summary>
-        /// Gets or sets JVM version
+        /// 获取或设置 JVM 版本
         /// </summary>
         [JsonProperty("version")]
         public string Version { get; set; }
 
         /// <summary>
-        /// Gets or sets JVM vendor
+        /// 获取或设置 JVM 供应商
         /// </summary>
         [JsonProperty("vendor")]
         public string Vendor { get; set; }
     }
 
     /// <summary>
-    /// Represents GeoServer manifest information
+    /// 表示 GeoServer 清单信息
     /// </summary>
     public class ManifestInfo
     {
         /// <summary>
-        /// Gets or sets the manifest name
+        /// 获取或设置清单名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the manifest version
+        /// 获取或设置清单版本
         /// </summary>
         [JsonProperty("version")]
         public string Version { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for manifests response
+    /// 清单响应的包装器
     /// </summary>
     public class ManifestsWrapper
     {
         /// <summary>
-        /// Gets or sets the manifests
+        /// 获取或设置清单信息
         /// </summary>
         [JsonProperty("about")]
         public ManifestsAbout About { get; set; }
     }
 
     /// <summary>
-    /// Represents manifests about information
+    /// 表示清单关于信息
     /// </summary>
     public class ManifestsAbout
     {
         /// <summary>
-        /// Gets or sets the resource manifests
+        /// 获取或设置资源清单
         /// </summary>
         [JsonProperty("resource")]
         public ManifestInfo[] Resources { get; set; }

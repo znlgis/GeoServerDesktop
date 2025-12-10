@@ -15,9 +15,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the AuthenticationProviderService class
+        /// 初始化 AuthenticationProviderService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public AuthenticationProviderService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -48,7 +48,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// Creates a new authentication provider
         /// </summary>
         /// <param name="provider">Authentication provider to create</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task CreateProviderAsync(AuthenticationProvider provider)
         {
             var wrapper = new { provider = provider };
@@ -62,7 +62,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// </summary>
         /// <param name="providerName">Provider name</param>
         /// <param name="provider">Updated provider information</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task UpdateProviderAsync(string providerName, AuthenticationProvider provider)
         {
             var wrapper = new { provider = provider };
@@ -75,7 +75,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// Deletes an authentication provider
         /// </summary>
         /// <param name="providerName">Provider name to delete</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task DeleteProviderAsync(string providerName)
         {
             await _httpClient.DeleteAsync($"/rest/security/authProviders/{providerName}");

@@ -13,9 +13,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the MonitoringService class
+        /// 初始化 MonitoringService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public MonitoringService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;

@@ -15,9 +15,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the TemplateService class
+        /// 初始化 TemplateService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public TemplateService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -48,7 +48,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// </summary>
         /// <param name="templateName">Template name</param>
         /// <param name="content">Template content</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task CreateTemplateAsync(string templateName, string content)
         {
             var stringContent = new StringContent(content, Encoding.UTF8, "text/plain");
@@ -59,7 +59,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// Deletes a template
         /// </summary>
         /// <param name="templateName">Template name</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task DeleteTemplateAsync(string templateName)
         {
             await _httpClient.DeleteAsync($"/rest/templates/{templateName}");

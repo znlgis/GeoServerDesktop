@@ -15,9 +15,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the GridsetService class
+        /// 初始化 GridsetService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public GridsetService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -34,10 +34,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Gets details for a specific gridset
+        /// 获取特定网格集的详细信息
         /// </summary>
         /// <param name="gridsetName">Gridset name</param>
-        /// <returns>Gridset details</returns>
+        /// <returns>网格集详细信息</returns>
         public async Task<Gridset> GetGridsetAsync(string gridsetName)
         {
             var response = await _httpClient.GetAsync($"/gwc/rest/gridsets/{gridsetName}.json");
@@ -45,10 +45,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Creates a new gridset
+        /// 创建新的网格集
         /// </summary>
         /// <param name="gridset">Gridset to create</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task CreateGridsetAsync(Gridset gridset)
         {
             var json = JsonConvert.SerializeObject(gridset);
@@ -57,10 +57,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Deletes a gridset
+        /// 删除网格集
         /// </summary>
         /// <param name="gridsetName">Gridset name</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task DeleteGridsetAsync(string gridsetName)
         {
             await _httpClient.DeleteAsync($"/gwc/rest/gridsets/{gridsetName}");

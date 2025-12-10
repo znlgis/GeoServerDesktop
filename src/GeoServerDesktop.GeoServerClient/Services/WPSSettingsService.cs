@@ -15,9 +15,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the WPSSettingsService class
+        /// 初始化 WPSSettingsService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public WPSSettingsService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -26,7 +26,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <summary>
         /// Gets the WPS service settings
         /// </summary>
-        /// <returns>WPS settings</returns>
+        /// <returns>WPS 设置</returns>
         public async Task<WPSSettings> GetSettingsAsync()
         {
             var response = await _httpClient.GetAsync("/rest/services/wps/settings.json");
@@ -36,8 +36,8 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <summary>
         /// Updates the WPS service settings
         /// </summary>
-        /// <param name="settings">Updated WPS settings</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <param name="settings">Updated WPS 设置</param>
+        /// <returns>表示异步操作的任务</returns>
         public async Task UpdateSettingsAsync(WPSSettings settings)
         {
             var json = JsonConvert.SerializeObject(settings);

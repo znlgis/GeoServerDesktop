@@ -15,9 +15,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the WMTSSettingsService class
+        /// 初始化 WMTSSettingsService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public WMTSSettingsService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -26,7 +26,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <summary>
         /// Gets the global WMTS service settings
         /// </summary>
-        /// <returns>WMTS settings</returns>
+        /// <returns>WMTS 设置</returns>
         public async Task<WMTSSettings> GetWMTSSettingsAsync()
         {
             var response = await _httpClient.GetAsync("/rest/services/wmts/settings.json");
@@ -36,8 +36,8 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <summary>
         /// Updates the global WMTS service settings
         /// </summary>
-        /// <param name="settings">Updated WMTS settings</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <param name="settings">Updated WMTS 设置</param>
+        /// <returns>表示异步操作的任务</returns>
         public async Task UpdateWMTSSettingsAsync(WMTSSettings settings)
         {
             var json = JsonConvert.SerializeObject(settings);

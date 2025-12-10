@@ -14,9 +14,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the FontService class
+        /// 初始化 FontService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public FontService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -37,7 +37,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// </summary>
         /// <param name="fontName">Font name</param>
         /// <param name="fontContent">Font file content</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task UploadFontAsync(string fontName, byte[] fontContent)
         {
             var content = new ByteArrayContent(fontContent);

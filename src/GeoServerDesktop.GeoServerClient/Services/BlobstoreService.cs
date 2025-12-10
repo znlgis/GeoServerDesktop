@@ -15,9 +15,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the BlobstoreService class
+        /// 初始化 BlobstoreService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public BlobstoreService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -34,10 +34,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Gets details for a specific blobstore
+        /// 获取特定 Blob 存储的详细信息
         /// </summary>
         /// <param name="blobstoreId">Blobstore ID</param>
-        /// <returns>Blobstore details</returns>
+        /// <returns>Blob 存储详细信息</returns>
         public async Task<BlobstoreWrapper> GetBlobstoreAsync(string blobstoreId)
         {
             var response = await _httpClient.GetAsync($"/gwc/rest/blobstores/{blobstoreId}.json");
@@ -45,10 +45,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Creates a new blobstore
+        /// 创建新的 Blob 存储
         /// </summary>
         /// <param name="blobstore">Blobstore to create</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task CreateBlobstoreAsync(Blobstore blobstore)
         {
             var wrapper = new { blobstore = blobstore };
@@ -58,11 +58,11 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Updates an existing blobstore
+        /// 更新现有的 Blob 存储
         /// </summary>
         /// <param name="blobstoreId">Blobstore ID</param>
         /// <param name="blobstore">Updated blobstore information</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task UpdateBlobstoreAsync(string blobstoreId, Blobstore blobstore)
         {
             var wrapper = new { blobstore = blobstore };
@@ -72,10 +72,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Deletes a blobstore
+        /// 删除 Blob 存储
         /// </summary>
         /// <param name="blobstoreId">Blobstore ID to delete</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task DeleteBlobstoreAsync(string blobstoreId)
         {
             await _httpClient.DeleteAsync($"/gwc/rest/blobstores/{blobstoreId}");

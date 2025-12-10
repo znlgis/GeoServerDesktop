@@ -15,9 +15,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the StructuredCoverageService class
+        /// 初始化 StructuredCoverageService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public StructuredCoverageService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -43,7 +43,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <param name="coverageStore">Coverage store name</param>
         /// <param name="coverage">Coverage name</param>
         /// <param name="index">Index configuration</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task UpdateIndexAsync(string workspace, string coverageStore, string coverage, StructuredCoverageIndex index)
         {
             var json = JsonConvert.SerializeObject(index);
@@ -94,7 +94,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <param name="coverageStore">Coverage store name</param>
         /// <param name="coverage">Coverage name</param>
         /// <param name="granuleId">Granule ID to delete</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task DeleteGranuleAsync(string workspace, string coverageStore, string coverage, string granuleId)
         {
             await _httpClient.DeleteAsync($"/rest/workspaces/{workspace}/coveragestores/{coverageStore}/coverages/{coverage}/index/granules/{granuleId}");
@@ -107,7 +107,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <param name="coverageStore">Coverage store name</param>
         /// <param name="coverage">Coverage name</param>
         /// <param name="files">File paths or URLs to harvest</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         public async Task HarvestGranulesAsync(string workspace, string coverageStore, string coverage, string[] files)
         {
             var request = new { files = files };

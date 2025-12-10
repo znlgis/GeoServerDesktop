@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 namespace GeoServerDesktop.GeoServerClient.Services
 {
     /// <summary>
-    /// Service for managing GeoServer logging configuration
+    /// 用于管理 GeoServer 日志配置的服务
     /// </summary>
     public class LoggingService
     {
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the LoggingService class
+        /// 初始化 LoggingService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public LoggingService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -37,7 +37,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// Updates the logging configuration
         /// </summary>
         /// <param name="loggingSettings">New logging settings</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         /// <remarks>
         /// Common logging levels: DEFAULT_LOGGING, GEOTOOLS_DEVELOPER_LOGGING, GEOSERVER_DEVELOPER_LOGGING,
         /// VERBOSE_LOGGING, PRODUCTION_LOGGING, QUIET_LOGGING

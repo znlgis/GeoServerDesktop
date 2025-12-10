@@ -12,9 +12,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the ResourceService class
+        /// 初始化 ResourceService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public ResourceService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -41,7 +41,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <param name="resourcePath">Path where the resource should be stored (e.g., "styles/myStyle.sld")</param>
         /// <param name="content">File content as byte array</param>
         /// <param name="contentType">MIME type of the content (e.g., "application/vnd.ogc.sld+xml")</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         /// <remarks>
         /// This operation creates or overwrites a file in the GeoServer data directory.
         /// The path is relative to the data directory root.
@@ -57,7 +57,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// Deletes a resource at the specified path
         /// </summary>
         /// <param name="resourcePath">Path to the resource to delete (e.g., "styles/myStyle.sld")</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <returns>表示异步操作的任务</returns>
         /// <remarks>
         /// This operation permanently deletes a file from the GeoServer data directory.
         /// </remarks>

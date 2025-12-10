@@ -4,78 +4,78 @@ using System.Collections.Generic;
 namespace GeoServerDesktop.GeoServerClient.Models
 {
     /// <summary>
-    /// Represents security access control list
+    /// 表示安全访问控制列表
     /// </summary>
     public class SecurityACL
     {
         /// <summary>
-        /// Gets or sets the resource path
+        /// 获取或设置资源路径
         /// </summary>
         [JsonProperty("resource")]
         public string Resource { get; set; }
 
         /// <summary>
-        /// Gets or sets the list of access rules
+        /// 获取或设置访问规则列表
         /// </summary>
         [JsonProperty("rules")]
         public List<AccessRule> Rules { get; set; }
     }
 
     /// <summary>
-    /// Represents an access control rule
+    /// 表示访问控制规则
     /// </summary>
     public class AccessRule
     {
         /// <summary>
-        /// Gets or sets the role
+        /// 获取或设置角色
         /// </summary>
         [JsonProperty("role")]
         public string Role { get; set; }
 
         /// <summary>
-        /// Gets or sets the access level (READ, WRITE, ADMIN)
+        /// 获取或设置访问级别（READ、WRITE、ADMIN）
         /// </summary>
         [JsonProperty("access")]
         public string Access { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for user group services list
+    /// 用户组服务列表的包装器
     /// </summary>
     public class UserGroupServiceList
     {
         /// <summary>
-        /// Gets or sets the list of user group services
+        /// 获取或设置用户组服务列表
         /// </summary>
         [JsonProperty("userGroupServices")]
         public List<string> Services { get; set; }
     }
 
     /// <summary>
-    /// Represents a user in the system
+    /// 表示系统中的用户
     /// </summary>
     public class User
     {
         /// <summary>
-        /// Gets or sets the username
+        /// 获取或设置用户名
         /// </summary>
         [JsonProperty("userName")]
         public string UserName { get; set; }
 
         /// <summary>
-        /// Gets or sets the password (write-only)
+        /// 获取或设置密码（只写）
         /// </summary>
         [JsonProperty("password")]
         public string Password { get; set; }
 
         /// <summary>
-        /// Gets or sets whether the user is enabled
+        /// 获取或设置用户是否启用
         /// </summary>
         [JsonProperty("enabled")]
         public bool? Enabled { get; set; }
 
         /// <summary>
-        /// Gets or sets the list of groups the user belongs to
+        /// 获取或设置用户所属的组列表
         /// </summary>
         [JsonProperty("groups")]
         public List<string> Groups { get; set; }
@@ -87,43 +87,43 @@ namespace GeoServerDesktop.GeoServerClient.Models
     public class UserWrapper
     {
         /// <summary>
-        /// Gets or sets the user
+        /// 获取或设置用户
         /// </summary>
         [JsonProperty("user")]
         public User User { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for users list
+    /// 用户列表的包装器
     /// </summary>
     public class UserListWrapper
     {
         /// <summary>
-        /// Gets or sets the list of users
+        /// 获取或设置用户列表
         /// </summary>
         [JsonProperty("users")]
         public List<string> Users { get; set; }
     }
 
     /// <summary>
-    /// Represents a user group
+    /// 表示用户组
     /// </summary>
     public class UserGroup
     {
         /// <summary>
-        /// Gets or sets the group name
+        /// 获取或设置组 name
         /// </summary>
         [JsonProperty("groupName")]
         public string GroupName { get; set; }
 
         /// <summary>
-        /// Gets or sets whether the group is enabled
+        /// 获取或设置组是否启用
         /// </summary>
         [JsonProperty("enabled")]
         public bool? Enabled { get; set; }
 
         /// <summary>
-        /// Gets or sets the list of users in the group
+        /// 获取或设置用户列表 in the group
         /// </summary>
         [JsonProperty("users")]
         public List<string> Users { get; set; }
@@ -135,55 +135,55 @@ namespace GeoServerDesktop.GeoServerClient.Models
     public class GroupWrapper
     {
         /// <summary>
-        /// Gets or sets the group
+        /// 获取或设置组
         /// </summary>
         [JsonProperty("group")]
         public UserGroup Group { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for groups list
+    /// 组列表的包装器
     /// </summary>
     public class GroupListWrapper
     {
         /// <summary>
-        /// Gets or sets the list of groups
+        /// 获取或设置组列表
         /// </summary>
         [JsonProperty("groups")]
         public List<string> Groups { get; set; }
     }
 
     /// <summary>
-    /// Represents a security role
+    /// 表示安全角色
     /// </summary>
     public class Role
     {
         /// <summary>
-        /// Gets or sets the role name
+        /// 获取或设置角色 name
         /// </summary>
         [JsonProperty("role")]
         public string RoleName { get; set; }
 
         /// <summary>
-        /// Gets or sets the parent role
+        /// 获取或设置父角色
         /// </summary>
         [JsonProperty("parentRole")]
         public string ParentRole { get; set; }
 
         /// <summary>
-        /// Gets or sets the role properties
+        /// 获取或设置角色 properties
         /// </summary>
         [JsonProperty("properties")]
         public Dictionary<string, string> Properties { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for roles list
+    /// 角色列表的包装器
     /// </summary>
     public class RoleListWrapper
     {
         /// <summary>
-        /// Gets or sets the list of roles
+        /// 获取或设置角色列表
         /// </summary>
         [JsonProperty("roles")]
         public List<string> Roles { get; set; }
@@ -195,31 +195,31 @@ namespace GeoServerDesktop.GeoServerClient.Models
     public class RoleWrapper
     {
         /// <summary>
-        /// Gets or sets the role
+        /// 获取或设置角色
         /// </summary>
         [JsonProperty("role")]
         public Role Role { get; set; }
     }
 
     /// <summary>
-    /// Represents an authentication filter configuration
+    /// 表示认证过滤器配置
     /// </summary>
     public class AuthenticationFilter
     {
         /// <summary>
-        /// Gets or sets the filter name
+        /// 获取或设置过滤器 name
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the filter class name
+        /// 获取或设置过滤器 class name
         /// </summary>
         [JsonProperty("className")]
         public string ClassName { get; set; }
 
         /// <summary>
-        /// Gets or sets the filter configuration
+        /// 获取或设置过滤器 configuration
         /// </summary>
         [JsonProperty("config")]
         public Dictionary<string, object> Config { get; set; }
@@ -231,7 +231,7 @@ namespace GeoServerDesktop.GeoServerClient.Models
     public class AuthenticationFilterListWrapper
     {
         /// <summary>
-        /// Gets or sets the list of filters
+        /// 获取或设置过滤器列表
         /// </summary>
         [JsonProperty("filters")]
         public List<string> Filters { get; set; }
@@ -243,31 +243,31 @@ namespace GeoServerDesktop.GeoServerClient.Models
     public class AuthenticationFilterWrapper
     {
         /// <summary>
-        /// Gets or sets the filter
+        /// 获取或设置过滤器
         /// </summary>
         [JsonProperty("filter")]
         public AuthenticationFilter Filter { get; set; }
     }
 
     /// <summary>
-    /// Represents an authentication provider configuration
+    /// 表示认证提供者配置
     /// </summary>
     public class AuthenticationProvider
     {
         /// <summary>
-        /// Gets or sets the provider name
+        /// 获取或设置提供者名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the provider class name
+        /// 获取或设置提供者类名
         /// </summary>
         [JsonProperty("className")]
         public string ClassName { get; set; }
 
         /// <summary>
-        /// Gets or sets the provider configuration
+        /// 获取或设置提供者配置
         /// </summary>
         [JsonProperty("config")]
         public Dictionary<string, object> Config { get; set; }
@@ -279,7 +279,7 @@ namespace GeoServerDesktop.GeoServerClient.Models
     public class AuthenticationProviderListWrapper
     {
         /// <summary>
-        /// Gets or sets the list of providers
+        /// 获取或设置提供者列表
         /// </summary>
         [JsonProperty("providers")]
         public List<string> Providers { get; set; }
@@ -291,55 +291,55 @@ namespace GeoServerDesktop.GeoServerClient.Models
     public class AuthenticationProviderWrapper
     {
         /// <summary>
-        /// Gets or sets the provider
+        /// 获取或设置提供者
         /// </summary>
         [JsonProperty("provider")]
         public AuthenticationProvider Provider { get; set; }
     }
 
     /// <summary>
-    /// Represents a security filter chain configuration
+    /// 表示安全过滤器链配置
     /// </summary>
     public class FilterChain
     {
         /// <summary>
-        /// Gets or sets the chain name
+        /// 获取或设置链名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the chain pattern
+        /// 获取或设置链模式
         /// </summary>
         [JsonProperty("pattern")]
         public string Pattern { get; set; }
 
         /// <summary>
-        /// Gets or sets the list of filters in the chain
+        /// 获取或设置过滤器列表 in the chain
         /// </summary>
         [JsonProperty("filters")]
         public List<string> Filters { get; set; }
 
         /// <summary>
-        /// Gets or sets whether the chain is disabled
+        /// 获取或设置链是否禁用
         /// </summary>
         [JsonProperty("disabled")]
         public bool? Disabled { get; set; }
 
         /// <summary>
-        /// Gets or sets whether to allow session creation
+        /// 获取或设置是否允许创建会话
         /// </summary>
         [JsonProperty("allowSessionCreation")]
         public bool? AllowSessionCreation { get; set; }
 
         /// <summary>
-        /// Gets or sets whether SSL is required
+        /// 获取或设置是否需要 SSL
         /// </summary>
         [JsonProperty("requireSSL")]
         public bool? RequireSSL { get; set; }
 
         /// <summary>
-        /// Gets or sets whether to match HTTP method
+        /// 获取或设置是否匹配 HTTP 方法
         /// </summary>
         [JsonProperty("matchHTTPMethod")]
         public bool? MatchHTTPMethod { get; set; }
@@ -351,7 +351,7 @@ namespace GeoServerDesktop.GeoServerClient.Models
     public class FilterChainListWrapper
     {
         /// <summary>
-        /// Gets or sets the list of chains
+        /// 获取或设置链列表
         /// </summary>
         [JsonProperty("filterChains")]
         public List<FilterChain> Chains { get; set; }
@@ -363,67 +363,67 @@ namespace GeoServerDesktop.GeoServerClient.Models
     public class FilterChainWrapper
     {
         /// <summary>
-        /// Gets or sets the filter chain
+        /// 获取或设置过滤器 chain
         /// </summary>
         [JsonProperty("filterChain")]
         public FilterChain Chain { get; set; }
     }
 
     /// <summary>
-    /// Represents a password change request
+    /// 表示密码更改请求
     /// </summary>
     public class PasswordChangeRequest
     {
         /// <summary>
-        /// Gets or sets the new password
+        /// 获取或设置新密码
         /// </summary>
         [JsonProperty("newPassword")]
         public string NewPassword { get; set; }
     }
 
     /// <summary>
-    /// Represents a keystore entry
+    /// 表示密钥存储条目
     /// </summary>
     public class KeystoreEntry
     {
         /// <summary>
-        /// Gets or sets the alias
+        /// 获取或设置别名
         /// </summary>
         [JsonProperty("alias")]
         public string Alias { get; set; }
 
         /// <summary>
-        /// Gets or sets the entry type
+        /// 获取或设置条目类型
         /// </summary>
         [JsonProperty("type")]
         public string Type { get; set; }
 
         /// <summary>
-        /// Gets or sets the algorithm
+        /// 获取或设置算法
         /// </summary>
         [JsonProperty("algorithm")]
         public string Algorithm { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for keystore information
+    /// 密钥存储的包装器 information
     /// </summary>
     public class KeystoreInfo
     {
         /// <summary>
-        /// Gets or sets the keystore type
+        /// 获取或设置密钥存储类型
         /// </summary>
         [JsonProperty("type")]
         public string Type { get; set; }
 
         /// <summary>
-        /// Gets or sets the keystore provider
+        /// 获取或设置密钥存储提供者
         /// </summary>
         [JsonProperty("provider")]
         public string Provider { get; set; }
 
         /// <summary>
-        /// Gets or sets the list of aliases
+        /// 获取或设置别名列表
         /// </summary>
         [JsonProperty("aliases")]
         public List<KeystoreEntry> Aliases { get; set; }
