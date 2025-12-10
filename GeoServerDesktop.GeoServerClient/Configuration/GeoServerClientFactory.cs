@@ -79,6 +79,15 @@ namespace GeoServerDesktop.GeoServerClient.Configuration
         }
 
         /// <summary>
+        /// Creates a new FeatureTypeService instance
+        /// </summary>
+        /// <returns>FeatureTypeService instance</returns>
+        public FeatureTypeService CreateFeatureTypeService()
+        {
+            return new FeatureTypeService(GetHttpClient());
+        }
+
+        /// <summary>
         /// Creates a new PreviewService instance
         /// </summary>
         /// <returns>PreviewService instance</returns>

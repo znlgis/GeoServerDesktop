@@ -112,6 +112,16 @@ namespace GeoServerDesktop.App.Services
         }
 
         /// <summary>
+        /// Gets the feature type service
+        /// </summary>
+        /// <returns>FeatureTypeService instance</returns>
+        public FeatureTypeService GetFeatureTypeService()
+        {
+            EnsureConnected();
+            return _factory!.CreateFeatureTypeService();
+        }
+
+        /// <summary>
         /// Gets the preview service
         /// </summary>
         /// <returns>PreviewService instance</returns>

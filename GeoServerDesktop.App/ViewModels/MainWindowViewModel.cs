@@ -34,10 +34,14 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private ResourceTreeNode? _selectedNode;
 
+    [ObservableProperty]
+    private MapPreviewViewModel _mapPreviewViewModel;
+
     public MainWindowViewModel()
     {
         _connectionService = new GeoServerConnectionService();
         _connectionService.ConnectionStatusChanged += OnConnectionStatusChanged;
+        _mapPreviewViewModel = new MapPreviewViewModel();
     }
 
     [RelayCommand]
