@@ -8,25 +8,25 @@ using System.Threading.Tasks;
 namespace GeoServerDesktop.GeoServerClient.Services
 {
     /// <summary>
-    /// Service for managing GeoServer global settings
+    /// 用于管理 GeoServer 全局设置的服务
     /// </summary>
     public class SettingsService
     {
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the SettingsService class
+        /// 初始化 SettingsService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public SettingsService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
         }
 
         /// <summary>
-        /// Gets the global GeoServer settings
+        /// 获取 GeoServer 全局设置
         /// </summary>
-        /// <returns>Global settings</returns>
+        /// <returns>全局设置</returns>
         public async Task<GlobalSettings> GetGlobalSettingsAsync()
         {
             var response = await _httpClient.GetAsync("/rest/settings.json");
@@ -34,10 +34,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Updates the global GeoServer settings
+        /// 更新 GeoServer 全局设置
         /// </summary>
-        /// <param name="settings">Updated global settings</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <param name="settings">更新后的全局设置</param>
+        /// <returns>表示异步操作的任务</returns>
         public async Task UpdateGlobalSettingsAsync(GlobalSettings settings)
         {
             var json = JsonConvert.SerializeObject(settings);
@@ -46,9 +46,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Gets the contact information from global settings
+        /// 从全局设置中获取联系信息
         /// </summary>
-        /// <returns>Contact information</returns>
+        /// <returns>联系信息</returns>
         public async Task<ContactInfoWrapper> GetContactInfoAsync()
         {
             var response = await _httpClient.GetAsync("/rest/settings/contact.json");
@@ -56,10 +56,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Updates the contact information in global settings
+        /// 更新全局设置中的联系信息
         /// </summary>
-        /// <param name="contact">Updated contact information</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <param name="contact">更新后的联系信息</param>
+        /// <returns>表示异步操作的任务</returns>
         public async Task UpdateContactInfoAsync(ContactInfo contact)
         {
             var wrapper = new { contact = contact };
