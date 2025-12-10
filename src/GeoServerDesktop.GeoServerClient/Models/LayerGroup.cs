@@ -3,96 +3,96 @@ using Newtonsoft.Json;
 namespace GeoServerDesktop.GeoServerClient.Models
 {
     /// <summary>
-    /// Represents a GeoServer layer group
+    /// 表示 GeoServer 图层组
     /// </summary>
     public class LayerGroup
     {
         /// <summary>
-        /// Name of the layer group
+        /// 图层组的名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Mode of the layer group
+        /// 图层组的模式
         /// </summary>
         [JsonProperty("mode")]
         public string Mode { get; set; }
 
         /// <summary>
-        /// Title of the layer group
+        /// 图层组的标题
         /// </summary>
         [JsonProperty("title")]
         public string Title { get; set; }
 
         /// <summary>
-        /// Abstract/description of the layer group
+        /// 图层组的摘要/描述
         /// </summary>
         [JsonProperty("abstractTxt")]
         public string Abstract { get; set; }
 
         /// <summary>
-        /// Workspace the layer group belongs to
+        /// 图层组所属的工作空间
         /// </summary>
         [JsonProperty("workspace")]
         public WorkspaceReference Workspace { get; set; }
 
         /// <summary>
-        /// Publishables (layers) in the group
+        /// 组中的可发布项（图层）
         /// </summary>
         [JsonProperty("publishables")]
         public PublishableList Publishables { get; set; }
 
         /// <summary>
-        /// Link to the layer group resource
+        /// 图层组资源的链接
         /// </summary>
         [JsonProperty("href")]
         public string Href { get; set; }
     }
 
     /// <summary>
-    /// List of publishables (layers/layer groups)
+    /// 可发布项（图层/图层组）列表
     /// </summary>
     public class PublishableList
     {
         /// <summary>
-        /// Array of published items
+        /// 已发布项数组
         /// </summary>
         [JsonProperty("published")]
         public PublishedItem[] Published { get; set; }
     }
 
     /// <summary>
-    /// A published item (layer or layer group)
+    /// 已发布的项（图层或图层组）
     /// </summary>
     public class PublishedItem
     {
         /// <summary>
-        /// Type of the published item
+        /// 已发布项的类型
         /// </summary>
         [JsonProperty("@type")]
         public string Type { get; set; }
 
         /// <summary>
-        /// Name of the published item
+        /// 已发布项的名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Link to the published item
+        /// 已发布项的链接
         /// </summary>
         [JsonProperty("href")]
         public string Href { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for a single layer group response
+    /// 单个图层组响应的包装器
     /// </summary>
     public class LayerGroupWrapper
     {
         /// <summary>
-        /// The layer group data
+        /// 图层组数据
         /// </summary>
         [JsonProperty("layerGroup")]
         public LayerGroup LayerGroup { get; set; }

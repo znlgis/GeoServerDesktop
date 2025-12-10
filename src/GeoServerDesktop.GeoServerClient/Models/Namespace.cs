@@ -3,66 +3,66 @@ using Newtonsoft.Json;
 namespace GeoServerDesktop.GeoServerClient.Models
 {
     /// <summary>
-    /// Represents a GeoServer namespace
+    /// 表示 GeoServer 命名空间
     /// </summary>
     public class Namespace
     {
         /// <summary>
-        /// Gets or sets the namespace prefix
+        /// 获取或设置命名空间前缀
         /// </summary>
         [JsonProperty("prefix")]
         public string Prefix { get; set; }
 
         /// <summary>
-        /// Gets or sets the namespace URI
+        /// 获取或设置命名空间 URI
         /// </summary>
         [JsonProperty("uri")]
         public string Uri { get; set; }
 
         /// <summary>
-        /// Gets or sets whether this is the default namespace
+        /// 获取或设置此命名空间是否隔离
         /// </summary>
         [JsonProperty("isolated")]
         public bool? Isolated { get; set; }
 
         /// <summary>
-        /// Gets or sets the namespace href (link)
+        /// 获取或设置命名空间链接
         /// </summary>
         [JsonProperty("href")]
         public string Href { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for a single namespace response
+    /// 单个命名空间响应的包装器
     /// </summary>
     public class NamespaceWrapper
     {
         /// <summary>
-        /// Gets or sets the namespace
+        /// 获取或设置命名空间
         /// </summary>
         [JsonProperty("namespace")]
         public Namespace Namespace { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for namespace list response
+    /// 命名空间列表响应的包装器
     /// </summary>
     public class NamespaceListWrapper
     {
         /// <summary>
-        /// Gets or sets the namespace list
+        /// 获取或设置命名空间列表
         /// </summary>
         [JsonProperty("namespaces")]
         public NamespaceList NamespaceList { get; set; }
     }
 
     /// <summary>
-    /// Represents a list of namespaces
+    /// 表示命名空间列表
     /// </summary>
     public class NamespaceList
     {
         /// <summary>
-        /// Gets or sets the array of namespaces
+        /// 获取或设置命名空间数组
         /// </summary>
         [JsonProperty("namespace")]
         public Namespace[] Namespaces { get; set; }
