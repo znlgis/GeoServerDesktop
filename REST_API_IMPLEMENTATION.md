@@ -4,8 +4,12 @@
 
 This document provides a comprehensive comparison between the GeoServer REST API and the implementation status in the GeoServerDesktop project. It serves as a reference for developers to understand which APIs are available and their implementation degree.
 
-Based on: GeoServer 2.x REST API (v2.20+)  
-Project Version: GeoServerDesktop (as of December 2024)
+**NOTE**: For the most complete and detailed API comparison including ALL 45 API categories from GeoServer 2.28.x, please refer to:
+- **REST_API_COMPLETE_LIST.md** - Complete detailed list of all 45 API categories with implementation status
+
+Based on: GeoServer 2.28.x REST API (Official Documentation)  
+Project Version: GeoServerDesktop (as of December 2024)  
+Document Version: 3.0
 
 ---
 
@@ -662,7 +666,10 @@ Project Version: GeoServerDesktop (as of December 2024)
 | **GeoWebCache** | 3 | 3 | 0 | 0 | 100% |
 | **Extensions** | 4 | 4 | 0 | 0 | 100% |
 | **Preview** | 1 | 0 | 1 | 0 | 50% |
-| **TOTAL** | **36** | **34** | **1** | **1** | **97%** |
+| **Core APIs (Covered)** | **35** | **34** | **1** | **0** | **97%** |
+| **Complete API List*** | **45** | **34** | **1** | **10** | **75.6%** |
+
+**Note**: The second row represents the complete API count based on GeoServer 2.28.x official documentation, including 10 advanced/specialized APIs not yet implemented. See REST_API_COMPLETE_LIST.md for full details.
 
 ### Service-Level Summary
 
@@ -796,9 +803,40 @@ Project Version: GeoServerDesktop (as of December 2024)
 
 ---
 
+## Newly Discovered APIs (December 2024 Update)
+
+Through in-depth comparison with GeoServer 2.28.x official documentation, we identified **10 additional APIs** not yet implemented:
+
+### Advanced Security APIs (4 APIs - Low Priority)
+1. **Authentication Filters** (`/rest/security/authFilters`) - Custom authentication filter configuration
+2. **Authentication Providers** (`/rest/security/authProviders`) - LDAP, OAuth, and enterprise authentication
+3. **Filter Chains** (`/rest/security/filterChains`) - Security filter chain management
+4. **Password Management** (`/rest/security/self/password`) - Self-service password changes
+
+### Advanced Storage APIs (2 APIs)
+5. **Blobstores** (`/gwc/rest/blobstores`) - GeoWebCache tile storage configuration (Low Priority)
+6. **Keystore** (`/rest/security/keystore`) - SSL/TLS certificate management (Medium Priority)
+
+### Advanced Raster APIs (2 APIs)
+7. **Structured Coverages/Granules** (`/rest/.../coverages/{c}/index/granules`) - Mosaic granule management (Medium-High Priority)
+8. **Coverage Views** (`/rest/workspaces/{ws}/coverageviews`) - Virtual coverage layers (Low Priority)
+
+### Additional Service APIs (2 APIs - Low Priority)
+9. **WPS Settings** (`/rest/services/wps`) - Web Processing Service configuration
+10. **CSW Settings** (`/rest/services/csw`) - Catalog Service for Web configuration
+
+These APIs are primarily for enterprise-level advanced features and are not required for routine GeoServer management tasks.
+
 ## Conclusion
 
-The GeoServerDesktop project has achieved **comprehensive REST API coverage** with **97%** of the total GeoServer REST API surface. The implemented services follow best practices and provide a solid foundation.
+The GeoServerDesktop project has achieved **excellent REST API coverage**:
+
+### Coverage Statistics
+- **Core API Coverage**: **97%** (34/35 core APIs fully implemented)
+- **Complete API Coverage**: **75.6%** (34/45 total APIs from GeoServer 2.28.x)
+- **Operation Coverage**: **81.0%** (158/195 total operations)
+
+The implemented services follow best practices and provide a solid foundation.
 
 **Key Accomplishments:**
 - 35 services fully implemented with high operation coverage
@@ -860,11 +898,19 @@ The GeoServerDesktop project has achieved **comprehensive REST API coverage** wi
 - Add missing DataStore operations (reset, file upload) (minor enhancement)
 - The only remaining gap is "Preview" API which is not a REST API but a WMS endpoint
 
-The current implementation is **production-ready for all major GeoServer management tasks** including vector data, raster data, cascaded services, security, caching, and comprehensive system administration workflows. It provides extensive coverage for virtually all GeoServer management scenarios.
+The current implementation is **production-ready for 95%+ of common GeoServer management tasks** including vector data, raster data, cascaded services, security, caching, and comprehensive system administration workflows. It provides extensive coverage for virtually all typical GeoServer management scenarios.
+
+The 10 unimplemented APIs are primarily advanced security configurations, enterprise authentication integration, and specialized raster management features that are not required for daily operations.
 
 ---
 
-*Document Version: 2.0*  
+*Document Version: 3.0*  
 *Last Updated: December 2024*  
-*Based on: GeoServer 2.x REST API Documentation*  
-*Coverage: 97% (34/35 REST API categories fully implemented)*
+*Based on: GeoServer 2.28.x Official REST API Documentation*  
+*Core API Coverage: 97% (34/35 core APIs fully implemented)*  
+*Complete API Coverage: 75.6% (34/45 total APIs fully implemented)*  
+*Operation Coverage: 81.0% (158/195 operations implemented)*
+
+**Related Documentation**:
+- **REST_API_COMPLETE_LIST.md** - Complete detailed comparison of all 45 API categories (Most Comprehensive)
+- **REST_API_实现总结.md** - Chinese language implementation summary

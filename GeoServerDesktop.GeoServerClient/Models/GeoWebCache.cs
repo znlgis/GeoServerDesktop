@@ -344,4 +344,70 @@ namespace GeoServerDesktop.GeoServerClient.Models
         [JsonProperty("gridSets")]
         public List<string> GridSets { get; set; }
     }
+
+    /// <summary>
+    /// Represents a blobstore configuration
+    /// </summary>
+    public class Blobstore
+    {
+        /// <summary>
+        /// Gets or sets the blobstore ID
+        /// </summary>
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets the blobstore type
+        /// </summary>
+        [JsonProperty("type")]
+        public string Type { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether the blobstore is enabled
+        /// </summary>
+        [JsonProperty("enabled")]
+        public bool? Enabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets the base directory for file blobstores
+        /// </summary>
+        [JsonProperty("baseDirectory")]
+        public string BaseDirectory { get; set; }
+
+        /// <summary>
+        /// Gets or sets the file system block size
+        /// </summary>
+        [JsonProperty("fileSystemBlockSize")]
+        public int? FileSystemBlockSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets additional configuration properties
+        /// </summary>
+        [JsonProperty("properties")]
+        public Dictionary<string, object> Properties { get; set; }
+    }
+
+    /// <summary>
+    /// Wrapper for blobstore list
+    /// </summary>
+    public class BlobstoreListWrapper
+    {
+        /// <summary>
+        /// Gets or sets the list of blobstores
+        /// </summary>
+        [JsonProperty("blobstores")]
+        public List<string> Blobstores { get; set; }
+    }
+
+    /// <summary>
+    /// Wrapper for blobstore response
+    /// </summary>
+    public class BlobstoreWrapper
+    {
+        /// <summary>
+        /// Gets or sets the blobstore
+        /// </summary>
+        [JsonProperty("blobstore")]
+        public Blobstore Blobstore { get; set; }
+    }
 }

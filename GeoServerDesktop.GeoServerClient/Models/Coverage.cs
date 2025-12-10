@@ -217,4 +217,160 @@ namespace GeoServerDesktop.GeoServerClient.Models
         [JsonProperty("coverage")]
         public Coverage[] Coverages { get; set; }
     }
+
+    /// <summary>
+    /// Represents a structured coverage index configuration
+    /// </summary>
+    public class StructuredCoverageIndex
+    {
+        /// <summary>
+        /// Gets or sets the index name
+        /// </summary>
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the schema attributes
+        /// </summary>
+        [JsonProperty("schema")]
+        public System.Collections.Generic.Dictionary<string, object> Schema { get; set; }
+    }
+
+    /// <summary>
+    /// Represents granule information
+    /// </summary>
+    public class Granule
+    {
+        /// <summary>
+        /// Gets or sets the granule ID
+        /// </summary>
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets the feature type
+        /// </summary>
+        [JsonProperty("fid")]
+        public string Fid { get; set; }
+
+        /// <summary>
+        /// Gets or sets the granule attributes
+        /// </summary>
+        [JsonProperty("properties")]
+        public System.Collections.Generic.Dictionary<string, object> Properties { get; set; }
+    }
+
+    /// <summary>
+    /// Wrapper for granules list
+    /// </summary>
+    public class GranuleListWrapper
+    {
+        /// <summary>
+        /// Gets or sets the list of granules
+        /// </summary>
+        [JsonProperty("features")]
+        public System.Collections.Generic.List<Granule> Granules { get; set; }
+
+        /// <summary>
+        /// Gets or sets the total features count
+        /// </summary>
+        [JsonProperty("totalFeatures")]
+        public int? TotalFeatures { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a coverage view configuration
+    /// </summary>
+    public class CoverageView
+    {
+        /// <summary>
+        /// Gets or sets the coverage view name
+        /// </summary>
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the envelope (bounding box)
+        /// </summary>
+        [JsonProperty("envelope")]
+        public System.Collections.Generic.Dictionary<string, object> Envelope { get; set; }
+
+        /// <summary>
+        /// Gets or sets the coverage bands
+        /// </summary>
+        [JsonProperty("coverageBands")]
+        public System.Collections.Generic.List<CoverageBand> CoverageBands { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a coverage band
+    /// </summary>
+    public class CoverageBand
+    {
+        /// <summary>
+        /// Gets or sets the input coverage bands
+        /// </summary>
+        [JsonProperty("inputCoverageBands")]
+        public System.Collections.Generic.List<InputCoverageBand> InputCoverageBands { get; set; }
+
+        /// <summary>
+        /// Gets or sets the definition
+        /// </summary>
+        [JsonProperty("definition")]
+        public string Definition { get; set; }
+
+        /// <summary>
+        /// Gets or sets the index
+        /// </summary>
+        [JsonProperty("index")]
+        public int? Index { get; set; }
+
+        /// <summary>
+        /// Gets or sets the composition type
+        /// </summary>
+        [JsonProperty("compositionType")]
+        public string CompositionType { get; set; }
+    }
+
+    /// <summary>
+    /// Represents an input coverage band
+    /// </summary>
+    public class InputCoverageBand
+    {
+        /// <summary>
+        /// Gets or sets the coverage name
+        /// </summary>
+        [JsonProperty("coverageName")]
+        public string CoverageName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the band index
+        /// </summary>
+        [JsonProperty("band")]
+        public int? Band { get; set; }
+    }
+
+    /// <summary>
+    /// Wrapper for coverage view list
+    /// </summary>
+    public class CoverageViewListWrapper
+    {
+        /// <summary>
+        /// Gets or sets the list of coverage views
+        /// </summary>
+        [JsonProperty("coverageViews")]
+        public System.Collections.Generic.List<string> CoverageViews { get; set; }
+    }
+
+    /// <summary>
+    /// Wrapper for coverage view response
+    /// </summary>
+    public class CoverageViewWrapper
+    {
+        /// <summary>
+        /// Gets or sets the coverage view
+        /// </summary>
+        [JsonProperty("coverageView")]
+        public CoverageView CoverageView { get; set; }
+    }
 }
