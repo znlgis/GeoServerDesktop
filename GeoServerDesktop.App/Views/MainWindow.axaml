@@ -37,6 +37,12 @@
                         Command="{Binding DisconnectCommand}" 
                         IsVisible="{Binding IsConnected}"
                         HorizontalAlignment="Left"/>
+                
+                <Button Content="🔄 Refresh" 
+                        Command="{Binding RefreshResourcesCommand}" 
+                        IsVisible="{Binding IsConnected}"
+                        ToolTip.Tip="Refresh resources"
+                        HorizontalAlignment="Left"/>
             </StackPanel>
         </Border>
 
@@ -46,7 +52,8 @@
             <Border Grid.Column="0" BorderBrush="#CCCCCC" BorderThickness="0,0,1,0" Padding="5">
                 <DockPanel>
                     <TextBlock DockPanel.Dock="Top" Text="Resources" FontWeight="Bold" Margin="0,0,0,10"/>
-                    <TreeView ItemsSource="{Binding ResourceTree}">
+                    <TreeView ItemsSource="{Binding ResourceTree}" 
+                              SelectedItem="{Binding SelectedNode}">
                         <TreeView.ItemTemplate>
                             <TreeDataTemplate ItemsSource="{Binding Children}">
                                 <TextBlock Text="{Binding Name}"/>
@@ -56,23 +63,66 @@
                 </DockPanel>
             </Border>
 
-            <!-- Right Panel - Details -->
-            <Border Grid.Column="1" Padding="10">
-                <StackPanel>
-                    <TextBlock Text="Welcome to GeoServer Desktop" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
-                    <TextBlock Text="Connect to a GeoServer instance to begin managing resources." TextWrapping="Wrap"/>
+            <!-- Right Panel - Tabbed Content -->
+            <Border Grid.Column="1">
+                <TabControl>
+                    <!-- Overview Tab -->
+                    <TabItem Header="Overview">
+                        <Border Padding="10">
+                            <StackPanel>
+                                <TextBlock Text="Welcome to GeoServer Desktop" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
+                                <TextBlock Text="Connect to a GeoServer instance to begin managing resources." TextWrapping="Wrap"/>
+                                
+                                <StackPanel Margin="0,30,0,0" IsVisible="{Binding IsConnected}">
+                                    <TextBlock Text="Connected to GeoServer" FontWeight="Bold" Margin="0,0,0,10"/>
+                                    <TextBlock Text="{Binding BaseUrl}" Margin="0,0,0,20"/>
+                                    
+                                    <TextBlock Text="Features:" FontWeight="Bold" Margin="0,0,0,10"/>
+                                    <TextBlock Text="• Manage workspaces, data stores, and layers" Margin="20,0,0,5"/>
+                                    <TextBlock Text="• Upload and manage styles" Margin="20,0,0,5"/>
+                                    <TextBlock Text="• Create and organize layer groups" Margin="20,0,0,5"/>
+                                    <TextBlock Text="• Preview layers with WMS integration" Margin="20,0,0,5"/>
+                                    <TextBlock Text="• View feature types and publish layers" Margin="20,0,0,5"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </TabItem>
                     
-                    <StackPanel Margin="0,30,0,0" IsVisible="{Binding IsConnected}">
-                        <TextBlock Text="Connected to GeoServer" FontWeight="Bold" Margin="0,0,0,10"/>
-                        <TextBlock Text="{Binding BaseUrl}" Margin="0,0,0,20"/>
-                        
-                        <TextBlock Text="Features:" FontWeight="Bold" Margin="0,0,0,10"/>
-                        <TextBlock Text="• Manage workspaces, data stores, and layers" Margin="20,0,0,5"/>
-                        <TextBlock Text="• Upload and manage styles" Margin="20,0,0,5"/>
-                        <TextBlock Text="• Create and organize layer groups" Margin="20,0,0,5"/>
-                        <TextBlock Text="• Preview layers with WMS integration" Margin="20,0,0,5"/>
-                    </StackPanel>
-                </StackPanel>
+                    <!-- Map Preview Tab -->
+                    <TabItem Header="Map Preview">
+                        <ContentControl Content="{Binding MapPreviewViewModel}"/>
+                    </TabItem>
+                    
+                    <!-- Workspace Management Tab -->
+                    <TabItem Header="Workspaces">
+                        <ContentControl Content="{Binding WorkspaceManagementViewModel}"/>
+                    </TabItem>
+                    
+                    <!-- Style Management Tab -->
+                    <TabItem Header="Styles">
+                        <ContentControl Content="{Binding StyleManagementViewModel}"/>
+                    </TabItem>
+                    
+                    <!-- Details Tab -->
+                    <TabItem Header="Details">
+                        <Border Padding="10">
+                            <StackPanel>
+                                <TextBlock Text="Resource Details" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
+                                <TextBlock Text="Select a resource from the tree to view its details."
+                                           TextWrapping="Wrap"
+                                           IsVisible="{Binding !SelectedNode}"/>
+                                
+                                <StackPanel IsVisible="{Binding !!SelectedNode}">
+                                    <TextBlock Text="Name:" FontWeight="Bold" Margin="0,0,0,5"/>
+                                    <TextBlock Text="{Binding SelectedNode.Name}" Margin="0,0,0,15"/>
+                                    
+                                    <TextBlock Text="Type:" FontWeight="Bold" Margin="0,0,0,5"/>
+                                    <TextBlock Text="{Binding SelectedNode.Type}" Margin="0,0,0,15"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </TabItem>
+                </TabControl>
             </Border>
         </Grid>
 

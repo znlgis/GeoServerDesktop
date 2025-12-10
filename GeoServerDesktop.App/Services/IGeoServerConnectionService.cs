@@ -66,6 +66,12 @@ namespace GeoServerDesktop.App.Services
         LayerGroupService GetLayerGroupService();
 
         /// <summary>
+        /// Gets the feature type service
+        /// </summary>
+        /// <returns>FeatureTypeService instance</returns>
+        FeatureTypeService GetFeatureTypeService();
+
+        /// <summary>
         /// Gets the preview service
         /// </summary>
         /// <returns>PreviewService instance</returns>
