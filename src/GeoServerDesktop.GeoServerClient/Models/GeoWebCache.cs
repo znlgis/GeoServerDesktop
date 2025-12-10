@@ -9,109 +9,109 @@ namespace GeoServerDesktop.GeoServerClient.Models
     public class GWCLayerListWrapper
     {
         /// <summary>
-        /// Gets or sets the list of cached layers
+        /// 获取或设置缓存图层列表
         /// </summary>
         [JsonProperty("layers")]
         public List<string> Layers { get; set; }
     }
 
     /// <summary>
-    /// Represents a GeoWebCache layer
+    /// 表示 GeoWebCache 图层
     /// </summary>
     public class GWCLayer
     {
         /// <summary>
-        /// Gets or sets the layer name
+        /// 获取或设置图层名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets whether the layer is enabled
+        /// 获取或设置图层是否启用
         /// </summary>
         [JsonProperty("enabled")]
         public bool? Enabled { get; set; }
 
         /// <summary>
-        /// Gets or sets the MIME formats
+        /// 获取或设置 MIME 格式
         /// </summary>
         [JsonProperty("mimeFormats")]
         public List<string> MimeFormats { get; set; }
 
         /// <summary>
-        /// Gets or sets the gridsets
+        /// 获取或设置网格集
         /// </summary>
         [JsonProperty("gridSubsets")]
         public List<GridSubset> GridSubsets { get; set; }
 
         /// <summary>
-        /// Gets or sets the metadata URLs
+        /// 获取或设置元数据 URL
         /// </summary>
         [JsonProperty("metaWidthHeight")]
         public int[] MetaWidthHeight { get; set; }
 
         /// <summary>
-        /// Gets or sets the expiration time in seconds
+        /// 获取或设置过期时间（秒）
         /// </summary>
         [JsonProperty("expireCache")]
         public int? ExpireCache { get; set; }
 
         /// <summary>
-        /// Gets or sets the expiration clients
+        /// 获取或设置过期客户端
         /// </summary>
         [JsonProperty("expireClients")]
         public int? ExpireClients { get; set; }
     }
 
     /// <summary>
-    /// Represents a grid subset
+    /// 表示网格子集
     /// </summary>
     public class GridSubset
     {
         /// <summary>
-        /// Gets or sets the gridset name
+        /// 获取或设置网格集名称
         /// </summary>
         [JsonProperty("gridSetName")]
         public string GridSetName { get; set; }
 
         /// <summary>
-        /// Gets or sets the zoom start level
+        /// 获取或设置起始缩放级别 level
         /// </summary>
         [JsonProperty("zoomStart")]
         public int? ZoomStart { get; set; }
 
         /// <summary>
-        /// Gets or sets the zoom stop level
+        /// 获取或设置结束缩放级别 level
         /// </summary>
         [JsonProperty("zoomStop")]
         public int? ZoomStop { get; set; }
 
         /// <summary>
-        /// Gets or sets the extent
+        /// 获取或设置范围
         /// </summary>
         [JsonProperty("extent")]
         public Extent Extent { get; set; }
     }
 
     /// <summary>
-    /// Represents an extent/bounding box
+    /// 表示范围/边界框
     /// </summary>
     public class Extent
     {
         /// <summary>
-        /// Gets or sets the coordinates
+        /// 获取或设置坐标
         /// </summary>
         [JsonProperty("coords")]
         public double[] Coords { get; set; }
     }
 
     /// <summary>
-    /// Represents seeding request
+    /// 表示种子请求
     /// </summary>
     public class SeedRequest
     {
         /// <summary>
-        /// Gets or sets the seed request wrapper
+        /// 获取或设置种子请求包装器
         /// </summary>
         [JsonProperty("seedRequest")]
         public SeedRequestConfig Config { get; set; }
@@ -123,289 +123,289 @@ namespace GeoServerDesktop.GeoServerClient.Models
     public class SeedRequestConfig
     {
         /// <summary>
-        /// Gets or sets the layer name
+        /// 获取或设置图层名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the gridset ID
+        /// 获取或设置网格集 ID
         /// </summary>
         [JsonProperty("gridSetId")]
         public string GridSetId { get; set; }
 
         /// <summary>
-        /// Gets or sets the zoom start level
+        /// 获取或设置起始缩放级别 level
         /// </summary>
         [JsonProperty("zoomStart")]
         public int ZoomStart { get; set; }
 
         /// <summary>
-        /// Gets or sets the zoom stop level
+        /// 获取或设置结束缩放级别 level
         /// </summary>
         [JsonProperty("zoomStop")]
         public int ZoomStop { get; set; }
 
         /// <summary>
-        /// Gets or sets the format
+        /// 获取或设置格式
         /// </summary>
         [JsonProperty("format")]
         public string Format { get; set; }
 
         /// <summary>
-        /// Gets or sets the type (seed, reseed, truncate)
+        /// 获取或设置类型（seed、reseed、truncate）
         /// </summary>
         [JsonProperty("type")]
         public string Type { get; set; }
 
         /// <summary>
-        /// Gets or sets the thread count
+        /// 获取或设置线程数
         /// </summary>
         [JsonProperty("threadCount")]
         public int? ThreadCount { get; set; }
     }
 
     /// <summary>
-    /// Represents disk quota configuration
+    /// 表示磁盘配额配置
     /// </summary>
     public class DiskQuotaConfig
     {
         /// <summary>
-        /// Gets or sets whether disk quota is enabled
+        /// 获取或设置是否启用磁盘配额
         /// </summary>
         [JsonProperty("enabled")]
         public bool? Enabled { get; set; }
 
         /// <summary>
-        /// Gets or sets the disk block size
+        /// 获取或设置磁盘块大小
         /// </summary>
         [JsonProperty("diskBlockSize")]
         public int? DiskBlockSize { get; set; }
 
         /// <summary>
-        /// Gets or sets the cache cleanup frequency
+        /// 获取或设置缓存清理频率
         /// </summary>
         [JsonProperty("cacheCleanUpFrequency")]
         public int? CacheCleanUpFrequency { get; set; }
 
         /// <summary>
-        /// Gets or sets the cache cleanup units
+        /// 获取或设置缓存清理单位
         /// </summary>
         [JsonProperty("cacheCleanUpUnits")]
         public string CacheCleanUpUnits { get; set; }
 
         /// <summary>
-        /// Gets or sets the maximum cache age
+        /// 获取或设置最大缓存时间
         /// </summary>
         [JsonProperty("maxConcurrentCleanUps")]
         public int? MaxConcurrentCleanUps { get; set; }
 
         /// <summary>
-        /// Gets or sets the global quota
+        /// 获取或设置全局配额
         /// </summary>
         [JsonProperty("globalQuota")]
         public Quota GlobalQuota { get; set; }
 
         /// <summary>
-        /// Gets or sets the layer quotas
+        /// 获取或设置图层配额
         /// </summary>
         [JsonProperty("layerQuotas")]
         public List<LayerQuota> LayerQuotas { get; set; }
     }
 
     /// <summary>
-    /// Represents a quota value
+    /// 表示配额值
     /// </summary>
     public class Quota
     {
         /// <summary>
-        /// Gets or sets the value
+        /// 获取或设置值
         /// </summary>
         [JsonProperty("value")]
         public double Value { get; set; }
 
         /// <summary>
-        /// Gets or sets the units (B, KB, MB, GB, TB)
+        /// 获取或设置单位（B、KB、MB、GB、TB）
         /// </summary>
         [JsonProperty("units")]
         public string Units { get; set; }
     }
 
     /// <summary>
-    /// Represents a layer-specific quota
+    /// 表示图层特定配额
     /// </summary>
     public class LayerQuota
     {
         /// <summary>
-        /// Gets or sets the layer name
+        /// 获取或设置图层名称
         /// </summary>
         [JsonProperty("layer")]
         public string Layer { get; set; }
 
         /// <summary>
-        /// Gets or sets the quota
+        /// 获取或设置配额
         /// </summary>
         [JsonProperty("quota")]
         public Quota Quota { get; set; }
     }
 
     /// <summary>
-    /// Represents a gridset definition
+    /// 表示网格集定义
     /// </summary>
     public class Gridset
     {
         /// <summary>
-        /// Gets or sets the gridset name
+        /// 获取或设置网格集名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the SRS
+        /// 获取或设置空间参考系统
         /// </summary>
         [JsonProperty("srs")]
         public SRS SRS { get; set; }
 
         /// <summary>
-        /// Gets or sets the extent
+        /// 获取或设置范围
         /// </summary>
         [JsonProperty("extent")]
         public Extent Extent { get; set; }
 
         /// <summary>
-        /// Gets or sets whether alignment is top-left
+        /// 获取或设置对齐方式是否为左上角
         /// </summary>
         [JsonProperty("alignTopLeft")]
         public bool? AlignTopLeft { get; set; }
 
         /// <summary>
-        /// Gets or sets the resolutions
+        /// 获取或设置分辨率
         /// </summary>
         [JsonProperty("resolutions")]
         public List<double> Resolutions { get; set; }
 
         /// <summary>
-        /// Gets or sets the meters per unit
+        /// 获取或设置每单位米数
         /// </summary>
         [JsonProperty("metersPerUnit")]
         public double? MetersPerUnit { get; set; }
 
         /// <summary>
-        /// Gets or sets the pixel size
+        /// 获取或设置像素大小
         /// </summary>
         [JsonProperty("pixelSize")]
         public double? PixelSize { get; set; }
 
         /// <summary>
-        /// Gets or sets the scale names
+        /// 获取或设置比例尺名称
         /// </summary>
         [JsonProperty("scaleNames")]
         public List<string> ScaleNames { get; set; }
 
         /// <summary>
-        /// Gets or sets the tile height
+        /// 获取或设置瓦片高度
         /// </summary>
         [JsonProperty("tileHeight")]
         public int? TileHeight { get; set; }
 
         /// <summary>
-        /// Gets or sets the tile width
+        /// 获取或设置瓦片宽度
         /// </summary>
         [JsonProperty("tileWidth")]
         public int? TileWidth { get; set; }
 
         /// <summary>
-        /// Gets or sets whether Y coordinate increases downward
+        /// 获取或设置 Y 坐标是否向下递增
         /// </summary>
         [JsonProperty("yCoordinateFirst")]
         public bool? YCoordinateFirst { get; set; }
     }
 
     /// <summary>
-    /// Represents SRS information
+    /// 表示空间参考系统信息
     /// </summary>
     public class SRS
     {
         /// <summary>
-        /// Gets or sets the SRS number
+        /// 获取或设置空间参考系统 number
         /// </summary>
         [JsonProperty("number")]
         public int Number { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for gridsets list
+    /// 网格集的包装器s list
     /// </summary>
     public class GridsetListWrapper
     {
         /// <summary>
-        /// Gets or sets the list of gridsets
+        /// 获取或设置网格集列表
         /// </summary>
         [JsonProperty("gridSets")]
         public List<string> GridSets { get; set; }
     }
 
     /// <summary>
-    /// Represents a blobstore configuration
+    /// 表示 Blob 存储配置
     /// </summary>
     public class Blobstore
     {
         /// <summary>
-        /// Gets or sets the blobstore ID
+        /// 获取或设置 Blob 存储 ID
         /// </summary>
         [JsonProperty("id")]
         public string Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the blobstore type
+        /// 获取或设置 Blob 存储 type
         /// </summary>
         [JsonProperty("type")]
         public string Type { get; set; }
 
         /// <summary>
-        /// Gets or sets whether the blobstore is enabled
+        /// 获取或设置 Blob 存储是否启用
         /// </summary>
         [JsonProperty("enabled")]
         public bool? Enabled { get; set; }
 
         /// <summary>
-        /// Gets or sets the base directory for file blobstores
+        /// 获取或设置文件 Blob 存储的基础目录
         /// </summary>
         [JsonProperty("baseDirectory")]
         public string BaseDirectory { get; set; }
 
         /// <summary>
-        /// Gets or sets the file system block size
+        /// 获取或设置文件系统块大小
         /// </summary>
         [JsonProperty("fileSystemBlockSize")]
         public int? FileSystemBlockSize { get; set; }
 
         /// <summary>
-        /// Gets or sets additional configuration properties
+        /// 获取或设置附加配置属性
         /// </summary>
         [JsonProperty("properties")]
         public Dictionary<string, object> Properties { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for blobstore list
+    /// Blob 存储的包装器 list
     /// </summary>
     public class BlobstoreListWrapper
     {
         /// <summary>
-        /// Gets or sets the list of blobstores
+        /// 获取或设置 Blob 存储列表
         /// </summary>
         [JsonProperty("blobstores")]
         public List<string> Blobstores { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for blobstore response
+    /// Blob 存储的包装器 response
     /// </summary>
     public class BlobstoreWrapper
     {
         /// <summary>
-        /// Gets or sets the blobstore
+        /// 获取或设置 Blob 存储
         /// </summary>
         [JsonProperty("blobstore")]
         public Blobstore Blobstore { get; set; }
