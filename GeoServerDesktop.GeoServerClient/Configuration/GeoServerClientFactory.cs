@@ -169,6 +169,42 @@ namespace GeoServerDesktop.GeoServerClient.Configuration
         }
 
         /// <summary>
+        /// Creates a new WMTSStoreService instance
+        /// </summary>
+        /// <returns>WMTSStoreService instance</returns>
+        public WMTSStoreService CreateWMTSStoreService()
+        {
+            return new WMTSStoreService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new WMTSLayerService instance
+        /// </summary>
+        /// <returns>WMTSLayerService instance</returns>
+        public WMTSLayerService CreateWMTSLayerService()
+        {
+            return new WMTSLayerService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new LoggingService instance
+        /// </summary>
+        /// <returns>LoggingService instance</returns>
+        public LoggingService CreateLoggingService()
+        {
+            return new LoggingService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// Creates a new ResourceService instance
+        /// </summary>
+        /// <returns>ResourceService instance</returns>
+        public ResourceService CreateResourceService()
+        {
+            return new ResourceService(GetHttpClient());
+        }
+
+        /// <summary>
         /// Disposes the factory and its resources
         /// </summary>
         public void Dispose()
