@@ -108,10 +108,10 @@ Project Version: GeoServerDesktop (as of December 2024)
 | Operation | Endpoint | HTTP Method | Implemented | Notes |
 |-----------|----------|-------------|-------------|-------|
 | List WMS stores | `/rest/workspaces/{ws}/wmsstores.json` | GET | ✅ | All WMS stores |
-| Get WMS store | `/rest/workspaces/{ws}/wmsstores/{ws}.json` | GET | ✅ | Store details |
+| Get WMS store | `/rest/workspaces/{ws}/wmsstores/{store}.json` | GET | ✅ | Store details |
 | Create WMS store | `/rest/workspaces/{ws}/wmsstores` | POST | ✅ | With capabilities URL |
-| Update WMS store | `/rest/workspaces/{ws}/wmsstores/{ws}` | PUT | ✅ | Modify configuration |
-| Delete WMS store | `/rest/workspaces/{ws}/wmsstores/{ws}` | DELETE | ✅ | With recurse |
+| Update WMS store | `/rest/workspaces/{ws}/wmsstores/{store}` | PUT | ✅ | Modify configuration |
+| Delete WMS store | `/rest/workspaces/{ws}/wmsstores/{store}` | DELETE | ✅ | With recurse |
 
 **Implementation Degree**: 100%  
 **Priority**: Medium (cascaded WMS support)
