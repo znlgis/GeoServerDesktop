@@ -3,210 +3,210 @@ using Newtonsoft.Json;
 namespace GeoServerDesktop.GeoServerClient.Models
 {
     /// <summary>
-    /// Represents a GeoServer feature type
+    /// 表示 GeoServer 要素类型
     /// </summary>
     public class FeatureType
     {
         /// <summary>
-        /// Name of the feature type
+        /// 要素类型的名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Native name of the feature type
+        /// 要素类型的本地名称
         /// </summary>
         [JsonProperty("nativeName")]
         public string NativeName { get; set; }
 
         /// <summary>
-        /// Namespace associated with the feature type
+        /// 与要素类型关联的命名空间
         /// </summary>
         [JsonProperty("namespace")]
         public NamespaceReference Namespace { get; set; }
 
         /// <summary>
-        /// Title of the feature type
+        /// 要素类型的标题
         /// </summary>
         [JsonProperty("title")]
         public string Title { get; set; }
 
         /// <summary>
-        /// Abstract/description of the feature type
+        /// 要素类型的摘要/描述
         /// </summary>
         [JsonProperty("abstract")]
         public string Abstract { get; set; }
 
         /// <summary>
-        /// Keywords associated with the feature type
+        /// 与要素类型关联的关键字
         /// </summary>
         [JsonProperty("keywords")]
         public KeywordInfo Keywords { get; set; }
 
         /// <summary>
-        /// Native CRS of the feature type
+        /// 要素类型的本地坐标参考系统
         /// </summary>
         [JsonProperty("nativeCRS")]
         public string NativeCRS { get; set; }
 
         /// <summary>
-        /// SRS of the feature type
+        /// 要素类型的空间参考系统
         /// </summary>
         [JsonProperty("srs")]
         public string Srs { get; set; }
 
         /// <summary>
-        /// Native bounding box
+        /// 本地边界框
         /// </summary>
         [JsonProperty("nativeBoundingBox")]
         public BoundingBox NativeBoundingBox { get; set; }
 
         /// <summary>
-        /// Lat/lon bounding box
+        /// 经纬度边界框
         /// </summary>
         [JsonProperty("latLonBoundingBox")]
         public BoundingBox LatLonBoundingBox { get; set; }
 
         /// <summary>
-        /// Whether the feature type is enabled
+        /// 要素类型是否启用
         /// </summary>
         [JsonProperty("enabled")]
         public bool Enabled { get; set; }
 
         /// <summary>
-        /// Store reference
+        /// 数据存储引用
         /// </summary>
         [JsonProperty("store")]
         public StoreReference Store { get; set; }
 
         /// <summary>
-        /// Link to the feature type resource
+        /// 要素类型资源的链接
         /// </summary>
         [JsonProperty("href")]
         public string Href { get; set; }
     }
 
     /// <summary>
-    /// Reference to a namespace
+    /// 对命名空间的引用
     /// </summary>
     public class NamespaceReference
     {
         /// <summary>
-        /// Name of the namespace
+        /// 命名空间的名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Link to the namespace
+        /// 命名空间的链接
         /// </summary>
         [JsonProperty("href")]
         public string Href { get; set; }
     }
 
     /// <summary>
-    /// Reference to a data store
+    /// 对数据存储的引用
     /// </summary>
     public class StoreReference
     {
         /// <summary>
-        /// Class type of the store
+        /// 数据存储的类型
         /// </summary>
         [JsonProperty("@class")]
         public string Class { get; set; }
 
         /// <summary>
-        /// Name of the store
+        /// 数据存储的名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Link to the store
+        /// 数据存储的链接
         /// </summary>
         [JsonProperty("href")]
         public string Href { get; set; }
     }
 
     /// <summary>
-    /// Keyword information
+    /// 关键字信息
     /// </summary>
     public class KeywordInfo
     {
         /// <summary>
-        /// Array of keywords
+        /// 关键字数组
         /// </summary>
         [JsonProperty("string")]
         public string[] Keywords { get; set; }
     }
 
     /// <summary>
-    /// Bounding box information
+    /// 边界框信息
     /// </summary>
     public class BoundingBox
     {
         /// <summary>
-        /// Minimum X coordinate
+        /// 最小 X 坐标
         /// </summary>
         [JsonProperty("minx")]
         public double MinX { get; set; }
 
         /// <summary>
-        /// Maximum X coordinate
+        /// 最大 X 坐标
         /// </summary>
         [JsonProperty("maxx")]
         public double MaxX { get; set; }
 
         /// <summary>
-        /// Minimum Y coordinate
+        /// 最小 Y 坐标
         /// </summary>
         [JsonProperty("miny")]
         public double MinY { get; set; }
 
         /// <summary>
-        /// Maximum Y coordinate
+        /// 最大 Y 坐标
         /// </summary>
         [JsonProperty("maxy")]
         public double MaxY { get; set; }
 
         /// <summary>
-        /// Coordinate reference system
+        /// 坐标参考系统
         /// </summary>
         [JsonProperty("crs")]
         public string Crs { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for a single feature type response
+    /// 单个要素类型响应的包装器
     /// </summary>
     public class FeatureTypeWrapper
     {
         /// <summary>
-        /// The feature type data
+        /// 要素类型数据
         /// </summary>
         [JsonProperty("featureType")]
         public FeatureType FeatureType { get; set; }
     }
 
     /// <summary>
-    /// List of feature types
+    /// 要素类型列表
     /// </summary>
     public class FeatureTypeList
     {
         /// <summary>
-        /// Array of feature types
+        /// 要素类型数组
         /// </summary>
         [JsonProperty("featureType")]
         public FeatureType[] FeatureTypes { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for feature type list response
+    /// 要素类型列表响应的包装器
     /// </summary>
     public class FeatureTypeListWrapper
     {
         /// <summary>
-        /// The feature type list data
+        /// 要素类型列表数据
         /// </summary>
         [JsonProperty("featureTypes")]
         public FeatureTypeList FeatureTypeList { get; set; }
