@@ -4,342 +4,342 @@ using System.Collections.Generic;
 namespace GeoServerDesktop.GeoServerClient.Models
 {
     /// <summary>
-    /// Represents an import context
+    /// 表示导入上下文
     /// </summary>
     public class ImportContext
     {
         /// <summary>
-        /// Gets or sets the import ID
+        /// 获取或设置导入 ID
         /// </summary>
         [JsonProperty("id")]
         public int Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the import state (PENDING, READY, RUNNING, COMPLETE, etc.)
+        /// 获取或设置导入状态（PENDING、READY、RUNNING、COMPLETE 等）
         /// </summary>
         [JsonProperty("state")]
         public string State { get; set; }
 
         /// <summary>
-        /// Gets or sets the target workspace
+        /// 获取或设置目标工作空间
         /// </summary>
         [JsonProperty("targetWorkspace")]
         public WorkspaceReference TargetWorkspace { get; set; }
 
         /// <summary>
-        /// Gets or sets the target store
+        /// 获取或设置目标存储
         /// </summary>
         [JsonProperty("targetStore")]
         public StoreReference TargetStore { get; set; }
 
         /// <summary>
-        /// Gets or sets the list of tasks
+        /// 获取或设置任务列表
         /// </summary>
         [JsonProperty("tasks")]
         public List<ImportTask> Tasks { get; set; }
     }
 
     /// <summary>
-    /// Represents an import task
+    /// 表示导入任务
     /// </summary>
     public class ImportTask
     {
         /// <summary>
-        /// Gets or sets the task ID
+        /// 获取或设置任务 ID
         /// </summary>
         [JsonProperty("id")]
         public int Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the task state
+        /// 获取或设置任务状态
         /// </summary>
         [JsonProperty("state")]
         public string State { get; set; }
 
         /// <summary>
-        /// Gets or sets the source data
+        /// 获取或设置源数据
         /// </summary>
         [JsonProperty("data")]
         public ImportData Data { get; set; }
 
         /// <summary>
-        /// Gets or sets the target layer
+        /// 获取或设置目标图层
         /// </summary>
         [JsonProperty("target")]
         public LayerReference Target { get; set; }
 
         /// <summary>
-        /// Gets or sets the progress information
+        /// 获取或设置进度信息
         /// </summary>
         [JsonProperty("progress")]
         public string Progress { get; set; }
     }
 
     /// <summary>
-    /// Represents import data
+    /// 表示导入数据
     /// </summary>
     public class ImportData
     {
         /// <summary>
-        /// Gets or sets the data type (file, directory, database, etc.)
+        /// 获取或设置数据类型（文件、目录、数据库等）
         /// </summary>
         [JsonProperty("type")]
         public string Type { get; set; }
 
         /// <summary>
-        /// Gets or sets the format
+        /// 获取或设置格式
         /// </summary>
         [JsonProperty("format")]
         public string Format { get; set; }
 
         /// <summary>
-        /// Gets or sets the location
+        /// 获取或设置位置
         /// </summary>
         [JsonProperty("location")]
         public string Location { get; set; }
     }
 
     /// <summary>
-    /// Represents a layer reference
+    /// 表示图层引用
     /// </summary>
     public class LayerReference
     {
         /// <summary>
-        /// Gets or sets the layer name
+        /// 获取或设置图层名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for import context
+    /// 导入上下文的包装器
     /// </summary>
     public class ImportContextWrapper
     {
         /// <summary>
-        /// Gets or sets the import context
+        /// 获取或设置导入上下文数据
         /// </summary>
         [JsonProperty("import")]
         public ImportContext Import { get; set; }
     }
 
     /// <summary>
-    /// Represents monitoring request information
+    /// 表示监控请求信息
     /// </summary>
     public class MonitorRequest
     {
         /// <summary>
-        /// Gets or sets the request ID
+        /// 获取或设置请求 ID
         /// </summary>
         [JsonProperty("id")]
         public long Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the path
+        /// 获取或设置路径
         /// </summary>
         [JsonProperty("path")]
         public string Path { get; set; }
 
         /// <summary>
-        /// Gets or sets the query string
+        /// 获取或设置查询字符串
         /// </summary>
         [JsonProperty("queryString")]
         public string QueryString { get; set; }
 
         /// <summary>
-        /// Gets or sets the HTTP method
+        /// 获取或设置 HTTP 方法
         /// </summary>
         [JsonProperty("httpMethod")]
         public string HttpMethod { get; set; }
 
         /// <summary>
-        /// Gets or sets the start time
+        /// 获取或设置开始时间
         /// </summary>
         [JsonProperty("startTime")]
         public string StartTime { get; set; }
 
         /// <summary>
-        /// Gets or sets the end time
+        /// 获取或设置结束时间
         /// </summary>
         [JsonProperty("endTime")]
         public string EndTime { get; set; }
 
         /// <summary>
-        /// Gets or sets the total time in milliseconds
+        /// 获取或设置总时间（毫秒）
         /// </summary>
         [JsonProperty("totalTime")]
         public long TotalTime { get; set; }
 
         /// <summary>
-        /// Gets or sets the response status
+        /// 获取或设置响应状态
         /// </summary>
         [JsonProperty("responseStatus")]
         public int ResponseStatus { get; set; }
 
         /// <summary>
-        /// Gets or sets the response length
+        /// 获取或设置响应长度
         /// </summary>
         [JsonProperty("responseLength")]
         public long ResponseLength { get; set; }
 
         /// <summary>
-        /// Gets or sets the remote address
+        /// 获取或设置远程地址
         /// </summary>
         [JsonProperty("remoteAddr")]
         public string RemoteAddr { get; set; }
 
         /// <summary>
-        /// Gets or sets the remote host
+        /// 获取或设置远程主机
         /// </summary>
         [JsonProperty("remoteHost")]
         public string RemoteHost { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for monitoring requests list
+    /// 监控请求列表的包装器
     /// </summary>
     public class MonitorRequestListWrapper
     {
         /// <summary>
-        /// Gets or sets the list of requests
+        /// 获取或设置请求列表
         /// </summary>
         [JsonProperty("requests")]
         public List<MonitorRequest> Requests { get; set; }
     }
 
     /// <summary>
-    /// Represents monitoring statistics
+    /// 表示监控统计信息
     /// </summary>
     public class MonitorStatistics
     {
         /// <summary>
-        /// Gets or sets the total requests
+        /// 获取或设置总请求数
         /// </summary>
         [JsonProperty("totalRequests")]
         public long TotalRequests { get; set; }
 
         /// <summary>
-        /// Gets or sets the average response time
+        /// 获取或设置平均响应时间
         /// </summary>
         [JsonProperty("avgResponseTime")]
         public double AvgResponseTime { get; set; }
 
         /// <summary>
-        /// Gets or sets the request statistics by path
+        /// 获取或设置按路径分组的请求统计信息
         /// </summary>
         [JsonProperty("byPath")]
         public Dictionary<string, PathStatistics> ByPath { get; set; }
     }
 
     /// <summary>
-    /// Represents statistics for a specific path
+    /// 表示特定路径的统计信息
     /// </summary>
     public class PathStatistics
     {
         /// <summary>
-        /// Gets or sets the request count
+        /// 获取或设置请求数量
         /// </summary>
         [JsonProperty("count")]
         public long Count { get; set; }
 
         /// <summary>
-        /// Gets or sets the average response time
+        /// 获取或设置平均响应时间
         /// </summary>
         [JsonProperty("avgTime")]
         public double AvgTime { get; set; }
 
         /// <summary>
-        /// Gets or sets the total bytes transferred
+        /// 获取或设置传输的总字节数
         /// </summary>
         [JsonProperty("totalBytes")]
         public long TotalBytes { get; set; }
     }
 
     /// <summary>
-    /// Represents a transform (XSLT)
+    /// 表示转换（XSLT）
     /// </summary>
     public class Transform
     {
         /// <summary>
-        /// Gets or sets the transform name
+        /// 获取或设置转换名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the XSLT content
+        /// 获取或设置 XSLT 内容
         /// </summary>
         [JsonProperty("xslt")]
         public string XSLT { get; set; }
 
         /// <summary>
-        /// Gets or sets the source format
+        /// 获取或设置源格式
         /// </summary>
         [JsonProperty("sourceFormat")]
         public string SourceFormat { get; set; }
 
         /// <summary>
-        /// Gets or sets the output format
+        /// 获取或设置输出格式
         /// </summary>
         [JsonProperty("outputFormat")]
         public string OutputFormat { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for transforms list
+    /// 转换列表的包装器
     /// </summary>
     public class TransformListWrapper
     {
         /// <summary>
-        /// Gets or sets the list of transforms
+        /// 获取或设置转换列表
         /// </summary>
         [JsonProperty("transforms")]
         public List<string> Transforms { get; set; }
     }
 
     /// <summary>
-    /// Represents a URL check rule
+    /// 表示 URL 检查规则
     /// </summary>
     public class URLCheck
     {
         /// <summary>
-        /// Gets or sets the rule name
+        /// 获取或设置规则名称
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the description
+        /// 获取或设置描述
         /// </summary>
         [JsonProperty("description")]
         public string Description { get; set; }
 
         /// <summary>
-        /// Gets or sets whether the check is enabled
+        /// 获取或设置检查是否启用
         /// </summary>
         [JsonProperty("enabled")]
         public bool? Enabled { get; set; }
 
         /// <summary>
-        /// Gets or sets the URL pattern (regex)
+        /// 获取或设置 URL 模式（正则表达式）
         /// </summary>
         [JsonProperty("urlPattern")]
         public string UrlPattern { get; set; }
 
         /// <summary>
-        /// Gets or sets the check type (DENY, ALLOW)
+        /// 获取或设置检查类型（DENY、ALLOW）
         /// </summary>
         [JsonProperty("checkType")]
         public string CheckType { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for URL checks list
+    /// URL 检查列表的包装器
     /// </summary>
     public class URLCheckListWrapper
     {
         /// <summary>
-        /// Gets or sets the list of URL checks
+        /// 获取或设置 URL 检查列表
         /// </summary>
         [JsonProperty("checks")]
         public List<string> Checks { get; set; }
