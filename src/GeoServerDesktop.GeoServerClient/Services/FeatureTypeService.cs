@@ -9,27 +9,27 @@ using System.Threading.Tasks;
 namespace GeoServerDesktop.GeoServerClient.Services
 {
     /// <summary>
-    /// Service for managing GeoServer feature types
+    /// 用于管理 GeoServer 要素类型的服务
     /// </summary>
     public class FeatureTypeService
     {
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
-        /// Initializes a new instance of the FeatureTypeService class
+        /// 初始化 FeatureTypeService 类的新实例
         /// </summary>
-        /// <param name="httpClient">HTTP client for GeoServer operations</param>
+        /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public FeatureTypeService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient;
         }
 
         /// <summary>
-        /// Gets a list of feature types in a data store
+        /// 获取数据存储中的要素类型列表
         /// </summary>
-        /// <param name="workspaceName">Name of the workspace</param>
-        /// <param name="dataStoreName">Name of the data store</param>
-        /// <returns>Array of feature types</returns>
+        /// <param name="workspaceName">工作空间的名称</param>
+        /// <param name="dataStoreName">数据存储的名称</param>
+        /// <returns>要素类型数组</returns>
         public async Task<FeatureType[]> GetFeatureTypesAsync(string workspaceName, string dataStoreName)
         {
             var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/datastores/{dataStoreName}/featuretypes.json");
@@ -38,12 +38,12 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Gets details for a specific feature type
+        /// 获取特定要素类型的详细信息
         /// </summary>
-        /// <param name="workspaceName">Name of the workspace</param>
-        /// <param name="dataStoreName">Name of the data store</param>
-        /// <param name="featureTypeName">Name of the feature type</param>
-        /// <returns>Feature type details</returns>
+        /// <param name="workspaceName">工作空间的名称</param>
+        /// <param name="dataStoreName">数据存储的名称</param>
+        /// <param name="featureTypeName">要素类型的名称</param>
+        /// <returns>要素类型详细信息</returns>
         public async Task<FeatureType> GetFeatureTypeAsync(string workspaceName, string dataStoreName, string featureTypeName)
         {
             var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/datastores/{dataStoreName}/featuretypes/{featureTypeName}.json");
@@ -52,12 +52,12 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Publishes a new feature type (creates a layer from a feature type)
+        /// 发布新的要素类型（从要素类型创建图层）
         /// </summary>
-        /// <param name="workspaceName">Name of the workspace</param>
-        /// <param name="dataStoreName">Name of the data store</param>
-        /// <param name="featureType">Feature type configuration</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <param name="workspaceName">工作空间的名称</param>
+        /// <param name="dataStoreName">数据存储的名称</param>
+        /// <param name="featureType">要素类型配置</param>
+        /// <returns>表示异步操作的任务</returns>
         public async Task CreateFeatureTypeAsync(string workspaceName, string dataStoreName, FeatureType featureType)
         {
             var wrapper = new { featureType = featureType };
@@ -67,13 +67,13 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Updates an existing feature type
+        /// 更新现有的要素类型
         /// </summary>
-        /// <param name="workspaceName">Name of the workspace</param>
-        /// <param name="dataStoreName">Name of the data store</param>
-        /// <param name="featureTypeName">Name of the feature type</param>
-        /// <param name="featureType">Updated feature type configuration</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <param name="workspaceName">工作空间的名称</param>
+        /// <param name="dataStoreName">数据存储的名称</param>
+        /// <param name="featureTypeName">要素类型的名称</param>
+        /// <param name="featureType">更新后的要素类型配置</param>
+        /// <returns>表示异步操作的任务</returns>
         public async Task UpdateFeatureTypeAsync(string workspaceName, string dataStoreName, string featureTypeName, FeatureType featureType)
         {
             var wrapper = new { featureType = featureType };
@@ -83,13 +83,13 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Deletes a feature type
+        /// 删除要素类型
         /// </summary>
-        /// <param name="workspaceName">Name of the workspace</param>
-        /// <param name="dataStoreName">Name of the data store</param>
-        /// <param name="featureTypeName">Name of the feature type to delete</param>
-        /// <param name="recurse">Whether to recursively delete all resources associated with the feature type</param>
-        /// <returns>Task representing the asynchronous operation</returns>
+        /// <param name="workspaceName">工作空间的名称</param>
+        /// <param name="dataStoreName">数据存储的名称</param>
+        /// <param name="featureTypeName">要删除的要素类型名称</param>
+        /// <param name="recurse">是否递归删除与要素类型相关的所有资源</param>
+        /// <returns>表示异步操作的任务</returns>
         public async Task DeleteFeatureTypeAsync(string workspaceName, string dataStoreName, string featureTypeName, bool recurse = false)
         {
             var path = $"/rest/workspaces/{workspaceName}/datastores/{dataStoreName}/featuretypes/{featureTypeName}?recurse={recurse.ToString().ToLowerInvariant()}";

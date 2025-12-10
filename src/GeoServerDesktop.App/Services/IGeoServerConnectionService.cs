@@ -5,76 +5,76 @@ using System;
 namespace GeoServerDesktop.App.Services
 {
     /// <summary>
-    /// Interface for managing GeoServer connections
+    /// 用于管理 GeoServer 连接的接口
     /// </summary>
     public interface IGeoServerConnectionService
     {
         /// <summary>
-        /// Gets whether a connection is currently established
+        /// 获取当前是否已建立连接
         /// </summary>
         bool IsConnected { get; }
 
         /// <summary>
-        /// Gets the current connection options
+        /// 获取当前的连接选项
         /// </summary>
         GeoServerClientOptions? CurrentOptions { get; }
 
         /// <summary>
-        /// Event raised when connection status changes
+        /// 当连接状态发生变化时触发的事件
         /// </summary>
         event EventHandler<bool>? ConnectionStatusChanged;
 
         /// <summary>
-        /// Connects to a GeoServer instance
+        /// 连接到 GeoServer 实例
         /// </summary>
-        /// <param name="options">Connection options</param>
+        /// <param name="options">连接选项</param>
         void Connect(GeoServerClientOptions options);
 
         /// <summary>
-        /// Disconnects from the current GeoServer instance
+        /// 断开与当前 GeoServer 实例的连接
         /// </summary>
         void Disconnect();
 
         /// <summary>
-        /// Gets the workspace service
+        /// 获取工作空间服务
         /// </summary>
-        /// <returns>WorkspaceService instance</returns>
+        /// <returns>WorkspaceService 实例</returns>
         WorkspaceService GetWorkspaceService();
 
         /// <summary>
-        /// Gets the data store service
+        /// 获取数据存储服务
         /// </summary>
-        /// <returns>DataStoreService instance</returns>
+        /// <returns>DataStoreService 实例</returns>
         DataStoreService GetDataStoreService();
 
         /// <summary>
-        /// Gets the layer service
+        /// 获取图层服务
         /// </summary>
-        /// <returns>LayerService instance</returns>
+        /// <returns>LayerService 实例</returns>
         LayerService GetLayerService();
 
         /// <summary>
-        /// Gets the style service
+        /// 获取样式服务
         /// </summary>
-        /// <returns>StyleService instance</returns>
+        /// <returns>StyleService 实例</returns>
         StyleService GetStyleService();
 
         /// <summary>
-        /// Gets the layer group service
+        /// 获取图层组服务
         /// </summary>
-        /// <returns>LayerGroupService instance</returns>
+        /// <returns>LayerGroupService 实例</returns>
         LayerGroupService GetLayerGroupService();
 
         /// <summary>
-        /// Gets the feature type service
+        /// 获取要素类型服务
         /// </summary>
-        /// <returns>FeatureTypeService instance</returns>
+        /// <returns>FeatureTypeService 实例</returns>
         FeatureTypeService GetFeatureTypeService();
 
         /// <summary>
-        /// Gets the preview service
+        /// 获取预览服务
         /// </summary>
-        /// <returns>PreviewService instance</returns>
+        /// <returns>PreviewService 实例</returns>
         PreviewService GetPreviewService();
     }
 }

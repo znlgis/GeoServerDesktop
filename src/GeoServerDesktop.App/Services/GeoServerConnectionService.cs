@@ -5,31 +5,31 @@ using System;
 namespace GeoServerDesktop.App.Services
 {
     /// <summary>
-    /// Service for managing GeoServer connections
+    /// 用于管理 GeoServer 连接的服务
     /// </summary>
     public class GeoServerConnectionService : IGeoServerConnectionService
     {
         private GeoServerClientFactory? _factory;
 
         /// <summary>
-        /// Gets whether a connection is currently established
+        /// 获取当前是否已建立连接
         /// </summary>
         public bool IsConnected { get; private set; }
 
         /// <summary>
-        /// Gets the current connection options
+        /// 获取当前的连接选项
         /// </summary>
         public GeoServerClientOptions? CurrentOptions { get; private set; }
 
         /// <summary>
-        /// Event raised when connection status changes
+        /// 当连接状态发生变化时触发的事件
         /// </summary>
         public event EventHandler<bool>? ConnectionStatusChanged;
 
         /// <summary>
-        /// Connects to a GeoServer instance
+        /// 连接到 GeoServer 实例
         /// </summary>
-        /// <param name="options">Connection options</param>
+        /// <param name="options">连接选项</param>
         public void Connect(GeoServerClientOptions options)
         {
             if (options == null)
@@ -45,7 +45,7 @@ namespace GeoServerDesktop.App.Services
         }
 
         /// <summary>
-        /// Disconnects from the current GeoServer instance
+        /// 断开与当前 GeoServer 实例的连接
         /// </summary>
         public void Disconnect()
         {
@@ -62,9 +62,9 @@ namespace GeoServerDesktop.App.Services
         }
 
         /// <summary>
-        /// Gets the workspace service
+        /// 获取工作空间服务
         /// </summary>
-        /// <returns>WorkspaceService instance</returns>
+        /// <returns>WorkspaceService 实例</returns>
         public WorkspaceService GetWorkspaceService()
         {
             EnsureConnected();
@@ -72,9 +72,9 @@ namespace GeoServerDesktop.App.Services
         }
 
         /// <summary>
-        /// Gets the data store service
+        /// 获取数据存储服务
         /// </summary>
-        /// <returns>DataStoreService instance</returns>
+        /// <returns>DataStoreService 实例</returns>
         public DataStoreService GetDataStoreService()
         {
             EnsureConnected();
@@ -82,9 +82,9 @@ namespace GeoServerDesktop.App.Services
         }
 
         /// <summary>
-        /// Gets the layer service
+        /// 获取图层服务
         /// </summary>
-        /// <returns>LayerService instance</returns>
+        /// <returns>LayerService 实例</returns>
         public LayerService GetLayerService()
         {
             EnsureConnected();
@@ -92,9 +92,9 @@ namespace GeoServerDesktop.App.Services
         }
 
         /// <summary>
-        /// Gets the style service
+        /// 获取样式服务
         /// </summary>
-        /// <returns>StyleService instance</returns>
+        /// <returns>StyleService 实例</returns>
         public StyleService GetStyleService()
         {
             EnsureConnected();
@@ -102,9 +102,9 @@ namespace GeoServerDesktop.App.Services
         }
 
         /// <summary>
-        /// Gets the layer group service
+        /// 获取图层组服务
         /// </summary>
-        /// <returns>LayerGroupService instance</returns>
+        /// <returns>LayerGroupService 实例</returns>
         public LayerGroupService GetLayerGroupService()
         {
             EnsureConnected();
@@ -112,9 +112,9 @@ namespace GeoServerDesktop.App.Services
         }
 
         /// <summary>
-        /// Gets the feature type service
+        /// 获取要素类型服务
         /// </summary>
-        /// <returns>FeatureTypeService instance</returns>
+        /// <returns>FeatureTypeService 实例</returns>
         public FeatureTypeService GetFeatureTypeService()
         {
             EnsureConnected();
@@ -122,15 +122,18 @@ namespace GeoServerDesktop.App.Services
         }
 
         /// <summary>
-        /// Gets the preview service
+        /// 获取预览服务
         /// </summary>
-        /// <returns>PreviewService instance</returns>
+        /// <returns>PreviewService 实例</returns>
         public PreviewService GetPreviewService()
         {
             EnsureConnected();
             return _factory!.CreatePreviewService();
         }
 
+        /// <summary>
+        /// 确保已连接到 GeoServer 实例
+        /// </summary>
         private void EnsureConnected()
         {
             if (!IsConnected || _factory == null)
