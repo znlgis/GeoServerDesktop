@@ -123,13 +123,13 @@ namespace GeoServerDesktop.App.ViewModels
                         switch (resource.Name)
                         {
                             case "GeoServer":
-                                GeoServerVersion = resource.Value;
+                                GeoServerVersion = resource.Version ?? "N/A";
                                 break;
                             case "GeoTools":
-                                GeoToolsVersion = resource.Value;
+                                GeoToolsVersion = resource.Version ?? "N/A";
                                 break;
                             case "GeoWebCache":
-                                GeoWebCacheVersion = resource.Value;
+                                GeoWebCacheVersion = resource.Version ?? "N/A";
                                 break;
                         }
                     }
@@ -137,30 +137,27 @@ namespace GeoServerDesktop.App.ViewModels
 
                 // 加载系统状态
                 var systemStatus = await aboutService.GetSystemStatusAsync();
-                if (systemStatus?.SystemStatus?.Metrics != null)
+                if (systemStatus?.Metrics?.MetricArray != null)
                 {
-                    var metrics = systemStatus.SystemStatus.Metrics;
-
                     // 处理 JVM 信息
-                    if (metrics.Jvm != null)
-                    {
-                        JvmVersion = metrics.Jvm.Version ?? "N/A";
-                        JvmVendor = metrics.Jvm.Vendor ?? "N/A";
-                    }
+                    JvmVersion = systemStatus.GetJvmVersion() ?? "N/A";
+                    JvmVendor = systemStatus.GetJvmVendor() ?? "N/A";
 
                     // 处理内存信息
-                    if (metrics.Memory != null)
-                    {
-                        TotalMemory = FormatMemory(metrics.Memory.Total);
-                        UsedMemory = FormatMemory(metrics.Memory.Used);
-                        FreeMemory = FormatMemory(metrics.Memory.Free);
-                        MaxMemory = FormatMemory(metrics.Memory.Max);
+                    var maxMemory = systemStatus.GetMaximumHeapMemory();
+                    var totalMemory = systemStatus.GetTotalHeapMemory();
+                    var freeMemory = systemStatus.GetFreeHeapMemory();
+                    var usedMemory = systemStatus.GetUsedHeapMemory();
 
-                        // 计算使用百分比
-                        if (metrics.Memory.Max > 0)
-                        {
-                            MemoryUsagePercentage = (double)metrics.Memory.Used / metrics.Memory.Max * 100;
-                        }
+                    TotalMemory = FormatMemory(totalMemory);
+                    UsedMemory = FormatMemory(usedMemory);
+                    FreeMemory = FormatMemory(freeMemory);
+                    MaxMemory = FormatMemory(maxMemory);
+
+                    // 计算使用百分比
+                    if (maxMemory > 0)
+                    {
+                        MemoryUsagePercentage = (double)usedMemory / maxMemory * 100;
                     }
                 }
 
