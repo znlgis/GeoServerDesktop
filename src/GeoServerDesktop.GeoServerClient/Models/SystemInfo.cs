@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace GeoServerDesktop.GeoServerClient.Models
 {
@@ -58,26 +59,26 @@ namespace GeoServerDesktop.GeoServerClient.Models
         /// <summary>
         /// 获取或设置资源名称
         /// </summary>
-        [JsonProperty("@name")]
+        [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// 获取或设置资源值
+        /// 获取或设置版本
         /// </summary>
-        [JsonProperty("$")]
-        public string Value { get; set; }
-    }
+        [JsonProperty("Version")]
+        public string Version { get; set; }
 
-    /// <summary>
-    /// 表示系统状态信息
-    /// </summary>
-    public class SystemStatus
-    {
         /// <summary>
-        /// 获取或设置内存信息
+        /// 获取或设置构建时间戳
         /// </summary>
-        [JsonProperty("metrics")]
-        public Metrics Metrics { get; set; }
+        [JsonProperty("Build-Timestamp")]
+        public string BuildTimestamp { get; set; }
+
+        /// <summary>
+        /// 获取或设置 Git 修订版本
+        /// </summary>
+        [JsonProperty("Git-Revision")]
+        public string GitRevision { get; set; }
     }
 
     /// <summary>
@@ -86,15 +87,82 @@ namespace GeoServerDesktop.GeoServerClient.Models
     public class SystemStatusWrapper
     {
         /// <summary>
-        /// 获取或设置系统状态
+        /// 获取或设置指标容器
         /// </summary>
-        [JsonProperty("systemStatus")]
-        public SystemStatus SystemStatus { get; set; }
+        [JsonProperty("metrics")]
+        public MetricsContainer Metrics { get; set; }
     }
 
     /// <summary>
-    /// 表示系统指标
+    /// 表示指标容器
     /// </summary>
+    public class MetricsContainer
+    {
+        /// <summary>
+        /// 获取或设置指标数组
+        /// </summary>
+        [JsonProperty("metric")]
+        public Metric[] MetricArray { get; set; }
+    }
+
+    /// <summary>
+    /// 表示单个指标
+    /// </summary>
+    public class Metric
+    {
+        /// <summary>
+        /// 获取或设置指标是否可用
+        /// </summary>
+        [JsonProperty("available")]
+        public bool Available { get; set; }
+
+        /// <summary>
+        /// 获取或设置指标描述
+        /// </summary>
+        [JsonProperty("description")]
+        public string Description { get; set; }
+
+        /// <summary>
+        /// 获取或设置指标名称
+        /// </summary>
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 获取或设置单位
+        /// </summary>
+        [JsonProperty("unit")]
+        public string Unit { get; set; }
+
+        /// <summary>
+        /// 获取或设置类别
+        /// </summary>
+        [JsonProperty("category")]
+        public string Category { get; set; }
+
+        /// <summary>
+        /// 获取或设置标识符
+        /// </summary>
+        [JsonProperty("identifier")]
+        public string Identifier { get; set; }
+
+        /// <summary>
+        /// 获取或设置优先级
+        /// </summary>
+        [JsonProperty("priority")]
+        public int Priority { get; set; }
+
+        /// <summary>
+        /// 获取或设置值
+        /// </summary>
+        [JsonProperty("value")]
+        public object Value { get; set; }
+    }
+
+    /// <summary>
+    /// 表示系统指标（已弃用，保留以向后兼容）
+    /// </summary>
+    [System.Obsolete("Use MetricsContainer and Metric classes instead. This class will be removed in version 2.0.0.")]
     public class Metrics
     {
         /// <summary>
@@ -198,5 +266,82 @@ namespace GeoServerDesktop.GeoServerClient.Models
         /// </summary>
         [JsonProperty("resource")]
         public ManifestInfo[] Resources { get; set; }
+    }
+
+    /// <summary>
+    /// SystemStatusWrapper 扩展方法
+    /// </summary>
+    public static class SystemStatusExtensions
+    {
+        /// <summary>
+        /// 从指标数组中获取指定名称的指标值
+        /// </summary>
+        public static string GetMetricValue(this SystemStatusWrapper wrapper, string metricName)
+        {
+            var metric = wrapper?.Metrics?.MetricArray?.FirstOrDefault(m => m.Name == metricName);
+            return metric?.Value?.ToString();
+        }
+
+        /// <summary>
+        /// 从指标数组中获取 long 类型的指标值
+        /// </summary>
+        public static long GetMetricValueAsLong(this SystemStatusWrapper wrapper, string metricName)
+        {
+            var metric = wrapper?.Metrics?.MetricArray?.FirstOrDefault(m => m.Name == metricName);
+            if (metric?.Value == null) return 0;
+            
+            if (metric.Value is long longValue) return longValue;
+            var valueString = metric.Value?.ToString();
+            if (valueString != null && long.TryParse(valueString, out var result)) return result;
+            return 0;
+        }
+
+        /// <summary>
+        /// 获取 JVM 版本
+        /// </summary>
+        public static string GetJvmVersion(this SystemStatusWrapper wrapper)
+        {
+            return wrapper.GetMetricValue("JVM_VERSION");
+        }
+
+        /// <summary>
+        /// 获取 JVM 供应商
+        /// </summary>
+        public static string GetJvmVendor(this SystemStatusWrapper wrapper)
+        {
+            return wrapper.GetMetricValue("JVM_VENDOR");
+        }
+
+        /// <summary>
+        /// 获取最大堆内存
+        /// </summary>
+        public static long GetMaximumHeapMemory(this SystemStatusWrapper wrapper)
+        {
+            return wrapper.GetMetricValueAsLong("MAXIMUM_HEAP_MEMORY");
+        }
+
+        /// <summary>
+        /// 获取总堆内存
+        /// </summary>
+        public static long GetTotalHeapMemory(this SystemStatusWrapper wrapper)
+        {
+            return wrapper.GetMetricValueAsLong("TOTAL_HEAP_MEMORY");
+        }
+
+        /// <summary>
+        /// 获取空闲堆内存
+        /// </summary>
+        public static long GetFreeHeapMemory(this SystemStatusWrapper wrapper)
+        {
+            return wrapper.GetMetricValueAsLong("FREE_HEAP_MEMORY");
+        }
+
+        /// <summary>
+        /// 获取已使用堆内存
+        /// </summary>
+        public static long GetUsedHeapMemory(this SystemStatusWrapper wrapper)
+        {
+            return wrapper.GetMetricValueAsLong("USED_HEAP_MEMORY");
+        }
     }
 }
