@@ -84,6 +84,12 @@ public partial class MainWindowViewModel : ViewModelBase
     private StoresManagementViewModel _storesManagementViewModel;
 
     /// <summary>
+    /// 图层管理视图模型
+    /// </summary>
+    [ObservableProperty]
+    private LayersManagementViewModel _layersManagementViewModel;
+
+    /// <summary>
     /// 当前显示的视图
     /// </summary>
     [ObservableProperty]
@@ -100,6 +106,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _workspaceManagementViewModel = new WorkspaceManagementViewModel(_connectionService);
         _styleManagementViewModel = new StyleManagementViewModel(_connectionService);
         _storesManagementViewModel = new StoresManagementViewModel(_connectionService);
+        _layersManagementViewModel = new LayersManagementViewModel(_connectionService);
         
         // 设置默认视图为欢迎页面
         _currentView = CreateWelcomeViewModel();
@@ -705,8 +712,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private ViewModelBase CreateLayersViewModel()
     {
-        return new PlaceholderViewModel("Layers", 
-            "Layer management interface will be displayed here. This allows you to publish and configure vector and raster layers.");
+        return LayersManagementViewModel;
     }
 
     private ViewModelBase CreateLayerGroupsViewModel()
