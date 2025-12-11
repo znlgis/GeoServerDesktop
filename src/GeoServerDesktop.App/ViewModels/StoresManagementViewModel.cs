@@ -1,11 +1,10 @@
+using System;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GeoServerDesktop.App.Services;
 using GeoServerDesktop.GeoServerClient.Models;
-using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace GeoServerDesktop.App.ViewModels
 {
@@ -88,7 +87,7 @@ namespace GeoServerDesktop.App.ViewModels
                 }
 
                 StatusMessage = $"Loaded {Workspaces.Count} workspaces";
-                
+
                 // 自动选择第一个工作空间
                 if (Workspaces.Count > 0)
                 {

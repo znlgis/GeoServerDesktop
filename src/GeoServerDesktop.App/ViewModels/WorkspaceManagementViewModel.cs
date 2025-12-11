@@ -1,9 +1,9 @@
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using GeoServerDesktop.App.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using GeoServerDesktop.App.Services;
 
 namespace GeoServerDesktop.App.ViewModels
 {
@@ -113,7 +113,7 @@ namespace GeoServerDesktop.App.ViewModels
 
                 StatusMessage = $"Workspace '{NewWorkspaceName}' created successfully";
                 NewWorkspaceName = string.Empty;
-                
+
                 // 重新加载工作空间
                 await LoadWorkspacesAsync();
             }
@@ -149,7 +149,7 @@ namespace GeoServerDesktop.App.ViewModels
 
                 StatusMessage = $"Workspace '{SelectedWorkspace}' deleted successfully";
                 SelectedWorkspace = null;
-                
+
                 // 重新加载工作空间
                 await LoadWorkspacesAsync();
             }

@@ -75,14 +75,8 @@
                 <ScrollViewer>
                     <StackPanel Margin="0,10">
                         <!-- About & Status Section -->
-                        <Expander Header="About &amp; Status" IsExpanded="True" Margin="5">
+                        <Expander Header="About &amp; Status" IsExpanded="True" Margin="5" HorizontalAlignment="Stretch">
                             <StackPanel Margin="10,5">
-                                <Button Content="Server Status" 
-                                        Command="{Binding ShowServerStatusCommand}"
-                                        HorizontalAlignment="Stretch"
-                                        HorizontalContentAlignment="Left"
-                                        Background="Transparent"
-                                        Margin="0,2"/>
                                 <Button Content="About GeoServer" 
                                         Command="{Binding ShowAboutCommand}"
                                         HorizontalAlignment="Stretch"
@@ -93,7 +87,7 @@
                         </Expander>
 
                         <!-- Data Section -->
-                        <Expander Header="Data" IsExpanded="True" Margin="5">
+                        <Expander Header="Data" IsExpanded="True" Margin="5" HorizontalAlignment="Stretch">
                             <StackPanel Margin="10,5">
                                 <Button Content="Layer Preview" 
                                         Command="{Binding ShowLayerPreviewCommand}"
@@ -135,7 +129,7 @@
                         </Expander>
 
                         <!-- Services Section -->
-                        <Expander Header="Services" Margin="5">
+                        <Expander Header="Services" Margin="5" HorizontalAlignment="Stretch">
                             <StackPanel Margin="10,5">
                                 <Button Content="WMS" 
                                         Command="{Binding ShowWMSSettingsCommand}"
@@ -159,7 +153,7 @@
                         </Expander>
 
                         <!-- Settings Section -->
-                        <Expander Header="Settings" Margin="5">
+                        <Expander Header="Settings" Margin="5" HorizontalAlignment="Stretch">
                             <StackPanel Margin="10,5">
                                 <Button Content="Global" 
                                         Command="{Binding ShowGlobalSettingsCommand}"
@@ -177,7 +171,7 @@
                         </Expander>
 
                         <!-- Tile Caching Section -->
-                        <Expander Header="Tile Caching" Margin="5">
+                        <Expander Header="Tile Caching" Margin="5" HorizontalAlignment="Stretch">
                             <StackPanel Margin="10,5">
                                 <Button Content="Caching Defaults" 
                                         Command="{Binding ShowCachingDefaultsCommand}"
@@ -201,7 +195,7 @@
                         </Expander>
 
                         <!-- Security Section -->
-                        <Expander Header="Security" Margin="5">
+                        <Expander Header="Security" Margin="5" HorizontalAlignment="Stretch">
                             <StackPanel Margin="10,5">
                                 <Button Content="Settings" 
                                         Command="{Binding ShowSecuritySettingsCommand}"

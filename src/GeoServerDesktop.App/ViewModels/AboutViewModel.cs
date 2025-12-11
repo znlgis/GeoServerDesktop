@@ -1,9 +1,8 @@
+using System;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GeoServerDesktop.App.Services;
-using GeoServerDesktop.GeoServerClient.Models;
-using System;
-using System.Threading.Tasks;
 
 namespace GeoServerDesktop.App.ViewModels
 {
@@ -31,48 +30,6 @@ namespace GeoServerDesktop.App.ViewModels
         /// </summary>
         [ObservableProperty]
         private string _geoWebCacheVersion = "Loading...";
-
-        /// <summary>
-        /// JVM 版本
-        /// </summary>
-        [ObservableProperty]
-        private string _jvmVersion = "Loading...";
-
-        /// <summary>
-        /// JVM 供应商
-        /// </summary>
-        [ObservableProperty]
-        private string _jvmVendor = "Loading...";
-
-        /// <summary>
-        /// 总内存（MB）
-        /// </summary>
-        [ObservableProperty]
-        private string _totalMemory = "Loading...";
-
-        /// <summary>
-        /// 已使用内存（MB）
-        /// </summary>
-        [ObservableProperty]
-        private string _usedMemory = "Loading...";
-
-        /// <summary>
-        /// 空闲内存（MB）
-        /// </summary>
-        [ObservableProperty]
-        private string _freeMemory = "Loading...";
-
-        /// <summary>
-        /// 最大内存（MB）
-        /// </summary>
-        [ObservableProperty]
-        private string _maxMemory = "Loading...";
-
-        /// <summary>
-        /// 内存使用百分比
-        /// </summary>
-        [ObservableProperty]
-        private double _memoryUsagePercentage;
 
         /// <summary>
         /// 状态消息
@@ -135,32 +92,6 @@ namespace GeoServerDesktop.App.ViewModels
                     }
                 }
 
-                // 加载系统状态
-                var systemStatus = await aboutService.GetSystemStatusAsync();
-                if (systemStatus?.Metrics?.MetricArray != null)
-                {
-                    // 处理 JVM 信息
-                    JvmVersion = systemStatus.GetJvmVersion() ?? "N/A";
-                    JvmVendor = systemStatus.GetJvmVendor() ?? "N/A";
-
-                    // 处理内存信息
-                    var maxMemory = systemStatus.GetMaximumHeapMemory();
-                    var totalMemory = systemStatus.GetTotalHeapMemory();
-                    var freeMemory = systemStatus.GetFreeHeapMemory();
-                    var usedMemory = systemStatus.GetUsedHeapMemory();
-
-                    TotalMemory = FormatMemory(totalMemory);
-                    UsedMemory = FormatMemory(usedMemory);
-                    FreeMemory = FormatMemory(freeMemory);
-                    MaxMemory = FormatMemory(maxMemory);
-
-                    // 计算使用百分比
-                    if (maxMemory > 0)
-                    {
-                        MemoryUsagePercentage = (double)usedMemory / maxMemory * 100;
-                    }
-                }
-
                 StatusMessage = "System information loaded successfully";
             }
             catch (Exception ex)
@@ -169,26 +100,11 @@ namespace GeoServerDesktop.App.ViewModels
                 GeoServerVersion = "Error";
                 GeoToolsVersion = "Error";
                 GeoWebCacheVersion = "Error";
-                JvmVersion = "Error";
-                JvmVendor = "Error";
-                TotalMemory = "Error";
-                UsedMemory = "Error";
-                FreeMemory = "Error";
-                MaxMemory = "Error";
             }
             finally
             {
                 IsLoading = false;
             }
-        }
-
-        /// <summary>
-        /// 格式化内存大小（字节转 MB）
-        /// </summary>
-        private string FormatMemory(long bytes)
-        {
-            double mb = bytes / (1024.0 * 1024.0);
-            return $"{mb:N2} MB";
         }
 
         /// <summary>

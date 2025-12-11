@@ -1,12 +1,12 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using GeoServerDesktop.App.Models;
-using GeoServerDesktop.App.Services;
-using GeoServerDesktop.GeoServerClient.Configuration;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using GeoServerDesktop.App.Models;
+using GeoServerDesktop.App.Services;
+using GeoServerDesktop.GeoServerClient.Configuration;
 
 namespace GeoServerDesktop.App.ViewModels;
 
@@ -121,7 +121,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _layersManagementViewModel = new LayersManagementViewModel(_connectionService);
         _layerGroupsManagementViewModel = new LayerGroupsManagementViewModel(_connectionService);
         _aboutViewModel = new AboutViewModel(_connectionService);
-        
+
         // 设置默认视图为欢迎页面
         _currentView = CreateWelcomeViewModel();
     }
@@ -224,21 +224,6 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             StatusMessage = $"Failed to refresh: {ex.Message}";
         }
-    }
-
-    /// <summary>
-    /// 显示服务器状态页面
-    /// </summary>
-    [RelayCommand]
-    private void ShowServerStatus()
-    {
-        if (!IsConnected)
-        {
-            StatusMessage = "Please connect to GeoServer first";
-            return;
-        }
-        CurrentView = CreateServerStatusViewModel();
-        StatusMessage = "Server Status";
     }
 
     /// <summary>
@@ -547,7 +532,7 @@ public partial class MainWindowViewModel : ViewModelBase
                     Type = ResourceType.Workspace,
                     Tag = workspace
                 };
-                
+
                 // 添加用于延迟加载的占位符节点
                 var dataStoresContainer = new ResourceTreeNode
                 {
@@ -556,7 +541,7 @@ public partial class MainWindowViewModel : ViewModelBase
                     Tag = workspace.Name
                 };
                 workspaceNode.Children.Add(dataStoresContainer);
-                
+
                 workspacesContainer.Children.Add(workspaceNode);
             }
 
@@ -605,7 +590,7 @@ public partial class MainWindowViewModel : ViewModelBase
             if (dataStoresContainer != null)
             {
                 dataStoresContainer.Children.Clear();
-                
+
                 foreach (var dataStore in dataStores)
                 {
                     var dataStoreNode = new ResourceTreeNode
@@ -614,7 +599,7 @@ public partial class MainWindowViewModel : ViewModelBase
                         Type = ResourceType.DataStore,
                         Tag = dataStore
                     };
-                    
+
                     // 添加图层的占位符
                     var layersContainer = new ResourceTreeNode
                     {
@@ -623,7 +608,7 @@ public partial class MainWindowViewModel : ViewModelBase
                         Tag = new { WorkspaceName = workspaceName, DataStoreName = dataStore.Name }
                     };
                     dataStoreNode.Children.Add(layersContainer);
-                    
+
                     dataStoresContainer.Children.Add(dataStoreNode);
                 }
             }
@@ -652,7 +637,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
             var workspaceName = workspaceNode.Name;
             var dataStoreName = dataStoreNode.Name;
-            
+
             var featureTypeService = _connectionService.GetFeatureTypeService();
             var featureTypes = await featureTypeService.GetFeatureTypesAsync(workspaceName, dataStoreName);
 
@@ -660,7 +645,7 @@ public partial class MainWindowViewModel : ViewModelBase
             if (layersContainer != null)
             {
                 layersContainer.Children.Clear();
-                
+
                 foreach (var featureType in featureTypes)
                 {
                     var layerNode = new ResourceTreeNode
@@ -703,13 +688,13 @@ public partial class MainWindowViewModel : ViewModelBase
     // Factory methods for creating ViewModels
     private ViewModelBase CreateWelcomeViewModel()
     {
-        return new PlaceholderViewModel("Welcome to GeoServer Desktop", 
+        return new PlaceholderViewModel("Welcome to GeoServer Desktop",
             "Connect to a GeoServer instance using the login form above to begin managing your spatial data services.");
     }
 
     private ViewModelBase CreateServerStatusViewModel()
     {
-        return new PlaceholderViewModel("Server Status", 
+        return new PlaceholderViewModel("Server Status",
             "Server status information will be displayed here. This includes uptime, resource usage, and active connections.");
     }
 
@@ -735,61 +720,61 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private ViewModelBase CreateWMSSettingsViewModel()
     {
-        return new PlaceholderViewModel("WMS Settings", 
+        return new PlaceholderViewModel("WMS Settings",
             "Web Map Service (WMS) configuration will be displayed here.");
     }
 
     private ViewModelBase CreateWFSSettingsViewModel()
     {
-        return new PlaceholderViewModel("WFS Settings", 
+        return new PlaceholderViewModel("WFS Settings",
             "Web Feature Service (WFS) configuration will be displayed here.");
     }
 
     private ViewModelBase CreateWCSSettingsViewModel()
     {
-        return new PlaceholderViewModel("WCS Settings", 
+        return new PlaceholderViewModel("WCS Settings",
             "Web Coverage Service (WCS) configuration will be displayed here.");
     }
 
     private ViewModelBase CreateGlobalSettingsViewModel()
     {
-        return new PlaceholderViewModel("Global Settings", 
+        return new PlaceholderViewModel("Global Settings",
             "Global GeoServer settings will be displayed here. This includes contact information, proxy settings, and other global configurations.");
     }
 
     private ViewModelBase CreateLoggingViewModel()
     {
-        return new PlaceholderViewModel("Logging Settings", 
+        return new PlaceholderViewModel("Logging Settings",
             "Logging configuration will be displayed here. This allows you to configure log levels and output destinations.");
     }
 
     private ViewModelBase CreateCachingDefaultsViewModel()
     {
-        return new PlaceholderViewModel("Tile Caching Defaults", 
+        return new PlaceholderViewModel("Tile Caching Defaults",
             "GeoWebCache default settings will be displayed here.");
     }
 
     private ViewModelBase CreateGridsetsViewModel()
     {
-        return new PlaceholderViewModel("Gridsets", 
+        return new PlaceholderViewModel("Gridsets",
             "Gridset management for tile caching will be displayed here.");
     }
 
     private ViewModelBase CreateDiskQuotaViewModel()
     {
-        return new PlaceholderViewModel("Disk Quota", 
+        return new PlaceholderViewModel("Disk Quota",
             "Disk quota configuration for tile cache will be displayed here.");
     }
 
     private ViewModelBase CreateSecuritySettingsViewModel()
     {
-        return new PlaceholderViewModel("Security Settings", 
+        return new PlaceholderViewModel("Security Settings",
             "Security configuration will be displayed here. This includes authentication and authorization settings.");
     }
 
     private ViewModelBase CreateUsersGroupsViewModel()
     {
-        return new PlaceholderViewModel("Users, Groups, and Roles", 
+        return new PlaceholderViewModel("Users, Groups, and Roles",
             "User, group, and role management will be displayed here.");
     }
 }

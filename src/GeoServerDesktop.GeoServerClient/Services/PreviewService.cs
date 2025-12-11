@@ -52,9 +52,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
                 ["format"] = format
             };
 
-            var queryString = string.Join("&", 
+            var queryString = string.Join("&",
                 Array.ConvertAll(
-                    new List<string>(parameters.Keys).ToArray(), 
+                    new List<string>(parameters.Keys).ToArray(),
                     key => $"{key}={Uri.EscapeDataString(parameters[key])}"
                 )
             );
@@ -69,8 +69,8 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>WMS GetCapabilities URL</returns>
         public string GetCapabilitiesUrl(string workspace = null)
         {
-            var path = string.IsNullOrWhiteSpace(workspace) 
-                ? "/wms" 
+            var path = string.IsNullOrWhiteSpace(workspace)
+                ? "/wms"
                 : $"/{workspace}/wms";
 
             return $"{_baseUrl}{path}?service=WMS&version=1.1.0&request=GetCapabilities";

@@ -1,8 +1,8 @@
+using System;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Mapsui;
-using System;
-using System.Threading.Tasks;
 using GeoServerLayer = GeoServerDesktop.GeoServerClient.Models.Layer;
 
 namespace GeoServerDesktop.App.ViewModels
@@ -86,7 +86,7 @@ namespace GeoServerDesktop.App.ViewModels
             {
                 BaseUrl = geoServerBaseUrl;
                 CurrentWorkspace = workspace;
-                
+
                 var layerFullName = string.IsNullOrWhiteSpace(workspace) ? layerName : $"{workspace}:{layerName}";
 
                 // 生成 WMS 预览 URL
@@ -94,7 +94,7 @@ namespace GeoServerDesktop.App.ViewModels
                 var bbox = "-180,-90,180,90"; // 世界范围
                 var width = 800;
                 var height = 600;
-                
+
                 PreviewUrl = $"{wmsUrl}?service=WMS&version=1.1.0&request=GetMap&layers={Uri.EscapeDataString(layerFullName)}&srs=EPSG:4326&bbox={bbox}&width={width}&height={height}&format=image/png";
 
                 StatusMessage = $"WMS URL generated for: {layerFullName}. Click 'View WMS URL' to see the preview URL.";

@@ -1,6 +1,6 @@
+using System;
 using GeoServerDesktop.GeoServerClient.Configuration;
 using GeoServerDesktop.GeoServerClient.Services;
-using System;
 
 namespace GeoServerDesktop.App.Services
 {

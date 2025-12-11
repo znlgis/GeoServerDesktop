@@ -1,11 +1,10 @@
+using System;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GeoServerDesktop.App.Services;
 using GeoServerDesktop.GeoServerClient.Models;
-using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace GeoServerDesktop.App.ViewModels
 {
@@ -101,14 +100,14 @@ namespace GeoServerDesktop.App.ViewModels
 
                 Workspaces.Clear();
                 Workspaces.Add("All Workspaces"); // 添加"所有工作空间"选项
-                
+
                 foreach (var workspace in workspaceList)
                 {
                     Workspaces.Add(workspace.Name);
                 }
 
                 StatusMessage = $"Loaded {Workspaces.Count - 1} workspaces";
-                
+
                 // 默认选择"所有工作空间"
                 if (Workspaces.Count > 0)
                 {
@@ -278,12 +277,12 @@ namespace GeoServerDesktop.App.ViewModels
             try
             {
                 var layerGroupService = _connectionService.GetLayerGroupService();
-                
+
                 if (SelectedLayerGroup.Workspace != null && !string.IsNullOrEmpty(SelectedLayerGroup.Workspace.Name))
                 {
                     // 删除工作空间图层组
                     await layerGroupService.DeleteWorkspaceLayerGroupAsync(
-                        SelectedLayerGroup.Workspace.Name, 
+                        SelectedLayerGroup.Workspace.Name,
                         SelectedLayerGroup.Name);
                 }
                 else

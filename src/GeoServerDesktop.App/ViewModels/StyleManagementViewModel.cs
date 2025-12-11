@@ -1,10 +1,9 @@
+using System;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GeoServerDesktop.App.Services;
-using System;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace GeoServerDesktop.App.ViewModels
 {
@@ -156,7 +155,7 @@ namespace GeoServerDesktop.App.ViewModels
             try
             {
                 var styleService = _connectionService.GetStyleService();
-                
+
                 // 检查样式是否存在
                 var existingStyles = await styleService.GetStylesAsync();
                 bool styleExists = false;
@@ -218,7 +217,7 @@ namespace GeoServerDesktop.App.ViewModels
                 StatusMessage = $"Style '{SelectedStyle}' deleted successfully";
                 SelectedStyle = null;
                 SldContent = string.Empty;
-                
+
                 // 重新加载样式
                 await LoadStylesAsync();
             }

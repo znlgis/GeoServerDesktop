@@ -1,11 +1,9 @@
-using GeoServerDesktop.GeoServerClient.Http;
-using GeoServerDesktop.GeoServerClient.Models;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using GeoServerDesktop.GeoServerClient.Http;
+using GeoServerDesktop.GeoServerClient.Models;
+using Newtonsoft.Json;
 
 namespace GeoServerDesktop.GeoServerClient.Services
 {

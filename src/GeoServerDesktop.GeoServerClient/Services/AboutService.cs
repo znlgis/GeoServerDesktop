@@ -1,7 +1,7 @@
+using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 using GeoServerDesktop.GeoServerClient.Models;
 using Newtonsoft.Json;
-using System.Threading.Tasks;
 
 namespace GeoServerDesktop.GeoServerClient.Services
 {

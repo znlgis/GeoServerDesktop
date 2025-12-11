@@ -16,7 +16,7 @@ namespace GeoServerDesktop.App.Views
         public LayersManagementView()
         {
             InitializeComponent();
-            
+
             // 当 DataContext 设置时初始化
             this.DataContextChanged += async (s, e) =>
             {
@@ -39,7 +39,7 @@ namespace GeoServerDesktop.App.Views
         /// </summary>
         private async void OnDeleteLayerClick(object? sender, RoutedEventArgs e)
         {
-            if (sender is Button button && 
+            if (sender is Button button &&
                 button.Tag is Layer layer &&
                 DataContext is LayersManagementViewModel viewModel)
             {

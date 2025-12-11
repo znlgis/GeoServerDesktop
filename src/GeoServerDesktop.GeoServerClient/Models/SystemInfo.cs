@@ -1,5 +1,4 @@
 using Newtonsoft.Json;
-using System.Linq;
 
 namespace GeoServerDesktop.GeoServerClient.Models
 {
@@ -59,7 +58,7 @@ namespace GeoServerDesktop.GeoServerClient.Models
         /// <summary>
         /// 获取或设置资源名称
         /// </summary>
-        [JsonProperty("name")]
+        [JsonProperty("@name")]
         public string Name { get; set; }
 
         /// <summary>
@@ -247,82 +246,5 @@ namespace GeoServerDesktop.GeoServerClient.Models
         /// </summary>
         [JsonProperty("resource")]
         public ManifestInfo[] Resources { get; set; }
-    }
-
-    /// <summary>
-    /// SystemStatusWrapper 扩展方法
-    /// </summary>
-    public static class SystemStatusExtensions
-    {
-        /// <summary>
-        /// 从指标数组中获取指定名称的指标值
-        /// </summary>
-        public static string GetMetricValue(this SystemStatusWrapper wrapper, string metricName)
-        {
-            var metric = wrapper?.Metrics?.MetricArray?.FirstOrDefault(m => m.Name == metricName);
-            return metric?.Value?.ToString();
-        }
-
-        /// <summary>
-        /// 从指标数组中获取 long 类型的指标值
-        /// </summary>
-        public static long GetMetricValueAsLong(this SystemStatusWrapper wrapper, string metricName)
-        {
-            var metric = wrapper?.Metrics?.MetricArray?.FirstOrDefault(m => m.Name == metricName);
-            if (metric?.Value == null) return 0;
-            
-            if (metric.Value is long longValue) return longValue;
-            var valueString = metric.Value?.ToString();
-            if (valueString != null && long.TryParse(valueString, out var result)) return result;
-            return 0;
-        }
-
-        /// <summary>
-        /// 获取 JVM 版本
-        /// </summary>
-        public static string GetJvmVersion(this SystemStatusWrapper wrapper)
-        {
-            return wrapper.GetMetricValue("JVM_VERSION");
-        }
-
-        /// <summary>
-        /// 获取 JVM 供应商
-        /// </summary>
-        public static string GetJvmVendor(this SystemStatusWrapper wrapper)
-        {
-            return wrapper.GetMetricValue("JVM_VENDOR");
-        }
-
-        /// <summary>
-        /// 获取最大堆内存
-        /// </summary>
-        public static long GetMaximumHeapMemory(this SystemStatusWrapper wrapper)
-        {
-            return wrapper.GetMetricValueAsLong("MAXIMUM_HEAP_MEMORY");
-        }
-
-        /// <summary>
-        /// 获取总堆内存
-        /// </summary>
-        public static long GetTotalHeapMemory(this SystemStatusWrapper wrapper)
-        {
-            return wrapper.GetMetricValueAsLong("TOTAL_HEAP_MEMORY");
-        }
-
-        /// <summary>
-        /// 获取空闲堆内存
-        /// </summary>
-        public static long GetFreeHeapMemory(this SystemStatusWrapper wrapper)
-        {
-            return wrapper.GetMetricValueAsLong("FREE_HEAP_MEMORY");
-        }
-
-        /// <summary>
-        /// 获取已使用堆内存
-        /// </summary>
-        public static long GetUsedHeapMemory(this SystemStatusWrapper wrapper)
-        {
-            return wrapper.GetMetricValueAsLong("USED_HEAP_MEMORY");
-        }
     }
 }

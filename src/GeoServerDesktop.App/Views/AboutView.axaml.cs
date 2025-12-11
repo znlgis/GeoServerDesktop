@@ -14,7 +14,7 @@ namespace GeoServerDesktop.App.Views
         public AboutView()
         {
             InitializeComponent();
-            
+
             // 当 DataContext 设置时初始化
             this.DataContextChanged += async (s, e) =>
             {
