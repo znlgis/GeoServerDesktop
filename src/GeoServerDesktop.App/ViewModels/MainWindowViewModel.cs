@@ -90,6 +90,12 @@ public partial class MainWindowViewModel : ViewModelBase
     private LayersManagementViewModel _layersManagementViewModel;
 
     /// <summary>
+    /// 图层组管理视图模型
+    /// </summary>
+    [ObservableProperty]
+    private LayerGroupsManagementViewModel _layerGroupsManagementViewModel;
+
+    /// <summary>
     /// 当前显示的视图
     /// </summary>
     [ObservableProperty]
@@ -107,6 +113,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _styleManagementViewModel = new StyleManagementViewModel(_connectionService);
         _storesManagementViewModel = new StoresManagementViewModel(_connectionService);
         _layersManagementViewModel = new LayersManagementViewModel(_connectionService);
+        _layerGroupsManagementViewModel = new LayerGroupsManagementViewModel(_connectionService);
         
         // 设置默认视图为欢迎页面
         _currentView = CreateWelcomeViewModel();
@@ -717,8 +724,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private ViewModelBase CreateLayerGroupsViewModel()
     {
-        return new PlaceholderViewModel("Layer Groups", 
-            "Layer group management interface will be displayed here. This allows you to organize layers into logical groups.");
+        return LayerGroupsManagementViewModel;
     }
 
     private ViewModelBase CreateWMSSettingsViewModel()
