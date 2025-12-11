@@ -160,25 +160,6 @@ namespace GeoServerDesktop.GeoServerClient.Models
     }
 
     /// <summary>
-    /// 表示系统指标（已弃用，保留以向后兼容）
-    /// </summary>
-    [System.Obsolete("Use MetricsContainer and Metric classes instead. This class will be removed in version 2.0.0.")]
-    public class Metrics
-    {
-        /// <summary>
-        /// 获取或设置内存使用情况
-        /// </summary>
-        [JsonProperty("memory")]
-        public MemoryInfo Memory { get; set; }
-
-        /// <summary>
-        /// 获取或设置 JVM 信息
-        /// </summary>
-        [JsonProperty("jvm")]
-        public JvmInfo Jvm { get; set; }
-    }
-
-    /// <summary>
     /// 表示内存信息
     /// </summary>
     public class MemoryInfo
