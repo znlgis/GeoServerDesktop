@@ -132,6 +132,36 @@ namespace GeoServerDesktop.App.Services
         }
 
         /// <summary>
+        /// 获取关于服务
+        /// </summary>
+        /// <returns>AboutService 实例</returns>
+        public AboutService GetAboutService()
+        {
+            EnsureConnected();
+            return _factory!.CreateAboutService();
+        }
+
+        /// <summary>
+        /// 获取 GeoServer 全局设置服务
+        /// </summary>
+        /// <returns>GeoServer SettingsService 实例</returns>
+        public GeoServerClient.Services.SettingsService GetGlobalSettingsService()
+        {
+            EnsureConnected();
+            return _factory!.CreateSettingsService();
+        }
+
+        /// <summary>
+        /// 获取日志服务
+        /// </summary>
+        /// <returns>LoggingService 实例</returns>
+        public LoggingService GetLoggingService()
+        {
+            EnsureConnected();
+            return _factory!.CreateLoggingService();
+        }
+
+        /// <summary>
         /// 确保已连接到 GeoServer 实例
         /// </summary>
         private void EnsureConnected()

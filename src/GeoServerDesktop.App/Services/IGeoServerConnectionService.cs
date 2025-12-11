@@ -76,5 +76,23 @@ namespace GeoServerDesktop.App.Services
         /// </summary>
         /// <returns>PreviewService 实例</returns>
         PreviewService GetPreviewService();
+
+        /// <summary>
+        /// 获取关于服务
+        /// </summary>
+        /// <returns>AboutService 实例</returns>
+        AboutService GetAboutService();
+
+        /// <summary>
+        /// 获取 GeoServer 全局设置服务
+        /// </summary>
+        /// <returns>GeoServer SettingsService 实例</returns>
+        GeoServerClient.Services.SettingsService GetGlobalSettingsService();
+
+        /// <summary>
+        /// 获取日志服务
+        /// </summary>
+        /// <returns>LoggingService 实例</returns>
+        LoggingService GetLoggingService();
     }
 }

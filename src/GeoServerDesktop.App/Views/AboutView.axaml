@@ -1,0 +1,200 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:GeoServerDesktop.App.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="700"
+             x:Class="GeoServerDesktop.App.Views.AboutView"
+             x:DataType="vm:AboutViewModel">
+
+    <Design.DataContext>
+        <vm:AboutViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#F5F5F5" Padding="15" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="About GeoServer" 
+                               FontSize="24" 
+                               FontWeight="Bold"/>
+                    <TextBlock Text="System information and version details" 
+                               FontSize="13"
+                               Foreground="#666666"
+                               Margin="0,5,0,0"/>
+                </StackPanel>
+                <Button Grid.Column="1" 
+                        Content="🔄 Refresh" 
+                        Command="{Binding LoadSystemInfoCommand}"
+                        VerticalAlignment="Center"
+                        Padding="12,6"/>
+            </Grid>
+        </Border>
+
+        <!-- Content -->
+        <ScrollViewer Grid.Row="1" Padding="20">
+            <StackPanel Spacing="20">
+                <!-- Version Information -->
+                <Border BorderBrush="#E0E0E0" 
+                        BorderThickness="1" 
+                        Padding="20"
+                        Background="White"
+                        CornerRadius="4">
+                    <StackPanel Spacing="15">
+                        <TextBlock Text="Version Information" 
+                                   FontSize="18" 
+                                   FontWeight="Bold"
+                                   Foreground="#2C5F8D"/>
+                        
+                        <Grid ColumnDefinitions="200,*" RowDefinitions="Auto,Auto,Auto">
+                            <TextBlock Grid.Row="0" Grid.Column="0" 
+                                       Text="GeoServer Version:" 
+                                       FontWeight="Medium"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" 
+                                       Text="{Binding GeoServerVersion}" 
+                                       VerticalAlignment="Center"/>
+                            
+                            <TextBlock Grid.Row="1" Grid.Column="0" 
+                                       Text="GeoTools Version:" 
+                                       FontWeight="Medium"
+                                       VerticalAlignment="Center"
+                                       Margin="0,10,0,0"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" 
+                                       Text="{Binding GeoToolsVersion}" 
+                                       VerticalAlignment="Center"
+                                       Margin="0,10,0,0"/>
+                            
+                            <TextBlock Grid.Row="2" Grid.Column="0" 
+                                       Text="GeoWebCache Version:" 
+                                       FontWeight="Medium"
+                                       VerticalAlignment="Center"
+                                       Margin="0,10,0,0"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" 
+                                       Text="{Binding GeoWebCacheVersion}" 
+                                       VerticalAlignment="Center"
+                                       Margin="0,10,0,0"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- JVM Information -->
+                <Border BorderBrush="#E0E0E0" 
+                        BorderThickness="1" 
+                        Padding="20"
+                        Background="White"
+                        CornerRadius="4">
+                    <StackPanel Spacing="15">
+                        <TextBlock Text="Java Virtual Machine" 
+                                   FontSize="18" 
+                                   FontWeight="Bold"
+                                   Foreground="#2C5F8D"/>
+                        
+                        <Grid ColumnDefinitions="200,*" RowDefinitions="Auto,Auto">
+                            <TextBlock Grid.Row="0" Grid.Column="0" 
+                                       Text="JVM Version:" 
+                                       FontWeight="Medium"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" 
+                                       Text="{Binding JvmVersion}" 
+                                       VerticalAlignment="Center"
+                                       TextWrapping="Wrap"/>
+                            
+                            <TextBlock Grid.Row="1" Grid.Column="0" 
+                                       Text="JVM Vendor:" 
+                                       FontWeight="Medium"
+                                       VerticalAlignment="Center"
+                                       Margin="0,10,0,0"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" 
+                                       Text="{Binding JvmVendor}" 
+                                       VerticalAlignment="Center"
+                                       Margin="0,10,0,0"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Memory Information -->
+                <Border BorderBrush="#E0E0E0" 
+                        BorderThickness="1" 
+                        Padding="20"
+                        Background="White"
+                        CornerRadius="4">
+                    <StackPanel Spacing="15">
+                        <TextBlock Text="Memory Usage" 
+                                   FontSize="18" 
+                                   FontWeight="Bold"
+                                   Foreground="#2C5F8D"/>
+                        
+                        <!-- Memory Bar -->
+                        <StackPanel Spacing="5">
+                            <ProgressBar Value="{Binding MemoryUsagePercentage}" 
+                                         Maximum="100"
+                                         Height="30"
+                                         Background="#E0E0E0"
+                                         Foreground="#4CAF50"/>
+                            <TextBlock Text="{Binding MemoryUsagePercentage, StringFormat='{}{0:F1}% Used'}" 
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Center"/>
+                        </StackPanel>
+                        
+                        <Grid ColumnDefinitions="200,*" RowDefinitions="Auto,Auto,Auto,Auto">
+                            <TextBlock Grid.Row="0" Grid.Column="0" 
+                                       Text="Used Memory:" 
+                                       FontWeight="Medium"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" 
+                                       Text="{Binding UsedMemory}" 
+                                       VerticalAlignment="Center"/>
+                            
+                            <TextBlock Grid.Row="1" Grid.Column="0" 
+                                       Text="Free Memory:" 
+                                       FontWeight="Medium"
+                                       VerticalAlignment="Center"
+                                       Margin="0,10,0,0"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" 
+                                       Text="{Binding FreeMemory}" 
+                                       VerticalAlignment="Center"
+                                       Margin="0,10,0,0"/>
+                            
+                            <TextBlock Grid.Row="2" Grid.Column="0" 
+                                       Text="Total Memory:" 
+                                       FontWeight="Medium"
+                                       VerticalAlignment="Center"
+                                       Margin="0,10,0,0"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" 
+                                       Text="{Binding TotalMemory}" 
+                                       VerticalAlignment="Center"
+                                       Margin="0,10,0,0"/>
+                            
+                            <TextBlock Grid.Row="3" Grid.Column="0" 
+                                       Text="Maximum Memory:" 
+                                       FontWeight="Medium"
+                                       VerticalAlignment="Center"
+                                       Margin="0,10,0,0"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" 
+                                       Text="{Binding MaxMemory}" 
+                                       VerticalAlignment="Center"
+                                       Margin="0,10,0,0"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Status Bar -->
+        <Border Grid.Row="2" Background="#F5F5F5" Padding="10,8" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0">
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Grid.Column="0" 
+                           Text="{Binding StatusMessage}" 
+                           VerticalAlignment="Center"
+                           FontSize="12"/>
+                <ProgressBar Grid.Column="1" 
+                             Width="100"
+                             Height="4"
+                             IsIndeterminate="True"
+                             IsVisible="{Binding IsLoading}"/>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

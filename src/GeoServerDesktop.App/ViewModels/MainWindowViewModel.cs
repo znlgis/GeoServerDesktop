@@ -84,6 +84,24 @@ public partial class MainWindowViewModel : ViewModelBase
     private StoresManagementViewModel _storesManagementViewModel;
 
     /// <summary>
+    /// 图层管理视图模型
+    /// </summary>
+    [ObservableProperty]
+    private LayersManagementViewModel _layersManagementViewModel;
+
+    /// <summary>
+    /// 图层组管理视图模型
+    /// </summary>
+    [ObservableProperty]
+    private LayerGroupsManagementViewModel _layerGroupsManagementViewModel;
+
+    /// <summary>
+    /// 关于视图模型
+    /// </summary>
+    [ObservableProperty]
+    private AboutViewModel _aboutViewModel;
+
+    /// <summary>
     /// 当前显示的视图
     /// </summary>
     [ObservableProperty]
@@ -100,6 +118,9 @@ public partial class MainWindowViewModel : ViewModelBase
         _workspaceManagementViewModel = new WorkspaceManagementViewModel(_connectionService);
         _styleManagementViewModel = new StyleManagementViewModel(_connectionService);
         _storesManagementViewModel = new StoresManagementViewModel(_connectionService);
+        _layersManagementViewModel = new LayersManagementViewModel(_connectionService);
+        _layerGroupsManagementViewModel = new LayerGroupsManagementViewModel(_connectionService);
+        _aboutViewModel = new AboutViewModel(_connectionService);
         
         // 设置默认视图为欢迎页面
         _currentView = CreateWelcomeViewModel();
@@ -694,8 +715,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private ViewModelBase CreateAboutViewModel()
     {
-        return new PlaceholderViewModel("About GeoServer", 
-            "GeoServer version and system information will be displayed here.");
+        return AboutViewModel;
     }
 
     private ViewModelBase CreateStoresViewModel()
@@ -705,14 +725,12 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private ViewModelBase CreateLayersViewModel()
     {
-        return new PlaceholderViewModel("Layers", 
-            "Layer management interface will be displayed here. This allows you to publish and configure vector and raster layers.");
+        return LayersManagementViewModel;
     }
 
     private ViewModelBase CreateLayerGroupsViewModel()
     {
-        return new PlaceholderViewModel("Layer Groups", 
-            "Layer group management interface will be displayed here. This allows you to organize layers into logical groups.");
+        return LayerGroupsManagementViewModel;
     }
 
     private ViewModelBase CreateWMSSettingsViewModel()
