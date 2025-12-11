@@ -78,6 +78,18 @@ public partial class MainWindowViewModel : ViewModelBase
     private StyleManagementViewModel _styleManagementViewModel;
 
     /// <summary>
+    /// 数据存储管理视图模型
+    /// </summary>
+    [ObservableProperty]
+    private StoresManagementViewModel _storesManagementViewModel;
+
+    /// <summary>
+    /// 当前显示的视图
+    /// </summary>
+    [ObservableProperty]
+    private ViewModelBase? _currentView;
+
+    /// <summary>
     /// 初始化 MainWindowViewModel 类的新实例
     /// </summary>
     public MainWindowViewModel()
@@ -87,6 +99,10 @@ public partial class MainWindowViewModel : ViewModelBase
         _mapPreviewViewModel = new MapPreviewViewModel();
         _workspaceManagementViewModel = new WorkspaceManagementViewModel(_connectionService);
         _styleManagementViewModel = new StyleManagementViewModel(_connectionService);
+        _storesManagementViewModel = new StoresManagementViewModel(_connectionService);
+        
+        // 设置默认视图为欢迎页面
+        _currentView = CreateWelcomeViewModel();
     }
 
     /// <summary>
@@ -165,6 +181,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         _connectionService.Disconnect();
         ResourceTree.Clear();
+        CurrentView = CreateWelcomeViewModel();
         StatusMessage = "Disconnected";
     }
 
@@ -186,6 +203,284 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             StatusMessage = $"Failed to refresh: {ex.Message}";
         }
+    }
+
+    /// <summary>
+    /// 显示服务器状态页面
+    /// </summary>
+    [RelayCommand]
+    private void ShowServerStatus()
+    {
+        if (!IsConnected)
+        {
+            StatusMessage = "Please connect to GeoServer first";
+            return;
+        }
+        CurrentView = CreateServerStatusViewModel();
+        StatusMessage = "Server Status";
+    }
+
+    /// <summary>
+    /// 显示关于页面
+    /// </summary>
+    [RelayCommand]
+    private void ShowAbout()
+    {
+        if (!IsConnected)
+        {
+            StatusMessage = "Please connect to GeoServer first";
+            return;
+        }
+        CurrentView = CreateAboutViewModel();
+        StatusMessage = "About GeoServer";
+    }
+
+    /// <summary>
+    /// 显示图层预览页面
+    /// </summary>
+    [RelayCommand]
+    private void ShowLayerPreview()
+    {
+        if (!IsConnected)
+        {
+            StatusMessage = "Please connect to GeoServer first";
+            return;
+        }
+        CurrentView = MapPreviewViewModel;
+        StatusMessage = "Layer Preview";
+    }
+
+    /// <summary>
+    /// 显示工作空间页面
+    /// </summary>
+    [RelayCommand]
+    private async Task ShowWorkspacesAsync()
+    {
+        if (!IsConnected)
+        {
+            StatusMessage = "Please connect to GeoServer first";
+            return;
+        }
+        CurrentView = WorkspaceManagementViewModel;
+        try
+        {
+            await WorkspaceManagementViewModel.LoadWorkspacesCommand.ExecuteAsync(null);
+        }
+        catch
+        {
+            // 错误已在 ViewModel 中处理
+        }
+        StatusMessage = "Workspaces";
+    }
+
+    /// <summary>
+    /// 显示数据存储页面
+    /// </summary>
+    [RelayCommand]
+    private void ShowStores()
+    {
+        if (!IsConnected)
+        {
+            StatusMessage = "Please connect to GeoServer first";
+            return;
+        }
+        CurrentView = CreateStoresViewModel();
+        StatusMessage = "Data Stores";
+    }
+
+    /// <summary>
+    /// 显示图层页面
+    /// </summary>
+    [RelayCommand]
+    private void ShowLayers()
+    {
+        if (!IsConnected)
+        {
+            StatusMessage = "Please connect to GeoServer first";
+            return;
+        }
+        CurrentView = CreateLayersViewModel();
+        StatusMessage = "Layers";
+    }
+
+    /// <summary>
+    /// 显示图层组页面
+    /// </summary>
+    [RelayCommand]
+    private void ShowLayerGroups()
+    {
+        if (!IsConnected)
+        {
+            StatusMessage = "Please connect to GeoServer first";
+            return;
+        }
+        CurrentView = CreateLayerGroupsViewModel();
+        StatusMessage = "Layer Groups";
+    }
+
+    /// <summary>
+    /// 显示样式页面
+    /// </summary>
+    [RelayCommand]
+    private void ShowStyles()
+    {
+        if (!IsConnected)
+        {
+            StatusMessage = "Please connect to GeoServer first";
+            return;
+        }
+        CurrentView = StyleManagementViewModel;
+        StatusMessage = "Styles";
+    }
+
+    /// <summary>
+    /// 显示 WMS 设置页面
+    /// </summary>
+    [RelayCommand]
+    private void ShowWMSSettings()
+    {
+        if (!IsConnected)
+        {
+            StatusMessage = "Please connect to GeoServer first";
+            return;
+        }
+        CurrentView = CreateWMSSettingsViewModel();
+        StatusMessage = "WMS Settings";
+    }
+
+    /// <summary>
+    /// 显示 WFS 设置页面
+    /// </summary>
+    [RelayCommand]
+    private void ShowWFSSettings()
+    {
+        if (!IsConnected)
+        {
+            StatusMessage = "Please connect to GeoServer first";
+            return;
+        }
+        CurrentView = CreateWFSSettingsViewModel();
+        StatusMessage = "WFS Settings";
+    }
+
+    /// <summary>
+    /// 显示 WCS 设置页面
+    /// </summary>
+    [RelayCommand]
+    private void ShowWCSSettings()
+    {
+        if (!IsConnected)
+        {
+            StatusMessage = "Please connect to GeoServer first";
+            return;
+        }
+        CurrentView = CreateWCSSettingsViewModel();
+        StatusMessage = "WCS Settings";
+    }
+
+    /// <summary>
+    /// 显示全局设置页面
+    /// </summary>
+    [RelayCommand]
+    private void ShowGlobalSettings()
+    {
+        if (!IsConnected)
+        {
+            StatusMessage = "Please connect to GeoServer first";
+            return;
+        }
+        CurrentView = CreateGlobalSettingsViewModel();
+        StatusMessage = "Global Settings";
+    }
+
+    /// <summary>
+    /// 显示日志设置页面
+    /// </summary>
+    [RelayCommand]
+    private void ShowLogging()
+    {
+        if (!IsConnected)
+        {
+            StatusMessage = "Please connect to GeoServer first";
+            return;
+        }
+        CurrentView = CreateLoggingViewModel();
+        StatusMessage = "Logging Settings";
+    }
+
+    /// <summary>
+    /// 显示缓存默认设置页面
+    /// </summary>
+    [RelayCommand]
+    private void ShowCachingDefaults()
+    {
+        if (!IsConnected)
+        {
+            StatusMessage = "Please connect to GeoServer first";
+            return;
+        }
+        CurrentView = CreateCachingDefaultsViewModel();
+        StatusMessage = "Tile Caching Defaults";
+    }
+
+    /// <summary>
+    /// 显示 Gridsets 页面
+    /// </summary>
+    [RelayCommand]
+    private void ShowGridsets()
+    {
+        if (!IsConnected)
+        {
+            StatusMessage = "Please connect to GeoServer first";
+            return;
+        }
+        CurrentView = CreateGridsetsViewModel();
+        StatusMessage = "Gridsets";
+    }
+
+    /// <summary>
+    /// 显示磁盘配额页面
+    /// </summary>
+    [RelayCommand]
+    private void ShowDiskQuota()
+    {
+        if (!IsConnected)
+        {
+            StatusMessage = "Please connect to GeoServer first";
+            return;
+        }
+        CurrentView = CreateDiskQuotaViewModel();
+        StatusMessage = "Disk Quota";
+    }
+
+    /// <summary>
+    /// 显示安全设置页面
+    /// </summary>
+    [RelayCommand]
+    private void ShowSecuritySettings()
+    {
+        if (!IsConnected)
+        {
+            StatusMessage = "Please connect to GeoServer first";
+            return;
+        }
+        CurrentView = CreateSecuritySettingsViewModel();
+        StatusMessage = "Security Settings";
+    }
+
+    /// <summary>
+    /// 显示用户组页面
+    /// </summary>
+    [RelayCommand]
+    private void ShowUsersGroups()
+    {
+        if (!IsConnected)
+        {
+            StatusMessage = "Please connect to GeoServer first";
+            return;
+        }
+        CurrentView = CreateUsersGroupsViewModel();
+        StatusMessage = "Users, Groups, and Roles";
     }
 
     /// <summary>
@@ -382,5 +677,101 @@ public partial class MainWindowViewModel : ViewModelBase
         }
 
         return null;
+    }
+
+    // Factory methods for creating ViewModels
+    private ViewModelBase CreateWelcomeViewModel()
+    {
+        return new PlaceholderViewModel("Welcome to GeoServer Desktop", 
+            "Connect to a GeoServer instance using the login form above to begin managing your spatial data services.");
+    }
+
+    private ViewModelBase CreateServerStatusViewModel()
+    {
+        return new PlaceholderViewModel("Server Status", 
+            "Server status information will be displayed here. This includes uptime, resource usage, and active connections.");
+    }
+
+    private ViewModelBase CreateAboutViewModel()
+    {
+        return new PlaceholderViewModel("About GeoServer", 
+            "GeoServer version and system information will be displayed here.");
+    }
+
+    private ViewModelBase CreateStoresViewModel()
+    {
+        return StoresManagementViewModel;
+    }
+
+    private ViewModelBase CreateLayersViewModel()
+    {
+        return new PlaceholderViewModel("Layers", 
+            "Layer management interface will be displayed here. This allows you to publish and configure vector and raster layers.");
+    }
+
+    private ViewModelBase CreateLayerGroupsViewModel()
+    {
+        return new PlaceholderViewModel("Layer Groups", 
+            "Layer group management interface will be displayed here. This allows you to organize layers into logical groups.");
+    }
+
+    private ViewModelBase CreateWMSSettingsViewModel()
+    {
+        return new PlaceholderViewModel("WMS Settings", 
+            "Web Map Service (WMS) configuration will be displayed here.");
+    }
+
+    private ViewModelBase CreateWFSSettingsViewModel()
+    {
+        return new PlaceholderViewModel("WFS Settings", 
+            "Web Feature Service (WFS) configuration will be displayed here.");
+    }
+
+    private ViewModelBase CreateWCSSettingsViewModel()
+    {
+        return new PlaceholderViewModel("WCS Settings", 
+            "Web Coverage Service (WCS) configuration will be displayed here.");
+    }
+
+    private ViewModelBase CreateGlobalSettingsViewModel()
+    {
+        return new PlaceholderViewModel("Global Settings", 
+            "Global GeoServer settings will be displayed here. This includes contact information, proxy settings, and other global configurations.");
+    }
+
+    private ViewModelBase CreateLoggingViewModel()
+    {
+        return new PlaceholderViewModel("Logging Settings", 
+            "Logging configuration will be displayed here. This allows you to configure log levels and output destinations.");
+    }
+
+    private ViewModelBase CreateCachingDefaultsViewModel()
+    {
+        return new PlaceholderViewModel("Tile Caching Defaults", 
+            "GeoWebCache default settings will be displayed here.");
+    }
+
+    private ViewModelBase CreateGridsetsViewModel()
+    {
+        return new PlaceholderViewModel("Gridsets", 
+            "Gridset management for tile caching will be displayed here.");
+    }
+
+    private ViewModelBase CreateDiskQuotaViewModel()
+    {
+        return new PlaceholderViewModel("Disk Quota", 
+            "Disk quota configuration for tile cache will be displayed here.");
+    }
+
+    private ViewModelBase CreateSecuritySettingsViewModel()
+    {
+        return new PlaceholderViewModel("Security Settings", 
+            "Security configuration will be displayed here. This includes authentication and authorization settings.");
+    }
+
+    private ViewModelBase CreateUsersGroupsViewModel()
+    {
+        return new PlaceholderViewModel("Users, Groups, and Roles", 
+            "User, group, and role management will be displayed here.");
     }
 }

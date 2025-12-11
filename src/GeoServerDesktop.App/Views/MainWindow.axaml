@@ -3,132 +3,244 @@
         xmlns:vm="using:GeoServerDesktop.App.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+        mc:Ignorable="d" d:DesignWidth="1400" d:DesignHeight="900"
         x:Class="GeoServerDesktop.App.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="GeoServer Desktop"
-        Width="1200"
-        Height="800">
+        Title="GeoServer Desktop - Administration"
+        Width="1400"
+        Height="900">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
     <Grid RowDefinitions="Auto,*,Auto">
-        <!-- Top Connection Panel -->
-        <Border Grid.Row="0" Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="0,0,0,1">
-            <StackPanel Orientation="Horizontal" Spacing="10">
-                <TextBlock Text="Base URL:" VerticalAlignment="Center"/>
-                <TextBox Text="{Binding BaseUrl}" Width="300" IsEnabled="{Binding !IsConnected}"/>
+        <!-- Top Header with Connection -->
+        <Border Grid.Row="0" Background="#2C5F8D" Padding="15,10" BorderBrush="#1A4D7A" BorderThickness="0,0,0,2">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
+                    <TextBlock Text="GeoServer" 
+                               FontSize="20" 
+                               FontWeight="Bold" 
+                               Foreground="White"
+                               VerticalAlignment="Center"/>
+                    <TextBlock Text="Administration" 
+                               FontSize="16" 
+                               Foreground="#B0D4F1"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
                 
-                <TextBlock Text="Username:" VerticalAlignment="Center"/>
-                <TextBox Text="{Binding Username}" Width="100" IsEnabled="{Binding !IsConnected}"/>
-                
-                <TextBlock Text="Password:" VerticalAlignment="Center"/>
-                <TextBox Text="{Binding Password}" Width="100" PasswordChar="*" IsEnabled="{Binding !IsConnected}"/>
-                
-                <Button Content="Connect" 
-                        Command="{Binding ConnectCommand}" 
-                        IsVisible="{Binding !IsConnected}"
-                        HorizontalAlignment="Left"/>
-                
-                <Button Content="Disconnect" 
-                        Command="{Binding DisconnectCommand}" 
-                        IsVisible="{Binding IsConnected}"
-                        HorizontalAlignment="Left"/>
-                
-                <Button Content="🔄 Refresh" 
-                        Command="{Binding RefreshResourcesCommand}" 
-                        IsVisible="{Binding IsConnected}"
-                        ToolTip.Tip="Refresh resources"
-                        HorizontalAlignment="Left"/>
-            </StackPanel>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10">
+                    <Border Background="White" Padding="10,5" CornerRadius="3" IsVisible="{Binding !IsConnected}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="URL:" VerticalAlignment="Center" FontSize="12"/>
+                            <TextBox Text="{Binding BaseUrl}" Width="250" FontSize="12"/>
+                            
+                            <TextBlock Text="User:" VerticalAlignment="Center" FontSize="12"/>
+                            <TextBox Text="{Binding Username}" Width="80" FontSize="12"/>
+                            
+                            <TextBlock Text="Password:" VerticalAlignment="Center" FontSize="12"/>
+                            <TextBox Text="{Binding Password}" Width="80" PasswordChar="*" FontSize="12"/>
+                            
+                            <Button Content="Login" 
+                                    Command="{Binding ConnectCommand}"
+                                    Background="#4CAF50"
+                                    Foreground="White"
+                                    Padding="12,5"/>
+                        </StackPanel>
+                    </Border>
+                    
+                    <Border Background="White" Padding="10,5" CornerRadius="3" IsVisible="{Binding IsConnected}">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <TextBlock Text="● Connected" 
+                                       Foreground="#4CAF50" 
+                                       FontWeight="Bold"
+                                       VerticalAlignment="Center"/>
+                            <Button Content="Logout" 
+                                    Command="{Binding DisconnectCommand}"
+                                    Background="#F44336"
+                                    Foreground="White"
+                                    Padding="10,5"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
         </Border>
 
         <!-- Main Content Area -->
-        <Grid Grid.Row="1" ColumnDefinitions="300,*">
-            <!-- Left Panel - Resource Tree -->
-            <Border Grid.Column="0" BorderBrush="#CCCCCC" BorderThickness="0,0,1,0" Padding="5">
-                <DockPanel>
-                    <TextBlock DockPanel.Dock="Top" Text="Resources" FontWeight="Bold" Margin="0,0,0,10"/>
-                    <TreeView ItemsSource="{Binding ResourceTree}" 
-                              SelectedItem="{Binding SelectedNode}">
-                        <TreeView.ItemTemplate>
-                            <TreeDataTemplate ItemsSource="{Binding Children}">
-                                <TextBlock Text="{Binding Name}"/>
-                            </TreeDataTemplate>
-                        </TreeView.ItemTemplate>
-                    </TreeView>
-                </DockPanel>
+        <Grid Grid.Row="1" ColumnDefinitions="250,*">
+            <!-- Left Navigation Panel - GeoServer Style -->
+            <Border Grid.Column="0" Background="#F9F9F9" BorderBrush="#E0E0E0" BorderThickness="0,0,1,0">
+                <ScrollViewer>
+                    <StackPanel Margin="0,10">
+                        <!-- About & Status Section -->
+                        <Expander Header="About &amp; Status" IsExpanded="True" Margin="5">
+                            <StackPanel Margin="10,5">
+                                <Button Content="Server Status" 
+                                        Command="{Binding ShowServerStatusCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Background="Transparent"
+                                        Margin="0,2"/>
+                                <Button Content="About GeoServer" 
+                                        Command="{Binding ShowAboutCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Background="Transparent"
+                                        Margin="0,2"/>
+                            </StackPanel>
+                        </Expander>
+
+                        <!-- Data Section -->
+                        <Expander Header="Data" IsExpanded="True" Margin="5">
+                            <StackPanel Margin="10,5">
+                                <Button Content="Layer Preview" 
+                                        Command="{Binding ShowLayerPreviewCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Background="Transparent"
+                                        Margin="0,2"/>
+                                <Button Content="Workspaces" 
+                                        Command="{Binding ShowWorkspacesCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Background="Transparent"
+                                        Margin="0,2"/>
+                                <Button Content="Stores" 
+                                        Command="{Binding ShowStoresCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Background="Transparent"
+                                        Margin="0,2"/>
+                                <Button Content="Layers" 
+                                        Command="{Binding ShowLayersCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Background="Transparent"
+                                        Margin="0,2"/>
+                                <Button Content="Layer Groups" 
+                                        Command="{Binding ShowLayerGroupsCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Background="Transparent"
+                                        Margin="0,2"/>
+                                <Button Content="Styles" 
+                                        Command="{Binding ShowStylesCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Background="Transparent"
+                                        Margin="0,2"/>
+                            </StackPanel>
+                        </Expander>
+
+                        <!-- Services Section -->
+                        <Expander Header="Services" Margin="5">
+                            <StackPanel Margin="10,5">
+                                <Button Content="WMS" 
+                                        Command="{Binding ShowWMSSettingsCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Background="Transparent"
+                                        Margin="0,2"/>
+                                <Button Content="WFS" 
+                                        Command="{Binding ShowWFSSettingsCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Background="Transparent"
+                                        Margin="0,2"/>
+                                <Button Content="WCS" 
+                                        Command="{Binding ShowWCSSettingsCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Background="Transparent"
+                                        Margin="0,2"/>
+                            </StackPanel>
+                        </Expander>
+
+                        <!-- Settings Section -->
+                        <Expander Header="Settings" Margin="5">
+                            <StackPanel Margin="10,5">
+                                <Button Content="Global" 
+                                        Command="{Binding ShowGlobalSettingsCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Background="Transparent"
+                                        Margin="0,2"/>
+                                <Button Content="Logging" 
+                                        Command="{Binding ShowLoggingCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Background="Transparent"
+                                        Margin="0,2"/>
+                            </StackPanel>
+                        </Expander>
+
+                        <!-- Tile Caching Section -->
+                        <Expander Header="Tile Caching" Margin="5">
+                            <StackPanel Margin="10,5">
+                                <Button Content="Caching Defaults" 
+                                        Command="{Binding ShowCachingDefaultsCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Background="Transparent"
+                                        Margin="0,2"/>
+                                <Button Content="Gridsets" 
+                                        Command="{Binding ShowGridsetsCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Background="Transparent"
+                                        Margin="0,2"/>
+                                <Button Content="Disk Quota" 
+                                        Command="{Binding ShowDiskQuotaCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Background="Transparent"
+                                        Margin="0,2"/>
+                            </StackPanel>
+                        </Expander>
+
+                        <!-- Security Section -->
+                        <Expander Header="Security" Margin="5">
+                            <StackPanel Margin="10,5">
+                                <Button Content="Settings" 
+                                        Command="{Binding ShowSecuritySettingsCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Background="Transparent"
+                                        Margin="0,2"/>
+                                <Button Content="Users, Groups, Roles" 
+                                        Command="{Binding ShowUsersGroupsCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Background="Transparent"
+                                        Margin="0,2"/>
+                            </StackPanel>
+                        </Expander>
+                    </StackPanel>
+                </ScrollViewer>
             </Border>
 
-            <!-- Right Panel - Tabbed Content -->
-            <Border Grid.Column="1">
-                <TabControl>
-                    <!-- Overview Tab -->
-                    <TabItem Header="Overview">
-                        <Border Padding="10">
-                            <StackPanel>
-                                <TextBlock Text="Welcome to GeoServer Desktop" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
-                                <TextBlock Text="Connect to a GeoServer instance to begin managing resources." TextWrapping="Wrap"/>
-                                
-                                <StackPanel Margin="0,30,0,0" IsVisible="{Binding IsConnected}">
-                                    <TextBlock Text="Connected to GeoServer" FontWeight="Bold" Margin="0,0,0,10"/>
-                                    <TextBlock Text="{Binding BaseUrl}" Margin="0,0,0,20"/>
-                                    
-                                    <TextBlock Text="Features:" FontWeight="Bold" Margin="0,0,0,10"/>
-                                    <TextBlock Text="• Manage workspaces, data stores, and layers" Margin="20,0,0,5"/>
-                                    <TextBlock Text="• Upload and manage styles" Margin="20,0,0,5"/>
-                                    <TextBlock Text="• Create and organize layer groups" Margin="20,0,0,5"/>
-                                    <TextBlock Text="• Preview layers with WMS integration" Margin="20,0,0,5"/>
-                                    <TextBlock Text="• View feature types and publish layers" Margin="20,0,0,5"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </Border>
-                    </TabItem>
-                    
-                    <!-- Map Preview Tab -->
-                    <TabItem Header="Map Preview">
-                        <ContentControl Content="{Binding MapPreviewViewModel}"/>
-                    </TabItem>
-                    
-                    <!-- Workspace Management Tab -->
-                    <TabItem Header="Workspaces">
-                        <ContentControl Content="{Binding WorkspaceManagementViewModel}"/>
-                    </TabItem>
-                    
-                    <!-- Style Management Tab -->
-                    <TabItem Header="Styles">
-                        <ContentControl Content="{Binding StyleManagementViewModel}"/>
-                    </TabItem>
-                    
-                    <!-- Details Tab -->
-                    <TabItem Header="Details">
-                        <Border Padding="10">
-                            <StackPanel>
-                                <TextBlock Text="Resource Details" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
-                                <TextBlock Text="Select a resource from the tree to view its details."
-                                           TextWrapping="Wrap"
-                                           IsVisible="{Binding !SelectedNode}"/>
-                                
-                                <StackPanel IsVisible="{Binding !!SelectedNode}">
-                                    <TextBlock Text="Name:" FontWeight="Bold" Margin="0,0,0,5"/>
-                                    <TextBlock Text="{Binding SelectedNode.Name}" Margin="0,0,0,15"/>
-                                    
-                                    <TextBlock Text="Type:" FontWeight="Bold" Margin="0,0,0,5"/>
-                                    <TextBlock Text="{Binding SelectedNode.Type}" Margin="0,0,0,15"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </Border>
-                    </TabItem>
-                </TabControl>
+            <!-- Central Content Area -->
+            <Border Grid.Column="1" Background="White">
+                <ContentControl Content="{Binding CurrentView}" />
             </Border>
         </Grid>
 
         <!-- Status Bar -->
-        <Border Grid.Row="2" Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="0,1,0,0">
-            <TextBlock Text="{Binding StatusMessage}" VerticalAlignment="Center"/>
+        <Border Grid.Row="2" Background="#F5F5F5" Padding="10,5" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0">
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Grid.Column="0" 
+                           Text="{Binding StatusMessage}" 
+                           VerticalAlignment="Center"
+                           FontSize="12"/>
+                <TextBlock Grid.Column="1" 
+                           Text="{Binding BaseUrl}" 
+                           VerticalAlignment="Center"
+                           FontSize="11"
+                           Foreground="#666666"
+                           IsVisible="{Binding IsConnected}"/>
+            </Grid>
         </Border>
     </Grid>
 </Window>
