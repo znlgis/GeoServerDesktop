@@ -291,7 +291,8 @@ namespace GeoServerDesktop.GeoServerClient.Models
             if (metric?.Value == null) return 0;
             
             if (metric.Value is long longValue) return longValue;
-            if (long.TryParse(metric.Value.ToString(), out var result)) return result;
+            var valueString = metric.Value?.ToString();
+            if (valueString != null && long.TryParse(valueString, out var result)) return result;
             return 0;
         }
 
