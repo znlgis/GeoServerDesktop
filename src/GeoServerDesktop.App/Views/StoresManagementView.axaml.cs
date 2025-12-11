@@ -16,11 +16,18 @@ namespace GeoServerDesktop.App.Views
             InitializeComponent();
             
             // 当 DataContext 设置时初始化
-            this.DataContextChanged += (s, e) =>
+            this.DataContextChanged += async (s, e) =>
             {
                 if (DataContext is StoresManagementViewModel viewModel)
                 {
-                    _ = viewModel.InitializeAsync();
+                    try
+                    {
+                        await viewModel.InitializeAsync();
+                    }
+                    catch
+                    {
+                        // 错误已在 ViewModel 中处理
+                    }
                 }
             };
         }

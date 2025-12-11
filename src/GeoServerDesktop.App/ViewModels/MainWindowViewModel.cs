@@ -254,7 +254,7 @@ public partial class MainWindowViewModel : ViewModelBase
     /// 显示工作空间页面
     /// </summary>
     [RelayCommand]
-    private void ShowWorkspaces()
+    private async Task ShowWorkspacesAsync()
     {
         if (!IsConnected)
         {
@@ -262,7 +262,14 @@ public partial class MainWindowViewModel : ViewModelBase
             return;
         }
         CurrentView = WorkspaceManagementViewModel;
-        _ = WorkspaceManagementViewModel.LoadWorkspacesCommand.ExecuteAsync(null);
+        try
+        {
+            await WorkspaceManagementViewModel.LoadWorkspacesCommand.ExecuteAsync(null);
+        }
+        catch
+        {
+            // 错误已在 ViewModel 中处理
+        }
         StatusMessage = "Workspaces";
     }
 

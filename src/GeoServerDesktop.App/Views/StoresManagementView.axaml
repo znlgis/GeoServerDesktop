@@ -145,8 +145,6 @@
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
                         </ScrollViewer>
-
-
                     </Grid>
                 </DockPanel>
             </Border>
