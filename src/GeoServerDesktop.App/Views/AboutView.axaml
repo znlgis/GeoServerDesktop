@@ -132,17 +132,7 @@
                                          Maximum="100"
                                          Height="30"
                                          Background="#E0E0E0"
-                                         Foreground="#4CAF50">
-                                <ProgressBar.Styles>
-                                    <Style Selector="ProgressBar /template/ Border#PART_Indicator">
-                                        <Setter Property="Background">
-                                            <Setter.Value>
-                                                <SolidColorBrush Color="{Binding MemoryUsagePercentage, Converter={StaticResource MemoryColorConverter}}"/>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                </ProgressBar.Styles>
-                            </ProgressBar>
+                                         Foreground="#4CAF50"/>
                             <TextBlock Text="{Binding MemoryUsagePercentage, StringFormat='{}{0:F1}% Used'}" 
                                        FontWeight="Bold"
                                        HorizontalAlignment="Center"/>
