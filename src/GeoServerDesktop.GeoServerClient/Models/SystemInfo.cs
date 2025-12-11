@@ -162,7 +162,7 @@ namespace GeoServerDesktop.GeoServerClient.Models
     /// <summary>
     /// 表示系统指标（已弃用，保留以向后兼容）
     /// </summary>
-    [System.Obsolete("Use MetricsContainer and Metric classes instead")]
+    [System.Obsolete("Use MetricsContainer and Metric classes instead. This class will be removed in version 2.0.0.")]
     public class Metrics
     {
         /// <summary>
