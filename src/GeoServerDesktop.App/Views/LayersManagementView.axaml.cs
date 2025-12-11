@@ -17,12 +17,19 @@ namespace GeoServerDesktop.App.Views
         {
             InitializeComponent();
             
-            // 当控件加载时，初始化 ViewModel
-            Loaded += async (s, e) =>
+            // 当 DataContext 设置时初始化
+            this.DataContextChanged += async (s, e) =>
             {
                 if (DataContext is LayersManagementViewModel viewModel)
                 {
-                    await viewModel.InitializeAsync();
+                    try
+                    {
+                        await viewModel.InitializeAsync();
+                    }
+                    catch
+                    {
+                        // 错误已在 ViewModel 中处理
+                    }
                 }
             };
         }

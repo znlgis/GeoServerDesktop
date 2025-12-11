@@ -113,6 +113,7 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (!string.IsNullOrEmpty(value))
             {
+                // 触发异步加载操作，错误处理在 LoadLayersAsync 方法内部
                 _ = LoadLayersAsync();
             }
         }
@@ -184,6 +185,8 @@ namespace GeoServerDesktop.App.ViewModels
             try
             {
                 var layerService = _connectionService.GetLayerService();
+                // recurse=false: 仅删除图层本身，不删除关联的资源（如要素类型）
+                // 这是为了保护底层数据存储中的数据
                 await layerService.DeleteLayerAsync(SelectedLayer.Name, recurse: false);
 
                 StatusMessage = $"Layer '{SelectedLayer.Name}' deleted successfully";

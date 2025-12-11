@@ -132,6 +132,7 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (!string.IsNullOrEmpty(value))
             {
+                // 触发异步加载操作，错误处理在 LoadLayerGroupsAsync 方法内部
                 _ = LoadLayerGroupsAsync();
             }
         }
