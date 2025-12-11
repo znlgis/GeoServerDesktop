@@ -96,6 +96,12 @@ public partial class MainWindowViewModel : ViewModelBase
     private LayerGroupsManagementViewModel _layerGroupsManagementViewModel;
 
     /// <summary>
+    /// 关于视图模型
+    /// </summary>
+    [ObservableProperty]
+    private AboutViewModel _aboutViewModel;
+
+    /// <summary>
     /// 当前显示的视图
     /// </summary>
     [ObservableProperty]
@@ -114,6 +120,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _storesManagementViewModel = new StoresManagementViewModel(_connectionService);
         _layersManagementViewModel = new LayersManagementViewModel(_connectionService);
         _layerGroupsManagementViewModel = new LayerGroupsManagementViewModel(_connectionService);
+        _aboutViewModel = new AboutViewModel(_connectionService);
         
         // 设置默认视图为欢迎页面
         _currentView = CreateWelcomeViewModel();
@@ -708,8 +715,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private ViewModelBase CreateAboutViewModel()
     {
-        return new PlaceholderViewModel("About GeoServer", 
-            "GeoServer version and system information will be displayed here.");
+        return AboutViewModel;
     }
 
     private ViewModelBase CreateStoresViewModel()
