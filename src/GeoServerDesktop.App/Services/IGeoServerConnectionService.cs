@@ -94,5 +94,53 @@ namespace GeoServerDesktop.App.Services
         /// </summary>
         /// <returns>LoggingService 实例</returns>
         LoggingService GetLoggingService();
+
+        /// <summary>
+        /// 获取 WMS 服务设置服务
+        /// </summary>
+        /// <returns>WMSSettingsService 实例</returns>
+        WMSSettingsService GetWMSSettingsService();
+
+        /// <summary>
+        /// 获取 WFS 服务设置服务
+        /// </summary>
+        /// <returns>WFSSettingsService 实例</returns>
+        WFSSettingsService GetWFSSettingsService();
+
+        /// <summary>
+        /// 获取 WCS 服务设置服务
+        /// </summary>
+        /// <returns>WCSSettingsService 实例</returns>
+        WCSSettingsService GetWCSSettingsService();
+
+        /// <summary>
+        /// 获取磁盘配额服务
+        /// </summary>
+        /// <returns>DiskQuotaService 实例</returns>
+        DiskQuotaService GetDiskQuotaService();
+
+        /// <summary>
+        /// 获取格网集服务
+        /// </summary>
+        /// <returns>GridsetService 实例</returns>
+        GridsetService GetGridsetService();
+
+        /// <summary>
+        /// 获取安全访问控制服务
+        /// </summary>
+        /// <returns>SecurityService 实例</returns>
+        SecurityService GetSecurityService();
+
+        /// <summary>
+        /// 获取用户组服务
+        /// </summary>
+        /// <returns>UserGroupService 实例</returns>
+        UserGroupService GetUserGroupService();
+
+        /// <summary>
+        /// 获取角色服务
+        /// </summary>
+        /// <returns>RoleService 实例</returns>
+        RoleService GetRoleService();
     }
 }

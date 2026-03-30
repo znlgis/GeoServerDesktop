@@ -102,6 +102,24 @@ public partial class MainWindowViewModel : ViewModelBase
     private AboutViewModel _aboutViewModel;
 
     /// <summary>
+    /// WMS 服务设置视图模型
+    /// </summary>
+    [ObservableProperty]
+    private WMSSettingsViewModel _wmsSettingsViewModel;
+
+    /// <summary>
+    /// WFS 服务设置视图模型
+    /// </summary>
+    [ObservableProperty]
+    private WFSSettingsViewModel _wfsSettingsViewModel;
+
+    /// <summary>
+    /// WCS 服务设置视图模型
+    /// </summary>
+    [ObservableProperty]
+    private WCSSettingsViewModel _wcsSettingsViewModel;
+
+    /// <summary>
     /// 当前显示的视图
     /// </summary>
     [ObservableProperty]
@@ -121,6 +139,9 @@ public partial class MainWindowViewModel : ViewModelBase
         _layersManagementViewModel = new LayersManagementViewModel(_connectionService);
         _layerGroupsManagementViewModel = new LayerGroupsManagementViewModel(_connectionService);
         _aboutViewModel = new AboutViewModel(_connectionService);
+        _wmsSettingsViewModel = new WMSSettingsViewModel(_connectionService);
+        _wfsSettingsViewModel = new WFSSettingsViewModel(_connectionService);
+        _wcsSettingsViewModel = new WCSSettingsViewModel(_connectionService);
 
         // 设置默认视图为欢迎页面
         _currentView = CreateWelcomeViewModel();
@@ -350,7 +371,8 @@ public partial class MainWindowViewModel : ViewModelBase
             StatusMessage = "Please connect to GeoServer first";
             return;
         }
-        CurrentView = CreateWMSSettingsViewModel();
+        CurrentView = WmsSettingsViewModel;
+        _ = WmsSettingsViewModel.LoadSettingsCommand.ExecuteAsync(null);
         StatusMessage = "WMS Settings";
     }
 
@@ -365,7 +387,8 @@ public partial class MainWindowViewModel : ViewModelBase
             StatusMessage = "Please connect to GeoServer first";
             return;
         }
-        CurrentView = CreateWFSSettingsViewModel();
+        CurrentView = WfsSettingsViewModel;
+        _ = WfsSettingsViewModel.LoadSettingsCommand.ExecuteAsync(null);
         StatusMessage = "WFS Settings";
     }
 
@@ -380,7 +403,8 @@ public partial class MainWindowViewModel : ViewModelBase
             StatusMessage = "Please connect to GeoServer first";
             return;
         }
-        CurrentView = CreateWCSSettingsViewModel();
+        CurrentView = WcsSettingsViewModel;
+        _ = WcsSettingsViewModel.LoadSettingsCommand.ExecuteAsync(null);
         StatusMessage = "WCS Settings";
     }
 
@@ -716,24 +740,6 @@ public partial class MainWindowViewModel : ViewModelBase
     private ViewModelBase CreateLayerGroupsViewModel()
     {
         return LayerGroupsManagementViewModel;
-    }
-
-    private ViewModelBase CreateWMSSettingsViewModel()
-    {
-        return new PlaceholderViewModel("WMS Settings",
-            "Web Map Service (WMS) configuration will be displayed here.");
-    }
-
-    private ViewModelBase CreateWFSSettingsViewModel()
-    {
-        return new PlaceholderViewModel("WFS Settings",
-            "Web Feature Service (WFS) configuration will be displayed here.");
-    }
-
-    private ViewModelBase CreateWCSSettingsViewModel()
-    {
-        return new PlaceholderViewModel("WCS Settings",
-            "Web Coverage Service (WCS) configuration will be displayed here.");
     }
 
     private ViewModelBase CreateGlobalSettingsViewModel()

@@ -162,6 +162,86 @@ namespace GeoServerDesktop.App.Services
         }
 
         /// <summary>
+        /// 获取 WMS 服务设置服务
+        /// </summary>
+        /// <returns>WMSSettingsService 实例</returns>
+        public WMSSettingsService GetWMSSettingsService()
+        {
+            EnsureConnected();
+            return _factory!.CreateWMSSettingsService();
+        }
+
+        /// <summary>
+        /// 获取 WFS 服务设置服务
+        /// </summary>
+        /// <returns>WFSSettingsService 实例</returns>
+        public WFSSettingsService GetWFSSettingsService()
+        {
+            EnsureConnected();
+            return _factory!.CreateWFSSettingsService();
+        }
+
+        /// <summary>
+        /// 获取 WCS 服务设置服务
+        /// </summary>
+        /// <returns>WCSSettingsService 实例</returns>
+        public WCSSettingsService GetWCSSettingsService()
+        {
+            EnsureConnected();
+            return _factory!.CreateWCSSettingsService();
+        }
+
+        /// <summary>
+        /// 获取磁盘配额服务
+        /// </summary>
+        /// <returns>DiskQuotaService 实例</returns>
+        public DiskQuotaService GetDiskQuotaService()
+        {
+            EnsureConnected();
+            return _factory!.CreateDiskQuotaService();
+        }
+
+        /// <summary>
+        /// 获取格网集服务
+        /// </summary>
+        /// <returns>GridsetService 实例</returns>
+        public GridsetService GetGridsetService()
+        {
+            EnsureConnected();
+            return _factory!.CreateGridsetService();
+        }
+
+        /// <summary>
+        /// 获取安全访问控制服务
+        /// </summary>
+        /// <returns>SecurityService 实例</returns>
+        public SecurityService GetSecurityService()
+        {
+            EnsureConnected();
+            return _factory!.CreateSecurityService();
+        }
+
+        /// <summary>
+        /// 获取用户组服务
+        /// </summary>
+        /// <returns>UserGroupService 实例</returns>
+        public UserGroupService GetUserGroupService()
+        {
+            EnsureConnected();
+            return _factory!.CreateUserGroupService();
+        }
+
+        /// <summary>
+        /// 获取角色服务
+        /// </summary>
+        /// <returns>RoleService 实例</returns>
+        public RoleService GetRoleService()
+        {
+            EnsureConnected();
+            return _factory!.CreateRoleService();
+        }
+
+        /// <summary>
         /// 确保已连接到 GeoServer 实例
         /// </summary>
         private void EnsureConnected()

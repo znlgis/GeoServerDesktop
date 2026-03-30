@@ -1,0 +1,92 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:GeoServerDesktop.App.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="GeoServerDesktop.App.Views.WFSSettingsView"
+             x:DataType="vm:WFSSettingsViewModel">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="0,0,0,1">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="WFS Settings" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
+                <Button Content="Load" Command="{Binding LoadSettingsCommand}" ToolTip.Tip="Load current WFS settings"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Content -->
+        <ScrollViewer Grid.Row="1" Padding="20">
+            <StackPanel Spacing="15" MaxWidth="600">
+                <!-- Service Configuration -->
+                <Border Background="#F5F5F5" Padding="15" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="4">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="Service Configuration" FontWeight="Bold" FontSize="14"/>
+                        <CheckBox Content="Enable WFS Service" IsChecked="{Binding IsEnabled}"/>
+                        <CheckBox Content="CITE Compliant" IsChecked="{Binding CiteCompliant}"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Service Information -->
+                <Border Background="#F5F5F5" Padding="15" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="4">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="Service Information" FontWeight="Bold" FontSize="14"/>
+                        <Grid ColumnDefinitions="130,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Name:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ServiceName}" Watermark="Service name"/>
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Title:" VerticalAlignment="Center" Margin="0,8,0,0"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Title}" Watermark="Service title" Margin="0,8,0,0"/>
+
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Abstract:" VerticalAlignment="Top" Margin="0,8,0,0"/>
+                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Abstract}" Watermark="Service abstract"
+                                     AcceptsReturn="True" Height="80" TextWrapping="Wrap" Margin="0,8,0,0"/>
+
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Maintainer:" VerticalAlignment="Center" Margin="0,8,0,0"/>
+                            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Maintainer}" Watermark="Maintainer" Margin="0,8,0,0"/>
+
+                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Online Resource:" VerticalAlignment="Center" Margin="0,8,0,0"/>
+                            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding OnlineResource}" Watermark="Online resource URL" Margin="0,8,0,0"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- WFS Parameters -->
+                <Border Background="#F5F5F5" Padding="15" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="4">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="WFS Parameters" FontWeight="Bold" FontSize="14"/>
+                        <Grid ColumnDefinitions="140,*" RowDefinitions="Auto,Auto,Auto">
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Max Features:" VerticalAlignment="Center"/>
+                            <NumericUpDown Grid.Row="0" Grid.Column="1" Value="{Binding MaxFeatures}" Minimum="0"/>
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Service Level:" VerticalAlignment="Center" Margin="0,8,0,0"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ServiceLevel}" Watermark="e.g. COMPLETE" Margin="0,8,0,0"/>
+
+                            <CheckBox Grid.Row="2" Grid.Column="1" Content="Feature Bounding" IsChecked="{Binding FeatureBounding}" Margin="0,8,0,0"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Save Button -->
+                <Button Content="Save Settings"
+                        Command="{Binding SaveSettingsCommand}"
+                        Background="#4CAF50"
+                        Foreground="White"
+                        HorizontalAlignment="Left"
+                        Padding="15,8"/>
+
+                <!-- Loading Indicator -->
+                <StackPanel Spacing="10" IsVisible="{Binding IsLoading}">
+                    <TextBlock Text="Processing..." HorizontalAlignment="Center"/>
+                    <ProgressBar IsIndeterminate="True"/>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Status Bar -->
+        <Border Grid.Row="2" Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="0,1,0,0">
+            <TextBlock Text="{Binding StatusMessage}" VerticalAlignment="Center"/>
+        </Border>
+    </Grid>
+</UserControl>
