@@ -167,10 +167,11 @@ public partial class UsersGroupsRolesViewModel : ViewModelBase
                 Enabled = true
             };
             await service.CreateUserAsync(user);
+            var createdUsername = NewUsername;
             NewUsername = string.Empty;
             NewPassword = string.Empty;
             await LoadUsersInternalAsync();
-            StatusMessage = string.Format(L.StatusUserCreated, NewUsername);
+            StatusMessage = string.Format(L.StatusUserCreated, createdUsername);
         }
         catch (Exception ex)
         {
@@ -201,9 +202,10 @@ public partial class UsersGroupsRolesViewModel : ViewModelBase
         {
             var service = _connectionService.GetUserGroupService();
             await service.DeleteUserAsync(SelectedUser);
+            var deletedUsername = SelectedUser;
             SelectedUser = null;
             await LoadUsersInternalAsync();
-            StatusMessage = string.Format(L.StatusUserDeleted, SelectedUser);
+            StatusMessage = string.Format(L.StatusUserDeleted, deletedUsername);
         }
         catch (Exception ex)
         {
@@ -235,9 +237,10 @@ public partial class UsersGroupsRolesViewModel : ViewModelBase
             var service = _connectionService.GetUserGroupService();
             var group = new UserGroup { GroupName = NewGroupName };
             await service.CreateGroupAsync(group);
+            var createdGroupName = NewGroupName;
             NewGroupName = string.Empty;
             await LoadGroupsInternalAsync();
-            StatusMessage = string.Format(L.StatusGroupCreated, NewGroupName);
+            StatusMessage = string.Format(L.StatusGroupCreated, createdGroupName);
         }
         catch (Exception ex)
         {
@@ -268,9 +271,10 @@ public partial class UsersGroupsRolesViewModel : ViewModelBase
         {
             var service = _connectionService.GetUserGroupService();
             await service.DeleteGroupAsync(SelectedGroup);
+            var deletedGroupName = SelectedGroup;
             SelectedGroup = null;
             await LoadGroupsInternalAsync();
-            StatusMessage = string.Format(L.StatusGroupDeleted, SelectedGroup);
+            StatusMessage = string.Format(L.StatusGroupDeleted, deletedGroupName);
         }
         catch (Exception ex)
         {
