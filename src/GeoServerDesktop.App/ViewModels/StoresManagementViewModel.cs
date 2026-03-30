@@ -40,6 +40,24 @@ namespace GeoServerDesktop.App.ViewModels
         private DataStore? _selectedDataStore;
 
         /// <summary>
+        /// 新建数据存储名称
+        /// </summary>
+        [ObservableProperty]
+        private string _newDataStoreName = string.Empty;
+
+        /// <summary>
+        /// 新建数据存储描述
+        /// </summary>
+        [ObservableProperty]
+        private string _newDataStoreDescription = string.Empty;
+
+        /// <summary>
+        /// 是否显示创建对话框
+        /// </summary>
+        [ObservableProperty]
+        private bool _isCreateDialogVisible;
+
+        /// <summary>
         /// 状态消息
         /// </summary>
         [ObservableProperty]
@@ -182,6 +200,80 @@ namespace GeoServerDesktop.App.ViewModels
             catch (Exception ex)
             {
                 StatusMessage = $"Failed to delete data store: {ex.Message}";
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
+        /// <summary>
+        /// 显示创建数据存储对话框
+        /// </summary>
+        [RelayCommand]
+        private void ShowCreateDialog()
+        {
+            NewDataStoreName = string.Empty;
+            NewDataStoreDescription = string.Empty;
+            IsCreateDialogVisible = true;
+        }
+
+        /// <summary>
+        /// 取消创建数据存储
+        /// </summary>
+        [RelayCommand]
+        private void CancelCreate()
+        {
+            IsCreateDialogVisible = false;
+        }
+
+        /// <summary>
+        /// 创建新的 Shapefile 数据存储
+        /// </summary>
+        [RelayCommand]
+        private async Task CreateDataStoreAsync()
+        {
+            if (string.IsNullOrWhiteSpace(NewDataStoreName))
+            {
+                StatusMessage = "Data store name is required";
+                return;
+            }
+
+            if (string.IsNullOrEmpty(SelectedWorkspace))
+            {
+                StatusMessage = "Please select a workspace first";
+                return;
+            }
+
+            IsLoading = true;
+            StatusMessage = $"Creating data store '{NewDataStoreName}'...";
+
+            try
+            {
+                var dataStoreService = _connectionService.GetDataStoreService();
+                var dataStore = new DataStore
+                {
+                    Name = NewDataStoreName,
+                    Enabled = true,
+                    ConnectionParameters = new ConnectionParameters
+                    {
+                        Entries = new[]
+                        {
+                            new ConnectionParameterEntry { Key = "namespace", Value = SelectedWorkspace },
+                        }
+                    }
+                };
+                await dataStoreService.CreateDataStoreAsync(SelectedWorkspace, dataStore);
+
+                IsCreateDialogVisible = false;
+                NewDataStoreName = string.Empty;
+                NewDataStoreDescription = string.Empty;
+                await LoadDataStoresAsync();
+                StatusMessage = "Data store created successfully";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Failed to create data store: {ex.Message}";
             }
             finally
             {

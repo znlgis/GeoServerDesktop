@@ -66,6 +66,23 @@
                                         Padding="10,6"/>
                             </StackPanel>
                         </Border>
+                        <Border Background="#F5F5F5" Padding="15" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="4">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Edit User" FontWeight="Bold" FontSize="14"/>
+                                <TextBlock Text="{Binding SelectedUser, StringFormat='Selected: {0}'}"
+                                           TextWrapping="Wrap" Opacity="0.7"/>
+                                <TextBox Text="{Binding EditPassword}" Watermark="New password (leave blank to keep)" PasswordChar="*"/>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <CheckBox IsChecked="{Binding EditEnabled}" Content="Enabled"/>
+                                </StackPanel>
+                                <Button Content="Update User"
+                                        Command="{Binding UpdateUserCommand}"
+                                        Background="#FF9800"
+                                        Foreground="White"
+                                        HorizontalAlignment="Stretch"
+                                        Padding="10,6"/>
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
                 </Grid>
             </TabItem>

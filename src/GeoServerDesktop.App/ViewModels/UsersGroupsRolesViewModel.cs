@@ -41,6 +41,18 @@ public partial class UsersGroupsRolesViewModel : ViewModelBase
     [ObservableProperty]
     private string _newPassword = string.Empty;
 
+    /// <summary>
+    /// 编辑用户时的新密码输入（为空则不修改密码）
+    /// </summary>
+    [ObservableProperty]
+    private string _editPassword = string.Empty;
+
+    /// <summary>
+    /// 编辑用户时的启用状态
+    /// </summary>
+    [ObservableProperty]
+    private bool _editEnabled = true;
+
     // --- Groups ---
 
     /// <summary>
@@ -263,6 +275,47 @@ public partial class UsersGroupsRolesViewModel : ViewModelBase
         catch (Exception ex)
         {
             StatusMessage = $"删除组失败：{ex.Message}";
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    /// <summary>
+    /// 更新用户（修改密码和启用状态）
+    /// </summary>
+    [RelayCommand]
+    private async Task UpdateUserAsync()
+    {
+        if (string.IsNullOrWhiteSpace(SelectedUser))
+        {
+            StatusMessage = "请先选择一个用户";
+            return;
+        }
+
+        IsLoading = true;
+        StatusMessage = $"正在更新用户 '{SelectedUser}'...";
+
+        try
+        {
+            var service = _connectionService.GetUserGroupService();
+            var user = new User
+            {
+                UserName = SelectedUser,
+                Enabled = EditEnabled
+            };
+            if (!string.IsNullOrWhiteSpace(EditPassword))
+            {
+                user.Password = EditPassword;
+            }
+            await service.UpdateUserAsync(SelectedUser, user);
+            EditPassword = string.Empty;
+            StatusMessage = "用户更新成功";
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"更新用户失败：{ex.Message}";
         }
         finally
         {

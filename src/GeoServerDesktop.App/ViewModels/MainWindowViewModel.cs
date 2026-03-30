@@ -307,7 +307,8 @@ public partial class MainWindowViewModel : ViewModelBase
             StatusMessage = "Please connect to GeoServer first";
             return;
         }
-        CurrentView = CreateAboutViewModel();
+        CurrentView = AboutViewModel;
+        _ = AboutViewModel.LoadSystemInfoCommand.ExecuteAsync(null);
         StatusMessage = "About GeoServer";
     }
 
@@ -770,17 +771,6 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         return new PlaceholderViewModel("Welcome to GeoServer Desktop",
             "Connect to a GeoServer instance using the login form above to begin managing your spatial data services.");
-    }
-
-    private ViewModelBase CreateServerStatusViewModel()
-    {
-        return new PlaceholderViewModel("Server Status",
-            "Server status information will be displayed here. This includes uptime, resource usage, and active connections.");
-    }
-
-    private ViewModelBase CreateAboutViewModel()
-    {
-        return AboutViewModel;
     }
 
     private ViewModelBase CreateStoresViewModel()

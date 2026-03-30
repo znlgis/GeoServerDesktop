@@ -40,6 +40,42 @@ namespace GeoServerDesktop.App.ViewModels
         private Layer? _selectedLayer;
 
         /// <summary>
+        /// 数据存储名称列表（供发布图层对话框选择）
+        /// </summary>
+        [ObservableProperty]
+        private ObservableCollection<string> _dataStoreNames = new();
+
+        /// <summary>
+        /// 新建图层名称
+        /// </summary>
+        [ObservableProperty]
+        private string _newLayerName = string.Empty;
+
+        /// <summary>
+        /// 新建图层的本地名称（数据库/文件中的实际名称）
+        /// </summary>
+        [ObservableProperty]
+        private string _newNativeName = string.Empty;
+
+        /// <summary>
+        /// 新建图层的坐标参考系
+        /// </summary>
+        [ObservableProperty]
+        private string _newLayerSrs = "EPSG:4326";
+
+        /// <summary>
+        /// 新建图层选中的数据存储名称
+        /// </summary>
+        [ObservableProperty]
+        private string? _newLayerDataStore;
+
+        /// <summary>
+        /// 是否显示发布图层对话框
+        /// </summary>
+        [ObservableProperty]
+        private bool _isCreateLayerDialogVisible;
+
+        /// <summary>
         /// 状态消息
         /// </summary>
         [ObservableProperty]
@@ -198,6 +234,101 @@ namespace GeoServerDesktop.App.ViewModels
             catch (Exception ex)
             {
                 StatusMessage = $"Failed to delete layer: {ex.Message}";
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
+        /// <summary>
+        /// 显示发布图层对话框
+        /// </summary>
+        [RelayCommand]
+        private async Task ShowCreateLayerDialogAsync()
+        {
+            if (string.IsNullOrEmpty(SelectedWorkspace) || SelectedWorkspace == "All Workspaces")
+            {
+                StatusMessage = "Please select a specific workspace first";
+                return;
+            }
+
+            // 加载该工作空间下的数据存储名称
+            try
+            {
+                var dataStoreService = _connectionService.GetDataStoreService();
+                var stores = await dataStoreService.GetDataStoresAsync(SelectedWorkspace);
+                DataStoreNames.Clear();
+                foreach (var store in stores)
+                {
+                    DataStoreNames.Add(store.Name);
+                }
+                NewLayerDataStore = DataStoreNames.Count > 0 ? DataStoreNames[0] : null;
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Failed to load data stores: {ex.Message}";
+                return;
+            }
+
+            NewLayerName = string.Empty;
+            NewNativeName = string.Empty;
+            NewLayerSrs = "EPSG:4326";
+            IsCreateLayerDialogVisible = true;
+        }
+
+        /// <summary>
+        /// 取消发布图层
+        /// </summary>
+        [RelayCommand]
+        private void CancelCreateLayer()
+        {
+            IsCreateLayerDialogVisible = false;
+        }
+
+        /// <summary>
+        /// 发布新图层（FeatureType）
+        /// </summary>
+        [RelayCommand]
+        private async Task CreateLayerAsync()
+        {
+            if (string.IsNullOrWhiteSpace(NewLayerName))
+            {
+                StatusMessage = "Layer name is required";
+                return;
+            }
+
+            if (string.IsNullOrEmpty(NewLayerDataStore))
+            {
+                StatusMessage = "Please select a data store";
+                return;
+            }
+
+            IsLoading = true;
+            StatusMessage = $"Publishing layer '{NewLayerName}'...";
+
+            try
+            {
+                var featureTypeService = _connectionService.GetFeatureTypeService();
+                var featureType = new FeatureType
+                {
+                    Name = NewLayerName,
+                    NativeName = string.IsNullOrWhiteSpace(NewNativeName) ? NewLayerName : NewNativeName,
+                    Title = NewLayerName,
+                    Srs = string.IsNullOrWhiteSpace(NewLayerSrs) ? "EPSG:4326" : NewLayerSrs,
+                    Enabled = true
+                };
+                await featureTypeService.CreateFeatureTypeAsync(SelectedWorkspace!, NewLayerDataStore, featureType);
+
+                IsCreateLayerDialogVisible = false;
+                NewLayerName = string.Empty;
+                NewNativeName = string.Empty;
+                await LoadLayersAsync();
+                StatusMessage = "Layer published successfully";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Failed to publish layer: {ex.Message}";
             }
             finally
             {

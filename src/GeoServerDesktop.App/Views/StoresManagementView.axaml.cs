@@ -1,5 +1,7 @@
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using GeoServerDesktop.App.ViewModels;
+using GeoServerDesktop.GeoServerClient.Models;
 
 namespace GeoServerDesktop.App.Views
 {
@@ -30,6 +32,20 @@ namespace GeoServerDesktop.App.Views
                     }
                 }
             };
+        }
+
+        /// <summary>
+        /// 删除数据存储按钮点击事件处理程序
+        /// </summary>
+        private async void OnDeleteDataStoreClick(object? sender, RoutedEventArgs e)
+        {
+            if (sender is Button button &&
+                button.Tag is DataStore dataStore &&
+                DataContext is StoresManagementViewModel viewModel)
+            {
+                viewModel.SelectedDataStore = dataStore;
+                await viewModel.DeleteDataStoreCommand.ExecuteAsync(null);
+            }
         }
     }
 }
