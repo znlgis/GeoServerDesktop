@@ -150,6 +150,18 @@ public partial class MainWindowViewModel : ViewModelBase
     private DiskQuotaViewModel _diskQuotaViewModel;
 
     /// <summary>
+    /// 安全设置视图模型
+    /// </summary>
+    [ObservableProperty]
+    private SecuritySettingsViewModel _securitySettingsViewModel;
+
+    /// <summary>
+    /// 用户/组/角色管理视图模型
+    /// </summary>
+    [ObservableProperty]
+    private UsersGroupsRolesViewModel _usersGroupsRolesViewModel;
+
+    /// <summary>
     /// 当前显示的视图
     /// </summary>
     [ObservableProperty]
@@ -177,6 +189,8 @@ public partial class MainWindowViewModel : ViewModelBase
         _cachingDefaultsViewModel = new CachingDefaultsViewModel(_connectionService);
         _gridsetsViewModel = new GridsetsViewModel(_connectionService);
         _diskQuotaViewModel = new DiskQuotaViewModel(_connectionService);
+        _securitySettingsViewModel = new SecuritySettingsViewModel(_connectionService);
+        _usersGroupsRolesViewModel = new UsersGroupsRolesViewModel(_connectionService);
 
         // 设置默认视图为欢迎页面
         _currentView = CreateWelcomeViewModel();
@@ -534,7 +548,8 @@ public partial class MainWindowViewModel : ViewModelBase
             StatusMessage = "Please connect to GeoServer first";
             return;
         }
-        CurrentView = CreateSecuritySettingsViewModel();
+        CurrentView = SecuritySettingsViewModel;
+        _ = SecuritySettingsViewModel.LoadSettingsCommand.ExecuteAsync(null);
         StatusMessage = "Security Settings";
     }
 
@@ -549,7 +564,8 @@ public partial class MainWindowViewModel : ViewModelBase
             StatusMessage = "Please connect to GeoServer first";
             return;
         }
-        CurrentView = CreateUsersGroupsViewModel();
+        CurrentView = UsersGroupsRolesViewModel;
+        _ = UsersGroupsRolesViewModel.LoadAllCommand.ExecuteAsync(null);
         StatusMessage = "Users, Groups, and Roles";
     }
 
@@ -780,17 +796,5 @@ public partial class MainWindowViewModel : ViewModelBase
     private ViewModelBase CreateLayerGroupsViewModel()
     {
         return LayerGroupsManagementViewModel;
-    }
-
-    private ViewModelBase CreateSecuritySettingsViewModel()
-    {
-        return new PlaceholderViewModel("Security Settings",
-            "Security configuration will be displayed here. This includes authentication and authorization settings.");
-    }
-
-    private ViewModelBase CreateUsersGroupsViewModel()
-    {
-        return new PlaceholderViewModel("Users, Groups, and Roles",
-            "User, group, and role management will be displayed here.");
     }
 }

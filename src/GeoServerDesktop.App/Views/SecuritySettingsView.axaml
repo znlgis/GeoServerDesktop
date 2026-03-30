@@ -1,0 +1,61 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:GeoServerDesktop.App.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="GeoServerDesktop.App.Views.SecuritySettingsView"
+             x:DataType="vm:SecuritySettingsViewModel">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="0,0,0,1">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="Security Settings" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
+                <Button Content="Load" Command="{Binding LoadSettingsCommand}" ToolTip.Tip="Load security settings"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Content -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto,280">
+            <!-- ACL Rules List -->
+            <Border Grid.Column="0" Margin="10" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="4">
+                <Grid RowDefinitions="Auto,*">
+                    <Border Grid.Row="0" Background="#F5F5F5" Padding="8" BorderBrush="#CCCCCC" BorderThickness="0,0,0,1">
+                        <TextBlock Text="Access Control Rules" FontWeight="Bold"/>
+                    </Border>
+                    <ListBox Grid.Row="1"
+                             ItemsSource="{Binding AclRules}"
+                             Padding="5"/>
+                </Grid>
+            </Border>
+
+            <!-- Splitter -->
+            <GridSplitter Grid.Column="1" Width="4" Background="#DDDDDD" VerticalAlignment="Stretch"/>
+
+            <!-- Info Panel -->
+            <StackPanel Grid.Column="2" Margin="10" Spacing="10">
+                <Border Background="#F5F5F5" Padding="15" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="4">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Information" FontWeight="Bold" FontSize="14"/>
+                        <TextBlock Text="This page shows Access Control List (ACL) rules for GeoServer services and layers."
+                                   TextWrapping="Wrap" Opacity="0.7"/>
+                        <TextBlock Text="Format: [resource] role => access level"
+                                   FontStyle="Italic" TextWrapping="Wrap" Opacity="0.7"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Loading Indicator -->
+                <StackPanel Spacing="10" IsVisible="{Binding IsLoading}">
+                    <TextBlock Text="Loading..." HorizontalAlignment="Center"/>
+                    <ProgressBar IsIndeterminate="True"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+
+        <!-- Status Bar -->
+        <Border Grid.Row="2" Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="0,1,0,0">
+            <TextBlock Text="{Binding StatusMessage}" VerticalAlignment="Center"/>
+        </Border>
+    </Grid>
+</UserControl>
