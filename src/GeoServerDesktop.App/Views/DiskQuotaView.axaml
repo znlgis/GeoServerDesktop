@@ -1,0 +1,82 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:GeoServerDesktop.App.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="GeoServerDesktop.App.Views.DiskQuotaView"
+             x:DataType="vm:DiskQuotaViewModel">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="0,0,0,1">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="Disk Quota" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
+                <Button Content="Load" Command="{Binding LoadSettingsCommand}" ToolTip.Tip="Load current disk quota settings"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Content -->
+        <ScrollViewer Grid.Row="1" Padding="20">
+            <StackPanel Spacing="15" MaxWidth="600">
+                <!-- Enable/Disable -->
+                <Border Background="#F5F5F5" Padding="15" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="4">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="Quota Configuration" FontWeight="Bold" FontSize="14"/>
+                        <CheckBox Content="Enable Disk Quota" IsChecked="{Binding IsEnabled}"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Quota Settings -->
+                <Border Background="#F5F5F5" Padding="15" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="4">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="Global Quota" FontWeight="Bold" FontSize="14"/>
+                        <Grid ColumnDefinitions="160,*,120" RowDefinitions="Auto,Auto,Auto,Auto">
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Quota Value:" VerticalAlignment="Center"/>
+                            <NumericUpDown Grid.Row="0" Grid.Column="1" Value="{Binding GlobalQuotaValue}"
+                                          Minimum="0" Increment="1" FormatString="0.##"
+                                          Margin="0,0,8,0"/>
+                            <ComboBox Grid.Row="0" Grid.Column="2"
+                                      ItemsSource="{Binding QuotaUnitOptions}"
+                                      SelectedItem="{Binding GlobalQuotaUnits}"/>
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Disk Block Size (B):" VerticalAlignment="Center" Margin="0,8,0,0"/>
+                            <NumericUpDown Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                                          Value="{Binding DiskBlockSize}"
+                                          Minimum="0" Increment="512"
+                                          Margin="0,8,0,0"/>
+
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Cleanup Frequency:" VerticalAlignment="Center" Margin="0,8,0,0"/>
+                            <NumericUpDown Grid.Row="2" Grid.Column="1"
+                                          Value="{Binding CacheCleanUpFrequency}"
+                                          Minimum="1" Increment="1"
+                                          Margin="0,8,8,0"/>
+                            <ComboBox Grid.Row="2" Grid.Column="2" Margin="0,8,0,0"
+                                      ItemsSource="{Binding CleanUpUnitOptions}"
+                                      SelectedItem="{Binding CacheCleanUpUnits}"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Save Button -->
+                <Button Content="Save Settings"
+                        Command="{Binding SaveSettingsCommand}"
+                        Background="#4CAF50"
+                        Foreground="White"
+                        HorizontalAlignment="Left"
+                        Padding="15,8"/>
+
+                <!-- Loading Indicator -->
+                <StackPanel Spacing="10" IsVisible="{Binding IsLoading}">
+                    <TextBlock Text="Processing..." HorizontalAlignment="Center"/>
+                    <ProgressBar IsIndeterminate="True"/>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Status Bar -->
+        <Border Grid.Row="2" Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="0,1,0,0">
+            <TextBlock Text="{Binding StatusMessage}" VerticalAlignment="Center"/>
+        </Border>
+    </Grid>
+</UserControl>

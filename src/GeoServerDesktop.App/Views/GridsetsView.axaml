@@ -1,0 +1,80 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:GeoServerDesktop.App.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="GeoServerDesktop.App.Views.GridsetsView"
+             x:DataType="vm:GridsetsViewModel">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="0,0,0,1">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="Gridsets" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
+                <Button Content="Refresh" Command="{Binding LoadGridsetsCommand}" ToolTip.Tip="Reload gridset list"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Content -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto,280">
+            <!-- Gridset List -->
+            <Border Grid.Column="0" Padding="10">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="Existing Gridsets" FontWeight="Bold" Margin="0,0,0,10"/>
+                    <ListBox ItemsSource="{Binding Gridsets}"
+                             SelectedItem="{Binding SelectedGridset}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" Padding="5"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+            </Border>
+
+            <Separator Grid.Column="1" Width="1" Background="#CCCCCC"/>
+
+            <!-- Actions Panel -->
+            <Border Grid.Column="2" Padding="10">
+                <StackPanel Spacing="15">
+                    <TextBlock Text="Actions" FontWeight="Bold" FontSize="16"/>
+
+                    <!-- Selected gridset info -->
+                    <Border Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="4">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Selected Gridset" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding SelectedGridset}" Foreground="#666666"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Delete Gridset -->
+                    <Border Background="#FFF5F5" Padding="10" BorderBrush="#FFCCCC" BorderThickness="1" CornerRadius="4">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="Delete Gridset" FontWeight="Bold" Foreground="#CC0000"/>
+                            <TextBlock Text="Warning: Deleting a gridset may affect layers using it."
+                                       TextWrapping="Wrap" FontSize="12" Foreground="#666666"/>
+                            <Button Content="Delete Selected"
+                                    Command="{Binding DeleteGridsetCommand}"
+                                    Background="#FFCCCC"
+                                    HorizontalAlignment="Stretch"
+                                    IsEnabled="{Binding !!SelectedGridset}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Loading Indicator -->
+                    <StackPanel Spacing="10" IsVisible="{Binding IsLoading}">
+                        <TextBlock Text="Processing..." HorizontalAlignment="Center"/>
+                        <ProgressBar IsIndeterminate="True"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Status Bar -->
+        <Border Grid.Row="2" Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="0,1,0,0">
+            <TextBlock Text="{Binding StatusMessage}" VerticalAlignment="Center"/>
+        </Border>
+    </Grid>
+</UserControl>

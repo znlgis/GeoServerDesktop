@@ -132,6 +132,24 @@ public partial class MainWindowViewModel : ViewModelBase
     private LoggingViewModel _loggingViewModel;
 
     /// <summary>
+    /// 缓存默认设置视图模型
+    /// </summary>
+    [ObservableProperty]
+    private CachingDefaultsViewModel _cachingDefaultsViewModel;
+
+    /// <summary>
+    /// 格网集管理视图模型
+    /// </summary>
+    [ObservableProperty]
+    private GridsetsViewModel _gridsetsViewModel;
+
+    /// <summary>
+    /// 磁盘配额视图模型
+    /// </summary>
+    [ObservableProperty]
+    private DiskQuotaViewModel _diskQuotaViewModel;
+
+    /// <summary>
     /// 当前显示的视图
     /// </summary>
     [ObservableProperty]
@@ -156,6 +174,9 @@ public partial class MainWindowViewModel : ViewModelBase
         _wcsSettingsViewModel = new WCSSettingsViewModel(_connectionService);
         _globalSettingsViewModel = new GlobalSettingsViewModel(_connectionService);
         _loggingViewModel = new LoggingViewModel(_connectionService);
+        _cachingDefaultsViewModel = new CachingDefaultsViewModel(_connectionService);
+        _gridsetsViewModel = new GridsetsViewModel(_connectionService);
+        _diskQuotaViewModel = new DiskQuotaViewModel(_connectionService);
 
         // 设置默认视图为欢迎页面
         _currentView = CreateWelcomeViewModel();
@@ -465,7 +486,8 @@ public partial class MainWindowViewModel : ViewModelBase
             StatusMessage = "Please connect to GeoServer first";
             return;
         }
-        CurrentView = CreateCachingDefaultsViewModel();
+        CurrentView = CachingDefaultsViewModel;
+        _ = CachingDefaultsViewModel.LoadSettingsCommand.ExecuteAsync(null);
         StatusMessage = "Tile Caching Defaults";
     }
 
@@ -480,7 +502,8 @@ public partial class MainWindowViewModel : ViewModelBase
             StatusMessage = "Please connect to GeoServer first";
             return;
         }
-        CurrentView = CreateGridsetsViewModel();
+        CurrentView = GridsetsViewModel;
+        _ = GridsetsViewModel.LoadGridsetsCommand.ExecuteAsync(null);
         StatusMessage = "Gridsets";
     }
 
@@ -495,7 +518,8 @@ public partial class MainWindowViewModel : ViewModelBase
             StatusMessage = "Please connect to GeoServer first";
             return;
         }
-        CurrentView = CreateDiskQuotaViewModel();
+        CurrentView = DiskQuotaViewModel;
+        _ = DiskQuotaViewModel.LoadSettingsCommand.ExecuteAsync(null);
         StatusMessage = "Disk Quota";
     }
 
@@ -756,24 +780,6 @@ public partial class MainWindowViewModel : ViewModelBase
     private ViewModelBase CreateLayerGroupsViewModel()
     {
         return LayerGroupsManagementViewModel;
-    }
-
-    private ViewModelBase CreateCachingDefaultsViewModel()
-    {
-        return new PlaceholderViewModel("Tile Caching Defaults",
-            "GeoWebCache default settings will be displayed here.");
-    }
-
-    private ViewModelBase CreateGridsetsViewModel()
-    {
-        return new PlaceholderViewModel("Gridsets",
-            "Gridset management for tile caching will be displayed here.");
-    }
-
-    private ViewModelBase CreateDiskQuotaViewModel()
-    {
-        return new PlaceholderViewModel("Disk Quota",
-            "Disk quota configuration for tile cache will be displayed here.");
     }
 
     private ViewModelBase CreateSecuritySettingsViewModel()
