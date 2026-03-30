@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 using GeoServerDesktop.GeoServerClient.Models;
@@ -18,7 +19,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public AboutService(IGeoServerHttpClient httpClient)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>

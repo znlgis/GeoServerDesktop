@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public StyleService(IGeoServerHttpClient httpClient)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -31,7 +32,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             var response = await _httpClient.GetAsync("/rest/styles.json");
             var wrapper = JsonConvert.DeserializeObject<StyleListWrapper>(response);
-            return wrapper?.StyleList?.Styles ?? new Style[0];
+            return wrapper?.StyleList?.Styles ?? Array.Empty<Style>();
         }
 
         /// <summary>
@@ -68,12 +69,16 @@ namespace GeoServerDesktop.GeoServerClient.Services
             // 首先创建样式元数据
             var style = new { style = new { name = styleName, filename = $"{styleName}.sld" } };
             var json = JsonConvert.SerializeObject(style);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            await _httpClient.PostAsync("/rest/styles", content);
+            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            {
+                await _httpClient.PostAsync("/rest/styles", content);
+            }
 
             // 然后上传 SLD 内容
-            var sldContentData = new StringContent(sldContent, Encoding.UTF8, "application/vnd.ogc.sld+xml");
-            await _httpClient.PutAsync($"/rest/styles/{styleName}", sldContentData);
+            using (var sldContentData = new StringContent(sldContent, Encoding.UTF8, "application/vnd.ogc.sld+xml"))
+            {
+                await _httpClient.PutAsync($"/rest/styles/{styleName}", sldContentData);
+            }
         }
 
         /// <summary>
@@ -84,8 +89,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task UpdateStyleAsync(string styleName, string sldContent)
         {
-            var content = new StringContent(sldContent, Encoding.UTF8, "application/vnd.ogc.sld+xml");
-            await _httpClient.PutAsync($"/rest/styles/{styleName}", content);
+            using (var content = new StringContent(sldContent, Encoding.UTF8, "application/vnd.ogc.sld+xml"))
+            {
+                await _httpClient.PutAsync($"/rest/styles/{styleName}", content);
+            }
         }
 
         /// <summary>
@@ -96,7 +103,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteStyleAsync(string styleName, bool purge = false)
         {
-            var path = $"/rest/styles/{styleName}?purge={purge.ToString().ToLower()}";
+            var path = $"/rest/styles/{styleName}?purge={purge.ToString().ToLowerInvariant()}";
             await _httpClient.DeleteAsync(path);
         }
 
@@ -109,7 +116,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/styles.json");
             var wrapper = JsonConvert.DeserializeObject<StyleListWrapper>(response);
-            return wrapper?.StyleList?.Styles ?? new Style[0];
+            return wrapper?.StyleList?.Styles ?? Array.Empty<Style>();
         }
 
         /// <summary>
@@ -149,12 +156,16 @@ namespace GeoServerDesktop.GeoServerClient.Services
             // 首先创建样式元数据
             var style = new { style = new { name = styleName, filename = $"{styleName}.sld" } };
             var json = JsonConvert.SerializeObject(style);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            await _httpClient.PostAsync($"/rest/workspaces/{workspaceName}/styles", content);
+            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            {
+                await _httpClient.PostAsync($"/rest/workspaces/{workspaceName}/styles", content);
+            }
 
             // 然后上传 SLD 内容
-            var sldContentData = new StringContent(sldContent, Encoding.UTF8, "application/vnd.ogc.sld+xml");
-            await _httpClient.PutAsync($"/rest/workspaces/{workspaceName}/styles/{styleName}", sldContentData);
+            using (var sldContentData = new StringContent(sldContent, Encoding.UTF8, "application/vnd.ogc.sld+xml"))
+            {
+                await _httpClient.PutAsync($"/rest/workspaces/{workspaceName}/styles/{styleName}", sldContentData);
+            }
         }
 
         /// <summary>
@@ -166,8 +177,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task UpdateWorkspaceStyleAsync(string workspaceName, string styleName, string sldContent)
         {
-            var content = new StringContent(sldContent, Encoding.UTF8, "application/vnd.ogc.sld+xml");
-            await _httpClient.PutAsync($"/rest/workspaces/{workspaceName}/styles/{styleName}", content);
+            using (var content = new StringContent(sldContent, Encoding.UTF8, "application/vnd.ogc.sld+xml"))
+            {
+                await _httpClient.PutAsync($"/rest/workspaces/{workspaceName}/styles/{styleName}", content);
+            }
         }
 
         /// <summary>
@@ -179,7 +192,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteWorkspaceStyleAsync(string workspaceName, string styleName, bool purge = false)
         {
-            var path = $"/rest/workspaces/{workspaceName}/styles/{styleName}?purge={purge.ToString().ToLower()}";
+            var path = $"/rest/workspaces/{workspaceName}/styles/{styleName}?purge={purge.ToString().ToLowerInvariant()}";
             await _httpClient.DeleteAsync(path);
         }
     }

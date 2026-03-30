@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public LayerService(IGeoServerHttpClient httpClient)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -31,7 +32,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             var response = await _httpClient.GetAsync("/rest/layers.json");
             var wrapper = JsonConvert.DeserializeObject<LayerListWrapper>(response);
-            return wrapper?.LayerList?.Layers ?? new Layer[0];
+            return wrapper?.LayerList?.Layers ?? Array.Empty<Layer>();
         }
 
         /// <summary>
@@ -56,8 +57,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             var wrapper = new { layer = layer };
             var json = JsonConvert.SerializeObject(wrapper);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            await _httpClient.PutAsync($"/rest/layers/{layerName}", content);
+            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            {
+                await _httpClient.PutAsync($"/rest/layers/{layerName}", content);
+            }
         }
 
         /// <summary>
@@ -68,7 +71,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteLayerAsync(string layerName, bool recurse = false)
         {
-            var path = $"/rest/layers/{layerName}?recurse={recurse.ToString().ToLower()}";
+            var path = $"/rest/layers/{layerName}?recurse={recurse.ToString().ToLowerInvariant()}";
             await _httpClient.DeleteAsync(path);
         }
 
@@ -81,7 +84,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/layers.json");
             var wrapper = JsonConvert.DeserializeObject<LayerListWrapper>(response);
-            return wrapper?.LayerList?.Layers ?? new Layer[0];
+            return wrapper?.LayerList?.Layers ?? Array.Empty<Layer>();
         }
 
         /// <summary>

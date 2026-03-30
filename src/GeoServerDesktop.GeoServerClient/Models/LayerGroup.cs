@@ -99,24 +99,24 @@ namespace GeoServerDesktop.GeoServerClient.Models
     }
 
     /// <summary>
-    /// List of layer groups
+    /// 图层组列表
     /// </summary>
     public class LayerGroupList
     {
         /// <summary>
-        /// Array of layer groups
+        /// 图层组数组
         /// </summary>
         [JsonProperty("layerGroup")]
         public LayerGroup[] LayerGroups { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for layer group list response
+    /// 图层组列表响应的包装器
     /// </summary>
     public class LayerGroupListWrapper
     {
         /// <summary>
-        /// The layer group list data
+        /// 图层组列表数据
         /// </summary>
         [JsonProperty("layerGroups")]
         public LayerGroupList LayerGroupList { get; set; }

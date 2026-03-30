@@ -7,7 +7,7 @@ namespace GeoServerDesktop.GeoServerClient.Configuration
     /// <summary>
     /// 用于创建 GeoServer 客户端服务实例的工厂类
     /// </summary>
-    public class GeoServerClientFactory
+    public class GeoServerClientFactory : IDisposable
     {
         private readonly GeoServerClientOptions _options;
         private IGeoServerHttpClient _httpClient;

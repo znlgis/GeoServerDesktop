@@ -80,49 +80,49 @@ namespace GeoServerDesktop.GeoServerClient.Models
     public class ConnectionParameterEntry
     {
         /// <summary>
-        /// Parameter key
+        /// 参数键
         /// </summary>
         [JsonProperty("@key")]
         public string Key { get; set; }
 
         /// <summary>
-        /// Parameter value
+        /// 参数值
         /// </summary>
         [JsonProperty("$")]
         public string Value { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for a single data store response
+    /// 单个数据存储响应的包装器
     /// </summary>
     public class DataStoreWrapper
     {
         /// <summary>
-        /// The data store data
+        /// 数据存储数据
         /// </summary>
         [JsonProperty("dataStore")]
         public DataStore DataStore { get; set; }
     }
 
     /// <summary>
-    /// List of data stores
+    /// 数据存储列表
     /// </summary>
     public class DataStoreList
     {
         /// <summary>
-        /// Array of data stores
+        /// 数据存储数组
         /// </summary>
         [JsonProperty("dataStore")]
         public DataStore[] DataStores { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for data store list response
+    /// 数据存储列表响应的包装器
     /// </summary>
     public class DataStoreListWrapper
     {
         /// <summary>
-        /// The data store list data
+        /// 数据存储列表数据
         /// </summary>
         [JsonProperty("dataStores")]
         public DataStoreList DataStoreList { get; set; }

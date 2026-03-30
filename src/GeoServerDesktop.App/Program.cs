@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Avalonia;
 
 namespace GeoServerDesktop.App;
@@ -13,8 +14,22 @@ sealed class Program
     /// 因为这些内容还没有初始化，可能会导致程序崩溃。
     /// </summary>
     [STAThread]
-    public static void Main(string[] args) => BuildAvaloniaApp()
-        .StartWithClassicDesktopLifetime(args);
+    public static void Main(string[] args)
+    {
+        AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+        {
+            System.Diagnostics.Trace.TraceError($"Unhandled exception: {e.ExceptionObject}");
+        };
+
+        TaskScheduler.UnobservedTaskException += (sender, e) =>
+        {
+            System.Diagnostics.Trace.TraceError($"Unobserved task exception: {e.Exception}");
+            e.SetObserved();
+        };
+
+        BuildAvaloniaApp()
+            .StartWithClassicDesktopLifetime(args);
+    }
 
     /// <summary>
     /// Avalonia 配置，不要删除；同时也被可视化设计器使用。

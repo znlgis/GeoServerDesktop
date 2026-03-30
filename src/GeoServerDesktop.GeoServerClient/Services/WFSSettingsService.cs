@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public WFSSettingsService(IGeoServerHttpClient httpClient)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -41,8 +42,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task UpdateWFSSettingsAsync(WFSSettings settings)
         {
             var json = JsonConvert.SerializeObject(settings);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            await _httpClient.PutAsync("/rest/services/wfs/settings", content);
+            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            {
+                await _httpClient.PutAsync("/rest/services/wfs/settings", content);
+            }
         }
 
         /// <summary>
@@ -65,8 +68,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task UpdateWorkspaceWFSSettingsAsync(string workspace, WFSSettings settings)
         {
             var json = JsonConvert.SerializeObject(settings);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            await _httpClient.PutAsync($"/rest/services/wfs/workspaces/{workspace}/settings", content);
+            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            {
+                await _httpClient.PutAsync($"/rest/services/wfs/workspaces/{workspace}/settings", content);
+            }
         }
     }
 }

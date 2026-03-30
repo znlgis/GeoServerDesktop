@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
@@ -17,7 +18,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public ResourceService(IGeoServerHttpClient httpClient)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -48,9 +49,11 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// </remarks>
         public async Task UploadResourceAsync(string resourcePath, byte[] content, string contentType = "application/octet-stream")
         {
-            var httpContent = new ByteArrayContent(content);
-            httpContent.Headers.Add("Content-Type", contentType);
-            await _httpClient.PutAsync($"/rest/resource/{resourcePath}", httpContent);
+            using (var httpContent = new ByteArrayContent(content))
+            {
+                httpContent.Headers.Add("Content-Type", contentType);
+                await _httpClient.PutAsync($"/rest/resource/{resourcePath}", httpContent);
+            }
         }
 
         /// <summary>

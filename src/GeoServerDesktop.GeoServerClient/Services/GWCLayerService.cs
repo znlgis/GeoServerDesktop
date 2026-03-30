@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public GWCLayerService(IGeoServerHttpClient httpClient)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -53,8 +54,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task SeedLayerAsync(string layerName, SeedRequest seedRequest)
         {
             var json = JsonConvert.SerializeObject(seedRequest);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            await _httpClient.PostAsync($"/gwc/rest/seed/{layerName}.json", content);
+            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            {
+                await _httpClient.PostAsync($"/gwc/rest/seed/{layerName}.json", content);
+            }
         }
 
         /// <summary>
@@ -65,8 +68,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             var truncateRequest = new { truncateAll = true };
             var json = JsonConvert.SerializeObject(truncateRequest);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            await _httpClient.PostAsync("/gwc/rest/masstruncate", content);
+            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            {
+                await _httpClient.PostAsync("/gwc/rest/masstruncate", content);
+            }
         }
     }
 }

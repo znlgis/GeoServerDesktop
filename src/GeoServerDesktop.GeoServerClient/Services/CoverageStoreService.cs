@@ -21,7 +21,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public CoverageStoreService(IGeoServerHttpClient httpClient)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -59,8 +59,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             var wrapper = new { coverageStore = coverageStore };
             var json = JsonConvert.SerializeObject(wrapper);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            await _httpClient.PostAsync($"/rest/workspaces/{workspaceName}/coveragestores", content);
+            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            {
+                await _httpClient.PostAsync($"/rest/workspaces/{workspaceName}/coveragestores", content);
+            }
         }
 
         /// <summary>
@@ -74,8 +76,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             var wrapper = new { coverageStore = coverageStore };
             var json = JsonConvert.SerializeObject(wrapper);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            await _httpClient.PutAsync($"/rest/workspaces/{workspaceName}/coveragestores/{coverageStoreName}", content);
+            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            {
+                await _httpClient.PutAsync($"/rest/workspaces/{workspaceName}/coveragestores/{coverageStoreName}", content);
+            }
         }
 
         /// <summary>
@@ -102,9 +106,11 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task UploadCoverageFileAsync(string workspaceName, string coverageStoreName, byte[] fileContent, string extension)
         {
-            var content = new ByteArrayContent(fileContent);
-            content.Headers.Add("Content-Type", "application/octet-stream");
-            await _httpClient.PutAsync($"/rest/workspaces/{workspaceName}/coveragestores/{coverageStoreName}/file.{extension}", content);
+            using (var content = new ByteArrayContent(fileContent))
+            {
+                content.Headers.Add("Content-Type", "application/octet-stream");
+                await _httpClient.PutAsync($"/rest/workspaces/{workspaceName}/coveragestores/{coverageStoreName}/file.{extension}", content);
+            }
         }
     }
 }

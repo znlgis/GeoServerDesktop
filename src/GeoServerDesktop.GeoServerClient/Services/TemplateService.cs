@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public TemplateService(IGeoServerHttpClient httpClient)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -51,8 +52,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task CreateTemplateAsync(string templateName, string content)
         {
-            var stringContent = new StringContent(content, Encoding.UTF8, "text/plain");
-            await _httpClient.PostAsync($"/rest/templates/{templateName}", stringContent);
+            using (var stringContent = new StringContent(content, Encoding.UTF8, "text/plain"))
+            {
+                await _httpClient.PostAsync($"/rest/templates/{templateName}", stringContent);
+            }
         }
 
         /// <summary>

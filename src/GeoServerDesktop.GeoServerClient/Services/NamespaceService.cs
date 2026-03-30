@@ -21,7 +21,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public NamespaceService(IGeoServerHttpClient httpClient)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -57,8 +57,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             var ns = new { @namespace = new { prefix = namespacePrefix, uri = uri } };
             var json = JsonConvert.SerializeObject(ns);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            await _httpClient.PostAsync("/rest/namespaces", content);
+            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            {
+                await _httpClient.PostAsync("/rest/namespaces", content);
+            }
         }
 
         /// <summary>
@@ -71,8 +73,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             var ns = new { @namespace = new { prefix = namespacePrefix, uri = uri } };
             var json = JsonConvert.SerializeObject(ns);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            await _httpClient.PutAsync($"/rest/namespaces/{namespacePrefix}", content);
+            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            {
+                await _httpClient.PutAsync($"/rest/namespaces/{namespacePrefix}", content);
+            }
         }
 
         /// <summary>

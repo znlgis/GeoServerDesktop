@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public TransformService(IGeoServerHttpClient httpClient)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -51,8 +52,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task CreateTransformAsync(string transformName, string xsltContent)
         {
-            var content = new StringContent(xsltContent, Encoding.UTF8, "application/xslt+xml");
-            await _httpClient.PostAsync($"/rest/transforms/{transformName}", content);
+            using (var content = new StringContent(xsltContent, Encoding.UTF8, "application/xslt+xml"))
+            {
+                await _httpClient.PostAsync($"/rest/transforms/{transformName}", content);
+            }
         }
 
         /// <summary>

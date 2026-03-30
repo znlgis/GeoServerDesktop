@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
@@ -19,7 +20,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public FontService(IGeoServerHttpClient httpClient)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -40,9 +41,11 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task UploadFontAsync(string fontName, byte[] fontContent)
         {
-            var content = new ByteArrayContent(fontContent);
-            content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
-            await _httpClient.PutAsync($"/rest/fonts/{fontName}", content);
+            using (var content = new ByteArrayContent(fontContent))
+            {
+                content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+                await _httpClient.PutAsync($"/rest/fonts/{fontName}", content);
+            }
         }
     }
 }

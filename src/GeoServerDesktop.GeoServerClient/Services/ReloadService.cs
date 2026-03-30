@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
@@ -17,7 +18,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public ReloadService(IGeoServerHttpClient httpClient)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -30,8 +31,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// </remarks>
         public async Task ReloadCatalogAsync()
         {
-            var content = new StringContent(string.Empty);
-            await _httpClient.PostAsync("/rest/reload", content);
+            using (var content = new StringContent(string.Empty))
+            {
+                await _httpClient.PostAsync("/rest/reload", content);
+            }
         }
 
         /// <summary>
@@ -44,8 +47,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// </remarks>
         public async Task ResetAsync()
         {
-            var content = new StringContent(string.Empty);
-            await _httpClient.PostAsync("/rest/reset", content);
+            using (var content = new StringContent(string.Empty))
+            {
+                await _httpClient.PostAsync("/rest/reset", content);
+            }
         }
     }
 }

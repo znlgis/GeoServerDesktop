@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public ImporterService(IGeoServerHttpClient httpClient)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -40,9 +41,11 @@ namespace GeoServerDesktop.GeoServerClient.Services
                 }
             };
             var json = JsonConvert.SerializeObject(import);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync("/rest/imports", content);
-            return JsonConvert.DeserializeObject<ImportContextWrapper>(response);
+            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            {
+                var response = await _httpClient.PostAsync("/rest/imports", content);
+                return JsonConvert.DeserializeObject<ImportContextWrapper>(response);
+            }
         }
 
         /// <summary>
@@ -86,9 +89,11 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task UploadDataAsync(int importId, int taskId, byte[] data, string contentType = "application/octet-stream")
         {
-            var content = new ByteArrayContent(data);
-            content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(contentType);
-            await _httpClient.PutAsync($"/rest/imports/{importId}/tasks/{taskId}/data", content);
+            using (var content = new ByteArrayContent(data))
+            {
+                content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(contentType);
+                await _httpClient.PutAsync($"/rest/imports/{importId}/tasks/{taskId}/data", content);
+            }
         }
     }
 }

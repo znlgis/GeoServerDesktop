@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public LayerGroupService(IGeoServerHttpClient httpClient)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -31,7 +32,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             var response = await _httpClient.GetAsync("/rest/layergroups.json");
             var wrapper = JsonConvert.DeserializeObject<LayerGroupListWrapper>(response);
-            return wrapper?.LayerGroupList?.LayerGroups ?? new LayerGroup[0];
+            return wrapper?.LayerGroupList?.LayerGroups ?? Array.Empty<LayerGroup>();
         }
 
         /// <summary>
@@ -55,8 +56,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             var wrapper = new { layerGroup = layerGroup };
             var json = JsonConvert.SerializeObject(wrapper);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            await _httpClient.PostAsync("/rest/layergroups", content);
+            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            {
+                await _httpClient.PostAsync("/rest/layergroups", content);
+            }
         }
 
         /// <summary>
@@ -69,8 +72,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             var wrapper = new { layerGroup = layerGroup };
             var json = JsonConvert.SerializeObject(wrapper);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            await _httpClient.PutAsync($"/rest/layergroups/{layerGroupName}", content);
+            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            {
+                await _httpClient.PutAsync($"/rest/layergroups/{layerGroupName}", content);
+            }
         }
 
         /// <summary>
@@ -92,7 +97,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/layergroups.json");
             var wrapper = JsonConvert.DeserializeObject<LayerGroupListWrapper>(response);
-            return wrapper?.LayerGroupList?.LayerGroups ?? new LayerGroup[0];
+            return wrapper?.LayerGroupList?.LayerGroups ?? Array.Empty<LayerGroup>();
         }
 
         /// <summary>
@@ -118,8 +123,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             var wrapper = new { layerGroup = layerGroup };
             var json = JsonConvert.SerializeObject(wrapper);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            await _httpClient.PostAsync($"/rest/workspaces/{workspaceName}/layergroups", content);
+            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            {
+                await _httpClient.PostAsync($"/rest/workspaces/{workspaceName}/layergroups", content);
+            }
         }
 
         /// <summary>
@@ -133,8 +140,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             var wrapper = new { layerGroup = layerGroup };
             var json = JsonConvert.SerializeObject(wrapper);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            await _httpClient.PutAsync($"/rest/workspaces/{workspaceName}/layergroups/{layerGroupName}", content);
+            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            {
+                await _httpClient.PutAsync($"/rest/workspaces/{workspaceName}/layergroups/{layerGroupName}", content);
+            }
         }
 
         /// <summary>

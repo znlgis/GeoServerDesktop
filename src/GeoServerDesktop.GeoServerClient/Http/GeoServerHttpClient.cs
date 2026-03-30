@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Configuration;
 
@@ -52,12 +53,15 @@ namespace GeoServerDesktop.GeoServerClient.Http
         /// 对指定路径执行 GET 请求
         /// </summary>
         /// <param name="path">REST 端点的相对路径</param>
+        /// <param name="cancellationToken">取消令牌</param>
         /// <returns>响应内容字符串</returns>
-        public async Task<string> GetAsync(string path)
+        public async Task<string> GetAsync(string path, CancellationToken cancellationToken = default)
         {
             var url = BuildUrl(path);
-            var response = await _httpClient.GetAsync(url);
-            return await ProcessResponse(response);
+            using (var response = await _httpClient.GetAsync(url, cancellationToken))
+            {
+                return await ProcessResponse(response);
+            }
         }
 
         /// <summary>
@@ -65,12 +69,15 @@ namespace GeoServerDesktop.GeoServerClient.Http
         /// </summary>
         /// <param name="path">REST 端点的相对路径</param>
         /// <param name="content">请求内容</param>
+        /// <param name="cancellationToken">取消令牌</param>
         /// <returns>响应内容字符串</returns>
-        public async Task<string> PostAsync(string path, HttpContent content)
+        public async Task<string> PostAsync(string path, HttpContent content, CancellationToken cancellationToken = default)
         {
             var url = BuildUrl(path);
-            var response = await _httpClient.PostAsync(url, content);
-            return await ProcessResponse(response);
+            using (var response = await _httpClient.PostAsync(url, content, cancellationToken))
+            {
+                return await ProcessResponse(response);
+            }
         }
 
         /// <summary>
@@ -78,24 +85,30 @@ namespace GeoServerDesktop.GeoServerClient.Http
         /// </summary>
         /// <param name="path">REST 端点的相对路径</param>
         /// <param name="content">请求内容</param>
+        /// <param name="cancellationToken">取消令牌</param>
         /// <returns>响应内容字符串</returns>
-        public async Task<string> PutAsync(string path, HttpContent content)
+        public async Task<string> PutAsync(string path, HttpContent content, CancellationToken cancellationToken = default)
         {
             var url = BuildUrl(path);
-            var response = await _httpClient.PutAsync(url, content);
-            return await ProcessResponse(response);
+            using (var response = await _httpClient.PutAsync(url, content, cancellationToken))
+            {
+                return await ProcessResponse(response);
+            }
         }
 
         /// <summary>
         /// 对指定路径执行 DELETE 请求
         /// </summary>
         /// <param name="path">REST 端点的相对路径</param>
+        /// <param name="cancellationToken">取消令牌</param>
         /// <returns>响应内容字符串</returns>
-        public async Task<string> DeleteAsync(string path)
+        public async Task<string> DeleteAsync(string path, CancellationToken cancellationToken = default)
         {
             var url = BuildUrl(path);
-            var response = await _httpClient.DeleteAsync(url);
-            return await ProcessResponse(response);
+            using (var response = await _httpClient.DeleteAsync(url, cancellationToken))
+            {
+                return await ProcessResponse(response);
+            }
         }
 
         /// <summary>

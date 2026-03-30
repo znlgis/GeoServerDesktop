@@ -81,36 +81,36 @@ namespace GeoServerDesktop.GeoServerClient.Models
     }
 
     /// <summary>
-    /// Wrapper for a single layer response
+    /// 单个图层响应的包装器
     /// </summary>
     public class LayerWrapper
     {
         /// <summary>
-        /// The layer data
+        /// 图层数据
         /// </summary>
         [JsonProperty("layer")]
         public Layer Layer { get; set; }
     }
 
     /// <summary>
-    /// List of layers
+    /// 图层列表
     /// </summary>
     public class LayerList
     {
         /// <summary>
-        /// Array of layers
+        /// 图层数组
         /// </summary>
         [JsonProperty("layer")]
         public Layer[] Layers { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for layer list response
+    /// 图层列表响应的包装器
     /// </summary>
     public class LayerListWrapper
     {
         /// <summary>
-        /// The layer list data
+        /// 图层列表数据
         /// </summary>
         [JsonProperty("layers")]
         public LayerList LayerList { get; set; }

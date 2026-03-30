@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public StructuredCoverageService(IGeoServerHttpClient httpClient)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -47,8 +48,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task UpdateIndexAsync(string workspace, string coverageStore, string coverage, StructuredCoverageIndex index)
         {
             var json = JsonConvert.SerializeObject(index);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            await _httpClient.PutAsync($"/rest/workspaces/{workspace}/coveragestores/{coverageStore}/coverages/{coverage}/index", content);
+            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            {
+                await _httpClient.PutAsync($"/rest/workspaces/{workspace}/coveragestores/{coverageStore}/coverages/{coverage}/index", content);
+            }
         }
 
         /// <summary>
@@ -112,8 +115,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             var request = new { files = files };
             var json = JsonConvert.SerializeObject(request);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            await _httpClient.PostAsync($"/rest/workspaces/{workspace}/coveragestores/{coverageStore}/coverages/{coverage}/index/granules", content);
+            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            {
+                await _httpClient.PostAsync($"/rest/workspaces/{workspace}/coveragestores/{coverageStore}/coverages/{coverage}/index/granules", content);
+            }
         }
     }
 }

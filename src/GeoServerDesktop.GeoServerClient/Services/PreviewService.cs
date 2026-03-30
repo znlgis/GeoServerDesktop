@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GeoServerDesktop.GeoServerClient.Services
 {
@@ -53,10 +54,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
             };
 
             var queryString = string.Join("&",
-                Array.ConvertAll(
-                    new List<string>(parameters.Keys).ToArray(),
-                    key => $"{key}={Uri.EscapeDataString(parameters[key])}"
-                )
+                parameters.Select(kv => $"{kv.Key}={Uri.EscapeDataString(kv.Value)}")
             );
 
             return $"{_baseUrl}/wms?{queryString}";

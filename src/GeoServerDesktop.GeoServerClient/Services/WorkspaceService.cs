@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public WorkspaceService(IGeoServerHttpClient httpClient)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -31,7 +32,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             var response = await _httpClient.GetAsync("/rest/workspaces.json");
             var wrapper = JsonConvert.DeserializeObject<WorkspaceListWrapper>(response);
-            return wrapper?.WorkspaceList?.Workspaces ?? new Workspace[0];
+            return wrapper?.WorkspaceList?.Workspaces ?? Array.Empty<Workspace>();
         }
 
         /// <summary>
@@ -55,8 +56,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             var workspace = new { workspace = new { name = workspaceName } };
             var json = JsonConvert.SerializeObject(workspace);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            await _httpClient.PostAsync("/rest/workspaces", content);
+            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            {
+                await _httpClient.PostAsync("/rest/workspaces", content);
+            }
         }
 
         /// <summary>
@@ -69,8 +72,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             var workspace = new { workspace = new { name = newWorkspaceName } };
             var json = JsonConvert.SerializeObject(workspace);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            await _httpClient.PutAsync($"/rest/workspaces/{workspaceName}", content);
+            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            {
+                await _httpClient.PutAsync($"/rest/workspaces/{workspaceName}", content);
+            }
         }
 
         /// <summary>
@@ -81,7 +86,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteWorkspaceAsync(string workspaceName, bool recurse = false)
         {
-            var path = $"/rest/workspaces/{workspaceName}?recurse={recurse.ToString().ToLower()}";
+            var path = $"/rest/workspaces/{workspaceName}?recurse={recurse.ToString().ToLowerInvariant()}";
             await _httpClient.DeleteAsync(path);
         }
     }
