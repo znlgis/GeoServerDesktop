@@ -11,8 +11,8 @@
         <!-- Header -->
         <Border Grid.Row="0" Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="0,0,0,1">
             <StackPanel Orientation="Horizontal" Spacing="10">
-                <TextBlock Text="Tile Caching Defaults" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
-                <Button Content="Load" Command="{Binding LoadSettingsCommand}" ToolTip.Tip="Load caching defaults"/>
+                <TextBlock Text="{Binding L.TileCachingDefaultsTitle}" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
+                <Button Content="{Binding L.Load}" Command="{Binding LoadSettingsCommand}" ToolTip.Tip="{Binding L.LoadCachingDefaultsToolTip}"/>
             </StackPanel>
         </Border>
 
@@ -22,39 +22,39 @@
                 <!-- Enable/Disable -->
                 <Border Background="#F5F5F5" Padding="15" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="4">
                     <StackPanel Spacing="10">
-                        <TextBlock Text="Default Cache Configuration" FontWeight="Bold" FontSize="14"/>
-                        <CheckBox Content="Enable Tile Caching by Default" IsChecked="{Binding IsEnabled}"/>
+                        <TextBlock Text="{Binding L.DefaultCacheConfiguration}" FontWeight="Bold" FontSize="14"/>
+                        <CheckBox Content="{Binding L.EnableTileCachingByDefault}" IsChecked="{Binding IsEnabled}"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Expiry Settings -->
                 <Border Background="#F5F5F5" Padding="15" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="4">
                     <StackPanel Spacing="10">
-                        <TextBlock Text="Default Expiry Settings" FontWeight="Bold" FontSize="14"/>
+                        <TextBlock Text="{Binding L.DefaultExpirySettings}" FontWeight="Bold" FontSize="14"/>
                         <Grid ColumnDefinitions="200,*" RowDefinitions="Auto,Auto">
-                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Cache Expiry (seconds):" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding L.CacheExpiryLabel}" VerticalAlignment="Center"/>
                             <NumericUpDown Grid.Row="0" Grid.Column="1"
                                           Value="{Binding DefaultExpireCache}"
                                           Minimum="0" Increment="3600"/>
 
-                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Client Cache Expiry (seconds):" VerticalAlignment="Center" Margin="0,8,0,0"/>
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding L.ClientCacheExpiryLabel}" VerticalAlignment="Center" Margin="0,8,0,0"/>
                             <NumericUpDown Grid.Row="1" Grid.Column="1"
                                           Value="{Binding DefaultExpireClients}"
                                           Minimum="0" Increment="3600"
                                           Margin="0,8,0,0"/>
                         </Grid>
-                        <TextBlock Text="Set to 0 for no expiry." FontSize="12" Foreground="#666666"/>
+                        <TextBlock Text="{Binding L.NoExpiryNote}" FontSize="12" Foreground="#666666"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Info -->
                 <Border Background="#E8F5E9" Padding="15" BorderBrush="#A5D6A7" BorderThickness="1" CornerRadius="4">
                     <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#2E7D32"
-                               Text="Note: These are global defaults. Individual layer caching settings can be configured in Layer Management."/>
+                               Text="{Binding L.CachingNote}"/>
                 </Border>
 
                 <!-- Save Button -->
-                <Button Content="Save Settings"
+                <Button Content="{Binding L.SaveSettings}"
                         Command="{Binding SaveSettingsCommand}"
                         Background="#4CAF50"
                         Foreground="White"
@@ -63,7 +63,7 @@
 
                 <!-- Loading Indicator -->
                 <StackPanel Spacing="10" IsVisible="{Binding IsLoading}">
-                    <TextBlock Text="Processing..." HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding L.Processing}" HorizontalAlignment="Center"/>
                     <ProgressBar IsIndeterminate="True"/>
                 </StackPanel>
             </StackPanel>

@@ -25,7 +25,7 @@ namespace GeoServerDesktop.App.ViewModels
         [ObservableProperty] private string _serviceLevel = string.Empty;
         [ObservableProperty] private bool _featureBounding;
         [ObservableProperty] private bool _isLoading;
-        [ObservableProperty] private string _statusMessage = "Ready";
+        [ObservableProperty] private string _statusMessage = string.Empty;
 
         /// <summary>
         /// 初始化 WFSSettingsViewModel 类的新实例
@@ -42,9 +42,9 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private async Task LoadSettingsAsync()
         {
-            if (!_connectionService.IsConnected) { StatusMessage = "Not connected to GeoServer"; return; }
+            if (!_connectionService.IsConnected) { StatusMessage = L.StatusNotConnected; return; }
             IsLoading = true;
-            StatusMessage = "Loading WFS settings...";
+            StatusMessage = L.StatusLoadingWfsSettings;
             try
             {
                 var service = _connectionService.GetWFSSettingsService();
@@ -62,9 +62,9 @@ namespace GeoServerDesktop.App.ViewModels
                     ServiceLevel = settings.WFS.ServiceLevel ?? string.Empty;
                     FeatureBounding = settings.WFS.FeatureBounding ?? false;
                 }
-                StatusMessage = "WFS settings loaded";
+                StatusMessage = L.StatusWfsSettingsLoaded;
             }
-            catch (Exception ex) { StatusMessage = $"Failed to load WFS settings: {ex.Message}"; }
+            catch (Exception ex) { StatusMessage = string.Format(L.StatusWfsSettingsLoadFailed, ex.Message); }
             finally { IsLoading = false; }
         }
 
@@ -74,9 +74,9 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private async Task SaveSettingsAsync()
         {
-            if (!_connectionService.IsConnected) { StatusMessage = "Not connected to GeoServer"; return; }
+            if (!_connectionService.IsConnected) { StatusMessage = L.StatusNotConnected; return; }
             IsLoading = true;
-            StatusMessage = "Saving WFS settings...";
+            StatusMessage = L.StatusSavingWfsSettings;
             try
             {
                 var service = _connectionService.GetWFSSettingsService();
@@ -97,9 +97,9 @@ namespace GeoServerDesktop.App.ViewModels
                     }
                 };
                 await service.UpdateWFSSettingsAsync(settings);
-                StatusMessage = "WFS settings saved successfully";
+                StatusMessage = L.StatusWfsSettingsSaved;
             }
-            catch (Exception ex) { StatusMessage = $"Failed to save WFS settings: {ex.Message}"; }
+            catch (Exception ex) { StatusMessage = string.Format(L.StatusWfsSettingsSaveFailed, ex.Message); }
             finally { IsLoading = false; }
         }
     }

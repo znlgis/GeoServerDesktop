@@ -44,7 +44,7 @@ namespace GeoServerDesktop.App.ViewModels
 
         /// <summary>状态消息</summary>
         [ObservableProperty]
-        private string _statusMessage = "Ready";
+        private string _statusMessage = string.Empty;
 
         /// <summary>
         /// 初始化 GlobalSettingsViewModel 类的新实例
@@ -63,12 +63,12 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (!_connectionService.IsConnected)
             {
-                StatusMessage = "Not connected to GeoServer";
+                StatusMessage = L.StatusNotConnected;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = "Loading global settings...";
+            StatusMessage = L.StatusLoadingGlobalSettings;
 
             try
             {
@@ -90,11 +90,11 @@ namespace GeoServerDesktop.App.ViewModels
                     }
                 }
 
-                StatusMessage = "Global settings loaded";
+                StatusMessage = L.StatusGlobalSettingsLoaded;
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to load settings: {ex.Message}";
+                StatusMessage = string.Format(L.StatusGlobalSettingsLoadFailed, ex.Message);
             }
             finally
             {
@@ -110,12 +110,12 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (!_connectionService.IsConnected)
             {
-                StatusMessage = "Not connected to GeoServer";
+                StatusMessage = L.StatusNotConnected;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = "Saving global settings...";
+            StatusMessage = L.StatusSavingGlobalSettings;
 
             try
             {
@@ -137,11 +137,11 @@ namespace GeoServerDesktop.App.ViewModels
                 };
 
                 await service.UpdateGlobalSettingsAsync(globalSettings);
-                StatusMessage = "Global settings saved successfully";
+                StatusMessage = L.StatusGlobalSettingsSaved;
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to save settings: {ex.Message}";
+                StatusMessage = string.Format(L.StatusGlobalSettingsSaveFailed, ex.Message);
             }
             finally
             {

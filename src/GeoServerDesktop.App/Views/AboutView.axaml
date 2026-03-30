@@ -16,16 +16,16 @@
         <Border Grid.Row="0" Background="#F5F5F5" Padding="15" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
             <Grid ColumnDefinitions="*,Auto">
                 <StackPanel Grid.Column="0">
-                    <TextBlock Text="About GeoServer" 
+                    <TextBlock Text="{Binding L.AboutGeoServerTitle}" 
                                FontSize="24" 
                                FontWeight="Bold"/>
-                    <TextBlock Text="System information and version details" 
+                    <TextBlock Text="{Binding L.AboutSubtitle}" 
                                FontSize="13"
                                Foreground="#666666"
                                Margin="0,5,0,0"/>
                 </StackPanel>
                 <Button Grid.Column="1" 
-                        Content="🔄 Refresh" 
+                        Content="{Binding L.Refresh}" 
                         Command="{Binding LoadSystemInfoCommand}"
                         VerticalAlignment="Center"
                         Padding="12,6"/>
@@ -42,14 +42,14 @@
                         Background="White"
                         CornerRadius="4">
                     <StackPanel Spacing="15">
-                        <TextBlock Text="Version Information" 
+                        <TextBlock Text="{Binding L.VersionInformation}" 
                                    FontSize="18" 
                                    FontWeight="Bold"
                                    Foreground="#2C5F8D"/>
                         
                         <Grid ColumnDefinitions="200,*" RowDefinitions="Auto,Auto,Auto">
                             <TextBlock Grid.Row="0" Grid.Column="0" 
-                                       Text="GeoServer Version:" 
+                                       Text="{Binding L.GeoServerVersionLabel}" 
                                        FontWeight="Medium"
                                        VerticalAlignment="Center"/>
                             <TextBlock Grid.Row="0" Grid.Column="1" 
@@ -57,7 +57,7 @@
                                        VerticalAlignment="Center"/>
                             
                             <TextBlock Grid.Row="1" Grid.Column="0" 
-                                       Text="GeoTools Version:" 
+                                       Text="{Binding L.GeoToolsVersionLabel}" 
                                        FontWeight="Medium"
                                        VerticalAlignment="Center"
                                        Margin="0,10,0,0"/>
@@ -67,7 +67,7 @@
                                        Margin="0,10,0,0"/>
                             
                             <TextBlock Grid.Row="2" Grid.Column="0" 
-                                       Text="GeoWebCache Version:" 
+                                       Text="{Binding L.GeoWebCacheVersionLabel}" 
                                        FontWeight="Medium"
                                        VerticalAlignment="Center"
                                        Margin="0,10,0,0"/>

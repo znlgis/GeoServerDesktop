@@ -35,7 +35,7 @@ namespace GeoServerDesktop.App.ViewModels
         /// 状态消息
         /// </summary>
         [ObservableProperty]
-        private string _statusMessage = "Ready";
+        private string _statusMessage = string.Empty;
 
         /// <summary>
         /// 是否正在加载
@@ -60,12 +60,12 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (!_connectionService.IsConnected)
             {
-                StatusMessage = "Not connected to GeoServer";
+                StatusMessage = L.StatusNotConnected;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = "Loading system information...";
+            StatusMessage = L.StatusLoadingSystemInfo;
 
             try
             {
@@ -92,11 +92,11 @@ namespace GeoServerDesktop.App.ViewModels
                     }
                 }
 
-                StatusMessage = "System information loaded successfully";
+                StatusMessage = L.StatusSystemInfoLoaded;
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to load system information: {ex.Message}";
+                StatusMessage = string.Format(L.StatusSystemInfoLoadFailed, ex.Message);
                 GeoServerVersion = "Error";
                 GeoToolsVersion = "Error";
                 GeoWebCacheVersion = "Error";

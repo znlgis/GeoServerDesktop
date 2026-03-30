@@ -31,7 +31,7 @@ namespace GeoServerDesktop.App.ViewModels
 
         /// <summary>状态消息</summary>
         [ObservableProperty]
-        private string _statusMessage = "Ready";
+        private string _statusMessage = string.Empty;
 
         /// <summary>
         /// 初始化 CachingDefaultsViewModel 类的新实例
@@ -50,22 +50,22 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (!_connectionService.IsConnected)
             {
-                StatusMessage = "Not connected to GeoServer";
+                StatusMessage = L.StatusNotConnected;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = "Loading caching defaults...";
+            StatusMessage = L.StatusLoadingCachingDefaults;
 
             try
             {
                 // GWC 默认设置通过 GWC 图层服务获取，此处展示概览信息
                 await Task.Delay(100); // 模拟异步加载
-                StatusMessage = "Caching defaults loaded (configure per-layer settings in Layer Management)";
+                StatusMessage = L.StatusCachingDefaultsLoaded;
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to load caching defaults: {ex.Message}";
+                StatusMessage = string.Format(L.StatusCachingDefaultsLoadFailed, ex.Message);
             }
             finally
             {
@@ -81,21 +81,21 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (!_connectionService.IsConnected)
             {
-                StatusMessage = "Not connected to GeoServer";
+                StatusMessage = L.StatusNotConnected;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = "Saving caching defaults...";
+            StatusMessage = L.StatusSavingCachingDefaults;
 
             try
             {
                 await Task.Delay(100); // 模拟异步保存
-                StatusMessage = "Caching defaults saved successfully";
+                StatusMessage = L.StatusCachingDefaultsSaved;
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to save caching defaults: {ex.Message}";
+                StatusMessage = string.Format(L.StatusCachingDefaultsSaveFailed, ex.Message);
             }
             finally
             {

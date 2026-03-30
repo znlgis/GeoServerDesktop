@@ -42,7 +42,7 @@ namespace GeoServerDesktop.App.ViewModels
         /// 状态消息
         /// </summary>
         [ObservableProperty]
-        private string _statusMessage = "Ready";
+        private string _statusMessage = string.Empty;
 
         /// <summary>
         /// 是否正在加载
@@ -67,12 +67,12 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (!_connectionService.IsConnected)
             {
-                StatusMessage = "Not connected to GeoServer";
+                StatusMessage = L.StatusNotConnected;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = "Loading styles...";
+            StatusMessage = L.StatusLoadingStyles;
 
             try
             {
@@ -85,11 +85,11 @@ namespace GeoServerDesktop.App.ViewModels
                     Styles.Add(style.Name);
                 }
 
-                StatusMessage = $"Loaded {Styles.Count} styles";
+                StatusMessage = string.Format(L.StatusStylesLoaded, Styles.Count);
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to load styles: {ex.Message}";
+                StatusMessage = string.Format(L.StatusStylesLoadFailed, ex.Message);
             }
             finally
             {
@@ -105,7 +105,7 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (string.IsNullOrWhiteSpace(SelectedStyle))
             {
-                StatusMessage = "No style selected";
+                StatusMessage = L.StatusNoStyleSelected;
                 return;
             }
 
@@ -186,7 +186,7 @@ namespace GeoServerDesktop.App.ViewModels
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to upload style: {ex.Message}";
+                StatusMessage = string.Format(L.StatusStyleUploadFailed, ex.Message);
             }
             finally
             {
@@ -202,7 +202,7 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (string.IsNullOrWhiteSpace(SelectedStyle))
             {
-                StatusMessage = "No style selected";
+                StatusMessage = L.StatusNoStyleSelected;
                 return;
             }
 
@@ -223,7 +223,7 @@ namespace GeoServerDesktop.App.ViewModels
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to delete style: {ex.Message}";
+                StatusMessage = string.Format(L.StatusStyleDeleteFailed, ex.Message);
             }
             finally
             {

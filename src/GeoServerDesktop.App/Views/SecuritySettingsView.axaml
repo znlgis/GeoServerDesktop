@@ -11,8 +11,8 @@
         <!-- Header -->
         <Border Grid.Row="0" Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="0,0,0,1">
             <StackPanel Orientation="Horizontal" Spacing="10">
-                <TextBlock Text="Security Settings" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
-                <Button Content="Load" Command="{Binding LoadSettingsCommand}" ToolTip.Tip="Load security settings"/>
+                <TextBlock Text="{Binding L.SecuritySettingsTitle}" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
+                <Button Content="{Binding L.Load}" Command="{Binding LoadSettingsCommand}" ToolTip.Tip="{Binding L.LoadSecuritySettingsToolTip}"/>
             </StackPanel>
         </Border>
 
@@ -22,7 +22,7 @@
             <Border Grid.Column="0" Margin="10" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="4">
                 <Grid RowDefinitions="Auto,*">
                     <Border Grid.Row="0" Background="#F5F5F5" Padding="8" BorderBrush="#CCCCCC" BorderThickness="0,0,0,1">
-                        <TextBlock Text="Access Control Rules" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding L.AccessControlRules}" FontWeight="Bold"/>
                     </Border>
                     <ListBox Grid.Row="1"
                              ItemsSource="{Binding AclRules}"
@@ -37,17 +37,17 @@
             <StackPanel Grid.Column="2" Margin="10" Spacing="10">
                 <Border Background="#F5F5F5" Padding="15" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="4">
                     <StackPanel Spacing="8">
-                        <TextBlock Text="Information" FontWeight="Bold" FontSize="14"/>
-                        <TextBlock Text="This page shows Access Control List (ACL) rules for GeoServer services and layers."
+                        <TextBlock Text="{Binding L.InformationLabel}" FontWeight="Bold" FontSize="14"/>
+                        <TextBlock Text="{Binding L.SecurityInfoText}"
                                    TextWrapping="Wrap" Opacity="0.7"/>
-                        <TextBlock Text="Format: [resource] role => access level"
+                        <TextBlock Text="{Binding L.SecurityFormatText}"
                                    FontStyle="Italic" TextWrapping="Wrap" Opacity="0.7"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Loading Indicator -->
                 <StackPanel Spacing="10" IsVisible="{Binding IsLoading}">
-                    <TextBlock Text="Loading..." HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding L.Loading}" HorizontalAlignment="Center"/>
                     <ProgressBar IsIndeterminate="True"/>
                 </StackPanel>
             </StackPanel>

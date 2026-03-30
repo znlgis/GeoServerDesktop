@@ -43,7 +43,7 @@ namespace GeoServerDesktop.App.ViewModels
         /// 状态消息
         /// </summary>
         [ObservableProperty]
-        private string _statusMessage = "Ready";
+        private string _statusMessage = string.Empty;
 
         /// <summary>
         /// 是否正在加载
@@ -86,12 +86,12 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (!_connectionService.IsConnected)
             {
-                StatusMessage = "Not connected to GeoServer";
+                StatusMessage = L.StatusNotConnected;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = "Loading workspaces...";
+            StatusMessage = L.StatusLoadingWorkspaces;
 
             try
             {
@@ -106,7 +106,7 @@ namespace GeoServerDesktop.App.ViewModels
                     Workspaces.Add(workspace.Name);
                 }
 
-                StatusMessage = $"Loaded {Workspaces.Count - 1} workspaces";
+                StatusMessage = string.Format(L.StatusWorkspacesLoaded, Workspaces.Count - 1);
 
                 // 默认选择"所有工作空间"
                 if (Workspaces.Count > 0)
@@ -116,7 +116,7 @@ namespace GeoServerDesktop.App.ViewModels
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to load workspaces: {ex.Message}";
+                StatusMessage = string.Format(L.StatusWorkspacesLoadFailed, ex.Message);
             }
             finally
             {
@@ -144,12 +144,12 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (string.IsNullOrEmpty(SelectedWorkspace))
             {
-                StatusMessage = "No workspace selected";
+                StatusMessage = L.StatusNoWorkspaceSelected;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = "Loading layer groups...";
+            StatusMessage = L.StatusLoadingLayerGroups;
 
             try
             {
@@ -173,11 +173,11 @@ namespace GeoServerDesktop.App.ViewModels
                     LayerGroups.Add(layerGroup);
                 }
 
-                StatusMessage = $"Loaded {LayerGroups.Count} layer groups";
+                StatusMessage = string.Format(L.StatusLayerGroupsLoaded, LayerGroups.Count);
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to load layer groups: {ex.Message}";
+                StatusMessage = string.Format(L.StatusLayerGroupsLoadFailed, ex.Message);
             }
             finally
             {
@@ -213,12 +213,12 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (string.IsNullOrWhiteSpace(NewLayerGroupName))
             {
-                StatusMessage = "Layer group name is required";
+                StatusMessage = L.StatusLayerGroupNameRequired;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = $"Creating layer group '{NewLayerGroupName}'...";
+            StatusMessage = string.Format(L.StatusCreatingLayerGroup, NewLayerGroupName);
 
             try
             {
@@ -243,7 +243,7 @@ namespace GeoServerDesktop.App.ViewModels
                     await layerGroupService.CreateWorkspaceLayerGroupAsync(SelectedWorkspace, layerGroup);
                 }
 
-                StatusMessage = $"Layer group '{NewLayerGroupName}' created successfully";
+                StatusMessage = string.Format(L.StatusLayerGroupCreated, NewLayerGroupName);
                 IsCreateDialogVisible = false;
 
                 // 重新加载图层组列表
@@ -251,7 +251,7 @@ namespace GeoServerDesktop.App.ViewModels
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to create layer group: {ex.Message}";
+                StatusMessage = string.Format(L.StatusLayerGroupCreateFailed, ex.Message);
             }
             finally
             {
@@ -267,12 +267,12 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (SelectedLayerGroup == null)
             {
-                StatusMessage = "No layer group selected";
+                StatusMessage = L.StatusNoLayerGroupSelected;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = $"Deleting layer group '{SelectedLayerGroup.Name}'...";
+            StatusMessage = string.Format(L.StatusDeletingLayerGroup, SelectedLayerGroup.Name);
 
             try
             {
@@ -291,7 +291,7 @@ namespace GeoServerDesktop.App.ViewModels
                     await layerGroupService.DeleteLayerGroupAsync(SelectedLayerGroup.Name);
                 }
 
-                StatusMessage = $"Layer group '{SelectedLayerGroup.Name}' deleted successfully";
+                StatusMessage = string.Format(L.StatusLayerGroupDeleted, SelectedLayerGroup.Name);
                 SelectedLayerGroup = null;
 
                 // 重新加载图层组列表
@@ -299,7 +299,7 @@ namespace GeoServerDesktop.App.ViewModels
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to delete layer group: {ex.Message}";
+                StatusMessage = string.Format(L.StatusLayerGroupDeleteFailed, ex.Message);
             }
             finally
             {

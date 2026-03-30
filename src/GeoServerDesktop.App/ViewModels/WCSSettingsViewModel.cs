@@ -25,7 +25,7 @@ namespace GeoServerDesktop.App.ViewModels
         [ObservableProperty] private int _maxOutputMemory;
         [ObservableProperty] private bool _subsamplingEnabled;
         [ObservableProperty] private bool _isLoading;
-        [ObservableProperty] private string _statusMessage = "Ready";
+        [ObservableProperty] private string _statusMessage = string.Empty;
 
         /// <summary>
         /// 初始化 WCSSettingsViewModel 类的新实例
@@ -42,9 +42,9 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private async Task LoadSettingsAsync()
         {
-            if (!_connectionService.IsConnected) { StatusMessage = "Not connected to GeoServer"; return; }
+            if (!_connectionService.IsConnected) { StatusMessage = L.StatusNotConnected; return; }
             IsLoading = true;
-            StatusMessage = "Loading WCS settings...";
+            StatusMessage = L.StatusLoadingWcsSettings;
             try
             {
                 var service = _connectionService.GetWCSSettingsService();
@@ -62,9 +62,9 @@ namespace GeoServerDesktop.App.ViewModels
                     MaxOutputMemory = settings.WCS.MaxOutputMemory ?? 0;
                     SubsamplingEnabled = settings.WCS.SubsamplingEnabled ?? false;
                 }
-                StatusMessage = "WCS settings loaded";
+                StatusMessage = L.StatusWcsSettingsLoaded;
             }
-            catch (Exception ex) { StatusMessage = $"Failed to load WCS settings: {ex.Message}"; }
+            catch (Exception ex) { StatusMessage = string.Format(L.StatusWcsSettingsLoadFailed, ex.Message); }
             finally { IsLoading = false; }
         }
 
@@ -74,9 +74,9 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private async Task SaveSettingsAsync()
         {
-            if (!_connectionService.IsConnected) { StatusMessage = "Not connected to GeoServer"; return; }
+            if (!_connectionService.IsConnected) { StatusMessage = L.StatusNotConnected; return; }
             IsLoading = true;
-            StatusMessage = "Saving WCS settings...";
+            StatusMessage = L.StatusSavingWcsSettings;
             try
             {
                 var service = _connectionService.GetWCSSettingsService();
@@ -97,9 +97,9 @@ namespace GeoServerDesktop.App.ViewModels
                     }
                 };
                 await service.UpdateWCSSettingsAsync(settings);
-                StatusMessage = "WCS settings saved successfully";
+                StatusMessage = L.StatusWcsSettingsSaved;
             }
-            catch (Exception ex) { StatusMessage = $"Failed to save WCS settings: {ex.Message}"; }
+            catch (Exception ex) { StatusMessage = string.Format(L.StatusWcsSettingsSaveFailed, ex.Message); }
             finally { IsLoading = false; }
         }
     }

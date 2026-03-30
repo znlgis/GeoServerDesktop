@@ -48,7 +48,7 @@ namespace GeoServerDesktop.App.ViewModels
 
         /// <summary>状态消息</summary>
         [ObservableProperty]
-        private string _statusMessage = "Ready";
+        private string _statusMessage = string.Empty;
 
         /// <summary>
         /// 初始化 WMSSettingsViewModel 类的新实例
@@ -67,12 +67,12 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (!_connectionService.IsConnected)
             {
-                StatusMessage = "Not connected to GeoServer";
+                StatusMessage = L.StatusNotConnected;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = "Loading WMS settings...";
+            StatusMessage = L.StatusLoadingWmsSettings;
 
             try
             {
@@ -90,11 +90,11 @@ namespace GeoServerDesktop.App.ViewModels
                     CiteCompliant = settings.WMS.CiteCompliant ?? false;
                 }
 
-                StatusMessage = "WMS settings loaded";
+                StatusMessage = L.StatusWmsSettingsLoaded;
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to load WMS settings: {ex.Message}";
+                StatusMessage = string.Format(L.StatusWmsSettingsLoadFailed, ex.Message);
             }
             finally
             {
@@ -110,12 +110,12 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (!_connectionService.IsConnected)
             {
-                StatusMessage = "Not connected to GeoServer";
+                StatusMessage = L.StatusNotConnected;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = "Saving WMS settings...";
+            StatusMessage = L.StatusSavingWmsSettings;
 
             try
             {
@@ -135,11 +135,11 @@ namespace GeoServerDesktop.App.ViewModels
                 };
 
                 await service.UpdateWMSSettingsAsync(settings);
-                StatusMessage = "WMS settings saved successfully";
+                StatusMessage = L.StatusWmsSettingsSaved;
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to save WMS settings: {ex.Message}";
+                StatusMessage = string.Format(L.StatusWmsSettingsSaveFailed, ex.Message);
             }
             finally
             {

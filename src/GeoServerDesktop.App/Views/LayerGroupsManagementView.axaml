@@ -16,22 +16,22 @@
         <Border Grid.Row="0" Background="#F5F5F5" Padding="15" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
             <Grid ColumnDefinitions="*,Auto,Auto">
                 <StackPanel Grid.Column="0">
-                    <TextBlock Text="Layer Groups" 
+                    <TextBlock Text="{Binding L.LayerGroupsTitle}" 
                                FontSize="24" 
                                FontWeight="Bold"/>
-                    <TextBlock Text="Manage layer groups to organize multiple layers together" 
+                    <TextBlock Text="{Binding L.LayerGroupsSubtitle}" 
                                FontSize="13"
                                Foreground="#666666"
                                Margin="0,5,0,0"/>
                 </StackPanel>
                 <Button Grid.Column="1" 
-                        Content="➕ Create" 
+                        Content="{Binding L.CreateLayerGroupButton}" 
                         Command="{Binding ShowCreateDialogCommand}"
                         VerticalAlignment="Center"
                         Padding="12,6"
                         Margin="0,0,10,0"/>
                 <Button Grid.Column="2" 
-                        Content="🔄 Refresh" 
+                        Content="{Binding L.Refresh}" 
                         Command="{Binding LoadLayerGroupsCommand}"
                         VerticalAlignment="Center"
                         Padding="12,6"/>
@@ -50,11 +50,11 @@
                     CornerRadius="4">
                 <DockPanel>
                     <StackPanel DockPanel.Dock="Top" Margin="0,0,0,10">
-                        <TextBlock Text="Workspace" 
+                        <TextBlock Text="{Binding L.WorkspaceLabel}" 
                                    FontWeight="Bold" 
                                    FontSize="14"
                                    Margin="0,0,0,5"/>
-                        <TextBlock Text="Select a workspace to filter layer groups" 
+                        <TextBlock Text="{Binding L.SelectWorkspaceFilterLayerGroupsHint}" 
                                    FontSize="12"
                                    Foreground="#666666"
                                    TextWrapping="Wrap"/>
@@ -85,7 +85,7 @@
                     CornerRadius="4">
                 <DockPanel>
                     <StackPanel DockPanel.Dock="Top" Margin="0,0,0,15">
-                        <TextBlock Text="Layer Groups" 
+                        <TextBlock Text="{Binding L.LayerGroupsTitle}" 
                                    FontWeight="Bold" 
                                    FontSize="14"
                                    Margin="0,0,0,5"/>
@@ -97,7 +97,7 @@
 
                     <!-- Layer Group List -->
                     <Grid>
-                        <TextBlock Text="Select a workspace to view layer groups" 
+                        <TextBlock Text="{Binding L.SelectWorkspaceToViewLayerGroups}" 
                                    FontSize="14"
                                    Foreground="#999999"
                                    HorizontalAlignment="Center"
@@ -204,24 +204,24 @@
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center">
                 <StackPanel Spacing="15">
-                    <TextBlock Text="Create Layer Group" 
+                    <TextBlock Text="{Binding L.CreateLayerGroupTitle}" 
                                FontSize="18" 
                                FontWeight="Bold"/>
                     
                     <StackPanel Spacing="5">
-                        <TextBlock Text="Name *" FontWeight="Medium"/>
+                        <TextBlock Text="{Binding L.NameRequiredLabel}" FontWeight="Medium"/>
                         <TextBox Text="{Binding NewLayerGroupName}" 
-                                 Watermark="Enter layer group name"/>
+                                 Watermark="{Binding L.EnterLayerGroupNameHint}"/>
                     </StackPanel>
                     
                     <StackPanel Spacing="5">
-                        <TextBlock Text="Title" FontWeight="Medium"/>
+                        <TextBlock Text="{Binding L.TitleLabel}" FontWeight="Medium"/>
                         <TextBox Text="{Binding NewLayerGroupTitle}" 
-                                 Watermark="Enter layer group title (optional)"/>
+                                 Watermark="{Binding L.EnterLayerGroupTitleHint}"/>
                     </StackPanel>
                     
                     <StackPanel Spacing="5">
-                        <TextBlock Text="Workspace" FontWeight="Medium"/>
+                        <TextBlock Text="{Binding L.WorkspaceLabel}" FontWeight="Medium"/>
                         <TextBlock Text="{Binding SelectedWorkspace}" 
                                    FontSize="12"
                                    Foreground="#666666"/>
@@ -230,10 +230,10 @@
                     <StackPanel Orientation="Horizontal" 
                                 Spacing="10" 
                                 HorizontalAlignment="Right">
-                        <Button Content="Cancel" 
+                        <Button Content="{Binding L.Cancel}" 
                                 Command="{Binding CancelCreateCommand}"
                                 Padding="15,8"/>
-                        <Button Content="Create" 
+                        <Button Content="{Binding L.Create}" 
                                 Command="{Binding CreateLayerGroupCommand}"
                                 Background="#2196F3"
                                 Foreground="White"
