@@ -57,7 +57,7 @@ namespace GeoServerDesktop.App.ViewModels
 
         /// <summary>状态消息</summary>
         [ObservableProperty]
-        private string _statusMessage = "Ready";
+        private string _statusMessage = string.Empty;
 
         /// <summary>
         /// 初始化 DiskQuotaViewModel 类的新实例
@@ -76,12 +76,12 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (!_connectionService.IsConnected)
             {
-                StatusMessage = "Not connected to GeoServer";
+                StatusMessage = L.StatusNotConnected;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = "Loading disk quota settings...";
+            StatusMessage = L.StatusLoadingDiskQuota;
 
             try
             {
@@ -102,11 +102,11 @@ namespace GeoServerDesktop.App.ViewModels
                     }
                 }
 
-                StatusMessage = "Disk quota settings loaded";
+                StatusMessage = L.StatusDiskQuotaLoaded;
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to load disk quota settings: {ex.Message}";
+                StatusMessage = string.Format(L.StatusDiskQuotaLoadFailed, ex.Message);
             }
             finally
             {
@@ -122,12 +122,12 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (!_connectionService.IsConnected)
             {
-                StatusMessage = "Not connected to GeoServer";
+                StatusMessage = L.StatusNotConnected;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = "Saving disk quota settings...";
+            StatusMessage = L.StatusSavingDiskQuota;
 
             try
             {
@@ -146,11 +146,11 @@ namespace GeoServerDesktop.App.ViewModels
                 };
 
                 await service.UpdateDiskQuotaAsync(config);
-                StatusMessage = "Disk quota settings saved successfully";
+                StatusMessage = L.StatusDiskQuotaSaved;
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to save disk quota settings: {ex.Message}";
+                StatusMessage = string.Format(L.StatusDiskQuotaSaveFailed, ex.Message);
             }
             finally
             {

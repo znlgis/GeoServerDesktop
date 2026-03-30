@@ -15,12 +15,12 @@
         <!-- Toolbar -->
         <Border Grid.Row="0" Background="#F5F5F5" Padding="5" BorderBrush="#CCCCCC" BorderThickness="0,0,0,1">
             <StackPanel Orientation="Horizontal" Spacing="5">
-                <Button Content="🏠 Reset" 
+                <Button Content="{Binding L.ResetButton}" 
                         Command="{Binding ZoomToExtentCommand}"
-                        ToolTip.Tip="Reset view"/>
-                <Button Content="🗑️ Clear" 
+                        ToolTip.Tip="{Binding L.ResetViewToolTip}"/>
+                <Button Content="{Binding L.ClearButton}" 
                         Command="{Binding ClearLayersCommand}"
-                        ToolTip.Tip="Clear current layer"/>
+                        ToolTip.Tip="{Binding L.ClearLayerToolTip}"/>
                 <Separator Width="1" Height="20" Background="#CCCCCC" Margin="5,0"/>
                 <TextBlock Text="{Binding StatusMessage}" 
                            VerticalAlignment="Center"
@@ -34,16 +34,16 @@
                 <!-- Map placeholder or WMS information -->
                 <ScrollViewer>
                     <StackPanel Spacing="20">
-                        <TextBlock Text="Map Preview" 
+                        <TextBlock Text="{Binding L.MapPreviewTitle}" 
                                    FontSize="24" 
                                    FontWeight="Bold"/>
                         
-                        <TextBlock Text="This view provides WMS layer preview capabilities."
+                        <TextBlock Text="{Binding L.MapPreviewDescription}"
                                    TextWrapping="Wrap"
                                    FontSize="14"/>
                         
                         <StackPanel Spacing="10" IsVisible="{Binding !!PreviewUrl}">
-                            <TextBlock Text="Current Layer WMS URL:" 
+                            <TextBlock Text="{Binding L.CurrentLayerWmsUrl}" 
                                        FontWeight="Bold"/>
                             <Border Background="#F5F5F5" 
                                     Padding="10" 
@@ -56,31 +56,31 @@
                                                      FontSize="12"/>
                             </Border>
                             
-                            <TextBlock Text="You can use this URL in GIS applications like QGIS, ArcGIS, or web mapping libraries."
+                            <TextBlock Text="{Binding L.WmsUrlUsageHint}"
                                        TextWrapping="Wrap"
                                        FontSize="12"
                                        Foreground="#666666"/>
                         </StackPanel>
                         
                         <StackPanel Spacing="10" IsVisible="{Binding !PreviewUrl}">
-                            <TextBlock Text="How to Preview Layers:" 
+                            <TextBlock Text="{Binding L.HowToPreviewTitle}" 
                                        FontWeight="Bold"
                                        FontSize="16"
                                        Margin="0,20,0,0"/>
-                            <TextBlock Text="1. Connect to a GeoServer instance"
+                            <TextBlock Text="{Binding L.PreviewStep1}"
                                        Margin="20,0,0,0"/>
-                            <TextBlock Text="2. Select a layer from the resource tree"
+                            <TextBlock Text="{Binding L.PreviewStep2}"
                                        Margin="20,0,0,0"/>
-                            <TextBlock Text="3. The WMS URL will be generated and displayed here"
+                            <TextBlock Text="{Binding L.PreviewStep3}"
                                        Margin="20,0,0,0"/>
-                            <TextBlock Text="4. Use the URL in your preferred GIS client"
+                            <TextBlock Text="{Binding L.PreviewStep4}"
                                        Margin="20,0,0,0"/>
                         </StackPanel>
                         
                         <!-- Loading overlay -->
                         <StackPanel IsVisible="{Binding IsLoading}"
                                     HorizontalAlignment="Center">
-                            <TextBlock Text="Loading..." 
+                            <TextBlock Text="{Binding L.Loading}" 
                                        FontSize="16" 
                                        FontWeight="Bold"
                                        HorizontalAlignment="Center"/>
@@ -97,11 +97,11 @@
         <Border Grid.Row="2" Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="0,1,0,0">
             <Grid ColumnDefinitions="Auto,*">
                 <TextBlock Grid.Column="0" 
-                           Text="Map Preview" 
+                           Text="{Binding L.MapPreviewTitle}" 
                            FontWeight="Bold" 
                            Margin="0,0,20,0"/>
                 <TextBlock Grid.Column="1" 
-                           Text="WMS layer preview with URL generation for external GIS applications"
+                           Text="{Binding L.MapPreviewInfo}"
                            Foreground="#666666"/>
             </Grid>
         </Border>

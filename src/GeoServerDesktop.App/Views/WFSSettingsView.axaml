@@ -11,8 +11,8 @@
         <!-- Header -->
         <Border Grid.Row="0" Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="0,0,0,1">
             <StackPanel Orientation="Horizontal" Spacing="10">
-                <TextBlock Text="WFS Settings" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
-                <Button Content="Load" Command="{Binding LoadSettingsCommand}" ToolTip.Tip="Load current WFS settings"/>
+                <TextBlock Text="{Binding L.WfsSettingsTitle}" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
+                <Button Content="{Binding L.Load}" Command="{Binding LoadSettingsCommand}" ToolTip.Tip="{Binding L.LoadWfsSettingsToolTip}"/>
             </StackPanel>
         </Border>
 
@@ -22,32 +22,32 @@
                 <!-- Service Configuration -->
                 <Border Background="#F5F5F5" Padding="15" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="4">
                     <StackPanel Spacing="10">
-                        <TextBlock Text="Service Configuration" FontWeight="Bold" FontSize="14"/>
-                        <CheckBox Content="Enable WFS Service" IsChecked="{Binding IsEnabled}"/>
-                        <CheckBox Content="CITE Compliant" IsChecked="{Binding CiteCompliant}"/>
+                        <TextBlock Text="{Binding L.ServiceConfiguration}" FontWeight="Bold" FontSize="14"/>
+                        <CheckBox Content="{Binding L.EnableWfsService}" IsChecked="{Binding IsEnabled}"/>
+                        <CheckBox Content="{Binding L.CiteCompliant}" IsChecked="{Binding CiteCompliant}"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Service Information -->
                 <Border Background="#F5F5F5" Padding="15" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="4">
                     <StackPanel Spacing="10">
-                        <TextBlock Text="Service Information" FontWeight="Bold" FontSize="14"/>
+                        <TextBlock Text="{Binding L.ServiceInformation}" FontWeight="Bold" FontSize="14"/>
                         <Grid ColumnDefinitions="130,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
-                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Name:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ServiceName}" Watermark="Service name"/>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding L.NameLabel}" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ServiceName}" Watermark="{Binding L.ServiceNameHint}"/>
 
-                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Title:" VerticalAlignment="Center" Margin="0,8,0,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Title}" Watermark="Service title" Margin="0,8,0,0"/>
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding L.TitleLabel}" VerticalAlignment="Center" Margin="0,8,0,0"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Title}" Watermark="{Binding L.ServiceTitleHint}" Margin="0,8,0,0"/>
 
-                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Abstract:" VerticalAlignment="Top" Margin="0,8,0,0"/>
-                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Abstract}" Watermark="Service abstract"
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding L.AbstractLabel}" VerticalAlignment="Top" Margin="0,8,0,0"/>
+                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Abstract}" Watermark="{Binding L.ServiceAbstractHint}"
                                      AcceptsReturn="True" Height="80" TextWrapping="Wrap" Margin="0,8,0,0"/>
 
-                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Maintainer:" VerticalAlignment="Center" Margin="0,8,0,0"/>
-                            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Maintainer}" Watermark="Maintainer" Margin="0,8,0,0"/>
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="{Binding L.MaintainerLabel}" VerticalAlignment="Center" Margin="0,8,0,0"/>
+                            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Maintainer}" Watermark="{Binding L.MaintainerHint}" Margin="0,8,0,0"/>
 
-                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Online Resource:" VerticalAlignment="Center" Margin="0,8,0,0"/>
-                            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding OnlineResource}" Watermark="Online resource URL" Margin="0,8,0,0"/>
+                            <TextBlock Grid.Row="4" Grid.Column="0" Text="{Binding L.OnlineResourceLabel}" VerticalAlignment="Center" Margin="0,8,0,0"/>
+                            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding OnlineResource}" Watermark="{Binding L.OnlineResourceUrlHint}" Margin="0,8,0,0"/>
                         </Grid>
                     </StackPanel>
                 </Border>
@@ -55,21 +55,21 @@
                 <!-- WFS Parameters -->
                 <Border Background="#F5F5F5" Padding="15" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="4">
                     <StackPanel Spacing="10">
-                        <TextBlock Text="WFS Parameters" FontWeight="Bold" FontSize="14"/>
+                        <TextBlock Text="{Binding L.WfsParameters}" FontWeight="Bold" FontSize="14"/>
                         <Grid ColumnDefinitions="140,*" RowDefinitions="Auto,Auto,Auto">
-                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Max Features:" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding L.MaxFeaturesLabel}" VerticalAlignment="Center"/>
                             <NumericUpDown Grid.Row="0" Grid.Column="1" Value="{Binding MaxFeatures}" Minimum="0"/>
 
-                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Service Level:" VerticalAlignment="Center" Margin="0,8,0,0"/>
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding L.ServiceLevelLabel}" VerticalAlignment="Center" Margin="0,8,0,0"/>
                             <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ServiceLevel}" Watermark="e.g. COMPLETE" Margin="0,8,0,0"/>
 
-                            <CheckBox Grid.Row="2" Grid.Column="1" Content="Feature Bounding" IsChecked="{Binding FeatureBounding}" Margin="0,8,0,0"/>
+                            <CheckBox Grid.Row="2" Grid.Column="1" Content="{Binding L.FeatureBounding}" IsChecked="{Binding FeatureBounding}" Margin="0,8,0,0"/>
                         </Grid>
                     </StackPanel>
                 </Border>
 
                 <!-- Save Button -->
-                <Button Content="Save Settings"
+                <Button Content="{Binding L.SaveSettings}"
                         Command="{Binding SaveSettingsCommand}"
                         Background="#4CAF50"
                         Foreground="White"
@@ -78,7 +78,7 @@
 
                 <!-- Loading Indicator -->
                 <StackPanel Spacing="10" IsVisible="{Binding IsLoading}">
-                    <TextBlock Text="Processing..." HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding L.Processing}" HorizontalAlignment="Center"/>
                     <ProgressBar IsIndeterminate="True"/>
                 </StackPanel>
             </StackPanel>

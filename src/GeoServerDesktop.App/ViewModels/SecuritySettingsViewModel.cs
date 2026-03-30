@@ -30,7 +30,7 @@ public partial class SecuritySettingsViewModel : ViewModelBase
     /// 状态消息
     /// </summary>
     [ObservableProperty]
-    private string _statusMessage = "Ready";
+    private string _statusMessage = string.Empty;
 
     /// <summary>
     /// 初始化 SecuritySettingsViewModel 类的新实例
@@ -49,12 +49,12 @@ public partial class SecuritySettingsViewModel : ViewModelBase
     {
         if (!_connectionService.IsConnected)
         {
-            StatusMessage = "Not connected to GeoServer";
+            StatusMessage = L.StatusNotConnected;
             return;
         }
 
         IsLoading = true;
-        StatusMessage = "Loading security settings...";
+        StatusMessage = L.StatusLoadingSecuritySettings;
 
         try
         {

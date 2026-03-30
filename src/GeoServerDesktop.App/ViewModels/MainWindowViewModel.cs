@@ -48,6 +48,16 @@ public partial class MainWindowViewModel : ViewModelBase
     private string _statusMessage = "Not connected";
 
     /// <summary>
+    /// 切换中英文语言的命令
+    /// </summary>
+    [RelayCommand]
+    private void ToggleLanguage()
+    {
+        L.ToggleLanguage();
+        StatusMessage = L.StatusNotConnected;
+    }
+
+    /// <summary>
     /// 资源树集合
     /// </summary>
     [ObservableProperty]
@@ -227,11 +237,11 @@ public partial class MainWindowViewModel : ViewModelBase
             var layerName = layerNode.Name;
 
             await MapPreviewViewModel.LoadWmsLayerAsync(BaseUrl, workspaceName, layerName);
-            StatusMessage = $"Preview ready for {workspaceName}:{layerName}";
+            StatusMessage = string.Format(L.StatusPreviewReady, $"{workspaceName}:{layerName}");
         }
         catch (Exception ex)
         {
-            StatusMessage = $"Failed to preview layer: {ex.Message}";
+            StatusMessage = string.Format(L.StatusPreviewFailed, ex.Message);
         }
     }
 
@@ -243,7 +253,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         try
         {
-            StatusMessage = "Connecting...";
+            StatusMessage = L.StatusConnecting;
 
             var options = new GeoServerClientOptions
             {
@@ -254,12 +264,12 @@ public partial class MainWindowViewModel : ViewModelBase
 
             _connectionService.Connect(options);
 
-            StatusMessage = "Connected successfully";
+            StatusMessage = L.StatusConnectedSuccess;
             await LoadResourceTreeAsync();
         }
         catch (Exception ex)
         {
-            StatusMessage = $"Connection failed: {ex.Message}";
+            StatusMessage = string.Format(L.StatusConnectionFailed, ex.Message);
             IsConnected = false;
         }
     }
@@ -273,7 +283,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _connectionService.Disconnect();
         ResourceTree.Clear();
         CurrentView = CreateWelcomeViewModel();
-        StatusMessage = "Disconnected";
+        StatusMessage = L.StatusDisconnected;
     }
 
     /// <summary>
@@ -286,13 +296,13 @@ public partial class MainWindowViewModel : ViewModelBase
 
         try
         {
-            StatusMessage = "Refreshing resources...";
+            StatusMessage = L.StatusRefreshing;
             await LoadResourceTreeAsync();
-            StatusMessage = "Resources refreshed";
+            StatusMessage = L.StatusRefreshed;
         }
         catch (Exception ex)
         {
-            StatusMessage = $"Failed to refresh: {ex.Message}";
+            StatusMessage = string.Format(L.StatusRefreshFailed, ex.Message);
         }
     }
 
@@ -304,12 +314,12 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (!IsConnected)
         {
-            StatusMessage = "Please connect to GeoServer first";
+            StatusMessage = L.StatusPleaseConnect;
             return;
         }
         CurrentView = AboutViewModel;
         _ = AboutViewModel.LoadSystemInfoCommand.ExecuteAsync(null);
-        StatusMessage = "About GeoServer";
+        StatusMessage = L.StatusAbout;
     }
 
     /// <summary>
@@ -320,11 +330,11 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (!IsConnected)
         {
-            StatusMessage = "Please connect to GeoServer first";
+            StatusMessage = L.StatusPleaseConnect;
             return;
         }
         CurrentView = MapPreviewViewModel;
-        StatusMessage = "Layer Preview";
+        StatusMessage = L.StatusLayerPreview;
     }
 
     /// <summary>
@@ -335,7 +345,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (!IsConnected)
         {
-            StatusMessage = "Please connect to GeoServer first";
+            StatusMessage = L.StatusPleaseConnect;
             return;
         }
         CurrentView = WorkspaceManagementViewModel;
@@ -347,7 +357,7 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             // 错误已在 ViewModel 中处理
         }
-        StatusMessage = "Workspaces";
+        StatusMessage = L.StatusWorkspaces;
     }
 
     /// <summary>
@@ -358,11 +368,11 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (!IsConnected)
         {
-            StatusMessage = "Please connect to GeoServer first";
+            StatusMessage = L.StatusPleaseConnect;
             return;
         }
         CurrentView = CreateStoresViewModel();
-        StatusMessage = "Data Stores";
+        StatusMessage = L.StatusDataStores;
     }
 
     /// <summary>
@@ -373,11 +383,11 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (!IsConnected)
         {
-            StatusMessage = "Please connect to GeoServer first";
+            StatusMessage = L.StatusPleaseConnect;
             return;
         }
         CurrentView = CreateLayersViewModel();
-        StatusMessage = "Layers";
+        StatusMessage = L.StatusLayers;
     }
 
     /// <summary>
@@ -388,11 +398,11 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (!IsConnected)
         {
-            StatusMessage = "Please connect to GeoServer first";
+            StatusMessage = L.StatusPleaseConnect;
             return;
         }
         CurrentView = CreateLayerGroupsViewModel();
-        StatusMessage = "Layer Groups";
+        StatusMessage = L.StatusLayerGroups;
     }
 
     /// <summary>
@@ -403,11 +413,11 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (!IsConnected)
         {
-            StatusMessage = "Please connect to GeoServer first";
+            StatusMessage = L.StatusPleaseConnect;
             return;
         }
         CurrentView = StyleManagementViewModel;
-        StatusMessage = "Styles";
+        StatusMessage = L.StatusStyles;
     }
 
     /// <summary>
@@ -418,12 +428,12 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (!IsConnected)
         {
-            StatusMessage = "Please connect to GeoServer first";
+            StatusMessage = L.StatusPleaseConnect;
             return;
         }
         CurrentView = WmsSettingsViewModel;
         _ = WmsSettingsViewModel.LoadSettingsCommand.ExecuteAsync(null);
-        StatusMessage = "WMS Settings";
+        StatusMessage = L.StatusWmsSettings;
     }
 
     /// <summary>
@@ -434,12 +444,12 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (!IsConnected)
         {
-            StatusMessage = "Please connect to GeoServer first";
+            StatusMessage = L.StatusPleaseConnect;
             return;
         }
         CurrentView = WfsSettingsViewModel;
         _ = WfsSettingsViewModel.LoadSettingsCommand.ExecuteAsync(null);
-        StatusMessage = "WFS Settings";
+        StatusMessage = L.StatusWfsSettings;
     }
 
     /// <summary>
@@ -450,12 +460,12 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (!IsConnected)
         {
-            StatusMessage = "Please connect to GeoServer first";
+            StatusMessage = L.StatusPleaseConnect;
             return;
         }
         CurrentView = WcsSettingsViewModel;
         _ = WcsSettingsViewModel.LoadSettingsCommand.ExecuteAsync(null);
-        StatusMessage = "WCS Settings";
+        StatusMessage = L.StatusWcsSettings;
     }
 
     /// <summary>
@@ -466,12 +476,12 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (!IsConnected)
         {
-            StatusMessage = "Please connect to GeoServer first";
+            StatusMessage = L.StatusPleaseConnect;
             return;
         }
         CurrentView = GlobalSettingsViewModel;
         _ = GlobalSettingsViewModel.LoadSettingsCommand.ExecuteAsync(null);
-        StatusMessage = "Global Settings";
+        StatusMessage = L.StatusGlobalSettings;
     }
 
     /// <summary>
@@ -482,12 +492,12 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (!IsConnected)
         {
-            StatusMessage = "Please connect to GeoServer first";
+            StatusMessage = L.StatusPleaseConnect;
             return;
         }
         CurrentView = LoggingViewModel;
         _ = LoggingViewModel.LoadSettingsCommand.ExecuteAsync(null);
-        StatusMessage = "Logging Settings";
+        StatusMessage = L.StatusLoggingSettings;
     }
 
     /// <summary>
@@ -498,12 +508,12 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (!IsConnected)
         {
-            StatusMessage = "Please connect to GeoServer first";
+            StatusMessage = L.StatusPleaseConnect;
             return;
         }
         CurrentView = CachingDefaultsViewModel;
         _ = CachingDefaultsViewModel.LoadSettingsCommand.ExecuteAsync(null);
-        StatusMessage = "Tile Caching Defaults";
+        StatusMessage = L.StatusTileCachingDefaults;
     }
 
     /// <summary>
@@ -514,12 +524,12 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (!IsConnected)
         {
-            StatusMessage = "Please connect to GeoServer first";
+            StatusMessage = L.StatusPleaseConnect;
             return;
         }
         CurrentView = GridsetsViewModel;
         _ = GridsetsViewModel.LoadGridsetsCommand.ExecuteAsync(null);
-        StatusMessage = "Gridsets";
+        StatusMessage = L.StatusGridsets;
     }
 
     /// <summary>
@@ -530,12 +540,12 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (!IsConnected)
         {
-            StatusMessage = "Please connect to GeoServer first";
+            StatusMessage = L.StatusPleaseConnect;
             return;
         }
         CurrentView = DiskQuotaViewModel;
         _ = DiskQuotaViewModel.LoadSettingsCommand.ExecuteAsync(null);
-        StatusMessage = "Disk Quota";
+        StatusMessage = L.StatusDiskQuota;
     }
 
     /// <summary>
@@ -546,12 +556,12 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (!IsConnected)
         {
-            StatusMessage = "Please connect to GeoServer first";
+            StatusMessage = L.StatusPleaseConnect;
             return;
         }
         CurrentView = SecuritySettingsViewModel;
         _ = SecuritySettingsViewModel.LoadSettingsCommand.ExecuteAsync(null);
-        StatusMessage = "Security Settings";
+        StatusMessage = L.StatusSecuritySettings;
     }
 
     /// <summary>
@@ -562,12 +572,12 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (!IsConnected)
         {
-            StatusMessage = "Please connect to GeoServer first";
+            StatusMessage = L.StatusPleaseConnect;
             return;
         }
         CurrentView = UsersGroupsRolesViewModel;
         _ = UsersGroupsRolesViewModel.LoadAllCommand.ExecuteAsync(null);
-        StatusMessage = "Users, Groups, and Roles";
+        StatusMessage = L.StatusUsersGroupsAndRoles;
     }
 
     /// <summary>
@@ -648,7 +658,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            StatusMessage = $"Failed to load resources: {ex.Message}";
+            StatusMessage = string.Format(L.StatusResourcesLoadFailed, ex.Message);
         }
     }
 
@@ -696,7 +706,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            StatusMessage = $"Failed to load data stores: {ex.Message}";
+            StatusMessage = string.Format(L.StatusDataStoresLoadFailed, ex.Message);
         }
     }
 
@@ -741,7 +751,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            StatusMessage = $"Failed to load layers: {ex.Message}";
+            StatusMessage = string.Format(L.StatusLayersLoadFailed, ex.Message);
         }
     }
 

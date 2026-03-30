@@ -11,8 +11,8 @@
         <!-- Header -->
         <Border Grid.Row="0" Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="0,0,0,1">
             <StackPanel Orientation="Horizontal" Spacing="10">
-                <TextBlock Text="Logging Settings" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
-                <Button Content="Load" Command="{Binding LoadSettingsCommand}" ToolTip.Tip="Load current logging settings"/>
+                <TextBlock Text="{Binding L.LoggingSettingsTitle}" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
+                <Button Content="{Binding L.Load}" Command="{Binding LoadSettingsCommand}" ToolTip.Tip="{Binding L.LoadLoggingSettingsToolTip}"/>
             </StackPanel>
         </Border>
 
@@ -22,24 +22,24 @@
                 <!-- Logging Configuration -->
                 <Border Background="#F5F5F5" Padding="15" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="4">
                     <StackPanel Spacing="10">
-                        <TextBlock Text="Logging Configuration" FontWeight="Bold" FontSize="14"/>
+                        <TextBlock Text="{Binding L.LoggingConfiguration}" FontWeight="Bold" FontSize="14"/>
                         <Grid ColumnDefinitions="130,*" RowDefinitions="Auto,Auto">
-                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Log Level:" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding L.LogLevelLabel}" VerticalAlignment="Center"/>
                             <ComboBox Grid.Row="0" Grid.Column="1"
                                       SelectedItem="{Binding LogLevel}"
                                       ItemsSource="{Binding LogLevelOptions}"
                                       HorizontalAlignment="Stretch"/>
 
-                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Log Location:" VerticalAlignment="Center" Margin="0,8,0,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding LogLocation}" Watermark="Log file path" Margin="0,8,0,0"/>
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding L.LogLocationLabel}" VerticalAlignment="Center" Margin="0,8,0,0"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding LogLocation}" Watermark="{Binding L.LogFilePathHint}" Margin="0,8,0,0"/>
                         </Grid>
-                        <CheckBox Content="Log to Standard Output (stdout)" IsChecked="{Binding StdOutLogging}"/>
-                        <CheckBox Content="Enable File Logging" IsChecked="{Binding FileLogging}"/>
+                        <CheckBox Content="{Binding L.StdOutLogging}" IsChecked="{Binding StdOutLogging}"/>
+                        <CheckBox Content="{Binding L.EnableFileLogging}" IsChecked="{Binding FileLogging}"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Save Button -->
-                <Button Content="Save Settings"
+                <Button Content="{Binding L.SaveSettings}"
                         Command="{Binding SaveSettingsCommand}"
                         Background="#4CAF50"
                         Foreground="White"
@@ -48,7 +48,7 @@
 
                 <!-- Loading Indicator -->
                 <StackPanel Spacing="10" IsVisible="{Binding IsLoading}">
-                    <TextBlock Text="Processing..." HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding L.Processing}" HorizontalAlignment="Center"/>
                     <ProgressBar IsIndeterminate="True"/>
                 </StackPanel>
             </StackPanel>

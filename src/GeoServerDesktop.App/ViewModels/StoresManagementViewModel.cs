@@ -61,7 +61,7 @@ namespace GeoServerDesktop.App.ViewModels
         /// 状态消息
         /// </summary>
         [ObservableProperty]
-        private string _statusMessage = "Ready";
+        private string _statusMessage = string.Empty;
 
         /// <summary>
         /// 是否正在加载
@@ -86,12 +86,12 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (!_connectionService.IsConnected)
             {
-                StatusMessage = "Not connected to GeoServer";
+                StatusMessage = L.StatusNotConnected;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = "Loading workspaces...";
+            StatusMessage = L.StatusLoadingWorkspaces;
 
             try
             {
@@ -104,7 +104,7 @@ namespace GeoServerDesktop.App.ViewModels
                     Workspaces.Add(workspace.Name);
                 }
 
-                StatusMessage = $"Loaded {Workspaces.Count} workspaces";
+                StatusMessage = string.Format(L.StatusWorkspacesLoaded, Workspaces.Count);
 
                 // 自动选择第一个工作空间
                 if (Workspaces.Count > 0)
@@ -114,7 +114,7 @@ namespace GeoServerDesktop.App.ViewModels
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to load workspaces: {ex.Message}";
+                StatusMessage = string.Format(L.StatusWorkspacesLoadFailed, ex.Message);
             }
             finally
             {
@@ -141,12 +141,12 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (string.IsNullOrEmpty(SelectedWorkspace))
             {
-                StatusMessage = "No workspace selected";
+                StatusMessage = L.StatusNoWorkspaceSelected;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = "Loading data stores...";
+            StatusMessage = L.StatusLoadingDataStores;
 
             try
             {
@@ -159,11 +159,11 @@ namespace GeoServerDesktop.App.ViewModels
                     DataStores.Add(store);
                 }
 
-                StatusMessage = $"Loaded {DataStores.Count} data stores for workspace '{SelectedWorkspace}'";
+                StatusMessage = string.Format(L.StatusDataStoresLoaded, DataStores.Count, SelectedWorkspace);
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to load data stores: {ex.Message}";
+                StatusMessage = string.Format(L.StatusDataStoresLoadFailed, ex.Message);
             }
             finally
             {
@@ -179,19 +179,19 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (SelectedDataStore == null || string.IsNullOrEmpty(SelectedWorkspace))
             {
-                StatusMessage = "No data store selected";
+                StatusMessage = L.StatusNoDataStoreSelected;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = $"Deleting data store '{SelectedDataStore.Name}'...";
+            StatusMessage = string.Format(L.StatusDeletingDataStore, SelectedDataStore.Name);
 
             try
             {
                 var dataStoreService = _connectionService.GetDataStoreService();
                 await dataStoreService.DeleteDataStoreAsync(SelectedWorkspace, SelectedDataStore.Name, recurse: false);
 
-                StatusMessage = $"Data store '{SelectedDataStore.Name}' deleted successfully";
+                StatusMessage = string.Format(L.StatusDataStoreDeleted, SelectedDataStore.Name);
                 SelectedDataStore = null;
 
                 // 重新加载数据存储列表
@@ -199,7 +199,7 @@ namespace GeoServerDesktop.App.ViewModels
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to delete data store: {ex.Message}";
+                StatusMessage = string.Format(L.StatusDataStoreDeleteFailed, ex.Message);
             }
             finally
             {
@@ -235,18 +235,18 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (string.IsNullOrWhiteSpace(NewDataStoreName))
             {
-                StatusMessage = "Data store name is required";
+                StatusMessage = L.StatusDataStoreNameRequired;
                 return;
             }
 
             if (string.IsNullOrEmpty(SelectedWorkspace))
             {
-                StatusMessage = "Please select a workspace first";
+                StatusMessage = L.StatusPleaseSelectWorkspace;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = $"Creating data store '{NewDataStoreName}'...";
+            StatusMessage = string.Format(L.StatusCreatingDataStore, NewDataStoreName);
 
             try
             {
@@ -269,11 +269,11 @@ namespace GeoServerDesktop.App.ViewModels
                 NewDataStoreName = string.Empty;
                 NewDataStoreDescription = string.Empty;
                 await LoadDataStoresAsync();
-                StatusMessage = "Data store created successfully";
+                StatusMessage = L.StatusDataStoreCreated;
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to create data store: {ex.Message}";
+                StatusMessage = string.Format(L.StatusDataStoreCreateFailed, ex.Message);
             }
             finally
             {

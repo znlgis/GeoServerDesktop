@@ -25,25 +25,34 @@
                                FontWeight="Bold" 
                                Foreground="White"
                                VerticalAlignment="Center"/>
-                    <TextBlock Text="Administration" 
+                    <TextBlock Text="{Binding L.AppHeaderSubtitle}" 
                                FontSize="16" 
                                Foreground="#B0D4F1"
                                VerticalAlignment="Center"/>
                 </StackPanel>
                 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10">
+                    <!-- Language toggle button -->
+                    <Button Content="{Binding L.LanguageToggleText}"
+                            Command="{Binding ToggleLanguageCommand}"
+                            ToolTip.Tip="{Binding L.LanguageToggleTooltip}"
+                            Background="#1A4D7A"
+                            Foreground="White"
+                            Padding="10,5"
+                            VerticalAlignment="Center"/>
+
                     <Border Background="White" Padding="10,5" CornerRadius="3" IsVisible="{Binding !IsConnected}">
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock Text="URL:" VerticalAlignment="Center" FontSize="12"/>
+                            <TextBlock Text="{Binding L.LabelUrl}" VerticalAlignment="Center" FontSize="12"/>
                             <TextBox Text="{Binding BaseUrl}" Width="250" FontSize="12"/>
                             
-                            <TextBlock Text="User:" VerticalAlignment="Center" FontSize="12"/>
+                            <TextBlock Text="{Binding L.LabelUser}" VerticalAlignment="Center" FontSize="12"/>
                             <TextBox Text="{Binding Username}" Width="80" FontSize="12"/>
                             
-                            <TextBlock Text="Password:" VerticalAlignment="Center" FontSize="12"/>
+                            <TextBlock Text="{Binding L.LabelPassword}" VerticalAlignment="Center" FontSize="12"/>
                             <TextBox Text="{Binding Password}" Width="80" PasswordChar="*" FontSize="12"/>
                             
-                            <Button Content="Login" 
+                            <Button Content="{Binding L.Login}" 
                                     Command="{Binding ConnectCommand}"
                                     Background="#4CAF50"
                                     Foreground="White"
@@ -53,11 +62,11 @@
                     
                     <Border Background="White" Padding="10,5" CornerRadius="3" IsVisible="{Binding IsConnected}">
                         <StackPanel Orientation="Horizontal" Spacing="10">
-                            <TextBlock Text="● Connected" 
+                            <TextBlock Text="{Binding L.Connected}" 
                                        Foreground="#4CAF50" 
                                        FontWeight="Bold"
                                        VerticalAlignment="Center"/>
-                            <Button Content="Logout" 
+                            <Button Content="{Binding L.Logout}" 
                                     Command="{Binding DisconnectCommand}"
                                     Background="#F44336"
                                     Foreground="White"
@@ -75,9 +84,9 @@
                 <ScrollViewer>
                     <StackPanel Margin="0,10">
                         <!-- About & Status Section -->
-                        <Expander Header="About &amp; Status" IsExpanded="True" Margin="5" HorizontalAlignment="Stretch">
+                        <Expander Header="{Binding L.NavAboutAndStatus}" IsExpanded="True" Margin="5" HorizontalAlignment="Stretch">
                             <StackPanel Margin="10,5">
-                                <Button Content="About GeoServer" 
+                                <Button Content="{Binding L.NavAboutGeoServer}" 
                                         Command="{Binding ShowAboutCommand}"
                                         HorizontalAlignment="Stretch"
                                         HorizontalContentAlignment="Left"
@@ -87,39 +96,39 @@
                         </Expander>
 
                         <!-- Data Section -->
-                        <Expander Header="Data" IsExpanded="True" Margin="5" HorizontalAlignment="Stretch">
+                        <Expander Header="{Binding L.NavData}" IsExpanded="True" Margin="5" HorizontalAlignment="Stretch">
                             <StackPanel Margin="10,5">
-                                <Button Content="Layer Preview" 
+                                <Button Content="{Binding L.NavLayerPreview}" 
                                         Command="{Binding ShowLayerPreviewCommand}"
                                         HorizontalAlignment="Stretch"
                                         HorizontalContentAlignment="Left"
                                         Background="Transparent"
                                         Margin="0,2"/>
-                                <Button Content="Workspaces" 
+                                <Button Content="{Binding L.NavWorkspaces}" 
                                         Command="{Binding ShowWorkspacesCommand}"
                                         HorizontalAlignment="Stretch"
                                         HorizontalContentAlignment="Left"
                                         Background="Transparent"
                                         Margin="0,2"/>
-                                <Button Content="Stores" 
+                                <Button Content="{Binding L.NavStores}" 
                                         Command="{Binding ShowStoresCommand}"
                                         HorizontalAlignment="Stretch"
                                         HorizontalContentAlignment="Left"
                                         Background="Transparent"
                                         Margin="0,2"/>
-                                <Button Content="Layers" 
+                                <Button Content="{Binding L.NavLayers}" 
                                         Command="{Binding ShowLayersCommand}"
                                         HorizontalAlignment="Stretch"
                                         HorizontalContentAlignment="Left"
                                         Background="Transparent"
                                         Margin="0,2"/>
-                                <Button Content="Layer Groups" 
+                                <Button Content="{Binding L.NavLayerGroups}" 
                                         Command="{Binding ShowLayerGroupsCommand}"
                                         HorizontalAlignment="Stretch"
                                         HorizontalContentAlignment="Left"
                                         Background="Transparent"
                                         Margin="0,2"/>
-                                <Button Content="Styles" 
+                                <Button Content="{Binding L.NavStyles}" 
                                         Command="{Binding ShowStylesCommand}"
                                         HorizontalAlignment="Stretch"
                                         HorizontalContentAlignment="Left"
@@ -129,7 +138,7 @@
                         </Expander>
 
                         <!-- Services Section -->
-                        <Expander Header="Services" Margin="5" HorizontalAlignment="Stretch">
+                        <Expander Header="{Binding L.NavServices}" Margin="5" HorizontalAlignment="Stretch">
                             <StackPanel Margin="10,5">
                                 <Button Content="WMS" 
                                         Command="{Binding ShowWMSSettingsCommand}"
@@ -153,15 +162,15 @@
                         </Expander>
 
                         <!-- Settings Section -->
-                        <Expander Header="Settings" Margin="5" HorizontalAlignment="Stretch">
+                        <Expander Header="{Binding L.NavSettings}" Margin="5" HorizontalAlignment="Stretch">
                             <StackPanel Margin="10,5">
-                                <Button Content="Global" 
+                                <Button Content="{Binding L.NavGlobal}" 
                                         Command="{Binding ShowGlobalSettingsCommand}"
                                         HorizontalAlignment="Stretch"
                                         HorizontalContentAlignment="Left"
                                         Background="Transparent"
                                         Margin="0,2"/>
-                                <Button Content="Logging" 
+                                <Button Content="{Binding L.NavLogging}" 
                                         Command="{Binding ShowLoggingCommand}"
                                         HorizontalAlignment="Stretch"
                                         HorizontalContentAlignment="Left"
@@ -171,21 +180,21 @@
                         </Expander>
 
                         <!-- Tile Caching Section -->
-                        <Expander Header="Tile Caching" Margin="5" HorizontalAlignment="Stretch">
+                        <Expander Header="{Binding L.NavTileCaching}" Margin="5" HorizontalAlignment="Stretch">
                             <StackPanel Margin="10,5">
-                                <Button Content="Caching Defaults" 
+                                <Button Content="{Binding L.NavCachingDefaults}" 
                                         Command="{Binding ShowCachingDefaultsCommand}"
                                         HorizontalAlignment="Stretch"
                                         HorizontalContentAlignment="Left"
                                         Background="Transparent"
                                         Margin="0,2"/>
-                                <Button Content="Gridsets" 
+                                <Button Content="{Binding L.NavGridsets}" 
                                         Command="{Binding ShowGridsetsCommand}"
                                         HorizontalAlignment="Stretch"
                                         HorizontalContentAlignment="Left"
                                         Background="Transparent"
                                         Margin="0,2"/>
-                                <Button Content="Disk Quota" 
+                                <Button Content="{Binding L.NavDiskQuota}" 
                                         Command="{Binding ShowDiskQuotaCommand}"
                                         HorizontalAlignment="Stretch"
                                         HorizontalContentAlignment="Left"
@@ -195,15 +204,15 @@
                         </Expander>
 
                         <!-- Security Section -->
-                        <Expander Header="Security" Margin="5" HorizontalAlignment="Stretch">
+                        <Expander Header="{Binding L.NavSecurity}" Margin="5" HorizontalAlignment="Stretch">
                             <StackPanel Margin="10,5">
-                                <Button Content="Settings" 
+                                <Button Content="{Binding L.NavSecuritySettings}" 
                                         Command="{Binding ShowSecuritySettingsCommand}"
                                         HorizontalAlignment="Stretch"
                                         HorizontalContentAlignment="Left"
                                         Background="Transparent"
                                         Margin="0,2"/>
-                                <Button Content="Users, Groups, Roles" 
+                                <Button Content="{Binding L.NavUsersGroupsRoles}" 
                                         Command="{Binding ShowUsersGroupsCommand}"
                                         HorizontalAlignment="Stretch"
                                         HorizontalContentAlignment="Left"

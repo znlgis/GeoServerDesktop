@@ -28,7 +28,7 @@ namespace GeoServerDesktop.App.ViewModels
 
         /// <summary>状态消息</summary>
         [ObservableProperty]
-        private string _statusMessage = "Ready";
+        private string _statusMessage = string.Empty;
 
         /// <summary>
         /// 初始化 GridsetsViewModel 类的新实例
@@ -47,12 +47,12 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (!_connectionService.IsConnected)
             {
-                StatusMessage = "Not connected to GeoServer";
+                StatusMessage = L.StatusNotConnected;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = "Loading gridsets...";
+            StatusMessage = L.StatusLoadingGridsets;
 
             try
             {
@@ -68,11 +68,11 @@ namespace GeoServerDesktop.App.ViewModels
                     }
                 }
 
-                StatusMessage = $"Loaded {Gridsets.Count} gridsets";
+                StatusMessage = string.Format(L.StatusGridsetsLoaded, Gridsets.Count);
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to load gridsets: {ex.Message}";
+                StatusMessage = string.Format(L.StatusGridsetsLoadFailed, ex.Message);
             }
             finally
             {
@@ -88,25 +88,25 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (string.IsNullOrWhiteSpace(SelectedGridset))
             {
-                StatusMessage = "No gridset selected";
+                StatusMessage = L.StatusNoGridsetSelected;
                 return;
             }
 
             var nameToDelete = SelectedGridset;
             IsLoading = true;
-            StatusMessage = $"Deleting gridset '{nameToDelete}'...";
+            StatusMessage = string.Format(L.StatusDeletingGridset, nameToDelete);
 
             try
             {
                 var service = _connectionService.GetGridsetService();
                 await service.DeleteGridsetAsync(nameToDelete);
-                StatusMessage = $"Gridset '{nameToDelete}' deleted";
+                StatusMessage = string.Format(L.StatusGridsetDeleted, nameToDelete);
                 SelectedGridset = null;
                 await LoadGridsetsAsync();
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to delete gridset: {ex.Message}";
+                StatusMessage = string.Format(L.StatusGridsetDeleteFailed, ex.Message);
             }
             finally
             {

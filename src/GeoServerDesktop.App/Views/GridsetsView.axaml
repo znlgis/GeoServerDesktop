@@ -11,8 +11,8 @@
         <!-- Header -->
         <Border Grid.Row="0" Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="0,0,0,1">
             <StackPanel Orientation="Horizontal" Spacing="10">
-                <TextBlock Text="Gridsets" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
-                <Button Content="Refresh" Command="{Binding LoadGridsetsCommand}" ToolTip.Tip="Reload gridset list"/>
+                <TextBlock Text="{Binding L.GridsetsTitle}" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
+                <Button Content="{Binding L.Refresh}" Command="{Binding LoadGridsetsCommand}" ToolTip.Tip="{Binding L.ReloadGridsetsToolTip}"/>
             </StackPanel>
         </Border>
 
@@ -21,7 +21,7 @@
             <!-- Gridset List -->
             <Border Grid.Column="0" Padding="10">
                 <DockPanel>
-                    <TextBlock DockPanel.Dock="Top" Text="Existing Gridsets" FontWeight="Bold" Margin="0,0,0,10"/>
+                    <TextBlock DockPanel.Dock="Top" Text="{Binding L.ExistingGridsets}" FontWeight="Bold" Margin="0,0,0,10"/>
                     <ListBox ItemsSource="{Binding Gridsets}"
                              SelectedItem="{Binding SelectedGridset}">
                         <ListBox.ItemTemplate>
@@ -38,12 +38,12 @@
             <!-- Actions Panel -->
             <Border Grid.Column="2" Padding="10">
                 <StackPanel Spacing="15">
-                    <TextBlock Text="Actions" FontWeight="Bold" FontSize="16"/>
+                    <TextBlock Text="{Binding L.Actions}" FontWeight="Bold" FontSize="16"/>
 
                     <!-- Selected gridset info -->
                     <Border Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="4">
                         <StackPanel Spacing="8">
-                            <TextBlock Text="Selected Gridset" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding L.SelectedGridset}" FontWeight="Bold"/>
                             <TextBlock Text="{Binding SelectedGridset}" Foreground="#666666"
                                        TextWrapping="Wrap"/>
                         </StackPanel>
@@ -52,10 +52,10 @@
                     <!-- Delete Gridset -->
                     <Border Background="#FFF5F5" Padding="10" BorderBrush="#FFCCCC" BorderThickness="1" CornerRadius="4">
                         <StackPanel Spacing="10">
-                            <TextBlock Text="Delete Gridset" FontWeight="Bold" Foreground="#CC0000"/>
-                            <TextBlock Text="Warning: Deleting a gridset may affect layers using it."
+                            <TextBlock Text="{Binding L.DeleteGridset}" FontWeight="Bold" Foreground="#CC0000"/>
+                            <TextBlock Text="{Binding L.DeleteGridsetWarning}"
                                        TextWrapping="Wrap" FontSize="12" Foreground="#666666"/>
-                            <Button Content="Delete Selected"
+                            <Button Content="{Binding L.DeleteSelected}"
                                     Command="{Binding DeleteGridsetCommand}"
                                     Background="#FFCCCC"
                                     HorizontalAlignment="Stretch"
@@ -65,7 +65,7 @@
 
                     <!-- Loading Indicator -->
                     <StackPanel Spacing="10" IsVisible="{Binding IsLoading}">
-                        <TextBlock Text="Processing..." HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding L.Processing}" HorizontalAlignment="Center"/>
                         <ProgressBar IsIndeterminate="True"/>
                     </StackPanel>
                 </StackPanel>

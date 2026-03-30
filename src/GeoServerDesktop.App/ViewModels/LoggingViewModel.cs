@@ -48,7 +48,7 @@ namespace GeoServerDesktop.App.ViewModels
 
         /// <summary>状态消息</summary>
         [ObservableProperty]
-        private string _statusMessage = "Ready";
+        private string _statusMessage = string.Empty;
 
         /// <summary>
         /// 初始化 LoggingViewModel 类的新实例
@@ -67,12 +67,12 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (!_connectionService.IsConnected)
             {
-                StatusMessage = "Not connected to GeoServer";
+                StatusMessage = L.StatusNotConnected;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = "Loading logging settings...";
+            StatusMessage = L.StatusLoadingLoggingSettings;
 
             try
             {
@@ -87,11 +87,11 @@ namespace GeoServerDesktop.App.ViewModels
                     FileLogging = loggingSettings.Logging.FileLogging ?? false;
                 }
 
-                StatusMessage = "Logging settings loaded";
+                StatusMessage = L.StatusLoggingSettingsLoaded;
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to load logging settings: {ex.Message}";
+                StatusMessage = string.Format(L.StatusLoggingSettingsLoadFailed, ex.Message);
             }
             finally
             {
@@ -107,12 +107,12 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (!_connectionService.IsConnected)
             {
-                StatusMessage = "Not connected to GeoServer";
+                StatusMessage = L.StatusNotConnected;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = "Saving logging settings...";
+            StatusMessage = L.StatusSavingLoggingSettings;
 
             try
             {
@@ -129,11 +129,11 @@ namespace GeoServerDesktop.App.ViewModels
                 };
 
                 await service.UpdateLoggingSettingsAsync(loggingSettings);
-                StatusMessage = "Logging settings saved successfully";
+                StatusMessage = L.StatusLoggingSettingsSaved;
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to save logging settings: {ex.Message}";
+                StatusMessage = string.Format(L.StatusLoggingSettingsSaveFailed, ex.Message);
             }
             finally
             {

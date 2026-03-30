@@ -79,7 +79,7 @@ namespace GeoServerDesktop.App.ViewModels
         /// 状态消息
         /// </summary>
         [ObservableProperty]
-        private string _statusMessage = "Ready";
+        private string _statusMessage = string.Empty;
 
         /// <summary>
         /// 是否正在加载
@@ -104,12 +104,12 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (!_connectionService.IsConnected)
             {
-                StatusMessage = "Not connected to GeoServer";
+                StatusMessage = L.StatusNotConnected;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = "Loading workspaces...";
+            StatusMessage = L.StatusLoadingWorkspaces;
 
             try
             {
@@ -124,7 +124,7 @@ namespace GeoServerDesktop.App.ViewModels
                     Workspaces.Add(workspace.Name);
                 }
 
-                StatusMessage = $"Loaded {Workspaces.Count - 1} workspaces";
+                StatusMessage = string.Format(L.StatusWorkspacesLoaded, Workspaces.Count - 1);
 
                 // 默认选择"所有工作空间"
                 if (Workspaces.Count > 0)
@@ -134,7 +134,7 @@ namespace GeoServerDesktop.App.ViewModels
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to load workspaces: {ex.Message}";
+                StatusMessage = string.Format(L.StatusWorkspacesLoadFailed, ex.Message);
             }
             finally
             {
@@ -162,12 +162,12 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (string.IsNullOrEmpty(SelectedWorkspace))
             {
-                StatusMessage = "No workspace selected";
+                StatusMessage = L.StatusNoWorkspaceSelected;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = "Loading layers...";
+            StatusMessage = L.StatusLoadingLayers;
 
             try
             {
@@ -191,11 +191,11 @@ namespace GeoServerDesktop.App.ViewModels
                     Layers.Add(layer);
                 }
 
-                StatusMessage = $"Loaded {Layers.Count} layers";
+                StatusMessage = string.Format(L.StatusLayersLoaded, Layers.Count);
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to load layers: {ex.Message}";
+                StatusMessage = string.Format(L.StatusLayersLoadFailed, ex.Message);
             }
             finally
             {
@@ -211,12 +211,12 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (SelectedLayer == null)
             {
-                StatusMessage = "No layer selected";
+                StatusMessage = L.StatusNoLayerSelected;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = $"Deleting layer '{SelectedLayer.Name}'...";
+            StatusMessage = string.Format(L.StatusDeletingLayer, SelectedLayer.Name);
 
             try
             {
@@ -225,7 +225,7 @@ namespace GeoServerDesktop.App.ViewModels
                 // 这是为了保护底层数据存储中的数据
                 await layerService.DeleteLayerAsync(SelectedLayer.Name, recurse: false);
 
-                StatusMessage = $"Layer '{SelectedLayer.Name}' deleted successfully";
+                StatusMessage = string.Format(L.StatusLayerDeleted, SelectedLayer.Name);
                 SelectedLayer = null;
 
                 // 重新加载图层列表
@@ -233,7 +233,7 @@ namespace GeoServerDesktop.App.ViewModels
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to delete layer: {ex.Message}";
+                StatusMessage = string.Format(L.StatusLayerDeleteFailed, ex.Message);
             }
             finally
             {
@@ -249,7 +249,7 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (string.IsNullOrEmpty(SelectedWorkspace) || SelectedWorkspace == "All Workspaces")
             {
-                StatusMessage = "Please select a specific workspace first";
+                StatusMessage = L.StatusPleaseSelectSpecificWorkspace;
                 return;
             }
 
@@ -267,7 +267,7 @@ namespace GeoServerDesktop.App.ViewModels
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to load data stores: {ex.Message}";
+                StatusMessage = string.Format(L.StatusDataStoresLoadFailed, ex.Message);
                 return;
             }
 
@@ -294,18 +294,18 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (string.IsNullOrWhiteSpace(NewLayerName))
             {
-                StatusMessage = "Layer name is required";
+                StatusMessage = L.StatusLayerNameRequired;
                 return;
             }
 
             if (string.IsNullOrEmpty(NewLayerDataStore))
             {
-                StatusMessage = "Please select a data store";
+                StatusMessage = L.StatusPleaseSelectDataStore;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = $"Publishing layer '{NewLayerName}'...";
+            StatusMessage = string.Format(L.StatusPublishingLayer, NewLayerName);
 
             try
             {
@@ -324,11 +324,11 @@ namespace GeoServerDesktop.App.ViewModels
                 NewLayerName = string.Empty;
                 NewNativeName = string.Empty;
                 await LoadLayersAsync();
-                StatusMessage = "Layer published successfully";
+                StatusMessage = L.StatusLayerPublished;
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to publish layer: {ex.Message}";
+                StatusMessage = string.Format(L.StatusLayerPublishFailed, ex.Message);
             }
             finally
             {

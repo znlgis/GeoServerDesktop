@@ -99,7 +99,7 @@ public partial class UsersGroupsRolesViewModel : ViewModelBase
     /// 状态消息
     /// </summary>
     [ObservableProperty]
-    private string _statusMessage = "Ready";
+    private string _statusMessage = string.Empty;
 
     /// <summary>
     /// 初始化 UsersGroupsRolesViewModel 类的新实例
@@ -118,23 +118,23 @@ public partial class UsersGroupsRolesViewModel : ViewModelBase
     {
         if (!_connectionService.IsConnected)
         {
-            StatusMessage = "Not connected to GeoServer";
+            StatusMessage = L.StatusNotConnected;
             return;
         }
 
         IsLoading = true;
-        StatusMessage = "Loading users, groups, and roles...";
+        StatusMessage = L.StatusLoadingAll;
 
         try
         {
             await LoadUsersInternalAsync();
             await LoadGroupsInternalAsync();
             await LoadRolesInternalAsync();
-            StatusMessage = $"已加载 {Users.Count} 用户，{Groups.Count} 组，{Roles.Count} 角色";
+            StatusMessage = $"{Users.Count} / {Groups.Count} / {Roles.Count}";
         }
         catch (Exception ex)
         {
-            StatusMessage = $"加载失败：{ex.Message}";
+            StatusMessage = string.Format(L.StatusUsersLoadFailed, ex.Message);
         }
         finally
         {
@@ -150,12 +150,12 @@ public partial class UsersGroupsRolesViewModel : ViewModelBase
     {
         if (string.IsNullOrWhiteSpace(NewUsername) || string.IsNullOrWhiteSpace(NewPassword))
         {
-            StatusMessage = "用户名和密码不能为空";
+            StatusMessage = L.StatusUsernamePasswordRequired;
             return;
         }
 
         IsLoading = true;
-        StatusMessage = $"正在创建用户 '{NewUsername}'...";
+        StatusMessage = string.Format(L.StatusCreatingUser, NewUsername);
 
         try
         {
@@ -170,11 +170,11 @@ public partial class UsersGroupsRolesViewModel : ViewModelBase
             NewUsername = string.Empty;
             NewPassword = string.Empty;
             await LoadUsersInternalAsync();
-            StatusMessage = "用户创建成功";
+            StatusMessage = string.Format(L.StatusUserCreated, NewUsername);
         }
         catch (Exception ex)
         {
-            StatusMessage = $"创建用户失败：{ex.Message}";
+            StatusMessage = string.Format(L.StatusUserCreateFailed, ex.Message);
         }
         finally
         {
@@ -190,12 +190,12 @@ public partial class UsersGroupsRolesViewModel : ViewModelBase
     {
         if (string.IsNullOrWhiteSpace(SelectedUser))
         {
-            StatusMessage = "请先选择一个用户";
+            StatusMessage = L.StatusNoUserSelected;
             return;
         }
 
         IsLoading = true;
-        StatusMessage = $"正在删除用户 '{SelectedUser}'...";
+        StatusMessage = string.Format(L.StatusDeletingUser, SelectedUser);
 
         try
         {
@@ -203,11 +203,11 @@ public partial class UsersGroupsRolesViewModel : ViewModelBase
             await service.DeleteUserAsync(SelectedUser);
             SelectedUser = null;
             await LoadUsersInternalAsync();
-            StatusMessage = "用户删除成功";
+            StatusMessage = string.Format(L.StatusUserDeleted, SelectedUser);
         }
         catch (Exception ex)
         {
-            StatusMessage = $"删除用户失败：{ex.Message}";
+            StatusMessage = string.Format(L.StatusUserDeleteFailed, ex.Message);
         }
         finally
         {
@@ -223,12 +223,12 @@ public partial class UsersGroupsRolesViewModel : ViewModelBase
     {
         if (string.IsNullOrWhiteSpace(NewGroupName))
         {
-            StatusMessage = "组名不能为空";
+            StatusMessage = L.StatusGroupNameRequired;
             return;
         }
 
         IsLoading = true;
-        StatusMessage = $"正在创建组 '{NewGroupName}'...";
+        StatusMessage = string.Format(L.StatusCreatingGroup, NewGroupName);
 
         try
         {
@@ -237,11 +237,11 @@ public partial class UsersGroupsRolesViewModel : ViewModelBase
             await service.CreateGroupAsync(group);
             NewGroupName = string.Empty;
             await LoadGroupsInternalAsync();
-            StatusMessage = "组创建成功";
+            StatusMessage = string.Format(L.StatusGroupCreated, NewGroupName);
         }
         catch (Exception ex)
         {
-            StatusMessage = $"创建组失败：{ex.Message}";
+            StatusMessage = string.Format(L.StatusGroupCreateFailed, ex.Message);
         }
         finally
         {
@@ -257,12 +257,12 @@ public partial class UsersGroupsRolesViewModel : ViewModelBase
     {
         if (string.IsNullOrWhiteSpace(SelectedGroup))
         {
-            StatusMessage = "请先选择一个组";
+            StatusMessage = L.StatusNoGroupSelected;
             return;
         }
 
         IsLoading = true;
-        StatusMessage = $"正在删除组 '{SelectedGroup}'...";
+        StatusMessage = string.Format(L.StatusDeletingGroup, SelectedGroup);
 
         try
         {
@@ -270,11 +270,11 @@ public partial class UsersGroupsRolesViewModel : ViewModelBase
             await service.DeleteGroupAsync(SelectedGroup);
             SelectedGroup = null;
             await LoadGroupsInternalAsync();
-            StatusMessage = "组删除成功";
+            StatusMessage = string.Format(L.StatusGroupDeleted, SelectedGroup);
         }
         catch (Exception ex)
         {
-            StatusMessage = $"删除组失败：{ex.Message}";
+            StatusMessage = string.Format(L.StatusGroupDeleteFailed, ex.Message);
         }
         finally
         {
@@ -290,12 +290,12 @@ public partial class UsersGroupsRolesViewModel : ViewModelBase
     {
         if (string.IsNullOrWhiteSpace(SelectedUser))
         {
-            StatusMessage = "请先选择一个用户";
+            StatusMessage = L.StatusNoUserSelected;
             return;
         }
 
         IsLoading = true;
-        StatusMessage = $"正在更新用户 '{SelectedUser}'...";
+        StatusMessage = string.Format(L.StatusUpdatingUser, SelectedUser);
 
         try
         {
@@ -311,11 +311,11 @@ public partial class UsersGroupsRolesViewModel : ViewModelBase
             }
             await service.UpdateUserAsync(SelectedUser, user);
             EditPassword = string.Empty;
-            StatusMessage = "用户更新成功";
+            StatusMessage = string.Format(L.StatusUserUpdated, SelectedUser);
         }
         catch (Exception ex)
         {
-            StatusMessage = $"更新用户失败：{ex.Message}";
+            StatusMessage = string.Format(L.StatusUserUpdateFailed, ex.Message);
         }
         finally
         {

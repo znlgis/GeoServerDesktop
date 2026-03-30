@@ -36,7 +36,7 @@ namespace GeoServerDesktop.App.ViewModels
         /// 状态消息
         /// </summary>
         [ObservableProperty]
-        private string _statusMessage = "Ready";
+        private string _statusMessage = string.Empty;
 
         /// <summary>
         /// 是否正在加载
@@ -61,12 +61,12 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (!_connectionService.IsConnected)
             {
-                StatusMessage = "Not connected to GeoServer";
+                StatusMessage = L.StatusNotConnected;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = "Loading workspaces...";
+            StatusMessage = L.StatusLoadingWorkspaces;
 
             try
             {
@@ -79,11 +79,11 @@ namespace GeoServerDesktop.App.ViewModels
                     Workspaces.Add(workspace.Name);
                 }
 
-                StatusMessage = $"Loaded {Workspaces.Count} workspaces";
+                StatusMessage = string.Format(L.StatusWorkspacesLoaded, Workspaces.Count);
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to load workspaces: {ex.Message}";
+                StatusMessage = string.Format(L.StatusWorkspacesLoadFailed, ex.Message);
             }
             finally
             {
@@ -99,19 +99,19 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (string.IsNullOrWhiteSpace(NewWorkspaceName))
             {
-                StatusMessage = "Workspace name is required";
+                StatusMessage = L.StatusWorkspaceNameRequired;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = $"Creating workspace '{NewWorkspaceName}'...";
+            StatusMessage = string.Format(L.StatusCreatingWorkspace, NewWorkspaceName);
 
             try
             {
                 var workspaceService = _connectionService.GetWorkspaceService();
                 await workspaceService.CreateWorkspaceAsync(NewWorkspaceName);
 
-                StatusMessage = $"Workspace '{NewWorkspaceName}' created successfully";
+                StatusMessage = string.Format(L.StatusWorkspaceCreated, NewWorkspaceName);
                 NewWorkspaceName = string.Empty;
 
                 // 重新加载工作空间
@@ -119,7 +119,7 @@ namespace GeoServerDesktop.App.ViewModels
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to create workspace: {ex.Message}";
+                StatusMessage = string.Format(L.StatusWorkspaceCreateFailed, ex.Message);
             }
             finally
             {
@@ -135,19 +135,19 @@ namespace GeoServerDesktop.App.ViewModels
         {
             if (string.IsNullOrWhiteSpace(SelectedWorkspace))
             {
-                StatusMessage = "No workspace selected";
+                StatusMessage = L.StatusNoWorkspaceSelected;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = $"Deleting workspace '{SelectedWorkspace}'...";
+            StatusMessage = string.Format(L.StatusDeletingWorkspace, SelectedWorkspace);
 
             try
             {
                 var workspaceService = _connectionService.GetWorkspaceService();
                 await workspaceService.DeleteWorkspaceAsync(SelectedWorkspace, recurse: false);
 
-                StatusMessage = $"Workspace '{SelectedWorkspace}' deleted successfully";
+                StatusMessage = string.Format(L.StatusWorkspaceDeleted, SelectedWorkspace);
                 SelectedWorkspace = null;
 
                 // 重新加载工作空间
@@ -155,7 +155,7 @@ namespace GeoServerDesktop.App.ViewModels
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to delete workspace: {ex.Message}";
+                StatusMessage = string.Format(L.StatusWorkspaceDeleteFailed, ex.Message);
             }
             finally
             {
