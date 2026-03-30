@@ -120,6 +120,18 @@ public partial class MainWindowViewModel : ViewModelBase
     private WCSSettingsViewModel _wcsSettingsViewModel;
 
     /// <summary>
+    /// 全局设置视图模型
+    /// </summary>
+    [ObservableProperty]
+    private GlobalSettingsViewModel _globalSettingsViewModel;
+
+    /// <summary>
+    /// 日志配置视图模型
+    /// </summary>
+    [ObservableProperty]
+    private LoggingViewModel _loggingViewModel;
+
+    /// <summary>
     /// 当前显示的视图
     /// </summary>
     [ObservableProperty]
@@ -142,6 +154,8 @@ public partial class MainWindowViewModel : ViewModelBase
         _wmsSettingsViewModel = new WMSSettingsViewModel(_connectionService);
         _wfsSettingsViewModel = new WFSSettingsViewModel(_connectionService);
         _wcsSettingsViewModel = new WCSSettingsViewModel(_connectionService);
+        _globalSettingsViewModel = new GlobalSettingsViewModel(_connectionService);
+        _loggingViewModel = new LoggingViewModel(_connectionService);
 
         // 设置默认视图为欢迎页面
         _currentView = CreateWelcomeViewModel();
@@ -419,7 +433,8 @@ public partial class MainWindowViewModel : ViewModelBase
             StatusMessage = "Please connect to GeoServer first";
             return;
         }
-        CurrentView = CreateGlobalSettingsViewModel();
+        CurrentView = GlobalSettingsViewModel;
+        _ = GlobalSettingsViewModel.LoadSettingsCommand.ExecuteAsync(null);
         StatusMessage = "Global Settings";
     }
 
@@ -434,7 +449,8 @@ public partial class MainWindowViewModel : ViewModelBase
             StatusMessage = "Please connect to GeoServer first";
             return;
         }
-        CurrentView = CreateLoggingViewModel();
+        CurrentView = LoggingViewModel;
+        _ = LoggingViewModel.LoadSettingsCommand.ExecuteAsync(null);
         StatusMessage = "Logging Settings";
     }
 
@@ -740,18 +756,6 @@ public partial class MainWindowViewModel : ViewModelBase
     private ViewModelBase CreateLayerGroupsViewModel()
     {
         return LayerGroupsManagementViewModel;
-    }
-
-    private ViewModelBase CreateGlobalSettingsViewModel()
-    {
-        return new PlaceholderViewModel("Global Settings",
-            "Global GeoServer settings will be displayed here. This includes contact information, proxy settings, and other global configurations.");
-    }
-
-    private ViewModelBase CreateLoggingViewModel()
-    {
-        return new PlaceholderViewModel("Logging Settings",
-            "Logging configuration will be displayed here. This allows you to configure log levels and output destinations.");
     }
 
     private ViewModelBase CreateCachingDefaultsViewModel()
