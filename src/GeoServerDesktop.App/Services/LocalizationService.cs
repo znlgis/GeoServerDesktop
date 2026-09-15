@@ -1239,4 +1239,100 @@ public class LocalizationService : ObservableObject
 
     /// <summary>组删除失败模板 {0}=消息</summary>
     public string StatusGroupDeleteFailed => T("Failed to delete group: {0}", "删除组失败: {0}");
+
+    // ── E32：连接后真实探测 ─────────────────────────────────────────────────
+
+    /// <summary>连接后连通性探测失败模板 {0}=消息（E32 修复新增）</summary>
+    public string StatusConnectVerifyFailed => T("Connection verification failed: {0}", "连接验证失败: {0}");
+
+    // ── E37：GWC 默认设置无 REST 端点 ───────────────────────────────────────
+
+    /// <summary>GWC 默认设置在 GeoServer 3.0.1 无 REST 端点、不可配置的显式提示（E37 显式化）</summary>
+    public string StatusGwcNotConfigurable => T(
+        "GWC caching defaults have no REST endpoint on GeoServer 3.0.1 and cannot be configured here.",
+        "GWC 默认设置在 GeoServer 3.0.1 无 REST 端点，暂不可配置。");
+
+    // ── 新建数据存储对话框（E40：shapefile 目录约定） ────────────────────────
+
+    /// <summary>数据目录标签（新建存储对话框）</summary>
+    public string DataStoreDirectoryLabel => T("Directory:", "数据目录:");
+
+    /// <summary>数据目录水印（相对 data_dir，可选；空=与存储同名约定）</summary>
+    public string DataStoreDirectoryHint => T(
+        "Directory under data_dir, e.g. mydata (optional; defaults to store name)",
+        "数据目录（相对 data_dir，可选；留空=与存储同名）");
+
+    // ── SecuritySettings 状态串（E36 本地化） ────────────────────────────────
+
+    /// <summary>已加载 ACL 规则模板 {0}=数量</summary>
+    public string StatusAclRulesLoaded => T("Loaded {0} ACL rules", "已加载 {0} 条 ACL 规则");
+
+    /// <summary>未找到 ACL 规则</summary>
+    public string StatusNoAclRules => T("No ACL rules found", "未找到 ACL 规则");
+
+    // ── StyleManagement 状态串（E36 本地化） ─────────────────────────────────
+
+    /// <summary>样式名称必填</summary>
+    public string StatusStyleNameRequired => T("Style name is required", "样式名称不能为空");
+
+    /// <summary>SLD 内容必填</summary>
+    public string StatusSldContentRequired => T("SLD content is required", "SLD 内容不能为空");
+
+    /// <summary>正在加载指定样式模板 {0}=名称</summary>
+    public string StatusLoadingStyleNamed => T("Loading style '{0}'...", "正在加载样式 '{0}'...");
+
+    /// <summary>已加载指定样式 SLD 模板 {0}=名称</summary>
+    public string StatusLoadedSldFor => T("Loaded SLD for '{0}'", "已加载样式 '{0}' 的 SLD");
+
+    /// <summary>加载指定样式失败模板 {0}=消息</summary>
+    public string StatusStyleLoadFailed => T("Failed to load style: {0}", "加载样式失败: {0}");
+
+    /// <summary>正在上传指定样式模板 {0}=名称</summary>
+    public string StatusUploadingStyleNamed => T("Uploading style '{0}'...", "正在上传样式 '{0}'...");
+
+    /// <summary>样式更新成功模板 {0}=名称</summary>
+    public string StatusStyleUpdated => T("Style '{0}' updated successfully", "样式 '{0}' 更新成功");
+
+    /// <summary>样式创建成功模板 {0}=名称</summary>
+    public string StatusStyleCreated => T("Style '{0}' created successfully", "样式 '{0}' 创建成功");
+
+    /// <summary>正在删除指定样式模板 {0}=名称</summary>
+    public string StatusDeletingStyleNamed => T("Deleting style '{0}'...", "正在删除样式 '{0}'...");
+
+    /// <summary>样式删除成功模板 {0}=名称</summary>
+    public string StatusStyleDeletedNamed => T("Style '{0}' deleted successfully", "样式 '{0}' 删除成功");
+
+    /// <summary>示例 SLD 已创建</summary>
+    public string StatusSampleSldCreated => T("Sample SLD created", "示例 SLD 已创建");
+
+    // ── MapPreview 状态串（E36 本地化） ──────────────────────────────────────
+
+    /// <summary>地图预览初态（构造字段默认值）</summary>
+    public string StatusMapPreviewReady => T(
+        "Map preview ready. WMS layer integration available.",
+        "地图预览就绪，可使用 WMS 图层集成。");
+
+    /// <summary>地图已初始化</summary>
+    public string StatusMapInitialized => T(
+        "Map initialized. Use LoadWmsLayerAsync to add layers.",
+        "地图已初始化。使用 LoadWmsLayerAsync 添加图层。");
+
+    /// <summary>正在准备图层模板 {0}=工作空间:图层</summary>
+    public string StatusPreparingLayer => T("Preparing layer {0}...", "正在准备图层 {0}...");
+
+    /// <summary>WMS URL 已生成模板 {0}=图层全名</summary>
+    public string StatusWmsUrlGenerated => T(
+        "WMS URL generated for: {0}. Click 'View WMS URL' to see the preview URL.",
+        "已生成 {0} 的 WMS URL。点击“查看 WMS URL”可预览地址。");
+
+    /// <summary>生成预览失败模板 {0}=消息</summary>
+    public string StatusPreviewGenerateFailed => T("Failed to generate preview: {0}", "生成预览失败: {0}");
+
+    /// <summary>预览已清除</summary>
+    public string StatusPreviewCleared => T("Preview cleared", "预览已清除");
+
+    /// <summary>地图就绪（WMS 图层预览）</summary>
+    public string StatusMapReadyForPreview => T(
+        "Map ready for WMS layer preview",
+        "地图已就绪，可进行 WMS 图层预览");
 }

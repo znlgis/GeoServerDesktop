@@ -120,21 +120,29 @@ namespace GeoServerDesktop.App.ViewModels
             try
             {
                 var service = _connectionService.GetGlobalSettingsService();
-                var globalSettings = new GlobalSettings
+
+                // FIXED：PUT /rest/settings 为整包替换语义（实测缺失键会被重置为服务器默认值），
+                // 原“新建对象整包 PUT”会丢 contact 其余字段与 ExtensionData 外的服务器键。
+                // 改为 GET 先读 → 仅改本页负责的字段 → 原对象回写 PUT；
+                // 模型外服务器键由 GlobalSettingsInfo/Settings/ContactInfo 的 [JsonExtensionData] 保障往返。
+                var globalSettings = await service.GetGlobalSettingsAsync() ?? new GlobalSettings();
+                if (globalSettings.Settings == null)
                 {
-                    Settings = new Settings
-                    {
-                        OnlineResource = OnlineResource,
-                        ProxyBaseUrl = ProxyBaseUrl,
-                        VerboseExceptions = VerboseExceptions,
-                        Contact = new ContactInfo
-                        {
-                            ContactPerson = ContactPerson,
-                            ContactOrganization = ContactOrganization,
-                            ContactEmail = ContactEmail
-                        }
-                    }
-                };
+                    globalSettings.Settings = new Settings();
+                }
+                var settings = globalSettings.Settings;
+
+                settings.OnlineResource = OnlineResource;
+                settings.ProxyBaseUrl = ProxyBaseUrl;
+                settings.VerboseExceptions = VerboseExceptions;
+
+                if (settings.Contact == null)
+                {
+                    settings.Contact = new ContactInfo();
+                }
+                settings.Contact.ContactPerson = ContactPerson;
+                settings.Contact.ContactOrganization = ContactOrganization;
+                settings.Contact.ContactEmail = ContactEmail;
 
                 await service.UpdateGlobalSettingsAsync(globalSettings);
                 StatusMessage = L.StatusGlobalSettingsSaved;

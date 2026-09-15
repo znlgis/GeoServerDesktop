@@ -335,9 +335,11 @@ public partial class UsersGroupsRolesViewModel : ViewModelBase
         var service = _connectionService.GetUserGroupService();
         var result = await service.GetUsersAsync();
         Users.Clear();
-        if (result?.Users != null)
+        // FIXED-E7：UserListWrapper.Users 已改为 List<User>，App 列表仅需用户名，走 UserNames 便捷属性。
+        var names = result?.UserNames;
+        if (names != null)
         {
-            foreach (var username in result.Users)
+            foreach (var username in names)
             {
                 Users.Add(username);
             }

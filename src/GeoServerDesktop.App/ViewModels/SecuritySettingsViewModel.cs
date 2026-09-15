@@ -82,13 +82,14 @@ public partial class SecuritySettingsViewModel : ViewModelBase
                 }
             }
 
+            // FIXED-E36：原为硬编码中文串，英文态下本地化不生效；改为本地化键
             StatusMessage = AclRules.Count > 0
-                ? $"已加载 {AclRules.Count} 条 ACL 规则"
-                : "未找到 ACL 规则";
+                ? string.Format(L.StatusAclRulesLoaded, AclRules.Count)
+                : L.StatusNoAclRules;
         }
         catch (Exception ex)
         {
-            StatusMessage = $"加载安全设置失败：{ex.Message}";
+            StatusMessage = string.Format(L.StatusSecuritySettingsLoadFailed, ex.Message);
         }
         finally
         {

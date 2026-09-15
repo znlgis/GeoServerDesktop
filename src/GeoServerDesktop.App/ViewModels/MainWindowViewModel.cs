@@ -264,6 +264,19 @@ public partial class MainWindowViewModel : ViewModelBase
 
             _connectionService.Connect(options);
 
+            // FIXED-E32：Connect 仅保存配置不发请求（库层无探测），这里做真实连通性探测：
+            // GET /rest/about/version.json 失败（不可达/非 GeoServer/凭据错误）则回退为未连接并提示错误。
+            try
+            {
+                await _connectionService.GetAboutService().GetVersionAsync();
+            }
+            catch (Exception ex)
+            {
+                _connectionService.Disconnect(); // 触发 ConnectionStatusChanged → IsConnected=false
+                StatusMessage = string.Format(L.StatusConnectVerifyFailed, ex.Message);
+                return;
+            }
+
             StatusMessage = L.StatusConnectedSuccess;
             await LoadResourceTreeAsync();
         }

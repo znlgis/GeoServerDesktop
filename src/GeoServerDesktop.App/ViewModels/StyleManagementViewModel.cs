@@ -109,8 +109,9 @@ namespace GeoServerDesktop.App.ViewModels
                 return;
             }
 
+            // FIXED-E36：原硬编码英文串改用本地化键
             IsLoading = true;
-            StatusMessage = $"Loading style '{SelectedStyle}'...";
+            StatusMessage = string.Format(L.StatusLoadingStyleNamed, SelectedStyle);
 
             try
             {
@@ -118,11 +119,11 @@ namespace GeoServerDesktop.App.ViewModels
                 var sld = await styleService.GetStyleSldAsync(SelectedStyle);
 
                 SldContent = sld;
-                StatusMessage = $"Loaded SLD for '{SelectedStyle}'";
+                StatusMessage = string.Format(L.StatusLoadedSldFor, SelectedStyle);
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to load style: {ex.Message}";
+                StatusMessage = string.Format(L.StatusStyleLoadFailed, ex.Message);
                 SldContent = string.Empty;
             }
             finally
@@ -137,20 +138,21 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private async Task UploadStyleAsync()
         {
+            // FIXED-E36：原硬编码英文串改用本地化键
             if (string.IsNullOrWhiteSpace(NewStyleName))
             {
-                StatusMessage = "Style name is required";
+                StatusMessage = L.StatusStyleNameRequired;
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(SldContent))
             {
-                StatusMessage = "SLD content is required";
+                StatusMessage = L.StatusSldContentRequired;
                 return;
             }
 
             IsLoading = true;
-            StatusMessage = $"Uploading style '{NewStyleName}'...";
+            StatusMessage = string.Format(L.StatusUploadingStyleNamed, NewStyleName);
 
             try
             {
@@ -172,13 +174,13 @@ namespace GeoServerDesktop.App.ViewModels
                 {
                     // 更新现有样式
                     await styleService.UpdateStyleAsync(NewStyleName, SldContent);
-                    StatusMessage = $"Style '{NewStyleName}' updated successfully";
+                    StatusMessage = string.Format(L.StatusStyleUpdated, NewStyleName);
                 }
                 else
                 {
                     // 创建新样式
                     await styleService.CreateStyleAsync(NewStyleName, SldContent);
-                    StatusMessage = $"Style '{NewStyleName}' created successfully";
+                    StatusMessage = string.Format(L.StatusStyleCreated, NewStyleName);
                 }
 
                 // 重新加载样式
@@ -207,14 +209,14 @@ namespace GeoServerDesktop.App.ViewModels
             }
 
             IsLoading = true;
-            StatusMessage = $"Deleting style '{SelectedStyle}'...";
+            StatusMessage = string.Format(L.StatusDeletingStyleNamed, SelectedStyle);
 
             try
             {
                 var styleService = _connectionService.GetStyleService();
                 await styleService.DeleteStyleAsync(SelectedStyle);
 
-                StatusMessage = $"Style '{SelectedStyle}' deleted successfully";
+                StatusMessage = string.Format(L.StatusStyleDeletedNamed, SelectedStyle);
                 SelectedStyle = null;
                 SldContent = string.Empty;
 
@@ -263,7 +265,7 @@ namespace GeoServerDesktop.App.ViewModels
     </UserStyle>
   </NamedLayer>
 </StyledLayerDescriptor>";
-            StatusMessage = "Sample SLD created";
+            StatusMessage = L.StatusSampleSldCreated;
         }
     }
 }

@@ -19,10 +19,10 @@ namespace GeoServerDesktop.App.ViewModels
         private Map? _map;
 
         /// <summary>
-        /// 状态消息
+        /// 状态消息（构造后经 InitializeMap 本地化赋值，见 E36 注释）
         /// </summary>
         [ObservableProperty]
-        private string _statusMessage = "Map preview ready. WMS layer integration available.";
+        private string _statusMessage = string.Empty;
 
         /// <summary>
         /// 是否正在加载
@@ -68,7 +68,8 @@ namespace GeoServerDesktop.App.ViewModels
         private void InitializeMap()
         {
             Map = new Map();
-            StatusMessage = "Map initialized. Use LoadWmsLayerAsync to add layers.";
+            // FIXED-E36：原硬编码英文状态串统一改为本地化键
+            StatusMessage = L.StatusMapInitialized;
         }
 
         /// <summary>
@@ -80,7 +81,7 @@ namespace GeoServerDesktop.App.ViewModels
         public async Task LoadWmsLayerAsync(string geoServerBaseUrl, string workspace, string layerName)
         {
             IsLoading = true;
-            StatusMessage = $"Preparing layer {workspace}:{layerName}...";
+            StatusMessage = string.Format(L.StatusPreparingLayer, $"{workspace}:{layerName}");
 
             try
             {
@@ -97,13 +98,13 @@ namespace GeoServerDesktop.App.ViewModels
 
                 PreviewUrl = $"{wmsUrl}?service=WMS&version=1.1.0&request=GetMap&layers={Uri.EscapeDataString(layerFullName)}&srs=EPSG:4326&bbox={bbox}&width={width}&height={height}&format=image/png";
 
-                StatusMessage = $"WMS URL generated for: {layerFullName}. Click 'View WMS URL' to see the preview URL.";
+                StatusMessage = string.Format(L.StatusWmsUrlGenerated, layerFullName);
 
                 await Task.CompletedTask;
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Failed to generate preview: {ex.Message}";
+                StatusMessage = string.Format(L.StatusPreviewGenerateFailed, ex.Message);
             }
             finally
             {
@@ -120,7 +121,7 @@ namespace GeoServerDesktop.App.ViewModels
             PreviewUrl = null;
             CurrentWorkspace = null;
             BaseUrl = null;
-            StatusMessage = "Preview cleared";
+            StatusMessage = L.StatusPreviewCleared;
         }
 
         /// <summary>
@@ -129,7 +130,7 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private void ZoomToExtent()
         {
-            StatusMessage = "Map ready for WMS layer preview";
+            StatusMessage = L.StatusMapReadyForPreview;
         }
     }
 }

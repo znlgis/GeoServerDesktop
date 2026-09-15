@@ -52,6 +52,13 @@ namespace GeoServerDesktop.App.ViewModels
         private string _newDataStoreDescription = string.Empty;
 
         /// <summary>
+        /// 新建 shapefile 数据存储的数据目录（相对 GeoServer data_dir）。
+        /// 留空则按 App 约定使用 "file:"+存储名（目录与存储同名，位于 data_dir 下）。
+        /// </summary>
+        [ObservableProperty]
+        private string _newDataStoreDirectory = string.Empty;
+
+        /// <summary>
         /// 是否显示创建对话框
         /// </summary>
         [ObservableProperty]
@@ -215,6 +222,7 @@ namespace GeoServerDesktop.App.ViewModels
         {
             NewDataStoreName = string.Empty;
             NewDataStoreDescription = string.Empty;
+            NewDataStoreDirectory = string.Empty;
             IsCreateDialogVisible = true;
         }
 
@@ -251,15 +259,30 @@ namespace GeoServerDesktop.App.ViewModels
             try
             {
                 var dataStoreService = _connectionService.GetDataStoreService();
+
+                // FIXED-E40：shapefile 存储必须声明 type 且带 url 连接参数（实测 GeoServer 3.0.1
+                // 只发 namespace 的载荷虽被 201 接受，但产出无种类、不可用的“空壳”存储）。
+                // url 约定：值形如 "file:<目录名>"，目录名相对 GeoServer 容器 data_dir 解析；
+                // App 场景默认约定 url = "file:" + 存储名（即数据目录与存储同名放在 data_dir 下），
+                // 用户在对话框显式填写目录（NewDataStoreDirectory）时优先采用该目录名。
+                var directory = string.IsNullOrWhiteSpace(NewDataStoreDirectory)
+                    ? NewDataStoreName
+                    : NewDataStoreDirectory.Trim();
+                var description = string.IsNullOrWhiteSpace(NewDataStoreDescription)
+                    ? null
+                    : NewDataStoreDescription.Trim();
                 var dataStore = new DataStore
                 {
                     Name = NewDataStoreName,
+                    Type = "Shapefile",
                     Enabled = true,
+                    Description = description,
                     ConnectionParameters = new ConnectionParameters
                     {
                         Entries = new[]
                         {
                             new ConnectionParameterEntry { Key = "namespace", Value = SelectedWorkspace },
+                            new ConnectionParameterEntry { Key = "url", Value = "file:" + directory },
                         }
                     }
                 };
@@ -268,6 +291,7 @@ namespace GeoServerDesktop.App.ViewModels
                 IsCreateDialogVisible = false;
                 NewDataStoreName = string.Empty;
                 NewDataStoreDescription = string.Empty;
+                NewDataStoreDirectory = string.Empty;
                 await LoadDataStoresAsync();
                 StatusMessage = L.StatusDataStoreCreated;
             }

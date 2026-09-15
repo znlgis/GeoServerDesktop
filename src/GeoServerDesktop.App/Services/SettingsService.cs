@@ -13,12 +13,21 @@ namespace GeoServerDesktop.App.Services
         private readonly string _settingsPath;
 
         /// <summary>
+        /// 【TESTABILITY】设置目录注入点（进程级）：供无头测试将 settings.json 重定向到临时目录，
+        /// 避免触碰用户真实 %APPDATA%/GeoServerDesktop。为 null/空时保持原有默认行为（写入 %APPDATA%）。
+        /// 这是本类为可测试性所做的唯一最小改动，产品运行时不设置该值。
+        /// </summary>
+        public static string? SettingsDirectoryOverride { get; set; }
+
+        /// <summary>
         /// 初始化 SettingsService 类的新实例
         /// </summary>
         public SettingsService()
         {
-            var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            var appFolder = Path.Combine(appDataPath, "GeoServerDesktop");
+            // 【TESTABILITY】若存在目录覆盖则使用之，否则维持原有 %APPDATA% 行为。
+            var appFolder = string.IsNullOrWhiteSpace(SettingsDirectoryOverride)
+                ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GeoServerDesktop")
+                : SettingsDirectoryOverride!;
             Directory.CreateDirectory(appFolder);
             _settingsPath = Path.Combine(appFolder, "settings.json");
         }

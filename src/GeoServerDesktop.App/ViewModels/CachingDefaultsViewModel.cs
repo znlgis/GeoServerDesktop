@@ -45,62 +45,40 @@ namespace GeoServerDesktop.App.ViewModels
         /// <summary>
         /// 加载缓存默认设置
         /// </summary>
+        /// <remarks>
+        /// FIXED-E37（显式化，不再假装成功）：实测目标 GeoServer 3.0.1 上
+        /// GET /gwc/rest/settings 返回 404（GWC 默认设置无 REST 端点），
+        /// 且 GET /rest/settings.json 的 global 体中也无任何 gwc 相关字段可借用，
+        /// 库层 GWCLayerService 亦无 defaults 方法——因此本页无法真实读写，
+        /// 明确提示不可配置，而非此前 Task.Delay(100) 的“加载成功”假象。
+        /// </remarks>
         [RelayCommand]
-        private async Task LoadSettingsAsync()
+        private Task LoadSettingsAsync()
         {
             if (!_connectionService.IsConnected)
             {
                 StatusMessage = L.StatusNotConnected;
-                return;
+                return Task.CompletedTask;
             }
 
-            IsLoading = true;
-            StatusMessage = L.StatusLoadingCachingDefaults;
-
-            try
-            {
-                // GWC 默认设置通过 GWC 图层服务获取，此处展示概览信息
-                await Task.Delay(100); // 模拟异步加载
-                StatusMessage = L.StatusCachingDefaultsLoaded;
-            }
-            catch (Exception ex)
-            {
-                StatusMessage = string.Format(L.StatusCachingDefaultsLoadFailed, ex.Message);
-            }
-            finally
-            {
-                IsLoading = false;
-            }
+            StatusMessage = L.StatusGwcNotConfigurable;
+            return Task.CompletedTask;
         }
 
         /// <summary>
-        /// 保存缓存默认设置
+        /// 保存缓存默认设置（同 Load：GWC defaults 在 3.0.1 无 REST 端点，不可保存，见 LoadSettingsAsync 注释）
         /// </summary>
         [RelayCommand]
-        private async Task SaveSettingsAsync()
+        private Task SaveSettingsAsync()
         {
             if (!_connectionService.IsConnected)
             {
                 StatusMessage = L.StatusNotConnected;
-                return;
+                return Task.CompletedTask;
             }
 
-            IsLoading = true;
-            StatusMessage = L.StatusSavingCachingDefaults;
-
-            try
-            {
-                await Task.Delay(100); // 模拟异步保存
-                StatusMessage = L.StatusCachingDefaultsSaved;
-            }
-            catch (Exception ex)
-            {
-                StatusMessage = string.Format(L.StatusCachingDefaultsSaveFailed, ex.Message);
-            }
-            finally
-            {
-                IsLoading = false;
-            }
+            StatusMessage = L.StatusGwcNotConfigurable;
+            return Task.CompletedTask;
         }
     }
 }
