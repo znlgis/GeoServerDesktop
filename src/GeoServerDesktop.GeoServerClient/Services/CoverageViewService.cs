@@ -31,7 +31,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>List of coverage views</returns>
         public async Task<CoverageViewListWrapper> GetCoverageViewsAsync(string workspace)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{workspace}/coverageviews.json");
+            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspace)}/coverageviews.json");
             return JsonConvert.DeserializeObject<CoverageViewListWrapper>(response);
         }
 
@@ -43,7 +43,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>覆盖范围视图详细信息</returns>
         public async Task<CoverageViewWrapper> GetCoverageViewAsync(string workspace, string coverageView)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{workspace}/coverageviews/{coverageView}.json");
+            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspace)}/coverageviews/{Uri.EscapeDataString(coverageView)}.json");
             return JsonConvert.DeserializeObject<CoverageViewWrapper>(response);
         }
 
@@ -56,10 +56,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task CreateCoverageViewAsync(string workspace, CoverageView coverageView)
         {
             var wrapper = new { coverageView = coverageView };
-            var json = JsonConvert.SerializeObject(wrapper);
+            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PostAsync($"/rest/workspaces/{workspace}/coverageviews", content);
+                await _httpClient.PostAsync($"/rest/workspaces/{Uri.EscapeDataString(workspace)}/coverageviews", content);
             }
         }
 
@@ -73,10 +73,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task UpdateCoverageViewAsync(string workspace, string coverageViewName, CoverageView coverageView)
         {
             var wrapper = new { coverageView = coverageView };
-            var json = JsonConvert.SerializeObject(wrapper);
+            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PutAsync($"/rest/workspaces/{workspace}/coverageviews/{coverageViewName}", content);
+                await _httpClient.PutAsync($"/rest/workspaces/{Uri.EscapeDataString(workspace)}/coverageviews/{Uri.EscapeDataString(coverageViewName)}", content);
             }
         }
 
@@ -88,7 +88,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteCoverageViewAsync(string workspace, string coverageView)
         {
-            await _httpClient.DeleteAsync($"/rest/workspaces/{workspace}/coverageviews/{coverageView}");
+            await _httpClient.DeleteAsync($"/rest/workspaces/{Uri.EscapeDataString(workspace)}/coverageviews/{Uri.EscapeDataString(coverageView)}");
         }
     }
 }

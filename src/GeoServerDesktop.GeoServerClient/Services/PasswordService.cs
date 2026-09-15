@@ -25,14 +25,17 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// 更改当前用户的密码
+        /// 更改当前用户的密码。
+        /// FIXED-E16（原基线误报）：3.0.1 源码 UserPasswordController#passwordPut 以
+        /// <c>@RequestBody Map&lt;String,String&gt;</c> 直接取扁平 <c>newPassword</c> 键——扁平体即真实契约，
+        /// 外层 {"password":{...}} 包装反而会 400 "Missing 'newPassword'"。（弱口令仍可能被密码策略拒为 400。）
         /// </summary>
         /// <param name="newPassword">新密码</param>
         /// <returns>表示异步操作的任务</returns>
         public async Task ChangePasswordAsync(string newPassword)
         {
             var request = new PasswordChangeRequest { NewPassword = newPassword };
-            var json = JsonConvert.SerializeObject(request);
+            var json = JsonConvert.SerializeObject(request, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
                 await _httpClient.PutAsync("/rest/security/self/password", content);

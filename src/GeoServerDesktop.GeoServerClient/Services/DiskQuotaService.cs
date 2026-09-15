@@ -30,8 +30,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>磁盘配额配置</returns>
         public async Task<DiskQuotaConfig> GetDiskQuotaAsync()
         {
-            var response = await _httpClient.GetAsync("/gwc/rest/diskquota.json");
-            return JsonConvert.DeserializeObject<DiskQuotaConfig>(response);
+            // FIXED-E13：diskquota 端点恒返回 XML（DiskQuotaController，与 Accept 无关），XDocument 映射解析
+            var response = await _httpClient.GetAsync("/gwc/rest/diskquota");
+            return DiskQuotaConfig.ParseXml(response);
         }
 
         /// <summary>
@@ -41,8 +42,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task UpdateDiskQuotaAsync(DiskQuotaConfig config)
         {
-            var json = JsonConvert.SerializeObject(config);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            // FIXED-E13：回写同样使用 XML（与 ParseXml 字段往返）
+            var json = (config ?? new DiskQuotaConfig()).ToXmlBody();
+            using (var content = new StringContent(json, Encoding.UTF8, "application/xml"))
             {
                 await _httpClient.PutAsync("/gwc/rest/diskquota", content);
             }

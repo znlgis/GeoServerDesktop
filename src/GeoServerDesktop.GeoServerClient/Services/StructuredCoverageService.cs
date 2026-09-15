@@ -9,7 +9,9 @@ using Newtonsoft.Json;
 namespace GeoServerDesktop.GeoServerClient.Services
 {
     /// <summary>
-    /// Service for managing structured coverage indexes and granules
+    /// Service for managing structured coverage indexes and granules。
+    /// 注：3.0.1 默认镜像未安装 structured coverage observer 扩展（相关路由 404），
+    /// E5/E21 等形态基线维持不变，安装扩展后需按实测复核。
     /// </summary>
     public class StructuredCoverageService
     {
@@ -67,7 +69,8 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task<GranuleListWrapper> GetGranulesAsync(string workspace, string coverageStore, string coverage, string filter = null, int? offset = null, int? limit = null)
         {
             var queryParams = new System.Collections.Generic.List<string>();
-            if (!string.IsNullOrEmpty(filter)) queryParams.Add($"filter={filter}");
+            // FIXED-E24：filter 为 CQL 表达式（含空格/&/>/中文），必须转义否则破坏查询串
+            if (!string.IsNullOrEmpty(filter)) queryParams.Add($"filter={Uri.EscapeDataString(filter)}");
             if (offset.HasValue) queryParams.Add($"offset={offset.Value}");
             if (limit.HasValue) queryParams.Add($"limit={limit.Value}");
 

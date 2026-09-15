@@ -1,5 +1,6 @@
 using System;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 
@@ -31,7 +32,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// </remarks>
         public async Task ReloadCatalogAsync()
         {
-            using (var content = new StringContent(string.Empty))
+            // FIXED-E18：原 new StringContent("") 隐式 Content-Type 为 text/plain。
+            // 实测 3.0.1：/rest/reload 对无体/text/plain/application/json 均回 200；
+            // 此处显式声明 application/json 空体，与 REST 语义一致、不依赖服务器宽容度。
+            using (var content = new StringContent(string.Empty, Encoding.UTF8, "application/json"))
             {
                 await _httpClient.PostAsync("/rest/reload", content);
             }
@@ -44,10 +48,14 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <remarks>
         /// 此操作清除所有缓存，但不重新加载目录。
         /// 在外部数据源发生更改时很有用。
+        /// Warn：该端点会重置全部存储/栅格/模式缓存，影响正在服务的实例——集成测试仅以
+        /// GET 探测存在性（实测 3.0.1 GET /rest/reset 回 405 Method Not Allowed，端点在位），
+        /// 不实际 POST 调用；仅在明确安全（专用实例/维护窗口）时由调用方主动使用。
         /// </remarks>
         public async Task ResetAsync()
         {
-            using (var content = new StringContent(string.Empty))
+            // FIXED-E18（同 ReloadCatalogAsync）：显式 application/json 空体。
+            using (var content = new StringContent(string.Empty, Encoding.UTF8, "application/json"))
             {
                 await _httpClient.PostAsync("/rest/reset", content);
             }

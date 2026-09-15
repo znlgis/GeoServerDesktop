@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace GeoServerDesktop.GeoServerClient.Models
 {
@@ -40,14 +41,56 @@ namespace GeoServerDesktop.GeoServerClient.Models
     }
 
     /// <summary>
-    /// 模板列表的包装器
+    /// 模板列表的包装器。
+    /// FIXED-E7（新形态）：GeoServer 3.0.1 <c>/rest/templates.json</c> 实际根为 Java 类全名——
+    /// 空态：<c>{"org.geoserver.rest.catalog.TemplateInfos":""}</c>；
+    /// 有数据：<c>{"org.geoserver.rest.catalog.TemplateInfos":{"org.geoserver.rest.catalog.TemplateInfo":[{"name","href"},...]}}</c>。
+    /// 模型改为承载解析后的模板名称列表。
     /// </summary>
     public class TemplateListWrapper
     {
         /// <summary>
-        /// 获取或设置模板列表
+        /// 已解析的模板列表（空态返回空列表）。
         /// </summary>
-        [JsonProperty("templates")]
+        [JsonIgnore]
         public List<string> Templates { get; set; }
+
+        /// <summary>
+        /// 解析 3.0.1 动态类名根。
+        /// </summary>
+        public static TemplateListWrapper Parse(string rawJson)
+        {
+            var w = new TemplateListWrapper { Templates = new List<string>() };
+            if (string.IsNullOrWhiteSpace(rawJson)) return w;
+            var obj = JObject.Parse(rawJson);
+            foreach (var outer in obj.Properties())
+            {
+                // 顶层为 "org.geoserver.rest.catalog.TemplateInfos"：值为 "" 或 内层对象
+                var v = outer.Value;
+                if (v.Type == JTokenType.String) continue; // 空串
+                if (v is JObject inner)
+                {
+                    foreach (var arr in inner.Properties())
+                    {
+                        if (arr.Value is JArray ja)
+                            foreach (var item in ja)
+                            {
+                                var name = (string)item["name"];
+                                if (!string.IsNullOrEmpty(name)) w.Templates.Add(name);
+                            }
+                    }
+                }
+                else if (v is JArray arr2)
+                {
+                    foreach (var item in arr2)
+                    {
+                        var name = (string)item["name"];
+                        if (!string.IsNullOrEmpty(name)) w.Templates.Add(name);
+                    }
+                }
+            }
+            return w;
+        }
     }
+
 }

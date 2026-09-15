@@ -1,17 +1,23 @@
 using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 using GeoServerDesktop.GeoServerClient.Models;
-using Newtonsoft.Json;
 
 namespace GeoServerDesktop.GeoServerClient.Services
 {
     /// <summary>
-    /// Service for managing SSL/TLS keystores
+    /// Service for managing SSL/TLS keystores。
+    /// FIXED-E4（明确化）：GeoServer 3.0.1 无 keystore REST 端点——
+    /// 实测 GET /rest/security/keystore.json 与 /rest/security/keystores.json 均回 problem+json 404
+    /// （gs-restconfig-3.0.1.jar 安全包内仅有 UserGroupServiceController / UsersRestController /
+    /// UserPasswordController / MasterPasswordController 等，无 keystore 控制器）。
+    /// 方法签名保留以兼容既有调用面，调用即抛 <see cref="NotSupportedException"/>。
     /// </summary>
     public class KeystoreService
     {
+        private const string NoEndpointMessage =
+            "GeoServer 3.0.1 无 keystore REST 端点（/rest/security/keystore(s) 实测 404），该功能仅 GUI 可用。";
+
         private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
@@ -24,38 +30,18 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Gets the keystore information
+        /// Gets the keystore information —— 3.0.1 无对应端点，恒抛 <see cref="NotSupportedException"/>（FIXED-E4）。
         /// </summary>
-        /// <returns>Keystore information</returns>
-        public async Task<KeystoreInfo> GetKeystoreInfoAsync()
-        {
-            var response = await _httpClient.GetAsync("/rest/security/keystore.json");
-            return JsonConvert.DeserializeObject<KeystoreInfo>(response);
-        }
+        public Task<KeystoreInfo> GetKeystoreInfoAsync() => throw new NotSupportedException(NoEndpointMessage);
 
         /// <summary>
-        /// Uploads a certificate to the keystore
+        /// Uploads a certificate to the keystore —— 3.0.1 无对应端点，恒抛 <see cref="NotSupportedException"/>（FIXED-E4）。
         /// </summary>
-        /// <param name="alias">Certificate alias</param>
-        /// <param name="certificateData">Certificate data (PEM or DER format)</param>
-        /// <returns>表示异步操作的任务</returns>
-        public async Task UploadCertificateAsync(string alias, byte[] certificateData)
-        {
-            using (var content = new ByteArrayContent(certificateData))
-            {
-                content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/x-pkcs12");
-                await _httpClient.PutAsync($"/rest/security/keystore/{alias}", content);
-            }
-        }
+        public Task UploadCertificateAsync(string alias, byte[] certificateData) => throw new NotSupportedException(NoEndpointMessage);
 
         /// <summary>
-        /// Deletes a certificate from the keystore
+        /// Deletes a certificate from the keystore —— 3.0.1 无对应端点，恒抛 <see cref="NotSupportedException"/>（FIXED-E4）。
         /// </summary>
-        /// <param name="alias">Certificate alias to delete</param>
-        /// <returns>表示异步操作的任务</returns>
-        public async Task DeleteCertificateAsync(string alias)
-        {
-            await _httpClient.DeleteAsync($"/rest/security/keystore/{alias}");
-        }
+        public Task DeleteCertificateAsync(string alias) => throw new NotSupportedException(NoEndpointMessage);
     }
 }

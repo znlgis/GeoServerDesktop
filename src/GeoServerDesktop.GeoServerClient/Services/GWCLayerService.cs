@@ -41,8 +41,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>Layer information</returns>
         public async Task<GWCLayer> GetLayerAsync(string layerName)
         {
-            var response = await _httpClient.GetAsync($"/gwc/rest/layers/{layerName}.json");
-            return JsonConvert.DeserializeObject<GWCLayer>(response);
+            var response = await _httpClient.GetAsync($"/gwc/rest/layers/{Uri.EscapeDataString(layerName)}.json");
+            // FIXED-E9：单体实测根为实现类名 {"GeoServerLayer":{...}}，动态键需手工解析
+            return GWCLayer.ParseSingle(response);
         }
 
         /// <summary>
@@ -53,10 +54,12 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task SeedLayerAsync(string layerName, SeedRequest seedRequest)
         {
-            var json = JsonConvert.SerializeObject(seedRequest);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            // FIXED-E12：GWC SeedController 实测 POST /gwc/rest/seed/{layer} 以 XML seedRequest 为体
+            // （XStream 形态；zoomStart/zoomStop 必填）。truncate 同路由，仅 type=truncate。
+            var xml = (seedRequest ?? new SeedRequest()).ToXmlBody();
+            using (var content = new StringContent(xml, Encoding.UTF8, "application/xml"))
             {
-                await _httpClient.PostAsync($"/gwc/rest/seed/{layerName}.json", content);
+                await _httpClient.PostAsync($"/gwc/rest/seed/{Uri.EscapeDataString(layerName)}", content);
             }
         }
 
@@ -66,9 +69,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task TruncateAllLayersAsync()
         {
-            var truncateRequest = new { truncateAll = true };
-            var json = JsonConvert.SerializeObject(truncateRequest);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            // FIXED-E12：MassTruncateController 源码以 XStream DomDriver 读 XML（或 form）请求体，
+            // 空 <massTruncateRequest/> 即触发全量清空；JSON {"truncateAll":true} 实测不被接受。
+            var xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<massTruncateRequest/>";
+            using (var content = new StringContent(xml, Encoding.UTF8, "application/xml"))
             {
                 await _httpClient.PostAsync("/gwc/rest/masstruncate", content);
             }

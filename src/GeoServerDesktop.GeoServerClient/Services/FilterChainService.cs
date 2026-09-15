@@ -30,8 +30,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>List of filter chains</returns>
         public async Task<FilterChainListWrapper> GetFilterChainsAsync()
         {
-            var response = await _httpClient.GetAsync("/rest/security/filterChains.json");
-            return JsonConvert.DeserializeObject<FilterChainListWrapper>(response);
+            var response = await _httpClient.GetAsync("/rest/security/filterchain.json");
+            // FIXED-E3：3.0.1 列表实测 {"filterchain":{"filters":[...]}}，双层解析
+            return FilterChainListWrapper.Parse(response);
         }
 
         /// <summary>
@@ -41,7 +42,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>过滤器链详细信息</returns>
         public async Task<FilterChainWrapper> GetFilterChainAsync(string chainName)
         {
-            var response = await _httpClient.GetAsync($"/rest/security/filterChains/{chainName}.json");
+            var response = await _httpClient.GetAsync($"/rest/security/filterchain/{chainName}.json");
             return JsonConvert.DeserializeObject<FilterChainWrapper>(response);
         }
 
@@ -54,10 +55,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task UpdateFilterChainAsync(string chainName, FilterChain chain)
         {
             var wrapper = new { filterChain = chain };
-            var json = JsonConvert.SerializeObject(wrapper);
+            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PutAsync($"/rest/security/filterChains/{chainName}", content);
+                await _httpClient.PutAsync($"/rest/security/filterchain/{chainName}", content);
             }
         }
     }

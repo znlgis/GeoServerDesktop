@@ -8,6 +8,16 @@ namespace GeoServerDesktop.GeoServerClient.Models
     public class FeatureType
     {
         /// <summary>
+        /// 初始化 FeatureType 类的新实例（FIXED-E27：Enabled 默认 true，
+        /// 与本客户端其余资源模型的创建语义及 GeoServer 默认一致，
+        /// 消除"直调创建即默认禁用"缺陷）
+        /// </summary>
+        public FeatureType()
+        {
+            Enabled = true;
+        }
+
+        /// <summary>
         /// 要素类型的名称
         /// </summary>
         [JsonProperty("name")]
@@ -68,10 +78,10 @@ namespace GeoServerDesktop.GeoServerClient.Models
         public BoundingBox LatLonBoundingBox { get; set; }
 
         /// <summary>
-        /// 要素类型是否启用
+        /// 要素类型是否启用（FIXED-E27：bool? 对齐其余资源模型；构造函数默认 true）
         /// </summary>
         [JsonProperty("enabled")]
-        public bool Enabled { get; set; }
+        public bool? Enabled { get; set; }
 
         /// <summary>
         /// 数据存储引用

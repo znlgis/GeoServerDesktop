@@ -41,8 +41,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>Blob 存储详细信息</returns>
         public async Task<BlobstoreWrapper> GetBlobstoreAsync(string blobstoreId)
         {
-            var response = await _httpClient.GetAsync($"/gwc/rest/blobstores/{blobstoreId}.json");
-            return JsonConvert.DeserializeObject<BlobstoreWrapper>(response);
+            var response = await _httpClient.GetAsync($"/gwc/rest/blobstores/{Uri.EscapeDataString(blobstoreId)}.json");
+            // FIXED-E11：单体实测根为实现类名 {"FileBlobStore":{...}}，动态键需 ParseSingle
+            return new BlobstoreWrapper { Blobstore = Blobstore.ParseSingle(response, blobstoreId) };
         }
 
         /// <summary>
@@ -52,11 +53,12 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task CreateBlobstoreAsync(Blobstore blobstore)
         {
-            var wrapper = new { blobstore = blobstore };
-            var json = JsonConvert.SerializeObject(wrapper);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            // FIXED-E11：BlobStoreController 创建为 PUT /gwc/rest/blobstores/{name} + XStream XML
+            // （{"FileBlobStore">...}，实测 201）；集合 POST JSON 不被接受。
+            var xml = (blobstore ?? new Blobstore()).ToXmlBody(null);
+            using (var content = new StringContent(xml, Encoding.UTF8, "application/xml"))
             {
-                await _httpClient.PostAsync("/gwc/rest/blobstores", content);
+                await _httpClient.PutAsync($"/gwc/rest/blobstores/{Uri.EscapeDataString(blobstore?.Id)}", content);
             }
         }
 
@@ -68,11 +70,11 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task UpdateBlobstoreAsync(string blobstoreId, Blobstore blobstore)
         {
-            var wrapper = new { blobstore = blobstore };
-            var json = JsonConvert.SerializeObject(wrapper);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            // FIXED-E11：更新与创建同路由 PUT /gwc/rest/blobstores/{name}，同样仅接受 XStream XML。
+            var xml = (blobstore ?? new Blobstore()).ToXmlBody(blobstoreId);
+            using (var content = new StringContent(xml, Encoding.UTF8, "application/xml"))
             {
-                await _httpClient.PutAsync($"/gwc/rest/blobstores/{blobstoreId}", content);
+                await _httpClient.PutAsync($"/gwc/rest/blobstores/{Uri.EscapeDataString(blobstoreId)}", content);
             }
         }
 
@@ -83,7 +85,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteBlobstoreAsync(string blobstoreId)
         {
-            await _httpClient.DeleteAsync($"/gwc/rest/blobstores/{blobstoreId}");
+            await _httpClient.DeleteAsync($"/gwc/rest/blobstores/{Uri.EscapeDataString(blobstoreId)}");
         }
     }
 }

@@ -40,14 +40,16 @@ namespace GeoServerDesktop.GeoServerClient.Services
             int height = 600,
             string format = "image/png")
         {
+            // FIXED-E38：srs 为 null/空白时回退 EPSG:4326（原直接内插，Uri.EscapeDataString(null) 抛
+            // ArgumentNullException）；bbox null 同理按空串处理。参数顺序与键名保持不变（App Mapsui 依赖）。
             var parameters = new Dictionary<string, string>
             {
                 ["service"] = "WMS",
                 ["version"] = "1.1.0",
                 ["request"] = "GetMap",
                 ["layers"] = string.IsNullOrWhiteSpace(workspace) ? layerName : $"{workspace}:{layerName}",
-                ["srs"] = srs,
-                ["bbox"] = bbox,
+                ["srs"] = string.IsNullOrWhiteSpace(srs) ? "EPSG:4326" : srs,
+                ["bbox"] = bbox ?? string.Empty,
                 ["width"] = width.ToString(),
                 ["height"] = height.ToString(),
                 ["format"] = format
@@ -67,9 +69,11 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>WMS GetCapabilities URL</returns>
         public string GetCapabilitiesUrl(string workspace = null)
         {
-            var path = string.IsNullOrWhiteSpace(workspace)
+            // FIXED-E38：workspace 段先 Trim 再 Uri.EscapeDataString（含空格/非 ASCII 不再产生非法 URL）
+            var trimmed = workspace?.Trim();
+            var path = string.IsNullOrWhiteSpace(trimmed)
                 ? "/wms"
-                : $"/{workspace}/wms";
+                : $"/{Uri.EscapeDataString(trimmed)}/wms";
 
             return $"{_baseUrl}{path}?service=WMS&version=1.1.0&request=GetCapabilities";
         }

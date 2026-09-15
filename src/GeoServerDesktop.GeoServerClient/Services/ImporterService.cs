@@ -25,7 +25,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
-        /// Creates a new import context
+        /// Creates a new import context。
+        /// FIXED-E14：请求体复用 GeoServerJson.Request（NullValueHandling.Ignore），
+        /// 不传 targetStore 时不再发送 "targetStore":null。
+        /// 注：3.0.1 默认镜像未安装 importer 扩展（/rest/imports 实测 404），集成基线维持"扩展未装"。
         /// </summary>
         /// <param name="targetWorkspace">Target workspace name</param>
         /// <param name="targetStore">Optional target store name</param>
@@ -40,7 +43,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
                     targetStore = targetStore != null ? new { name = targetStore } : null
                 }
             };
-            var json = JsonConvert.SerializeObject(import);
+            var json = JsonConvert.SerializeObject(import, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
                 var response = await _httpClient.PostAsync("/rest/imports", content);

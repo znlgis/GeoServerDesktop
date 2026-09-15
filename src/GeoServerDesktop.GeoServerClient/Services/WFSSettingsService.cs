@@ -41,7 +41,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task UpdateWFSSettingsAsync(WFSSettings settings)
         {
-            var json = JsonConvert.SerializeObject(settings);
+            var json = JsonConvert.SerializeObject(settings, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
                 await _httpClient.PutAsync("/rest/services/wfs/settings", content);
@@ -55,7 +55,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>WFS 设置 for the workspace</returns>
         public async Task<WFSSettings> GetWorkspaceWFSSettingsAsync(string workspace)
         {
-            var response = await _httpClient.GetAsync($"/rest/services/wfs/workspaces/{workspace}/settings.json");
+            var response = await _httpClient.GetAsync($"/rest/services/wfs/workspaces/{Uri.EscapeDataString(workspace)}/settings.json");
             return JsonConvert.DeserializeObject<WFSSettings>(response);
         }
 
@@ -67,10 +67,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task UpdateWorkspaceWFSSettingsAsync(string workspace, WFSSettings settings)
         {
-            var json = JsonConvert.SerializeObject(settings);
+            var json = JsonConvert.SerializeObject(settings, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PutAsync($"/rest/services/wfs/workspaces/{workspace}/settings", content);
+                await _httpClient.PutAsync($"/rest/services/wfs/workspaces/{Uri.EscapeDataString(workspace)}/settings", content);
             }
         }
     }

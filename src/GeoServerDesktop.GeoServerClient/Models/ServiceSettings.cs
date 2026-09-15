@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace GeoServerDesktop.GeoServerClient.Models
 {
@@ -12,6 +14,14 @@ namespace GeoServerDesktop.GeoServerClient.Models
         /// </summary>
         [JsonProperty("wms")]
         public WMSServiceConfig WMS { get; set; }
+
+        /// <summary>
+        /// GET 返回中出现但模型未声明的其余键（如 versions、keywords、service 层扩展位），
+        /// PUT 整包替换时原样回写，保证往返不丢字段（FIXED-E15 往返配套；GeoServer 3.0.1 实测
+        /// /rest/services/*/settings PUT 为替换语义，缺键即重置）。
+        /// </summary>
+        [JsonExtensionData]
+        public IDictionary<string, JToken> ExtensionData { get; set; }
     }
 
     /// <summary>
@@ -108,6 +118,14 @@ namespace GeoServerDesktop.GeoServerClient.Models
         /// </summary>
         [JsonProperty("srs")]
         public SRSList SRS { get; set; }
+
+        /// <summary>
+        /// GET 返回中出现但模型未声明的其余键（如 versions、keywords、service 层扩展位），
+        /// PUT 整包替换时原样回写，保证往返不丢字段（FIXED-E15 往返配套；GeoServer 3.0.1 实测
+        /// /rest/services/*/settings PUT 为替换语义，缺键即重置）。
+        /// </summary>
+        [JsonExtensionData]
+        public IDictionary<string, JToken> ExtensionData { get; set; }
     }
 
     /// <summary>
@@ -120,6 +138,14 @@ namespace GeoServerDesktop.GeoServerClient.Models
         /// </summary>
         [JsonProperty("wfs")]
         public WFSServiceConfig WFS { get; set; }
+
+        /// <summary>
+        /// GET 返回中出现但模型未声明的其余键（如 versions、keywords、service 层扩展位），
+        /// PUT 整包替换时原样回写，保证往返不丢字段（FIXED-E15 往返配套；GeoServer 3.0.1 实测
+        /// /rest/services/*/settings PUT 为替换语义，缺键即重置）。
+        /// </summary>
+        [JsonExtensionData]
+        public IDictionary<string, JToken> ExtensionData { get; set; }
     }
 
     /// <summary>
@@ -228,6 +254,14 @@ namespace GeoServerDesktop.GeoServerClient.Models
         /// </summary>
         [JsonProperty("hitsIgnoreMaxFeatures")]
         public bool? HitsIgnoreMaxFeatures { get; set; }
+
+        /// <summary>
+        /// GET 返回中出现但模型未声明的其余键（如 versions、keywords、service 层扩展位），
+        /// PUT 整包替换时原样回写，保证往返不丢字段（FIXED-E15 往返配套；GeoServer 3.0.1 实测
+        /// /rest/services/*/settings PUT 为替换语义，缺键即重置）。
+        /// </summary>
+        [JsonExtensionData]
+        public IDictionary<string, JToken> ExtensionData { get; set; }
     }
 
     /// <summary>
@@ -240,6 +274,14 @@ namespace GeoServerDesktop.GeoServerClient.Models
         /// </summary>
         [JsonProperty("wcs")]
         public WCSServiceConfig WCS { get; set; }
+
+        /// <summary>
+        /// GET 返回中出现但模型未声明的其余键（如 versions、keywords、service 层扩展位），
+        /// PUT 整包替换时原样回写，保证往返不丢字段（FIXED-E15 往返配套；GeoServer 3.0.1 实测
+        /// /rest/services/*/settings PUT 为替换语义，缺键即重置）。
+        /// </summary>
+        [JsonExtensionData]
+        public IDictionary<string, JToken> ExtensionData { get; set; }
     }
 
     /// <summary>
@@ -330,6 +372,14 @@ namespace GeoServerDesktop.GeoServerClient.Models
         /// </summary>
         [JsonProperty("resourceConsumptionLimits")]
         public ResourceConsumptionLimits ResourceConsumptionLimits { get; set; }
+
+        /// <summary>
+        /// GET 返回中出现但模型未声明的其余键（如 versions、keywords、service 层扩展位），
+        /// PUT 整包替换时原样回写，保证往返不丢字段（FIXED-E15 往返配套；GeoServer 3.0.1 实测
+        /// /rest/services/*/settings PUT 为替换语义，缺键即重置）。
+        /// </summary>
+        [JsonExtensionData]
+        public IDictionary<string, JToken> ExtensionData { get; set; }
     }
 
     /// <summary>
@@ -342,6 +392,14 @@ namespace GeoServerDesktop.GeoServerClient.Models
         /// </summary>
         [JsonProperty("wmts")]
         public WMTSServiceConfig WMTS { get; set; }
+
+        /// <summary>
+        /// GET 返回中出现但模型未声明的其余键（如 versions、keywords、service 层扩展位），
+        /// PUT 整包替换时原样回写，保证往返不丢字段（FIXED-E15 往返配套；GeoServer 3.0.1 实测
+        /// /rest/services/*/settings PUT 为替换语义，缺键即重置）。
+        /// </summary>
+        [JsonExtensionData]
+        public IDictionary<string, JToken> ExtensionData { get; set; }
     }
 
     /// <summary>
@@ -396,6 +454,14 @@ namespace GeoServerDesktop.GeoServerClient.Models
         /// </summary>
         [JsonProperty("verbose")]
         public bool? Verbose { get; set; }
+
+        /// <summary>
+        /// GET 返回中出现但模型未声明的其余键（如 versions、keywords、service 层扩展位），
+        /// PUT 整包替换时原样回写，保证往返不丢字段（FIXED-E15 往返配套；GeoServer 3.0.1 实测
+        /// /rest/services/*/settings PUT 为替换语义，缺键即重置）。
+        /// </summary>
+        [JsonExtensionData]
+        public IDictionary<string, JToken> ExtensionData { get; set; }
     }
 
     /// <summary>
@@ -510,6 +576,14 @@ namespace GeoServerDesktop.GeoServerClient.Models
         /// </summary>
         [JsonProperty("wps")]
         public WPSServiceConfig WPS { get; set; }
+
+        /// <summary>
+        /// GET 返回中出现但模型未声明的其余键（如 versions、keywords、service 层扩展位），
+        /// PUT 整包替换时原样回写，保证往返不丢字段（FIXED-E15 往返配套；GeoServer 3.0.1 实测
+        /// /rest/services/*/settings PUT 为替换语义，缺键即重置）。
+        /// </summary>
+        [JsonExtensionData]
+        public IDictionary<string, JToken> ExtensionData { get; set; }
     }
 
     /// <summary>
@@ -588,6 +662,14 @@ namespace GeoServerDesktop.GeoServerClient.Models
         /// </summary>
         [JsonProperty("maxAsynchronousProcesses")]
         public int? MaxAsynchronousProcesses { get; set; }
+
+        /// <summary>
+        /// GET 返回中出现但模型未声明的其余键（如 versions、keywords、service 层扩展位），
+        /// PUT 整包替换时原样回写，保证往返不丢字段（FIXED-E15 往返配套；GeoServer 3.0.1 实测
+        /// /rest/services/*/settings PUT 为替换语义，缺键即重置）。
+        /// </summary>
+        [JsonExtensionData]
+        public IDictionary<string, JToken> ExtensionData { get; set; }
     }
 
     /// <summary>
@@ -600,6 +682,14 @@ namespace GeoServerDesktop.GeoServerClient.Models
         /// </summary>
         [JsonProperty("csw")]
         public CSWServiceConfig CSW { get; set; }
+
+        /// <summary>
+        /// GET 返回中出现但模型未声明的其余键（如 versions、keywords、service 层扩展位），
+        /// PUT 整包替换时原样回写，保证往返不丢字段（FIXED-E15 往返配套；GeoServer 3.0.1 实测
+        /// /rest/services/*/settings PUT 为替换语义，缺键即重置）。
+        /// </summary>
+        [JsonExtensionData]
+        public IDictionary<string, JToken> ExtensionData { get; set; }
     }
 
     /// <summary>
@@ -654,5 +744,13 @@ namespace GeoServerDesktop.GeoServerClient.Models
         /// </summary>
         [JsonProperty("schemaBaseURL")]
         public string SchemaBaseURL { get; set; }
+
+        /// <summary>
+        /// GET 返回中出现但模型未声明的其余键（如 versions、keywords、service 层扩展位），
+        /// PUT 整包替换时原样回写，保证往返不丢字段（FIXED-E15 往返配套；GeoServer 3.0.1 实测
+        /// /rest/services/*/settings PUT 为替换语义，缺键即重置）。
+        /// </summary>
+        [JsonExtensionData]
+        public IDictionary<string, JToken> ExtensionData { get; set; }
     }
 }

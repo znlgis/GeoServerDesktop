@@ -42,7 +42,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>图层组详细信息</returns>
         public async Task<LayerGroup> GetLayerGroupAsync(string layerGroupName)
         {
-            var response = await _httpClient.GetAsync($"/rest/layergroups/{layerGroupName}.json");
+            var response = await _httpClient.GetAsync($"/rest/layergroups/{Uri.EscapeDataString(layerGroupName)}.json");
             var wrapper = JsonConvert.DeserializeObject<LayerGroupWrapper>(response);
             return wrapper?.LayerGroup;
         }
@@ -55,7 +55,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task CreateLayerGroupAsync(LayerGroup layerGroup)
         {
             var wrapper = new { layerGroup = layerGroup };
-            var json = JsonConvert.SerializeObject(wrapper);
+            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
                 await _httpClient.PostAsync("/rest/layergroups", content);
@@ -71,10 +71,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task UpdateLayerGroupAsync(string layerGroupName, LayerGroup layerGroup)
         {
             var wrapper = new { layerGroup = layerGroup };
-            var json = JsonConvert.SerializeObject(wrapper);
+            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PutAsync($"/rest/layergroups/{layerGroupName}", content);
+                await _httpClient.PutAsync($"/rest/layergroups/{Uri.EscapeDataString(layerGroupName)}", content);
             }
         }
 
@@ -85,7 +85,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteLayerGroupAsync(string layerGroupName)
         {
-            await _httpClient.DeleteAsync($"/rest/layergroups/{layerGroupName}");
+            await _httpClient.DeleteAsync($"/rest/layergroups/{Uri.EscapeDataString(layerGroupName)}");
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>工作空间中的图层组数组</returns>
         public async Task<LayerGroup[]> GetWorkspaceLayerGroupsAsync(string workspaceName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/layergroups.json");
+            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/layergroups.json");
             var wrapper = JsonConvert.DeserializeObject<LayerGroupListWrapper>(response);
             return wrapper?.LayerGroupList?.LayerGroups ?? Array.Empty<LayerGroup>();
         }
@@ -108,7 +108,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>图层组详细信息</returns>
         public async Task<LayerGroup> GetWorkspaceLayerGroupAsync(string workspaceName, string layerGroupName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/layergroups/{layerGroupName}.json");
+            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/layergroups/{Uri.EscapeDataString(layerGroupName)}.json");
             var wrapper = JsonConvert.DeserializeObject<LayerGroupWrapper>(response);
             return wrapper?.LayerGroup;
         }
@@ -122,10 +122,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task CreateWorkspaceLayerGroupAsync(string workspaceName, LayerGroup layerGroup)
         {
             var wrapper = new { layerGroup = layerGroup };
-            var json = JsonConvert.SerializeObject(wrapper);
+            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PostAsync($"/rest/workspaces/{workspaceName}/layergroups", content);
+                await _httpClient.PostAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/layergroups", content);
             }
         }
 
@@ -139,10 +139,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task UpdateWorkspaceLayerGroupAsync(string workspaceName, string layerGroupName, LayerGroup layerGroup)
         {
             var wrapper = new { layerGroup = layerGroup };
-            var json = JsonConvert.SerializeObject(wrapper);
+            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PutAsync($"/rest/workspaces/{workspaceName}/layergroups/{layerGroupName}", content);
+                await _httpClient.PutAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/layergroups/{Uri.EscapeDataString(layerGroupName)}", content);
             }
         }
 
@@ -154,7 +154,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteWorkspaceLayerGroupAsync(string workspaceName, string layerGroupName)
         {
-            await _httpClient.DeleteAsync($"/rest/workspaces/{workspaceName}/layergroups/{layerGroupName}");
+            await _httpClient.DeleteAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/layergroups/{Uri.EscapeDataString(layerGroupName)}");
         }
     }
 }

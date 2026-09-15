@@ -20,6 +20,12 @@ namespace GeoServerDesktop.GeoServerClient.Models
         public string Type { get; set; }
 
         /// <summary>
+        /// 数据存储的描述（实测 3.0.1 GET 回显 "description" 键，创建时可写入）
+        /// </summary>
+        [JsonProperty("description")]
+        public string Description { get; set; }
+
+        /// <summary>
         /// 数据存储是否启用
         /// </summary>
         [JsonProperty("enabled")]

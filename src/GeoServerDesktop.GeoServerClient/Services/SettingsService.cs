@@ -41,7 +41,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task UpdateGlobalSettingsAsync(GlobalSettings settings)
         {
-            var json = JsonConvert.SerializeObject(settings);
+            var json = JsonConvert.SerializeObject(settings, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
                 await _httpClient.PutAsync("/rest/settings", content);
@@ -66,7 +66,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task UpdateContactInfoAsync(ContactInfo contact)
         {
             var wrapper = new { contact = contact };
-            var json = JsonConvert.SerializeObject(wrapper);
+            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
                 await _httpClient.PutAsync("/rest/settings/contact", content);

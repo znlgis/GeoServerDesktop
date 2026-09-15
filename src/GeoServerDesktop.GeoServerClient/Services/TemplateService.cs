@@ -31,7 +31,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task<TemplateListWrapper> GetTemplatesAsync()
         {
             var response = await _httpClient.GetAsync("/rest/templates.json");
-            return JsonConvert.DeserializeObject<TemplateListWrapper>(response);
+            // FIXED-E7：3.0.1 根为类全名 {"org.geoserver.rest.catalog.TemplateInfos":...}（空态值为 ""），
+            // 直接反序列化取不到根；改用容错 Parse。
+            return TemplateListWrapper.Parse(response);
         }
 
         /// <summary>

@@ -32,7 +32,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>要素类型数组</returns>
         public async Task<FeatureType[]> GetFeatureTypesAsync(string workspaceName, string dataStoreName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/datastores/{dataStoreName}/featuretypes.json");
+            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/datastores/{Uri.EscapeDataString(dataStoreName)}/featuretypes.json");
             var wrapper = JsonConvert.DeserializeObject<FeatureTypeListWrapper>(response);
             return wrapper?.FeatureTypeList?.FeatureTypes ?? Array.Empty<FeatureType>();
         }
@@ -46,7 +46,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>要素类型详细信息</returns>
         public async Task<FeatureType> GetFeatureTypeAsync(string workspaceName, string dataStoreName, string featureTypeName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/datastores/{dataStoreName}/featuretypes/{featureTypeName}.json");
+            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/datastores/{Uri.EscapeDataString(dataStoreName)}/featuretypes/{Uri.EscapeDataString(featureTypeName)}.json");
             var wrapper = JsonConvert.DeserializeObject<FeatureTypeWrapper>(response);
             return wrapper?.FeatureType;
         }
@@ -61,10 +61,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task CreateFeatureTypeAsync(string workspaceName, string dataStoreName, FeatureType featureType)
         {
             var wrapper = new { featureType = featureType };
-            var json = JsonConvert.SerializeObject(wrapper);
+            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PostAsync($"/rest/workspaces/{workspaceName}/datastores/{dataStoreName}/featuretypes", content);
+                await _httpClient.PostAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/datastores/{Uri.EscapeDataString(dataStoreName)}/featuretypes", content);
             }
         }
 
@@ -79,10 +79,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task UpdateFeatureTypeAsync(string workspaceName, string dataStoreName, string featureTypeName, FeatureType featureType)
         {
             var wrapper = new { featureType = featureType };
-            var json = JsonConvert.SerializeObject(wrapper);
+            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PutAsync($"/rest/workspaces/{workspaceName}/datastores/{dataStoreName}/featuretypes/{featureTypeName}", content);
+                await _httpClient.PutAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/datastores/{Uri.EscapeDataString(dataStoreName)}/featuretypes/{Uri.EscapeDataString(featureTypeName)}", content);
             }
         }
 
@@ -96,7 +96,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteFeatureTypeAsync(string workspaceName, string dataStoreName, string featureTypeName, bool recurse = false)
         {
-            var path = $"/rest/workspaces/{workspaceName}/datastores/{dataStoreName}/featuretypes/{featureTypeName}?recurse={recurse.ToString().ToLowerInvariant()}";
+            var path = $"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/datastores/{Uri.EscapeDataString(dataStoreName)}/featuretypes/{Uri.EscapeDataString(featureTypeName)}?recurse={recurse.ToString().ToLowerInvariant()}";
             await _httpClient.DeleteAsync(path);
         }
     }

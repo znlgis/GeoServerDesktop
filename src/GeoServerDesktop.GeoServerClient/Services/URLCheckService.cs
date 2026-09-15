@@ -31,17 +31,22 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task<URLCheckListWrapper> GetURLChecksAsync()
         {
             var response = await _httpClient.GetAsync("/rest/urlchecks.json");
-            return JsonConvert.DeserializeObject<URLCheckListWrapper>(response);
+            // FIXED-E7：3.0.1 根键为 urlChecks 且空态为 {"urlChecks":""}，改用容错 Parse
+            return URLCheckListWrapper.Parse(response);
         }
 
         /// <summary>
-        /// Creates a new URL validation check
+        /// Creates a new URL validation check。
+        /// 说明（E20 维持基线）：3.0.1 UrlCheckController（org.geoserver.rest.security）POST /rest/urlchecks
+        /// 以 @RequestBody AbstractUrlCheck（XStream 具体实现类根）接收，默认安装无任何样例，实测
+        /// {"urlCheck":{...}} 报 "Cannot construct type"——请求体形态无法在不引入私有实现类的前提下固化，
+        /// 故维持当前未包装对象请求体基线，创建可用性以真实环境验证为准。
         /// </summary>
         /// <param name="check">URL check to create</param>
         /// <returns>表示异步操作的任务</returns>
         public async Task CreateURLCheckAsync(URLCheck check)
         {
-            var json = JsonConvert.SerializeObject(check);
+            var json = JsonConvert.SerializeObject(check, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
                 await _httpClient.PostAsync("/rest/urlchecks", content);

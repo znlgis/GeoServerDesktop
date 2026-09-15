@@ -31,7 +31,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>数据存储数组</returns>
         public async Task<DataStore[]> GetDataStoresAsync(string workspaceName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/datastores.json");
+            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/datastores.json");
             var wrapper = JsonConvert.DeserializeObject<DataStoreListWrapper>(response);
             return wrapper?.DataStoreList?.DataStores ?? Array.Empty<DataStore>();
         }
@@ -44,7 +44,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>数据存储详细信息</returns>
         public async Task<DataStore> GetDataStoreAsync(string workspaceName, string dataStoreName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/datastores/{dataStoreName}.json");
+            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/datastores/{Uri.EscapeDataString(dataStoreName)}.json");
             var wrapper = JsonConvert.DeserializeObject<DataStoreWrapper>(response);
             return wrapper?.DataStore;
         }
@@ -58,10 +58,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task CreateDataStoreAsync(string workspaceName, DataStore dataStore)
         {
             var wrapper = new { dataStore = dataStore };
-            var json = JsonConvert.SerializeObject(wrapper);
+            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PostAsync($"/rest/workspaces/{workspaceName}/datastores", content);
+                await _httpClient.PostAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/datastores", content);
             }
         }
 
@@ -75,10 +75,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task UpdateDataStoreAsync(string workspaceName, string dataStoreName, DataStore dataStore)
         {
             var wrapper = new { dataStore = dataStore };
-            var json = JsonConvert.SerializeObject(wrapper);
+            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PutAsync($"/rest/workspaces/{workspaceName}/datastores/{dataStoreName}", content);
+                await _httpClient.PutAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/datastores/{Uri.EscapeDataString(dataStoreName)}", content);
             }
         }
 
@@ -91,7 +91,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteDataStoreAsync(string workspaceName, string dataStoreName, bool recurse = false)
         {
-            var path = $"/rest/workspaces/{workspaceName}/datastores/{dataStoreName}?recurse={recurse.ToString().ToLowerInvariant()}";
+            var path = $"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/datastores/{Uri.EscapeDataString(dataStoreName)}?recurse={recurse.ToString().ToLowerInvariant()}";
             await _httpClient.DeleteAsync(path);
         }
 
@@ -103,7 +103,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task ResetDataStoreAsync(string workspaceName, string dataStoreName)
         {
-            await _httpClient.PutAsync($"/rest/workspaces/{workspaceName}/datastores/{dataStoreName}/reset", null);
+            await _httpClient.PutAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/datastores/{Uri.EscapeDataString(dataStoreName)}/reset", null);
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
             using (var content = new ByteArrayContent(fileContent))
             {
                 content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(contentType);
-                await _httpClient.PutAsync($"/rest/workspaces/{workspaceName}/datastores/{dataStoreName}/file.{fileFormat}", content);
+                await _httpClient.PutAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/datastores/{Uri.EscapeDataString(dataStoreName)}/file.{Uri.EscapeDataString(fileFormat)}", content);
             }
         }
     }

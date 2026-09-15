@@ -41,8 +41,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>网格集详细信息</returns>
         public async Task<Gridset> GetGridsetAsync(string gridsetName)
         {
-            var response = await _httpClient.GetAsync($"/gwc/rest/gridsets/{gridsetName}.json");
-            return JsonConvert.DeserializeObject<Gridset>(response);
+            var response = await _httpClient.GetAsync($"/gwc/rest/gridsets/{Uri.EscapeDataString(gridsetName)}.json");
+            // FIXED-E9：单体实测为 {"gridSet":{...}}（大写 S），需 ParseSingle
+            return Gridset.ParseSingle(response);
         }
 
         /// <summary>
@@ -52,10 +53,12 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task CreateGridsetAsync(Gridset gridset)
         {
-            var json = JsonConvert.SerializeObject(gridset);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            // FIXED-E10：创建路由为 PUT /gwc/rest/gridsets/{name}（GridSetController），
+            // JSON 体在 3.0.1 实测报 "Duplicate field coords"，XStream XML 实测 201。
+            var xml = (gridset ?? new Gridset()).ToXmlBody();
+            using (var content = new StringContent(xml, Encoding.UTF8, "application/xml"))
             {
-                await _httpClient.PostAsync("/gwc/rest/gridsets", content);
+                await _httpClient.PutAsync($"/gwc/rest/gridsets/{Uri.EscapeDataString(gridset?.Name)}", content);
             }
         }
 

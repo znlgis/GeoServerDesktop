@@ -45,7 +45,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// </remarks>
         public async Task UpdateLoggingSettingsAsync(LoggingSettings loggingSettings)
         {
-            var json = JsonConvert.SerializeObject(loggingSettings);
+            var json = JsonConvert.SerializeObject(loggingSettings, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
                 await _httpClient.PutAsync("/rest/logging", content);

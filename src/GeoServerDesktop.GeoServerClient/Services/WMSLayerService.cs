@@ -32,7 +32,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>WMS 图层数组</returns>
         public async Task<WMSLayer[]> GetWMSLayersAsync(string workspaceName, string wmsStoreName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/wmsstores/{wmsStoreName}/wmslayers.json");
+            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/wmsstores/{Uri.EscapeDataString(wmsStoreName)}/wmslayers.json");
             var wrapper = JsonConvert.DeserializeObject<WMSLayerListWrapper>(response);
             return wrapper?.WMSLayerList?.WMSLayers ?? Array.Empty<WMSLayer>();
         }
@@ -46,7 +46,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>WMS 图层详细信息</returns>
         public async Task<WMSLayer> GetWMSLayerAsync(string workspaceName, string wmsStoreName, string wmsLayerName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/wmsstores/{wmsStoreName}/wmslayers/{wmsLayerName}.json");
+            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/wmsstores/{Uri.EscapeDataString(wmsStoreName)}/wmslayers/{Uri.EscapeDataString(wmsLayerName)}.json");
             var wrapper = JsonConvert.DeserializeObject<WMSLayerWrapper>(response);
             return wrapper?.WMSLayer;
         }
@@ -61,10 +61,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task CreateWMSLayerAsync(string workspaceName, string wmsStoreName, WMSLayer wmsLayer)
         {
             var wrapper = new { wmsLayer = wmsLayer };
-            var json = JsonConvert.SerializeObject(wrapper);
+            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PostAsync($"/rest/workspaces/{workspaceName}/wmsstores/{wmsStoreName}/wmslayers", content);
+                await _httpClient.PostAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/wmsstores/{Uri.EscapeDataString(wmsStoreName)}/wmslayers", content);
             }
         }
 
@@ -79,10 +79,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task UpdateWMSLayerAsync(string workspaceName, string wmsStoreName, string wmsLayerName, WMSLayer wmsLayer)
         {
             var wrapper = new { wmsLayer = wmsLayer };
-            var json = JsonConvert.SerializeObject(wrapper);
+            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PutAsync($"/rest/workspaces/{workspaceName}/wmsstores/{wmsStoreName}/wmslayers/{wmsLayerName}", content);
+                await _httpClient.PutAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/wmsstores/{Uri.EscapeDataString(wmsStoreName)}/wmslayers/{Uri.EscapeDataString(wmsLayerName)}", content);
             }
         }
 
@@ -97,7 +97,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task DeleteWMSLayerAsync(string workspaceName, string wmsStoreName, string wmsLayerName, bool recurse = false)
         {
             var recurseValue = recurse ? "true" : "false";
-            var path = $"/rest/workspaces/{workspaceName}/wmsstores/{wmsStoreName}/wmslayers/{wmsLayerName}?recurse={recurseValue}";
+            var path = $"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/wmsstores/{Uri.EscapeDataString(wmsStoreName)}/wmslayers/{Uri.EscapeDataString(wmsLayerName)}?recurse={recurseValue}";
             await _httpClient.DeleteAsync(path);
         }
     }

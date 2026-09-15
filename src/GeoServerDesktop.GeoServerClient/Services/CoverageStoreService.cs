@@ -31,7 +31,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>覆盖范围存储数组</returns>
         public async Task<CoverageStore[]> GetCoverageStoresAsync(string workspaceName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/coveragestores.json");
+            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/coveragestores.json");
             var wrapper = JsonConvert.DeserializeObject<CoverageStoreListWrapper>(response);
             return wrapper?.CoverageStoreList?.CoverageStores ?? Array.Empty<CoverageStore>();
         }
@@ -44,7 +44,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>覆盖范围存储详细信息</returns>
         public async Task<CoverageStore> GetCoverageStoreAsync(string workspaceName, string coverageStoreName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/coveragestores/{coverageStoreName}.json");
+            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/coveragestores/{Uri.EscapeDataString(coverageStoreName)}.json");
             var wrapper = JsonConvert.DeserializeObject<CoverageStoreWrapper>(response);
             return wrapper?.CoverageStore;
         }
@@ -58,10 +58,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task CreateCoverageStoreAsync(string workspaceName, CoverageStore coverageStore)
         {
             var wrapper = new { coverageStore = coverageStore };
-            var json = JsonConvert.SerializeObject(wrapper);
+            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PostAsync($"/rest/workspaces/{workspaceName}/coveragestores", content);
+                await _httpClient.PostAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/coveragestores", content);
             }
         }
 
@@ -75,10 +75,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task UpdateCoverageStoreAsync(string workspaceName, string coverageStoreName, CoverageStore coverageStore)
         {
             var wrapper = new { coverageStore = coverageStore };
-            var json = JsonConvert.SerializeObject(wrapper);
+            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PutAsync($"/rest/workspaces/{workspaceName}/coveragestores/{coverageStoreName}", content);
+                await _httpClient.PutAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/coveragestores/{Uri.EscapeDataString(coverageStoreName)}", content);
             }
         }
 
@@ -92,7 +92,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task DeleteCoverageStoreAsync(string workspaceName, string coverageStoreName, bool recurse = false)
         {
             var recurseValue = recurse ? "true" : "false";
-            var path = $"/rest/workspaces/{workspaceName}/coveragestores/{coverageStoreName}?recurse={recurseValue}";
+            var path = $"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/coveragestores/{Uri.EscapeDataString(coverageStoreName)}?recurse={recurseValue}";
             await _httpClient.DeleteAsync(path);
         }
 
@@ -109,7 +109,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
             using (var content = new ByteArrayContent(fileContent))
             {
                 content.Headers.Add("Content-Type", "application/octet-stream");
-                await _httpClient.PutAsync($"/rest/workspaces/{workspaceName}/coveragestores/{coverageStoreName}/file.{extension}", content);
+                await _httpClient.PutAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/coveragestores/{Uri.EscapeDataString(coverageStoreName)}/file.{Uri.EscapeDataString(extension)}", content);
             }
         }
     }

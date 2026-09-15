@@ -29,11 +29,15 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task<MonitorRequestListWrapper> GetRequestsAsync()
         {
             var response = await _httpClient.GetAsync("/rest/monitor/requests.json");
-            return JsonConvert.DeserializeObject<MonitorRequestListWrapper>(response);
+            // FIXED-E7：3.0.1 实测根为 {"org.geoserver.monitor.RequestDatas":{"org.geoserver.monitor.RequestData":[{name,href}]}}
+            // （动态类名键、列表项仅摘要），直接反序列化取不到；改用手工 Parse。
+            return MonitorRequestListWrapper.Parse(response);
         }
 
         /// <summary>
-        /// Gets monitoring statistics
+        /// Gets monitoring statistics。
+        /// 说明（E6 维持基线）：statistics.json 实际为 {"statistics":{"stat":[...]}} 序列形态，
+        /// 与本模型的聚合结构（totalRequests/byPath）完全不同且随 monitor 版本变化，维持原样透传反序列化。
         /// </summary>
         /// <returns>Monitoring statistics</returns>
         public async Task<MonitorStatistics> GetStatisticsAsync()

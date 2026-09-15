@@ -31,7 +31,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>WMTS 存储数组</returns>
         public async Task<WMTSStore[]> GetWMTSStoresAsync(string workspaceName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/wmtsstores.json");
+            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/wmtsstores.json");
             var wrapper = JsonConvert.DeserializeObject<WMTSStoreListWrapper>(response);
             return wrapper?.WMTSStoreList?.WMTSStores ?? Array.Empty<WMTSStore>();
         }
@@ -44,7 +44,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>WMTS 存储详细信息</returns>
         public async Task<WMTSStore> GetWMTSStoreAsync(string workspaceName, string wmtsStoreName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/wmtsstores/{wmtsStoreName}.json");
+            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/wmtsstores/{Uri.EscapeDataString(wmtsStoreName)}.json");
             var wrapper = JsonConvert.DeserializeObject<WMTSStoreWrapper>(response);
             return wrapper?.WMTSStore;
         }
@@ -62,10 +62,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task CreateWMTSStoreAsync(string workspaceName, WMTSStore wmtsStore)
         {
             var wrapper = new { wmtsStore = wmtsStore };
-            var json = JsonConvert.SerializeObject(wrapper);
+            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PostAsync($"/rest/workspaces/{workspaceName}/wmtsstores", content);
+                await _httpClient.PostAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/wmtsstores", content);
             }
         }
 
@@ -79,10 +79,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task UpdateWMTSStoreAsync(string workspaceName, string wmtsStoreName, WMTSStore wmtsStore)
         {
             var wrapper = new { wmtsStore = wmtsStore };
-            var json = JsonConvert.SerializeObject(wrapper);
+            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PutAsync($"/rest/workspaces/{workspaceName}/wmtsstores/{wmtsStoreName}", content);
+                await _httpClient.PutAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/wmtsstores/{Uri.EscapeDataString(wmtsStoreName)}", content);
             }
         }
 
@@ -96,7 +96,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task DeleteWMTSStoreAsync(string workspaceName, string wmtsStoreName, bool recurse = false)
         {
             var recurseValue = recurse ? "true" : "false";
-            var path = $"/rest/workspaces/{workspaceName}/wmtsstores/{wmtsStoreName}?recurse={recurseValue}";
+            var path = $"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/wmtsstores/{Uri.EscapeDataString(wmtsStoreName)}?recurse={recurseValue}";
             await _httpClient.DeleteAsync(path);
         }
     }

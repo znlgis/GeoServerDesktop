@@ -42,7 +42,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>工作空间详细信息</returns>
         public async Task<Workspace> GetWorkspaceAsync(string workspaceName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}.json");
+            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}.json");
             var wrapper = JsonConvert.DeserializeObject<WorkspaceWrapper>(response);
             return wrapper?.Workspace;
         }
@@ -55,7 +55,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task CreateWorkspaceAsync(string workspaceName)
         {
             var workspace = new { workspace = new { name = workspaceName } };
-            var json = JsonConvert.SerializeObject(workspace);
+            var json = JsonConvert.SerializeObject(workspace, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
                 await _httpClient.PostAsync("/rest/workspaces", content);
@@ -71,10 +71,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task UpdateWorkspaceAsync(string workspaceName, string newWorkspaceName)
         {
             var workspace = new { workspace = new { name = newWorkspaceName } };
-            var json = JsonConvert.SerializeObject(workspace);
+            var json = JsonConvert.SerializeObject(workspace, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PutAsync($"/rest/workspaces/{workspaceName}", content);
+                await _httpClient.PutAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}", content);
             }
         }
 
@@ -86,7 +86,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteWorkspaceAsync(string workspaceName, bool recurse = false)
         {
-            var path = $"/rest/workspaces/{workspaceName}?recurse={recurse.ToString().ToLowerInvariant()}";
+            var path = $"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}?recurse={recurse.ToString().ToLowerInvariant()}";
             await _httpClient.DeleteAsync(path);
         }
     }

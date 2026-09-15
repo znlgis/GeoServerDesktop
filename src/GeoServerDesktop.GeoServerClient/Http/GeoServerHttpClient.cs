@@ -35,18 +35,24 @@ namespace GeoServerDesktop.GeoServerClient.Http
                 Timeout = TimeSpan.FromSeconds(options.TimeoutSeconds)
             };
 
-            // 设置基本身份验证
+            // 设置基本身份验证（FIXED-E31：凭证按 UTF-8 编码；此前 Encoding.ASCII 会把
+            // 非 ASCII 字符静默替换为 '?'，导致中文/重音密码的用户永远无法通过认证）
             if (!string.IsNullOrWhiteSpace(options.Username))
             {
                 var authToken = Convert.ToBase64String(
-                    Encoding.ASCII.GetBytes($"{options.Username}:{options.Password}"));
+                    Encoding.UTF8.GetBytes($"{options.Username}:{options.Password}"));
                 _httpClient.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Basic", authToken);
             }
 
-            // 设置 JSON 的默认头
+            // 设置 JSON 的默认头。注意：必须同时声明 text/plain（低优先级）——GeoServer 3.x 的
+            // /rest/styles 创建端点按 Accept 选择 style handler，仅 Accept: application/json 时
+            // POST 返回 500 "No such style handler: format = application/json"，导致样式创建整族不可用。
+            // 实测 Accept: application/json, text/plain;q=0.9 时返回 201（测试基线 E41）。
             _httpClient.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
+            _httpClient.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("text/plain", 0.9));
         }
 
         /// <summary>

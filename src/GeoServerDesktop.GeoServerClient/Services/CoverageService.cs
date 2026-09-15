@@ -32,7 +32,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>覆盖范围数组</returns>
         public async Task<Coverage[]> GetCoveragesAsync(string workspaceName, string coverageStoreName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/coveragestores/{coverageStoreName}/coverages.json");
+            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/coveragestores/{Uri.EscapeDataString(coverageStoreName)}/coverages.json");
             var wrapper = JsonConvert.DeserializeObject<CoverageListWrapper>(response);
             return wrapper?.CoverageList?.Coverages ?? Array.Empty<Coverage>();
         }
@@ -46,7 +46,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>覆盖范围详细信息</returns>
         public async Task<Coverage> GetCoverageAsync(string workspaceName, string coverageStoreName, string coverageName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/coveragestores/{coverageStoreName}/coverages/{coverageName}.json");
+            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/coveragestores/{Uri.EscapeDataString(coverageStoreName)}/coverages/{Uri.EscapeDataString(coverageName)}.json");
             var wrapper = JsonConvert.DeserializeObject<CoverageWrapper>(response);
             return wrapper?.Coverage;
         }
@@ -61,10 +61,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task CreateCoverageAsync(string workspaceName, string coverageStoreName, Coverage coverage)
         {
             var wrapper = new { coverage = coverage };
-            var json = JsonConvert.SerializeObject(wrapper);
+            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PostAsync($"/rest/workspaces/{workspaceName}/coveragestores/{coverageStoreName}/coverages", content);
+                await _httpClient.PostAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/coveragestores/{Uri.EscapeDataString(coverageStoreName)}/coverages", content);
             }
         }
 
@@ -79,10 +79,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task UpdateCoverageAsync(string workspaceName, string coverageStoreName, string coverageName, Coverage coverage)
         {
             var wrapper = new { coverage = coverage };
-            var json = JsonConvert.SerializeObject(wrapper);
+            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PutAsync($"/rest/workspaces/{workspaceName}/coveragestores/{coverageStoreName}/coverages/{coverageName}", content);
+                await _httpClient.PutAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/coveragestores/{Uri.EscapeDataString(coverageStoreName)}/coverages/{Uri.EscapeDataString(coverageName)}", content);
             }
         }
 
@@ -97,7 +97,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task DeleteCoverageAsync(string workspaceName, string coverageStoreName, string coverageName, bool recurse = false)
         {
             var recurseValue = recurse ? "true" : "false";
-            var path = $"/rest/workspaces/{workspaceName}/coveragestores/{coverageStoreName}/coverages/{coverageName}?recurse={recurseValue}";
+            var path = $"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/coveragestores/{Uri.EscapeDataString(coverageStoreName)}/coverages/{Uri.EscapeDataString(coverageName)}?recurse={recurseValue}";
             await _httpClient.DeleteAsync(path);
         }
     }

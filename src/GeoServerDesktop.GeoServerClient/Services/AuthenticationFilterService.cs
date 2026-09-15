@@ -30,8 +30,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>List of authentication filters</returns>
         public async Task<AuthenticationFilterListWrapper> GetFiltersAsync()
         {
-            var response = await _httpClient.GetAsync("/rest/security/authFilters.json");
-            return JsonConvert.DeserializeObject<AuthenticationFilterListWrapper>(response);
+            var response = await _httpClient.GetAsync("/rest/security/authfilters.json");
+            // FIXED-E1：3.0.1 列表实测 {"authfilters":{"authfilter":[{name,href}]}}，双层解析
+            return AuthenticationFilterListWrapper.Parse(response);
         }
 
         /// <summary>
@@ -41,8 +42,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>Authentication filter details</returns>
         public async Task<AuthenticationFilterWrapper> GetFilterAsync(string filterName)
         {
-            var response = await _httpClient.GetAsync($"/rest/security/authFilters/{filterName}.json");
-            return JsonConvert.DeserializeObject<AuthenticationFilterWrapper>(response);
+            var response = await _httpClient.GetAsync($"/rest/security/authfilters/{filterName}.json");
+            // FIXED-E1：单体实测以配置类全名为动态根键，需 ParseSingle
+            return new AuthenticationFilterWrapper { Filter = AuthenticationFilter.ParseSingle(response) };
         }
 
         /// <summary>
@@ -53,10 +55,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task CreateFilterAsync(AuthenticationFilter filter)
         {
             var wrapper = new { filter = filter };
-            var json = JsonConvert.SerializeObject(wrapper);
+            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PostAsync("/rest/security/authFilters", content);
+                await _httpClient.PostAsync("/rest/security/authfilters", content);
             }
         }
 
@@ -69,10 +71,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task UpdateFilterAsync(string filterName, AuthenticationFilter filter)
         {
             var wrapper = new { filter = filter };
-            var json = JsonConvert.SerializeObject(wrapper);
+            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PutAsync($"/rest/security/authFilters/{filterName}", content);
+                await _httpClient.PutAsync($"/rest/security/authfilters/{filterName}", content);
             }
         }
 
@@ -83,7 +85,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteFilterAsync(string filterName)
         {
-            await _httpClient.DeleteAsync($"/rest/security/authFilters/{filterName}");
+            await _httpClient.DeleteAsync($"/rest/security/authfilters/{filterName}");
         }
     }
 }

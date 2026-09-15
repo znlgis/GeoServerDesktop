@@ -41,7 +41,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task UpdateWMTSSettingsAsync(WMTSSettings settings)
         {
-            var json = JsonConvert.SerializeObject(settings);
+            var json = JsonConvert.SerializeObject(settings, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
                 await _httpClient.PutAsync("/rest/services/wmts/settings", content);

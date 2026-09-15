@@ -42,7 +42,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>图层详细信息</returns>
         public async Task<Layer> GetLayerAsync(string layerName)
         {
-            var response = await _httpClient.GetAsync($"/rest/layers/{layerName}.json");
+            var response = await _httpClient.GetAsync($"/rest/layers/{Uri.EscapeDataString(layerName)}.json");
             var wrapper = JsonConvert.DeserializeObject<LayerWrapper>(response);
             return wrapper?.Layer;
         }
@@ -56,10 +56,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task UpdateLayerAsync(string layerName, Layer layer)
         {
             var wrapper = new { layer = layer };
-            var json = JsonConvert.SerializeObject(wrapper);
+            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PutAsync($"/rest/layers/{layerName}", content);
+                await _httpClient.PutAsync($"/rest/layers/{Uri.EscapeDataString(layerName)}", content);
             }
         }
 
@@ -71,7 +71,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteLayerAsync(string layerName, bool recurse = false)
         {
-            var path = $"/rest/layers/{layerName}?recurse={recurse.ToString().ToLowerInvariant()}";
+            var path = $"/rest/layers/{Uri.EscapeDataString(layerName)}?recurse={recurse.ToString().ToLowerInvariant()}";
             await _httpClient.DeleteAsync(path);
         }
 
@@ -82,7 +82,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>工作空间中的图层数组</returns>
         public async Task<Layer[]> GetWorkspaceLayersAsync(string workspaceName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/layers.json");
+            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/layers.json");
             var wrapper = JsonConvert.DeserializeObject<LayerListWrapper>(response);
             return wrapper?.LayerList?.Layers ?? Array.Empty<Layer>();
         }
@@ -95,7 +95,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>图层详细信息</returns>
         public async Task<Layer> GetWorkspaceLayerAsync(string workspaceName, string layerName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{workspaceName}/layers/{layerName}.json");
+            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/layers/{Uri.EscapeDataString(layerName)}.json");
             var wrapper = JsonConvert.DeserializeObject<LayerWrapper>(response);
             return wrapper?.Layer;
         }

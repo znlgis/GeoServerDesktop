@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace GeoServerDesktop.GeoServerClient.Models
 {
@@ -124,15 +125,24 @@ namespace GeoServerDesktop.GeoServerClient.Models
     }
 
     /// <summary>
-    /// 表示监控请求信息
+    /// 表示监控请求信息。
+    /// FIXED-E7：3.0.1 <c>/rest/monitor/requests.json</c> 实际返回
+    /// <c>{"org.geoserver.monitor.RequestDatas":{"org.geoserver.monitor.RequestData":[{name,href},...]}}</c>
+    /// （以 Java 类名为动态根键，且列表项仅含 name/href 摘要，不含完整请求详情）。
     /// </summary>
     public class MonitorRequest
     {
         /// <summary>
-        /// 获取或设置请求 ID
+        /// 获取或设置请求 ID（GWC 3.0.1 里为 name 字段的整数值）
         /// </summary>
-        [JsonProperty("id")]
+        [JsonProperty("name")]
         public long Id { get; set; }
+
+        /// <summary>
+        /// 请求详情端点 href
+        /// </summary>
+        [JsonProperty("href")]
+        public string Href { get; set; }
 
         /// <summary>
         /// 获取或设置路径
@@ -196,19 +206,47 @@ namespace GeoServerDesktop.GeoServerClient.Models
     }
 
     /// <summary>
-    /// 监控请求列表的包装器
+    /// 监控请求列表的包装器（GWC 3.0.1 动态类名键）。
     /// </summary>
     public class MonitorRequestListWrapper
     {
         /// <summary>
-        /// 获取或设置请求列表
+        /// 请求列表（由 <see cref="Parse"/> 从动态键抽取）。
         /// </summary>
-        [JsonProperty("requests")]
+        [JsonIgnore]
         public List<MonitorRequest> Requests { get; set; }
+
+        /// <summary>
+        /// 从 <c>{"&lt;RequestDatasFQN&gt;":{"&lt;RequestDataFQN&gt;":[{name,href},...]}}</c> 手工解析。
+        /// </summary>
+        public static MonitorRequestListWrapper Parse(string rawJson)
+        {
+            var wrapper = new MonitorRequestListWrapper { Requests = new List<MonitorRequest>() };
+            if (string.IsNullOrWhiteSpace(rawJson)) return wrapper;
+            var obj = JObject.Parse(rawJson);
+            foreach (var outer in obj.Properties())
+            {
+                var inner = outer.Value as JObject;
+                if (inner == null) continue;
+                foreach (var arr in inner.Properties())
+                {
+                    if (arr.Value is JArray ja)
+                    {
+                        foreach (var t in ja)
+                        {
+                            var r = t.ToObject<MonitorRequest>();
+                            if (r != null) wrapper.Requests.Add(r);
+                        }
+                    }
+                }
+            }
+            return wrapper;
+        }
     }
 
     /// <summary>
-    /// 表示监控统计信息
+    /// 表示监控统计信息（GWC 3.0.1 <c>/rest/monitor/statistics</c> 端点在默认安装里返回 404；
+    /// 该模型仅在启用 monitor 扩展后可用）。
     /// </summary>
     public class MonitorStatistics
     {
@@ -334,14 +372,76 @@ namespace GeoServerDesktop.GeoServerClient.Models
     }
 
     /// <summary>
-    /// URL 检查列表的包装器
+    /// URL 检查列表的包装器。
+    /// FIXED-E7：3.0.1 根键为 <c>urlChecks</c>（大小写混合），且无检查时值为空字符串（<c>{"urlChecks":""}</c>）；
+    /// 有检查时形态为 <c>{"urlChecks":{"&lt;检查实现类&gt;":{...}}}</c>。
     /// </summary>
     public class URLCheckListWrapper
     {
         /// <summary>
-        /// 获取或设置 URL 检查列表
+        /// 已解析的 URL 检查名称列表（空字符串响应 → 空列表；对象 → 单/多键名）。
         /// </summary>
-        [JsonProperty("checks")]
+        [JsonIgnore]
         public List<string> Checks { get; set; }
+
+        /// <summary>
+        /// 原始内层数据（数组/对象/空串）。
+        /// </summary>
+        [JsonIgnore]
+        public JToken Raw { get; set; }
+
+        /// <summary>
+        /// 解析 <c>{"urlChecks":...}</c> 形态：空串=无检查；
+        /// 有值时按文档为 <c>{"urlChecks":{"entry":[{"string":["name","value"]},...]}}</c>，
+        /// 兼容对象直接键与对象数组。
+        /// </summary>
+        public static URLCheckListWrapper Parse(string rawJson)
+        {
+            var w = new URLCheckListWrapper { Checks = new List<string>() };
+            if (string.IsNullOrWhiteSpace(rawJson)) return w;
+            var obj = JObject.Parse(rawJson);
+            var v = obj["urlChecks"] ?? obj["URLChecks"];
+            w.Raw = v;
+            if (v == null) return w;
+            if (v.Type == JTokenType.String) return w; // 空串 = 无检查
+            if (v is JObject vo && vo["entry"] is JArray entryArr)
+            {
+                foreach (var e in entryArr) AddEntryName(w, e);
+                return w;
+            }
+            if (v is JArray arr)
+            {
+                foreach (var item in arr)
+                {
+                    if (item.Type == JTokenType.String) w.Checks.Add((string)item);
+                    else AddEntryName(w, item);
+                }
+                return w;
+            }
+            if (v is JObject jo)
+            {
+                foreach (var p in jo.Properties())
+                {
+                    var name = (string)((p.Value as JObject)?["name"]) ?? p.Name;
+                    w.Checks.Add(name);
+                }
+            }
+            return w;
+        }
+
+        private static void AddEntryName(URLCheckListWrapper w, JToken e)
+        {
+            if (e is JObject eo)
+            {
+                if (eo["string"] is JArray s && s.Count > 0) { w.Checks.Add((string)s[0]); return; }
+                var name = (string)eo["name"];
+                if (!string.IsNullOrEmpty(name)) { w.Checks.Add(name); return; }
+                foreach (var p in eo.Properties())
+                {
+                    if (p.Value.Type == JTokenType.String) { w.Checks.Add((string)p.Value); return; }
+                }
+            }
+            else if (e.Type == JTokenType.String) w.Checks.Add((string)e);
+        }
     }
 }

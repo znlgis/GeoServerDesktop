@@ -42,7 +42,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>命名空间详细信息</returns>
         public async Task<Namespace> GetNamespaceAsync(string namespacePrefix)
         {
-            var response = await _httpClient.GetAsync($"/rest/namespaces/{namespacePrefix}.json");
+            var response = await _httpClient.GetAsync($"/rest/namespaces/{Uri.EscapeDataString(namespacePrefix)}.json");
             var wrapper = JsonConvert.DeserializeObject<NamespaceWrapper>(response);
             return wrapper?.Namespace;
         }
@@ -56,7 +56,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task CreateNamespaceAsync(string namespacePrefix, string uri)
         {
             var ns = new { @namespace = new { prefix = namespacePrefix, uri = uri } };
-            var json = JsonConvert.SerializeObject(ns);
+            var json = JsonConvert.SerializeObject(ns, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
                 await _httpClient.PostAsync("/rest/namespaces", content);
@@ -72,10 +72,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task UpdateNamespaceAsync(string namespacePrefix, string uri)
         {
             var ns = new { @namespace = new { prefix = namespacePrefix, uri = uri } };
-            var json = JsonConvert.SerializeObject(ns);
+            var json = JsonConvert.SerializeObject(ns, GeoServerJson.Request);
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PutAsync($"/rest/namespaces/{namespacePrefix}", content);
+                await _httpClient.PutAsync($"/rest/namespaces/{Uri.EscapeDataString(namespacePrefix)}", content);
             }
         }
 
@@ -86,7 +86,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteNamespaceAsync(string namespacePrefix)
         {
-            await _httpClient.DeleteAsync($"/rest/namespaces/{namespacePrefix}");
+            await _httpClient.DeleteAsync($"/rest/namespaces/{Uri.EscapeDataString(namespacePrefix)}");
         }
     }
 }
