@@ -1,0 +1,138 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-test:
+    name: Build + L1/L4 tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore src/GeoServerDesktop.sln
+
+    - name: Build solution (Release)
+      run: dotnet build src/GeoServerDesktop.sln --configuration Release --no-restore
+
+    - name: L1 unit tests (offline, any environment)
+      run: dotnet test src/GeoServerDesktop.Tests/GeoServerDesktop.Tests.csproj --configuration Release --no-build --filter "FullyQualifiedName~Tests.Unit"
+
+    - name: L4 headless ViewModel tests
+      run: dotnet test src/GeoServerDesktop.Tests/GeoServerDesktop.Tests.csproj --configuration Release --no-build --filter "FullyQualifiedName~Tests.Headless"
+
+  lint:
+    name: Lint (dotnet format)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore src/GeoServerDesktop.sln
+
+    - name: Verify formatting (dotnet format --verify-no-changes)
+      run: dotnet format src/GeoServerDesktop.sln --verify-no-changes --no-restore
+
+  integration:
+    name: Integration (L2/L3 + harness, real GeoServer)
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      GSD_GEOSERVER_URL: "http://localhost:8765/geoserver"
+      GSD_TEST_DATA_DIR: ${{ github.workspace }}/gdtest_data
+      GSD_CONTAINER_DATA_DIR: ${{ github.workspace }}
+      GSD_TEST_PG_HOST: "127.0.0.1"
+      GSD_TEST_PG_PORT: "5432"
+      GSD_TEST_PG_DB: "postgres"
+      GSD_TEST_PG_USER: "postgres"
+      GSD_TEST_PG_PASS: "postgres"
+      # GeoServer 容器视角下可达的 PostGIS 主机名（两容器位于同一自定义网络）
+      GSD_GS_PG_HOST: "postgis"
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Start GeoServer + PostGIS containers
+      run: |
+        docker network create gsd-ci
+        mkdir -p "$GITHUB_WORKSPACE/gdtest_data" "$GITHUB_WORKSPACE/gwc"
+        docker run -d --name postgis --network gsd-ci \
+          -e POSTGRES_PASSWORD=postgres \
+          -p 5432:5432 \
+          postgis/postgis:17-3.5
+        docker run -d --name geoserver --network gsd-ci \
+          -e SAMPLE_DATA=true \
+          -e GEOSERVER_ADMIN_PASSWORD=geoserver \
+          -e GEOWEBCACHE_CACHE_DIR=/data/geoserver/data_dir/gwc \
+          -p 8765:8080 \
+          -v "$GITHUB_WORKSPACE/gdtest_data:/data/geoserver/data_dir/gdtest_data" \
+          -v "$GITHUB_WORKSPACE/gwc:/data/geoserver/data_dir/gwc" \
+          kartoza/geoserver:3.0.1
+
+    - name: Install GDAL (ogr2ogr / gdal_translate)
+      run: sudo apt-get update && sudo apt-get install -y gdal-bin
+
+    - name: Restore + build (Release)
+      run: |
+        dotnet restore src/GeoServerDesktop.sln
+        dotnet build src/GeoServerDesktop.sln --configuration Release --no-restore
+
+    - name: Wait for GeoServer / PostGIS
+      run: |
+        echo "waiting for PostGIS..."
+        for i in $(seq 1 30); do
+          if docker exec postgis pg_isready -U postgres; then echo "PostGIS ready"; break; fi
+          sleep 2
+        done
+        echo "waiting for GeoServer..."
+        ready=0
+        for i in $(seq 1 60); do
+          if curl -u admin:geoserver -sf -o /dev/null "http://localhost:8765/geoserver/rest/about/version.xml"; then
+            ready=1; echo "GeoServer REST ready"; break
+          fi
+          sleep 5
+        done
+        if [ "$ready" != "1" ]; then
+          echo "::warning::GeoServer not reachable; L2/L3/harness will auto-skip (SkipLog)"
+        fi
+
+    - name: Generate deterministic test data
+      run: |
+        python3 tests/testdata/generate_testdata.py || echo "::warning::test data generation failed; data-dependent checks will skip"
+        bash tests/testdata/load_postgis.sh || echo "::warning::PostGIS load failed; PostGIS-backed checks will skip"
+
+    - name: L2 integration tests (real GeoServer REST)
+      run: dotnet test src/GeoServerDesktop.Tests/GeoServerDesktop.Tests.csproj --configuration Release --no-build --filter "FullyQualifiedName~Tests.Integration"
+
+    - name: L3 real-data end-to-end tests
+      run: dotnet test src/GeoServerDesktop.Tests/GeoServerDesktop.Tests.csproj --configuration Release --no-build --filter "FullyQualifiedName~Tests.RealDataTests"
+
+    - name: Real-data harness (Fail>0 → exit 1)
+      run: dotnet run --project src/GeoServerDesktop.RealDataHarness --configuration Release --no-build
