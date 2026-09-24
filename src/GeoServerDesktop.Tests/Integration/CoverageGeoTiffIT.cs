@@ -12,8 +12,8 @@ namespace GeoServerDesktop.Tests.Integration
     /// 实测要点（3.0.1）：coveragestore 默认 enabled=false 需显式 true；
     /// 文件上传端点扩展名必须是 geotiff（tif/tiff 均回 400 "Unsupported format"）；
     /// 空存储（不带 url）上传后自动创建的 coverage 名 = 存储名（非文件名）。
-    /// coverage GET 响应里 nativeCRS 是对象（{"@class":...,"$":"PROJCS..."}），
-    /// 而模型 Coverage.NativeCRS 为 string → 单体 GET 反序列化可能抛 Newtonsoft 异常（新发现，基线固化）。
+    /// coverage GET 响应里 nativeCRS/crs 是对象（{"@class":...,"$":"..."}）——CrsStringConverter 宽容为字符串
+    /// （原 KNOWN-ISSUE“单体 GET 抛 Newtonsoft 异常”已修复，本节改为严格断言防回归）。
     /// 命名族缩写：cov。
     /// </summary>
     [Collection("GeoServerSerial")]
@@ -76,22 +76,12 @@ namespace GeoServerDesktop.Tests.Integration
                 var list = await covSvc.GetCoveragesAsync(Ws, CsName);
                 Assert.Contains(list, c => c.Name == CovName);
 
-                // --- 单体 GET：基线固化——3.0.1 的 nativeCRS 为对象而模型为 string，可能抛 JsonException ---
-                Exception? singleEx = null;
-                Coverage? single = null;
-                try { single = await covSvc.GetCoverageAsync(Ws, CsName, CovName); }
-                catch (Exception e) { singleEx = e; }
-                if (singleEx != null)
-                {
-                    // KNOWN-ISSUE（新发现）：Coverage.NativeCRS 模型为 string，GeoServer 3.0.1 返回
-                    // {"@class":"projected","$":"PROJCS[...]"} 对象，GetCoverageAsync 必抛。以异常类型固化。
-                    Assert.True(GsKit.IsJsonNet(singleEx),
-                        "coverage 单体 GET 预期因 nativeCRS 对象→string 抛 Newtonsoft 解析异常，实际: " + singleEx);
-                }
-                else
-                {
-                    Assert.Equal(CovName, single!.Name);
-                }
+                // --- 单体 GET：完整读取（回归防护：nativeCRS/crs 对象形态经 CrsStringConverter 宽容为字符串） ---
+                var single = await covSvc.GetCoverageAsync(Ws, CsName, CovName);
+                Assert.Equal(CovName, single!.Name);
+                Assert.NotNull(single.NativeBoundingBox);
+                Assert.Equal("EPSG:32754", single.NativeBoundingBox!.Crs);
+                Assert.Contains("PROJCS", single.NativeCRS);
 
                 // --- UPDATE：PUT coverage title（原实测 namespace/store null 引用 → 500 NPE，已 FIXED；填实引用写法保留） ---
                 var updCov = GsKit.FilledCov(Ws, CsName, CovName, CovNative, CovName + "-upd", "EPSG:32754");

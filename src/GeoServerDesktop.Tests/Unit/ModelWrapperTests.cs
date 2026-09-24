@@ -401,6 +401,22 @@ public class ModelWrapperTests
     }
 
     [Fact]
+    public void CrsStringConverter_AcceptsStringAndReferenceObject()
+    {
+        // CrsStringConverter：GeoServer 3.0.1 的 coverage nativeCRS / 边界框 crs 可能为
+        // {"@class":"projected","$":"..."} 引用对象（原 KNOWN-ISSUE），统一宽容为字符串。
+        var bb = D<BoundingBox>("""{"minx":0,"maxx":1,"miny":0,"maxy":1,"crs":{"@class":"projected","$":"EPSG:32754"}}""");
+        Assert.Equal("EPSG:32754", bb.Crs);
+
+        var cov = D<Coverage>("""{"name":"c","nativeCRS":{"@class":"projected","$":"PROJCS[WGS 84 / UTM zone 54S]"}}""");
+        Assert.Equal("PROJCS[WGS 84 / UTM zone 54S]", cov.NativeCRS);
+
+        // 字符串形态原样返回（回归：原有行为不变）
+        var bb2 = D<BoundingBox>("""{"crs":"EPSG:4326"}""");
+        Assert.Equal("EPSG:4326", bb2.Crs);
+    }
+
+    [Fact]
     public void GwcLayer_GridSubsetAndExtent()
     {
         var l = D<GWCLayer>("""{"name":"l","enabled":true,"mimeFormats":["image/png"],"gridSubsets":[{"gridSetName":"EPSG:900913","zoomStart":0,"zoomStop":10,"extent":{"coords":[0,0,1,1]}}],"metaWidthHeight":[4,4],"expireCache":30,"expireClients":60}""");

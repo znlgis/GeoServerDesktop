@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using GeoServerDesktop.GeoServerClient.Configuration;
+using GeoServerDesktop.GeoServerClient.Import;
 using GeoServerDesktop.Tests.Infrastructure;
 using GeoServerDesktop.Tests.RealData;
 using Xunit;
@@ -42,6 +43,7 @@ namespace GeoServerDesktop.RealDataHarness
                 if (GeoServerAvailability.IsGeoServerReachable)
                 {
                     RunPublication();
+                    RunWizardPublishChecks();
                     RunServicePlaneChecks();
                     RunGwcChecks();
                 }
@@ -145,6 +147,119 @@ namespace GeoServerDesktop.RealDataHarness
             Check.Cond(r.Ok, "Publish/layer-rest", "shapefile 图层经独立通道可见", "HTTP " + r.Status);
         }
 
+        // ---------------- 3.5 向导路径发布（M2：ImportWizardService） ----------------
+        private static void RunWizardPublishChecks()
+        {
+            Console.WriteLine("-- 向导路径发布（ImportWizardService）");
+            string ws = "gdtest_ws_wiz";
+            try
+            {
+                using var f = new GeoServerClientFactory(GeoServerAvailability.Options());
+                try { f.CreateWorkspaceService().DeleteWorkspaceAsync(ws, true).GetAwaiter().GetResult(); } catch { }
+                f.CreateWorkspaceService().CreateWorkspaceAsync(ws).GetAwaiter().GetResult();
+                var wiz = f.CreateImportWizardService();
+
+                // 1) 内置数据：向导路径发布 shapefile（发布名全局唯一，nativeName 指磁盘基名）
+                const string polyLayer = "gdtest_wiz_poly";
+                var r = wiz.PublishShapefileAsync(new ImportSourceRequest
+                {
+                    Kind = ImportDataSourceKind.ShapefileDirectory,
+                    Workspace = ws,
+                    LayerName = polyLayer,
+                    NativeName = "gdtest_poly",
+                    StoreName = "gdtest_ds_wiz",
+                    FileRef = "file:gdtest_data",
+                    Srs = "EPSG:4326",
+                }).GetAwaiter().GetResult();
+                Check.Cond(r.Success, "Wizard/shapefile-publish", "向导路径发布成功（" + r.QualifiedName + "）", r.Message);
+                if (r.Success)
+                {
+                    var rest = OgcProbe.Get(TestEnv.RestBase + "/rest/layers/" + ws + ":" + polyLayer + ".json");
+                    Check.Cond(rest.Ok, "Wizard/shapefile-rest", "向导图层经独立通道可见", "HTTP " + rest.Status);
+                    int expected = DbfHeader.Parse(Path.Combine(TestEnv.GeneratedDataDir, "gdtest_poly.dbf")).RecordCount;
+                    Throw(RealDataChecks.WfsHitsCount(ws + ":" + polyLayer, expected, "wizard"));
+                }
+
+                // 2) 外部真实数据（提供 GSD_REAL_DATA_DIR 且位于挂载内时）：向导路径一键发布 + WFS 计数比对
+                var extDir = TestEnv.RealDataDir;
+                if (!string.IsNullOrEmpty(extDir))
+                {
+                    var extRef = DataEnv.HostPathToDataDirRef(extDir);
+                    var extPairs = DataEnv.DiscoverShapefilePairs(extDir);
+                    if (extRef == null)
+                    {
+                        Check.Warn("Wizard/ext", "外部数据目录不在容器 data_dir 挂载内，跳过向导外部数据发布：" + extDir);
+                    }
+                    else if (extPairs.Count == 0)
+                    {
+                        Check.Warn("Wizard/ext", "GSD_REAL_DATA_DIR 下未发现成对 .shp/.dbf，跳过");
+                    }
+                    else
+                    {
+                        Console.WriteLine("   外部真实数据：" + extPairs.Count + " 个 shapefile（" + extRef + "）");
+                        foreach (var (extShp, extDbf) in extPairs)
+                        {
+                            string extName = Path.GetFileNameWithoutExtension(extShp);
+                            var rext = wiz.PublishShapefileAsync(new ImportSourceRequest
+                            {
+                                Kind = ImportDataSourceKind.ShapefileDirectory,
+                                Workspace = ws,
+                                LayerName = extName,
+                                NativeName = extName,
+                                StoreName = "gdtest_ds_wiz_ext",
+                                FileRef = extRef,
+                                Srs = null, // 数据为自定义 Lambert（无 EPSG）：不声明 SRS（请求体省略该字段）
+                            }).GetAwaiter().GetResult();
+                            Check.Cond(rext.Success, "Wizard/ext-publish:" + extName,
+                                "向导路径发布成功（" + rext.QualifiedName + "）", rext.Message);
+                            if (rext.Success)
+                            {
+                                int extExpected = DbfHeader.Parse(extDbf).RecordCount;
+                                Throw(RealDataChecks.WfsHitsCount(ws + ":" + extName, extExpected, "wizard-ext/" + extName));
+                            }
+                        }
+                    }
+                }
+
+                // 3) PostGIS：探测 + 向导发布（环境不可用时跳过）
+                var pg = new PostgisConnectionParameters
+                {
+                    Host = TestEnv.GeoServerVisiblePgHost,
+                    Port = TestEnv.PgPort,
+                    Database = TestEnv.PgDb,
+                    User = TestEnv.PgUser,
+                    Password = TestEnv.PgPass,
+                };
+                var probe = wiz.ProbePostgisConnectionAsync(ws, pg).GetAwaiter().GetResult();
+                if (!probe.Success)
+                {
+                    Check.Warn("Wizard/postgis", "PostGIS 不可用，跳过向导 PostGIS 发布：" + probe.Message);
+                    return;
+                }
+                const string pgLayer = "gdtest_wiz_pg_poly";
+                var rp = wiz.PublishPostgisAsync(new ImportSourceRequest
+                {
+                    Kind = ImportDataSourceKind.Postgis,
+                    Workspace = ws,
+                    LayerName = pgLayer,
+                    NativeName = "gdtest_poly",
+                    StoreName = "gdtest_ds_wiz_pg",
+                    Srs = "EPSG:4326",
+                    Postgis = pg,
+                }).GetAwaiter().GetResult();
+                Check.Cond(rp.Success, "Wizard/postgis-publish", "向导 PostGIS 发布成功（" + rp.QualifiedName + "）", rp.Message);
+                if (rp.Success)
+                {
+                    int expected = DbfHeader.Parse(Path.Combine(TestEnv.GeneratedDataDir, "gdtest_poly.dbf")).RecordCount;
+                    Throw(RealDataChecks.WfsHitsCount(ws + ":" + pgLayer, expected, "wizard-pg"));
+                }
+            }
+            catch (Exception ex)
+            {
+                Check.Fail("Wizard/crash", ex.GetType().Name + ": " + ex.Message);
+            }
+        }
+
         // ---------------- 4. 服务面 ----------------
         private static void RunServicePlaneChecks()
         {
@@ -242,8 +357,8 @@ namespace GeoServerDesktop.RealDataHarness
             // 头交叉校验已在数据完整性段完成；服务面发布需数据位于容器 data_dir 挂载内：
             if (!IsUnder(DataEnv.ContainerDataRoot, TestEnv.RealDataDir))
             { Check.Warn("Ext/service", "外部目录不在容器 data_dir 挂载内，仅做文件头校验（服务面跳过）"); return; }
-            string rel = "file:" + Uri.UnescapeDataString(new Uri(DataEnv.ContainerDataRoot + Path.DirectorySeparatorChar)
-                .MakeRelativeUri(new Uri(TestEnv.RealDataDir + Path.DirectorySeparatorChar)).ToString()).Replace('/', '\\').TrimEnd('\\');
+            // 相对 data_dir 的 file: 引用（正斜杠——容器内 Linux 路径语义；旧实现对多层子目录会产出反斜杠而失效）
+            string rel = DataEnv.HostPathToDataDirRef(TestEnv.RealDataDir);
             var ws = "gdtest_ext";
             PublishViaLib(ws, "gdtest_ext_ds", rel);
             foreach (var (shp, dbf) in DiscoverPairs(TestEnv.RealDataDir))
@@ -277,9 +392,11 @@ namespace GeoServerDesktop.RealDataHarness
         {
             using var f = new GeoServerClientFactory(GeoServerAvailability.Options());
             var wsvc = f.CreateWorkspaceService();
-            try { wsvc.GetWorkspaceAsync(ws); } catch { wsvc.CreateWorkspaceAsync(ws).GetAwaiter().GetResult(); }
+            // 注意：存在性探测必须 GetAwaiter().GetResult() 等待——否则异常不被观察，catch 不执行（工作空间/store 永不创建）。
+            try { wsvc.GetWorkspaceAsync(ws).GetAwaiter().GetResult(); }
+            catch { wsvc.CreateWorkspaceAsync(ws).GetAwaiter().GetResult(); }
             var ds = f.CreateDataStoreService();
-            try { ds.GetDataStoreAsync(ws, store); }
+            try { ds.GetDataStoreAsync(ws, store).GetAwaiter().GetResult(); }
             catch
             {
                 ds.CreateDataStoreAsync(ws, new GeoServerDesktop.GeoServerClient.Models.DataStore
