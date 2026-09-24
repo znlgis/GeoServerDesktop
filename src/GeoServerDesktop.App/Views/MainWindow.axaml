@@ -135,6 +135,12 @@
                                         HorizontalContentAlignment="Left"
                                         Background="Transparent"
                                         Margin="0,2"/>
+                                <Button Content="{Binding L.NavImportWizard}"
+                                        Command="{Binding ShowImportWizardCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Background="Transparent"
+                                        Margin="0,2"/>
                             </StackPanel>
                         </Expander>
 

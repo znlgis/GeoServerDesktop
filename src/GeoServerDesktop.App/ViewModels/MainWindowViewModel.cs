@@ -178,6 +178,12 @@ public partial class MainWindowViewModel : ViewModelBase
     private UsersGroupsRolesViewModel _usersGroupsRolesViewModel;
 
     /// <summary>
+    /// 数据导入向导视图模型
+    /// </summary>
+    [ObservableProperty]
+    private ImportWizardViewModel _importWizardViewModel;
+
+    /// <summary>
     /// 当前显示的视图
     /// </summary>
     [ObservableProperty]
@@ -208,6 +214,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _diskQuotaViewModel = new DiskQuotaViewModel(_connectionService);
         _securitySettingsViewModel = new SecuritySettingsViewModel(_connectionService);
         _usersGroupsRolesViewModel = new UsersGroupsRolesViewModel(_connectionService);
+        _importWizardViewModel = new ImportWizardViewModel(_connectionService);
 
         // 设置默认视图为欢迎页面
         _currentView = CreateWelcomeViewModel();
@@ -409,6 +416,21 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         CurrentView = CreateStoresViewModel();
         StatusMessage = L.StatusDataStores;
+    }
+
+    /// <summary>
+    /// 显示数据导入向导页面
+    /// </summary>
+    [RelayCommand]
+    private void ShowImportWizard()
+    {
+        if (!IsConnected)
+        {
+            StatusMessage = L.StatusPleaseConnect;
+            return;
+        }
+        CurrentView = CreateImportWizardViewModel();
+        StatusMessage = L.NavImportWizard;
     }
 
     /// <summary>
@@ -861,6 +883,11 @@ public partial class MainWindowViewModel : ViewModelBase
     private ViewModelBase CreateStoresViewModel()
     {
         return StoresManagementViewModel;
+    }
+
+    private ViewModelBase CreateImportWizardViewModel()
+    {
+        return ImportWizardViewModel;
     }
 
     private ViewModelBase CreateLayersViewModel()

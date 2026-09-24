@@ -85,6 +85,9 @@ public class LocalizationService : ObservableObject
     /// <summary>样式</summary>
     public string NavStyles => T("Styles", "样式");
 
+    /// <summary>数据导入向导</summary>
+    public string NavImportWizard => T("Import Wizard", "数据导入向导");
+
     /// <summary>服务</summary>
     public string NavServices => T("Services", "服务");
 
@@ -1416,4 +1419,145 @@ public class LocalizationService : ObservableObject
     public string StatusMapReadyForPreview => T(
         "Map ready for WMS layer preview",
         "地图已就绪，可进行 WMS 图层预览");
+
+    // ── ImportWizard（数据导入向导，M2） ─────────────────────────────────────
+
+    /// <summary>向导标题</summary>
+    public string WizardTitle => T("Data Import Wizard", "数据导入向导");
+
+    /// <summary>步骤指示模板 {0}=当前步</summary>
+    public string WizardStepIndicator => T("Step {0} / 3", "第 {0} / 3 步");
+
+    /// <summary>第 1 步标题</summary>
+    public string WizardStep1Title => T("Step 1: Data Source", "第 1 步：选择数据源");
+
+    /// <summary>第 2 步标题</summary>
+    public string WizardStep2Title => T("Step 2: Target and Parameters", "第 2 步：目标与参数");
+
+    /// <summary>第 3 步标题</summary>
+    public string WizardStep3Title => T("Step 3: Publish", "第 3 步：发布");
+
+    /// <summary>数据源类型标签</summary>
+    public string WizardSourceKindLabel => T("Source Type", "数据源类型");
+
+    /// <summary>类型：Shapefile 目录</summary>
+    public string WizardKindShapefile => T("Shapefile Directory", "Shapefile 目录");
+
+    /// <summary>类型：GeoTIFF 文件</summary>
+    public string WizardKindGeoTiff => T("GeoTIFF File", "GeoTIFF 文件");
+
+    /// <summary>类型：PostGIS 表</summary>
+    public string WizardKindPostgis => T("PostGIS Table", "PostGIS 表");
+
+    /// <summary>文件引用标签</summary>
+    public string WizardFileRefLabel => T("Server-side file reference", "服务器侧文件引用");
+
+    /// <summary>文件引用提示</summary>
+    public string WizardFileRefWatermark => T("file:path relative to GeoServer data dir", "file:相对 GeoServer data_dir 的路径");
+
+    /// <summary>原始名称标签</summary>
+    public string WizardNativeNameLabel => T("Native name (file base / table)", "原始名称（文件基名 / 表名）");
+
+    /// <summary>PostGIS 主机标签</summary>
+    public string WizardPgHostLabel => T("Host", "主机");
+
+    /// <summary>PostGIS 端口标签</summary>
+    public string WizardPgPortLabel => T("Port", "端口");
+
+    /// <summary>PostGIS 数据库标签</summary>
+    public string WizardPgDatabaseLabel => T("Database", "数据库");
+
+    /// <summary>PostGIS 用户标签</summary>
+    public string WizardPgUserLabel => T("User", "用户");
+
+    /// <summary>PostGIS 密码标签</summary>
+    public string WizardPgPasswordLabel => T("Password", "密码");
+
+    /// <summary>测试连接按钮</summary>
+    public string WizardProbeButton => T("Test Connection", "测试连接");
+
+    /// <summary>工作空间标签</summary>
+    public string WizardWorkspaceLabel => T("Workspace", "工作空间");
+
+    /// <summary>刷新按钮</summary>
+    public string WizardRefreshButton => T("Refresh", "刷新");
+
+    /// <summary>发布名标签</summary>
+    public string WizardPublishNameLabel => T("Publish Name", "发布名");
+
+    /// <summary>存储名标签</summary>
+    public string WizardStoreNameLabel => T("Store Name", "存储名");
+
+    /// <summary>SRS 标签</summary>
+    public string WizardSrsLabel => T("SRS (optional)", "坐标参考系（可选）");
+
+    /// <summary>本地预检标签</summary>
+    public string WizardLocalPreviewLabel => T("Local path for preview (optional)", "本地预检路径（可选）");
+
+    /// <summary>解析按钮</summary>
+    public string WizardInspectButton => T("Inspect", "解析");
+
+    /// <summary>上一步按钮</summary>
+    public string WizardBackButton => T("Back", "上一步");
+
+    /// <summary>下一步按钮</summary>
+    public string WizardNextButton => T("Next", "下一步");
+
+    /// <summary>发布按钮</summary>
+    public string WizardPublishButton => T("Publish", "发布");
+
+    /// <summary>重新开始按钮</summary>
+    public string WizardRestartButton => T("Start Over", "重新开始");
+
+    /// <summary>结果标签</summary>
+    public string WizardResultLabel => T("Result", "结果");
+
+    /// <summary>提示：需要 file: 引用</summary>
+    public string WizardStatusNeedFileRef => T("Enter a file: reference first", "请先填写 file: 引用");
+
+    /// <summary>提示：需要原始名称</summary>
+    public string WizardStatusNeedNativeName => T("Enter the native name", "请填写原始名称");
+
+    /// <summary>提示：需要 PostGIS 参数</summary>
+    public string WizardStatusNeedPgParams => T("Enter host, database and user", "请填写主机、数据库与用户");
+
+    /// <summary>提示：需要工作空间</summary>
+    public string WizardStatusNeedWorkspace => T("Select a workspace", "请选择工作空间");
+
+    /// <summary>提示：需要发布名</summary>
+    public string WizardStatusNeedPublishName => T("Enter a publish name", "请填写发布名");
+
+    /// <summary>提示：需要本地路径</summary>
+    public string WizardStatusNeedLocalPath => T("Enter a local path", "请填写本地路径");
+
+    /// <summary>预检：路径不存在</summary>
+    public string WizardPreviewNotFound => T("Path not found", "路径不存在");
+
+    /// <summary>预检：未知类型</summary>
+    public string WizardPreviewUnknown => T("Unrecognized file type", "无法识别的文件类型");
+
+    /// <summary>预检：Shapefile 摘要模板 {0}=记录数 {1}=字段数 {2}=类型名</summary>
+    public string WizardPreviewShapefile => T(
+        "Shapefile: {0} records, {1} fields, geometry {2}",
+        "Shapefile：{0} 条记录、{1} 个字段、几何类型 {2}");
+
+    /// <summary>预检：GeoTIFF 摘要模板 {0}=宽 {1}=高 {2}=CRS</summary>
+    public string WizardPreviewGeoTiff => T(
+        "GeoTIFF: {0} x {1}, CRS {2}",
+        "GeoTIFF：{0} x {1}，CRS {2}");
+
+    /// <summary>预检：目录条目行模板 {0}=文件名 {1}=类型 {2}=大小</summary>
+    public string WizardPreviewDirEntry => T("{0}  ({1}, {2} B)", "{0}（{1}，{2} B）");
+
+    /// <summary>发布成功模板 {0}=限定名</summary>
+    public string WizardPublishSuccess => T("Published: {0}", "发布成功：{0}");
+
+    /// <summary>发布失败模板 {0}=消息</summary>
+    public string WizardPublishFailed => T("Publish failed: {0}", "发布失败：{0}");
+
+    /// <summary>探测成功</summary>
+    public string WizardProbeOk => T("Connection OK", "连接成功");
+
+    /// <summary>探测失败模板 {0}=消息</summary>
+    public string WizardProbeFailed => T("Connection failed: {0}", "连接失败：{0}");
 }

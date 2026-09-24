@@ -148,5 +148,11 @@ namespace GeoServerDesktop.App.Services
         /// </summary>
         /// <returns>ResourceService 实例</returns>
         ResourceService GetResourceService();
+
+        /// <summary>
+        /// 获取数据导入向导服务
+        /// </summary>
+        /// <returns>ImportWizardService 实例</returns>
+        ImportWizardService GetImportWizardService();
     }
 }

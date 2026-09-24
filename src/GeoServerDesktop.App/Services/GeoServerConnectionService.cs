@@ -252,6 +252,16 @@ namespace GeoServerDesktop.App.Services
         }
 
         /// <summary>
+        /// 获取数据导入向导服务
+        /// </summary>
+        /// <returns>ImportWizardService 实例</returns>
+        public ImportWizardService GetImportWizardService()
+        {
+            EnsureConnected();
+            return _factory!.CreateImportWizardService();
+        }
+
+        /// <summary>
         /// 确保已连接到 GeoServer 实例
         /// </summary>
         private void EnsureConnected()
