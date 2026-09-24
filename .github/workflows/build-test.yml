@@ -87,9 +87,12 @@ jobs:
           -e POSTGRES_PASSWORD=postgres \
           -p 5432:5432 \
           postgis/postgis:17-3.5
+        # GEOSERVER_DATA_DIR 必须与下方挂载路径一致：kartoza/geoserver:3.0.1 镜像默认
+        # data_dir 为 /opt/geoserver/data_dir，若不显式覆盖，GeoServer 将看不到 gdtest_data。
         docker run -d --name geoserver --network gsd-ci \
           -e SAMPLE_DATA=true \
           -e GEOSERVER_ADMIN_PASSWORD=geoserver \
+          -e GEOSERVER_DATA_DIR=/data/geoserver/data_dir \
           -e GEOWEBCACHE_CACHE_DIR=/data/geoserver/data_dir/gwc \
           -p 8765:8080 \
           -v "$GITHUB_WORKSPACE/gdtest_data:/data/geoserver/data_dir/gdtest_data" \
