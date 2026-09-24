@@ -145,3 +145,39 @@ jobs:
 
     - name: Real-data harness (Fail>0 → exit 1)
       run: dotnet run --project src/GeoServerDesktop.RealDataHarness --configuration Release --no-build
+
+    - name: GWC diagnostics (on failure)
+      if: failure()
+      run: |
+        echo "=== 1. host: gwc tree ==="
+        ls -laR "$GITHUB_WORKSPACE/gwc" 2>&1 | head -150 || true
+        echo
+        echo "=== 2. container: java process user ==="
+        docker exec geoserver bash -c "ps -eo user,pid,comm | grep -i java | head -5" 2>&1 || true
+        echo "=== 3. container: gwc tree ==="
+        docker exec geoserver bash -c "ls -laR /data/geoserver/data_dir/gwc 2>&1 | head -100" || true
+        echo "=== 4a. write test as root ==="
+        docker exec geoserver bash -c "touch /data/geoserver/data_dir/gwc/_wtest_root && echo OK || echo FAIL" 2>&1 || true
+        echo "=== 4b. write test as geoserveruser ==="
+        docker exec -u geoserveruser geoserver bash -c "touch /data/geoserver/data_dir/gwc/_wtest_gsu && echo OK || echo FAIL" 2>&1 || true
+        echo "=== 4c. mkdir test as geoserveruser ==="
+        docker exec -u geoserveruser geoserver bash -c "mkdir -p /data/geoserver/data_dir/gwc/_mtest_gsu && echo OK || echo FAIL" 2>&1 || true
+        echo "=== 5. GWC seed task list ==="
+        curl -s -u admin:geoserver "http://localhost:8765/geoserver/gwc/rest/seed.json" | head -c 800; echo
+        echo "=== 6. manual seed retry + wait 30s ==="
+        curl -s -u admin:geoserver -X POST -H "Content-Type: application/xml" -d '<seedRequest><name>gdtest_ws_e2e:gdtest_poly</name><zoomStart>0</zoomStart><zoomStop>1</zoomStop><format>image/png</format><type>seed</type><threadCount>1</threadCount></seedRequest>' "http://localhost:8765/geoserver/gwc/rest/seed/gdtest_ws_e2e%3Agdtest_poly" | head -c 200; echo
+        sleep 30
+        echo "--- task status ---"
+        curl -s -u admin:geoserver "http://localhost:8765/geoserver/gwc/rest/seed/gdtest_ws_e2e%3Agdtest_poly.json" | head -c 400; echo
+        echo "--- host files ---"
+        ls -la "$GITHUB_WORKSPACE/gwc/gdtest_ws_e2e_gdtest_poly" 2>&1 | head -20 || true
+        echo "--- container files ---"
+        docker exec geoserver bash -c "find /data/geoserver/data_dir/gwc/gdtest_ws_e2e_gdtest_poly -type f 2>/dev/null | head -15; echo COUNT:; find /data/geoserver/data_dir/gwc/gdtest_ws_e2e_gdtest_poly -type f 2>/dev/null | wc -l" 2>&1 || true
+        echo "=== 7. geoserver.log GWC/seed/error ==="
+        docker exec geoserver bash -c "tail -1500 /data/geoserver/data_dir/logs/geoserver.log 2>/dev/null | grep -iE 'gwc|seed|quota|truncat|ERROR|Exception' | tail -120" 2>&1 || true
+        echo "=== 8. docker logs tail 120 ==="
+        docker logs geoserver --tail 120 2>&1 || true
+        echo "=== 9. disk ==="
+        df -h 2>&1 || true
+        echo "=== 10. gwc-gs.xml keys ==="
+        docker exec geoserver bash -c "grep -E 'cacheLayersByDefault|persistenceEnabled|directWMS' /data/geoserver/data_dir/gwc-gs.xml" 2>&1 || true
