@@ -32,7 +32,7 @@
 - [x] README 兼容性章节更新（实测 3.0.1；2.20+ 预期兼容）+ NuGet 安装说明与版本号
 
 ### 3. App 小补缺（各带 L2/L4 测试）
-- [ ] 日志实时查看（读取 GeoServer 日志文件内容展示；`logging` REST + `GEOSERVER_LOG_LOCATION` 状态项）
+- [x] 日志实时查看（读取 GeoServer 日志文件内容展示；`logging` REST + `GEOSERVER_LOG_LOCATION` 状态项）——已实现：LoggingView 日志文件查看器（尾部 500 行，`logs/geoserver.log` 经 /rest/resource 读取），L1+L2+L4 测试就位
 - [ ] 资源树浏览视图（基于 `ResourceTreeNode` + ResourceService）
 - [ ] 欢迎页仪表盘（版本、连接状态、工作空间/图层计数速览）
 

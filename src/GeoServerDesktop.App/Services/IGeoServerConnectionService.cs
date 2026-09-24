@@ -142,5 +142,11 @@ namespace GeoServerDesktop.App.Services
         /// </summary>
         /// <returns>RoleService 实例</returns>
         RoleService GetRoleService();
+
+        /// <summary>
+        /// 获取资源服务
+        /// </summary>
+        /// <returns>ResourceService 实例</returns>
+        ResourceService GetResourceService();
     }
 }

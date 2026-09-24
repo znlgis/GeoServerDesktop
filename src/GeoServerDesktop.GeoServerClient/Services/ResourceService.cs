@@ -37,6 +37,25 @@ namespace GeoServerDesktop.GeoServerClient.Services
         }
 
         /// <summary>
+        /// Reads the content of a resource file from the GeoServer data directory
+        /// </summary>
+        /// <param name="resourcePath">Path to the file relative to the data directory (e.g., "logs/geoserver.log")</param>
+        /// <returns>File content as string</returns>
+        /// <remarks>
+        /// Uses GET /rest/resource/{path}, which returns the raw file content for files
+        /// (and an HTML directory listing for directories). The path is relative to the
+        /// data directory root; empty paths are rejected to avoid requesting the bare
+        /// directory listing endpoint.
+        /// </remarks>
+        public async Task<string> GetResourceContentAsync(string resourcePath)
+        {
+            if (string.IsNullOrWhiteSpace(resourcePath))
+                throw new ArgumentException("Resource path must not be empty", nameof(resourcePath));
+
+            return await _httpClient.GetAsync($"/rest/resource/{resourcePath}");
+        }
+
+        /// <summary>
         /// Uploads a resource file to the specified path
         /// </summary>
         /// <param name="resourcePath">Path where the resource should be stored (e.g., "styles/myStyle.sld")</param>

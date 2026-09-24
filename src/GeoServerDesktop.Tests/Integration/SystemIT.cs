@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 using GeoServerDesktop.GeoServerClient.Models;
+using GeoServerDesktop.GeoServerClient.Services;
 using GeoServerDesktop.Tests.Infrastructure;
 
 namespace GeoServerDesktop.Tests.Integration
@@ -150,6 +151,43 @@ namespace GeoServerDesktop.Tests.Integration
                 var raw = await Fx.Cleanup.GetAsync("/rest/logging.json");
                 Assert.NotNull(raw);
                 Assert.Contains(level!, raw!);
+            }
+        }
+
+        [Fact]
+        public async Task Logging_LogFileContent_ReadsRealLogFile()
+        {
+            if (!RequireGeoServer()) return;
+            using var f = Fx.Factory();
+            var svc = f.CreateResourceService();
+
+            // 真实场景：日志文件（默认位置 data_dir/logs/geoserver.log）可通过 /rest/resource 读取
+            var content = await svc.GetResourceContentAsync(LogResourcePathResolver.DefaultLogResourcePath);
+
+            Assert.False(string.IsNullOrWhiteSpace(content));
+            // 实测：日志文件为纯文本，启动/运行日志必含级别标记（如 "INFO"）
+            Assert.Contains("INFO", content);
+        }
+
+        [Fact]
+        public async Task Logging_ResourceContent_RoundTrip_MatchesUpload()
+        {
+            if (!RequireGeoServer()) return;
+            using var f = Fx.Factory();
+            var svc = f.CreateResourceService();
+            const string path = "logs/gdtest_logread_probe.txt";
+            const string text = "probe-line-1\nprobe-line-2\n";
+            try
+            {
+                await svc.UploadResourceAsync(path, System.Text.Encoding.UTF8.GetBytes(text), "text/plain");
+
+                var readBack = await svc.GetResourceContentAsync(path);
+
+                Assert.Equal(text, readBack);
+            }
+            finally
+            {
+                try { await svc.DeleteResourceAsync(path); } catch { }
             }
         }
 

@@ -41,6 +41,26 @@ public class ResourceServiceTests
     }
 
     [Fact]
+    public async Task GetResourceContentAsync_ReadsFileUnderResource()
+    {
+        _fake.RespondGet("log-line-1\nlog-line-2");
+
+        var raw = await _svc.GetResourceContentAsync("logs/geoserver.log");
+
+        Assert.Equal("GET", _fake.Last!.Method);
+        Assert.Equal("/rest/resource/logs/geoserver.log", _fake.Last.Path);
+        Assert.Equal("log-line-1\nlog-line-2", raw);
+    }
+
+    [Fact]
+    public async Task GetResourceContentAsync_EmptyPath_ThrowsWithoutRequest()
+    {
+        await Assert.ThrowsAsync<ArgumentException>(() => _svc.GetResourceContentAsync(""));
+        await Assert.ThrowsAsync<ArgumentException>(() => _svc.GetResourceContentAsync("   "));
+        Assert.Empty(_fake.Requests); // 空路径不得发出请求（避免裸目录列表端点）
+    }
+
+    [Fact]
     public async Task UploadResourceAsync_PutsRawBytesWithHeaderAddedContentType()
     {
         var data = new byte[] { 10, 20, 30 };

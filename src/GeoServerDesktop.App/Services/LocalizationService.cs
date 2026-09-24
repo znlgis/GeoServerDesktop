@@ -552,6 +552,15 @@ public class LocalizationService : ObservableObject
     /// <summary>启用文件日志</summary>
     public string EnableFileLogging => T("Enable File Logging", "启用文件日志");
 
+    /// <summary>日志文件查看器</summary>
+    public string LogFileViewer => T("Log File Viewer", "日志文件查看器");
+
+    /// <summary>刷新日志按钮</summary>
+    public string RefreshLogFile => T("Refresh Log", "刷新日志");
+
+    /// <summary>日志文件位置标签（查看器）</summary>
+    public string LogFileLocationLabel => T("Log file:", "日志文件:");
+
     // ── CachingDefaults ────────────────────────────────────────────────────
 
     /// <summary>切片缓存默认值标题</summary>
@@ -1054,6 +1063,18 @@ public class LocalizationService : ObservableObject
 
     /// <summary>保存日志设置失败模板 {0}=消息</summary>
     public string StatusLoggingSettingsSaveFailed => T("Failed to save logging settings: {0}", "保存日志设置失败: {0}");
+
+    /// <summary>正在加载日志文件</summary>
+    public string StatusLoadingLogFile => T("Loading log file...", "正在加载日志文件...");
+
+    /// <summary>日志文件已加载模板 {0}=行数</summary>
+    public string StatusLogFileLoaded => T("Log loaded: last {0} lines", "日志已加载：尾部 {0} 行");
+
+    /// <summary>加载日志文件失败模板 {0}=消息</summary>
+    public string StatusLogFileLoadFailed => T("Failed to load log file: {0}", "加载日志文件失败: {0}");
+
+    /// <summary>日志位置无法通过 REST 读取模板 {0}=位置</summary>
+    public string StatusLogFileUnresolvable => T("Log location '{0}' is outside the data directory (cannot read via REST)", "日志位置 '{0}' 不在数据目录内（无法通过 REST 读取）");
 
     /// <summary>正在加载缓存默认值</summary>
     public string StatusLoadingCachingDefaults => T("Loading caching defaults...", "正在加载缓存默认值...");

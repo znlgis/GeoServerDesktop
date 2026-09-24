@@ -242,6 +242,16 @@ namespace GeoServerDesktop.App.Services
         }
 
         /// <summary>
+        /// 获取资源服务
+        /// </summary>
+        /// <returns>ResourceService 实例</returns>
+        public ResourceService GetResourceService()
+        {
+            EnsureConnected();
+            return _factory!.CreateResourceService();
+        }
+
+        /// <summary>
         /// 确保已连接到 GeoServer 实例
         /// </summary>
         private void EnsureConnected()

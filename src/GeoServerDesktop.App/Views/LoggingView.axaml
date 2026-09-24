@@ -46,6 +46,31 @@
                         HorizontalAlignment="Left"
                         Padding="15,8"/>
 
+                <!-- Log File Viewer -->
+                <Border Background="#F5F5F5" Padding="15" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="4">
+                    <StackPanel Spacing="10">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Text="{Binding L.LogFileViewer}" FontWeight="Bold" FontSize="14" VerticalAlignment="Center"/>
+                            <Button Grid.Column="1"
+                                    Content="{Binding L.RefreshLogFile}"
+                                    Command="{Binding RefreshLogCommand}"/>
+                        </Grid>
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="{Binding L.LogFileLocationLabel}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LogResourcePath}" FontFamily="Consolas" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBox Text="{Binding LogContent}"
+                                 IsReadOnly="True"
+                                 AcceptsReturn="True"
+                                 TextWrapping="NoWrap"
+                                 FontFamily="Consolas"
+                                 Height="320"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+                        <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsLogLoading}"/>
+                    </StackPanel>
+                </Border>
+
                 <!-- Loading Indicator -->
                 <StackPanel Spacing="10" IsVisible="{Binding IsLoading}">
                     <TextBlock Text="{Binding L.Processing}" HorizontalAlignment="Center"/>
