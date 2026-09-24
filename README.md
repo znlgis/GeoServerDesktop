@@ -193,6 +193,14 @@ GeoServerDesktop/
 
 ### API 使用
 
+#### 安装（NuGet）
+
+```bash
+dotnet add package GeoServerDesktop.GeoServerClient
+```
+
+当前版本：**v1.0.3**（[NuGet.org](https://www.nuget.org/packages/GeoServerDesktop.GeoServerClient)）
+
 GeoServerClient 库可以独立用于您自己的项目：
 
 ```csharp
@@ -266,16 +274,16 @@ factory.Dispose();
 
 ### GeoServer 兼容性
 
-此客户端基于 GeoServer 2.28.x REST API 规范构建，向后兼容主要 2.x 版本：
-- GeoServer 2.20+
-- GeoServer 2.24+
-- GeoServer 2.28+（推荐）
+- **实测基线**：GeoServer 3.0.1（四层测试套件与真实数据 harness 全量通过）
+- **预期兼容**：GeoServer 2.20+（2.x 尚未完整实测，差异清单与注意事项见 [docs/KNOWN-ISSUES.md](docs/KNOWN-ISSUES.md)）
 
 ### 许可证
 
 本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件。
 
 ### 路线图
+
+详细规划与进度跟踪见 [docs/ROADMAP.md](docs/ROADMAP.md)；已知问题见 [docs/KNOWN-ISSUES.md](docs/KNOWN-ISSUES.md)。
 
 - [x] 工作空间、数据存储、图层、样式、图层组管理
 - [x] 覆盖范围存储支持
@@ -501,6 +509,14 @@ Click the language toggle button in the top-right corner ("中文" / "English") 
 
 ### API Usage
 
+#### Installation (NuGet)
+
+```bash
+dotnet add package GeoServerDesktop.GeoServerClient
+```
+
+Current version: **v1.0.3** ([NuGet.org](https://www.nuget.org/packages/GeoServerDesktop.GeoServerClient))
+
 The GeoServerClient library can be used independently in your own projects:
 
 ```csharp
@@ -574,16 +590,16 @@ Contributions are welcome! Please follow these guidelines:
 
 ### GeoServer Compatibility
 
-This client is built against the GeoServer 2.28.x REST API specification and is backward compatible with major 2.x releases:
-- GeoServer 2.20+
-- GeoServer 2.24+
-- GeoServer 2.28+ (recommended)
+- **Verified baseline**: GeoServer 3.0.1 (full four-layer test suite and real-data harness pass)
+- **Expected compatibility**: GeoServer 2.20+ (2.x not fully re-verified; see [docs/KNOWN-ISSUES.md](docs/KNOWN-ISSUES.md) for the differences list)
 
 ### License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ### Roadmap
+
+See [docs/ROADMAP.md](docs/ROADMAP.md) for the detailed plan and progress tracking; known issues in [docs/KNOWN-ISSUES.md](docs/KNOWN-ISSUES.md).
 
 - [x] Workspace, data store, layer, style, and layer group management
 - [x] Coverage store support

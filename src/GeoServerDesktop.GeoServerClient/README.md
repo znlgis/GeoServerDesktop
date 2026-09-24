@@ -9,7 +9,7 @@
 ### 🎉 100% 完成 - 所有 API 已实现
 
 **项目**: GeoServerDesktop  
-**基于**: GeoServer 2.28.x REST API  
+**基于**: GeoServer 3.0.1 REST API（实测基线；2.20+ 预期兼容）  
 **日期**: 2024年12月10日
 
 ---
@@ -187,6 +187,8 @@
 
 ### 文档文件
 
+历史阶段报告已归档至 [`docs/archive/`](../../docs/archive/)（保留供参考）：
+
 1. **REST_API_COMPLETE_LIST.md** - 最全面，所有 45 个 API 的详细信息
 2. **REST_API_IMPLEMENTATION.md** - 实现概述（英文）
 3. **REST_API_实现总结.md** - 完整总结（中文）
@@ -216,7 +218,7 @@
 
 ---
 
-**基于**: GeoServer 2.28.x 官方 REST API 文档  
+**基于**: GeoServer 3.0.1 REST API（实测基线）  
 **项目**: https://github.com/znlgis/GeoServerDesktop  
 **状态**: ✅ 100% 完成
 
@@ -227,7 +229,7 @@
 ### 🎉 100% COMPLETE - All APIs Implemented
 
 **Project**: GeoServerDesktop  
-**Based on**: GeoServer 2.28.x REST API  
+**Based on**: GeoServer 3.0.1 REST API (verified baseline; 2.20+ expected compatible)  
 **Date**: December 10, 2024
 
 ---
@@ -405,6 +407,8 @@
 
 ### Documentation Files
 
+Historical phase reports are archived at [`docs/archive/`](../../docs/archive/) (kept for reference):
+
 1. **REST_API_COMPLETE_LIST.md** - Most comprehensive, all 45 APIs detailed
 2. **REST_API_IMPLEMENTATION.md** - Implementation overview
 3. **REST_API_实现总结.md** - Chinese complete summary
@@ -434,6 +438,6 @@ The implementation covers:
 
 ---
 
-**Based on**: GeoServer 2.28.x Official REST API Documentation  
+**Based on**: GeoServer 3.0.1 REST API (verified baseline)  
 **Project**: https://github.com/znlgis/GeoServerDesktop  
 **Status**: ✅ 100% COMPLETE
