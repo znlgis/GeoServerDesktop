@@ -1,9 +1,10 @@
+using System.Collections.Generic;
 using GeoServerDesktop.App.Models;
 
 namespace GeoServerDesktop.Tests.Headless
 {
     /// <summary>
-    /// ResourceTreeNode 纯 POCO 离线测试：CanHaveChildren 语义与 Children 默认值。
+    /// ResourceTreeNode 离线测试：CanHaveChildren 语义、Children 默认值与展开/选中通知属性。
     /// </summary>
     public sealed class ResourceTreeNodeTests
     {
@@ -45,6 +46,30 @@ namespace GeoServerDesktop.Tests.Headless
 
             Assert.Single(parent.Children);
             Assert.Equal("child", parent.Children[0].Name);
+        }
+
+        [Fact]
+        public void IsExpanded_IsSelected_RaisePropertyChanged()
+        {
+            var node = new ResourceTreeNode { Name = "n", Type = ResourceType.Workspace };
+            var raised = new List<string>();
+            node.PropertyChanged += (_, e) => raised.Add(e.PropertyName ?? string.Empty);
+
+            node.IsExpanded = true;
+            node.IsSelected = true;
+
+            Assert.Equal(2, raised.Count);
+            Assert.Equal(nameof(ResourceTreeNode.IsExpanded), raised[0]);
+            Assert.Equal(nameof(ResourceTreeNode.IsSelected), raised[1]);
+        }
+
+        [Fact]
+        public void IsLoaded_DefaultsFalse_AndSettable()
+        {
+            var node = new ResourceTreeNode();
+            Assert.False(node.IsLoaded);
+            node.IsLoaded = true;
+            Assert.True(node.IsLoaded);
         }
     }
 }

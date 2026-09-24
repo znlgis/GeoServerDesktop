@@ -33,7 +33,7 @@
 
 ### 3. App 小补缺（各带 L2/L4 测试）
 - [x] 日志实时查看（读取 GeoServer 日志文件内容展示；`logging` REST + `GEOSERVER_LOG_LOCATION` 状态项）——已实现：LoggingView 日志文件查看器（尾部 500 行，`logs/geoserver.log` 经 /rest/resource 读取），L1+L2+L4 测试就位
-- [ ] 资源树浏览视图（基于 `ResourceTreeNode` + ResourceService）
+- [x] 资源树浏览视图（基于 `ResourceTreeNode` + ResourceService）——已实现：主窗口常驻资源树面板（TreeView + 选中触发级联延迟加载 + 图层预览联动 + 刷新），L2+L4 测试就位
 - [ ] 欢迎页仪表盘（版本、连接状态、工作空间/图层计数速览）
 
 **M1 验收**：CI 双流水线全绿；ROADMAP/KNOWN-ISSUES 就位；三个小功能各带 L2/L4 测试。

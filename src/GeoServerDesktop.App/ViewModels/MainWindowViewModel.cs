@@ -207,14 +207,33 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     /// <summary>
-    /// 当选中的节点发生变化时调用
+    /// 当选中的节点发生变化时调用：按节点类型展开并延迟加载子级（或预览图层）
     /// </summary>
     partial void OnSelectedNodeChanged(ResourceTreeNode? value)
     {
-        // 当选中图层时，预览它
-        if (value?.Type == ResourceType.Layer && IsConnected)
+        if (value == null || !IsConnected)
+            return;
+
+        switch (value.Type)
         {
-            _ = PreviewLayerAsync(value);
+            // 工作空间/数据存储容器：展开并延迟加载数据存储
+            case ResourceType.Workspace:
+            case ResourceType.DataStoresContainer:
+                value.IsExpanded = true;
+                _ = LoadDataStoresAsync(value);
+                break;
+
+            // 数据存储/图层容器：展开并延迟加载图层
+            case ResourceType.DataStore:
+            case ResourceType.LayersContainer:
+                value.IsExpanded = true;
+                _ = LoadLayersAsync(value);
+                break;
+
+            // 图层：加载地图预览
+            case ResourceType.Layer:
+                _ = PreviewLayerAsync(value);
+                break;
         }
     }
 
@@ -226,11 +245,8 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         try
         {
-            // 从树层次结构中查找工作空间名称
-            var dataStoreNode = GetParentNode(ResourceTree[0], layerNode);
-            if (dataStoreNode == null) return;
-
-            var workspaceNode = GetParentNode(ResourceTree[0], dataStoreNode);
+            // 从树层次结构中向上查找所属工作空间（图层 → 图层容器 → 数据存储 → 数据存储容器 → 工作空间）
+            var workspaceNode = FindAncestor(ResourceTree[0], layerNode, ResourceType.Workspace);
             if (workspaceNode == null) return;
 
             var workspaceName = workspaceNode.Name;
@@ -620,7 +636,7 @@ public partial class MainWindowViewModel : ViewModelBase
             // 添加工作空间容器
             var workspacesContainer = new ResourceTreeNode
             {
-                Name = "Workspaces",
+                Name = L.TreeWorkspaces,
                 Type = ResourceType.WorkspacesContainer,
                 IsExpanded = true
             };
@@ -640,7 +656,7 @@ public partial class MainWindowViewModel : ViewModelBase
                 // 添加用于延迟加载的占位符节点
                 var dataStoresContainer = new ResourceTreeNode
                 {
-                    Name = "Data Stores",
+                    Name = L.TreeDataStores,
                     Type = ResourceType.DataStoresContainer,
                     Tag = workspace.Name
                 };
@@ -654,7 +670,7 @@ public partial class MainWindowViewModel : ViewModelBase
             // 添加样式容器
             var stylesContainer = new ResourceTreeNode
             {
-                Name = "Styles",
+                Name = L.TreeStyles,
                 Type = ResourceType.StylesContainer
             };
             rootNode.Children.Add(stylesContainer);
@@ -662,7 +678,7 @@ public partial class MainWindowViewModel : ViewModelBase
             // 添加图层组容器
             var layerGroupsContainer = new ResourceTreeNode
             {
-                Name = "Layer Groups",
+                Name = L.TreeLayerGroups,
                 Type = ResourceType.LayerGroupsContainer
             };
             rootNode.Children.Add(layerGroupsContainer);
@@ -676,12 +692,23 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     /// <summary>
-    /// 加载工作空间的数据存储
+    /// 加载工作空间的数据存储（延迟加载；支持工作空间节点或其数据存储容器节点；已加载则跳过）
     /// </summary>
-    /// <param name="workspaceNode">工作空间节点</param>
-    public async Task LoadDataStoresAsync(ResourceTreeNode workspaceNode)
+    /// <param name="node">工作空间节点或数据存储容器节点</param>
+    public async Task LoadDataStoresAsync(ResourceTreeNode node)
     {
-        if (workspaceNode.Type != ResourceType.Workspace)
+        if (ResourceTree.Count == 0)
+            return;
+
+        // 解析工作空间节点：直接传入工作空间，或从数据存储容器向上查找
+        var workspaceNode = node.Type == ResourceType.Workspace
+            ? node
+            : FindAncestor(ResourceTree[0], node, ResourceType.Workspace);
+        if (workspaceNode == null)
+            return;
+
+        var dataStoresContainer = workspaceNode.Children.FirstOrDefault(n => n.Type == ResourceType.DataStoresContainer);
+        if (dataStoresContainer == null || dataStoresContainer.IsLoaded)
             return;
 
         try
@@ -690,32 +717,31 @@ public partial class MainWindowViewModel : ViewModelBase
             var dataStoreService = _connectionService.GetDataStoreService();
             var dataStores = await dataStoreService.GetDataStoresAsync(workspaceName);
 
-            var dataStoresContainer = workspaceNode.Children.FirstOrDefault(n => n.Type == ResourceType.DataStoresContainer);
-            if (dataStoresContainer != null)
+            dataStoresContainer.Children.Clear();
+
+            foreach (var dataStore in dataStores)
             {
-                dataStoresContainer.Children.Clear();
-
-                foreach (var dataStore in dataStores)
+                var dataStoreNode = new ResourceTreeNode
                 {
-                    var dataStoreNode = new ResourceTreeNode
-                    {
-                        Name = dataStore.Name,
-                        Type = ResourceType.DataStore,
-                        Tag = dataStore
-                    };
+                    Name = dataStore.Name,
+                    Type = ResourceType.DataStore,
+                    Tag = dataStore
+                };
 
-                    // 添加图层的占位符
-                    var layersContainer = new ResourceTreeNode
-                    {
-                        Name = "Layers",
-                        Type = ResourceType.LayersContainer,
-                        Tag = new { WorkspaceName = workspaceName, DataStoreName = dataStore.Name }
-                    };
-                    dataStoreNode.Children.Add(layersContainer);
+                // 添加图层的占位符
+                var layersContainer = new ResourceTreeNode
+                {
+                    Name = L.TreeLayers,
+                    Type = ResourceType.LayersContainer,
+                    Tag = new { WorkspaceName = workspaceName, DataStoreName = dataStore.Name }
+                };
+                dataStoreNode.Children.Add(layersContainer);
 
-                    dataStoresContainer.Children.Add(dataStoreNode);
-                }
+                dataStoresContainer.Children.Add(dataStoreNode);
             }
+
+            dataStoresContainer.IsLoaded = true;
+            dataStoresContainer.IsExpanded = true;
         }
         catch (Exception ex)
         {
@@ -724,43 +750,53 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     /// <summary>
-    /// 加载数据存储的图层
+    /// 加载数据存储的图层（延迟加载；支持数据存储节点或其图层容器节点；已加载则跳过）
     /// </summary>
-    /// <param name="dataStoreNode">数据存储节点</param>
-    public async Task LoadLayersAsync(ResourceTreeNode dataStoreNode)
+    /// <param name="node">数据存储节点或图层容器节点</param>
+    public async Task LoadLayersAsync(ResourceTreeNode node)
     {
-        if (dataStoreNode.Type != ResourceType.DataStore)
+        if (ResourceTree.Count == 0)
+            return;
+
+        // 解析数据存储节点：直接传入数据存储，或从图层容器向上查找
+        var dataStoreNode = node.Type == ResourceType.DataStore
+            ? node
+            : FindAncestor(ResourceTree[0], node, ResourceType.DataStore);
+        if (dataStoreNode == null)
+            return;
+
+        // 向上查找所属工作空间
+        var workspaceNode = FindAncestor(ResourceTree[0], dataStoreNode, ResourceType.Workspace);
+        if (workspaceNode == null)
+            return;
+
+        var layersContainer = dataStoreNode.Children.FirstOrDefault(n => n.Type == ResourceType.LayersContainer);
+        if (layersContainer == null || layersContainer.IsLoaded)
             return;
 
         try
         {
-            // 从父节点获取工作空间名称
-            var workspaceNode = GetParentNode(ResourceTree[0], dataStoreNode);
-            if (workspaceNode == null || workspaceNode.Type != ResourceType.Workspace)
-                return;
-
             var workspaceName = workspaceNode.Name;
             var dataStoreName = dataStoreNode.Name;
 
             var featureTypeService = _connectionService.GetFeatureTypeService();
             var featureTypes = await featureTypeService.GetFeatureTypesAsync(workspaceName, dataStoreName);
 
-            var layersContainer = dataStoreNode.Children.FirstOrDefault(n => n.Type == ResourceType.LayersContainer);
-            if (layersContainer != null)
-            {
-                layersContainer.Children.Clear();
+            layersContainer.Children.Clear();
 
-                foreach (var featureType in featureTypes)
+            foreach (var featureType in featureTypes)
+            {
+                var layerNode = new ResourceTreeNode
                 {
-                    var layerNode = new ResourceTreeNode
-                    {
-                        Name = featureType.Name,
-                        Type = ResourceType.Layer,
-                        Tag = featureType
-                    };
-                    layersContainer.Children.Add(layerNode);
-                }
+                    Name = featureType.Name,
+                    Type = ResourceType.Layer,
+                    Tag = featureType
+                };
+                layersContainer.Children.Add(layerNode);
             }
+
+            layersContainer.IsLoaded = true;
+            layersContainer.IsExpanded = true;
         }
         catch (Exception ex)
         {
@@ -784,6 +820,26 @@ public partial class MainWindowViewModel : ViewModelBase
             var parent = GetParentNode(child, target);
             if (parent != null)
                 return parent;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// 从指定节点向上查找最近的指定类型祖先节点
+    /// </summary>
+    /// <param name="root">根节点</param>
+    /// <param name="target">起始节点</param>
+    /// <param name="type">目标祖先类型</param>
+    /// <returns>祖先节点，如果未找到则返回 null</returns>
+    private ResourceTreeNode? FindAncestor(ResourceTreeNode root, ResourceTreeNode target, ResourceType type)
+    {
+        var parent = GetParentNode(root, target);
+        while (parent != null)
+        {
+            if (parent.Type == type)
+                return parent;
+            parent = GetParentNode(root, parent);
         }
 
         return null;

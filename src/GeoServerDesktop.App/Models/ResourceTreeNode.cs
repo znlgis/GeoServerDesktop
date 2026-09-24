@@ -1,11 +1,12 @@
 using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace GeoServerDesktop.App.Models
 {
     /// <summary>
-    /// 表示 GeoServer 资源树中的节点
+    /// 表示 GeoServer 资源树中的节点（可观察模型：展开/选中状态支持界面双向绑定）
     /// </summary>
-    public class ResourceTreeNode
+    public partial class ResourceTreeNode : ObservableObject
     {
         /// <summary>
         /// 节点的显示名称
@@ -30,12 +31,19 @@ namespace GeoServerDesktop.App.Models
         /// <summary>
         /// 节点是否展开
         /// </summary>
-        public bool IsExpanded { get; set; }
+        [ObservableProperty]
+        private bool _isExpanded;
 
         /// <summary>
         /// 节点是否被选中
         /// </summary>
-        public bool IsSelected { get; set; }
+        [ObservableProperty]
+        private bool _isSelected;
+
+        /// <summary>
+        /// 子级数据是否已加载（延迟加载标记，避免重复请求）
+        /// </summary>
+        public bool IsLoaded { get; set; }
 
         /// <summary>
         /// 与节点关联的附加数据

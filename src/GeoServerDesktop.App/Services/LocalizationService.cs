@@ -118,6 +118,26 @@ public class LocalizationService : ObservableObject
     /// <summary>用户组角色（导航）</summary>
     public string NavUsersGroupsRoles => T("Users, Groups, Roles", "用户、组、角色");
 
+    // ── ResourceTree（资源树浏览）────────────────────────────────────────────
+
+    /// <summary>资源树标题</summary>
+    public string ResourceTreeTitle => T("Resources", "资源");
+
+    /// <summary>资源树：工作空间容器</summary>
+    public string TreeWorkspaces => T("Workspaces", "工作空间");
+
+    /// <summary>资源树：数据存储容器</summary>
+    public string TreeDataStores => T("Data Stores", "数据存储");
+
+    /// <summary>资源树：图层容器</summary>
+    public string TreeLayers => T("Layers", "图层");
+
+    /// <summary>资源树：样式容器</summary>
+    public string TreeStyles => T("Styles", "样式");
+
+    /// <summary>资源树：图层组容器</summary>
+    public string TreeLayerGroups => T("Layer Groups", "图层组");
+
     // ── 通用 ────────────────────────────────────────────────────────────────
 
     /// <summary>刷新</summary>
