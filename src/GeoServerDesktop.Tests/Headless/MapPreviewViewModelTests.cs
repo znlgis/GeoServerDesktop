@@ -48,10 +48,10 @@ namespace GeoServerDesktop.Tests.Headless
         }
 
         [Fact]
-        public void ClearAndZoom_States()
+        public async Task ClearAndZoom_States()
         {
             var vm = new MapPreviewViewModel();
-            vm.LoadWmsLayerAsync("http://h/geoserver", "w", "l").GetAwaiter().GetResult();
+            await vm.LoadWmsLayerAsync("http://h/geoserver", "w", "l");
             Assert.NotNull(vm.PreviewUrl);
 
             vm.ClearLayersCommand.Execute(null);

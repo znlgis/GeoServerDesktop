@@ -1,0 +1,28 @@
+# Line endings: normalize all text files to LF in the repository and in working trees,
+# matching src/.editorconfig (end_of_line = lf) so that local Windows checkouts and
+# Linux CI behave identically.
+* text=auto eol=lf
+
+# Windows batch scripts keep CRLF (see src/.editorconfig).
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary files: never convert line endings, never attempt text diffs.
+*.ico binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.bmp binary
+*.webp binary
+*.zip binary
+*.gz binary
+*.7z binary
+*.nupkg binary
+*.dll binary
+*.exe binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary

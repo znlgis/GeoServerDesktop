@@ -137,7 +137,11 @@ namespace GeoServerDesktop.Tests.Infrastructure
                 // 触发 500 "the layer srs seems to be mis-configured"（curl 二分定位），必须显式给 Srs。
                 var ft = new FeatureType
                 {
-                    Name = ftName, NativeName = ftName, Enabled = true, Title = ftName, Srs = "EPSG:4326"
+                    Name = ftName,
+                    NativeName = ftName,
+                    Enabled = true,
+                    Title = ftName,
+                    Srs = "EPSG:4326"
                 };
                 try { await f.CreateFeatureTypeService().CreateFeatureTypeAsync(Ws, Ds, ft); }
                 catch (Exception e) when (AlreadyExists(e)) { }

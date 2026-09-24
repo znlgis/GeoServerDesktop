@@ -7,7 +7,7 @@ namespace GeoServerDesktop.App;
 /// <summary>
 /// 程序入口类
 /// </summary>
-sealed class Program
+internal sealed class Program
 {
     /// <summary>
     /// 初始化代码。在调用 Main 方法之前不要使用任何 Avalonia、第三方 API 或任何依赖于 SynchronizationContext 的代码：

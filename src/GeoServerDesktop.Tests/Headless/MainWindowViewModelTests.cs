@@ -57,23 +57,23 @@ namespace GeoServerDesktop.Tests.Headless
             var vm = new MainWindowViewModel { IsConnected = true }; // 直接置 VM 级标志以越过“请先连接”守卫
 
             // 记录 (命令, 期望目标视图) —— 覆盖全部 Show* 分支
-            vm.ShowAboutCommand.Execute(null);            Assert.Same(vm.AboutViewModel, vm.CurrentView);
-            vm.ShowLayerPreviewCommand.Execute(null);     Assert.Same(vm.MapPreviewViewModel, vm.CurrentView);
+            vm.ShowAboutCommand.Execute(null); Assert.Same(vm.AboutViewModel, vm.CurrentView);
+            vm.ShowLayerPreviewCommand.Execute(null); Assert.Same(vm.MapPreviewViewModel, vm.CurrentView);
             await vm.ShowWorkspacesCommand.ExecuteAsync(null); Assert.Same(vm.WorkspaceManagementViewModel, vm.CurrentView);
-            vm.ShowStoresCommand.Execute(null);           Assert.Same(vm.StoresManagementViewModel, vm.CurrentView);
-            vm.ShowLayersCommand.Execute(null);           Assert.Same(vm.LayersManagementViewModel, vm.CurrentView);
-            vm.ShowLayerGroupsCommand.Execute(null);      Assert.Same(vm.LayerGroupsManagementViewModel, vm.CurrentView);
-            vm.ShowStylesCommand.Execute(null);           Assert.Same(vm.StyleManagementViewModel, vm.CurrentView);
-            vm.ShowWMSSettingsCommand.Execute(null);      Assert.Same(vm.WmsSettingsViewModel, vm.CurrentView);
-            vm.ShowWFSSettingsCommand.Execute(null);      Assert.Same(vm.WfsSettingsViewModel, vm.CurrentView);
-            vm.ShowWCSSettingsCommand.Execute(null);      Assert.Same(vm.WcsSettingsViewModel, vm.CurrentView);
-            vm.ShowGlobalSettingsCommand.Execute(null);   Assert.Same(vm.GlobalSettingsViewModel, vm.CurrentView);
-            vm.ShowLoggingCommand.Execute(null);          Assert.Same(vm.LoggingViewModel, vm.CurrentView);
-            vm.ShowCachingDefaultsCommand.Execute(null);  Assert.Same(vm.CachingDefaultsViewModel, vm.CurrentView);
-            vm.ShowGridsetsCommand.Execute(null);         Assert.Same(vm.GridsetsViewModel, vm.CurrentView);
-            vm.ShowDiskQuotaCommand.Execute(null);        Assert.Same(vm.DiskQuotaViewModel, vm.CurrentView);
+            vm.ShowStoresCommand.Execute(null); Assert.Same(vm.StoresManagementViewModel, vm.CurrentView);
+            vm.ShowLayersCommand.Execute(null); Assert.Same(vm.LayersManagementViewModel, vm.CurrentView);
+            vm.ShowLayerGroupsCommand.Execute(null); Assert.Same(vm.LayerGroupsManagementViewModel, vm.CurrentView);
+            vm.ShowStylesCommand.Execute(null); Assert.Same(vm.StyleManagementViewModel, vm.CurrentView);
+            vm.ShowWMSSettingsCommand.Execute(null); Assert.Same(vm.WmsSettingsViewModel, vm.CurrentView);
+            vm.ShowWFSSettingsCommand.Execute(null); Assert.Same(vm.WfsSettingsViewModel, vm.CurrentView);
+            vm.ShowWCSSettingsCommand.Execute(null); Assert.Same(vm.WcsSettingsViewModel, vm.CurrentView);
+            vm.ShowGlobalSettingsCommand.Execute(null); Assert.Same(vm.GlobalSettingsViewModel, vm.CurrentView);
+            vm.ShowLoggingCommand.Execute(null); Assert.Same(vm.LoggingViewModel, vm.CurrentView);
+            vm.ShowCachingDefaultsCommand.Execute(null); Assert.Same(vm.CachingDefaultsViewModel, vm.CurrentView);
+            vm.ShowGridsetsCommand.Execute(null); Assert.Same(vm.GridsetsViewModel, vm.CurrentView);
+            vm.ShowDiskQuotaCommand.Execute(null); Assert.Same(vm.DiskQuotaViewModel, vm.CurrentView);
             vm.ShowSecuritySettingsCommand.Execute(null); Assert.Same(vm.SecuritySettingsViewModel, vm.CurrentView);
-            vm.ShowUsersGroupsCommand.Execute(null);      Assert.Same(vm.UsersGroupsRolesViewModel, vm.CurrentView);
+            vm.ShowUsersGroupsCommand.Execute(null); Assert.Same(vm.UsersGroupsRolesViewModel, vm.CurrentView);
         }
 
         [Fact]

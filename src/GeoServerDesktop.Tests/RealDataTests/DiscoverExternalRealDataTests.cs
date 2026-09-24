@@ -22,7 +22,7 @@ namespace GeoServerDesktop.Tests.RealDataTests
         public DiscoverExternalRealDataTests(GeoServerFixture fx) : base(fx) { }
 
         [Fact]
-        public void Discover_Publish_Verify()
+        public async Task Discover_Publish_Verify()
         {
             if (!RequireGeoServer()) return;
             var dir = TestEnv.RealDataDir;
@@ -59,13 +59,18 @@ namespace GeoServerDesktop.Tests.RealDataTests
                     string layer = Sanitize(baseName);
                     if (Try(() => factory.CreateDataStoreService().CreateDataStoreAsync(ExtWs, new DataStore
                     {
-                        Name = store, Type = "Shapefile", Enabled = true,
+                        Name = store,
+                        Type = "Shapefile",
+                        Enabled = true,
                         ConnectionParameters = new ConnectionParameters { Entries = new[] { new ConnectionParameterEntry { Key = "url", Value = refDir } } }
                     })))
                     {
                         Try(() => factory.CreateFeatureTypeService().CreateFeatureTypeAsync(ExtWs, store, new FeatureType
                         {
-                            Name = layer, NativeName = baseName, Srs = "EPSG:4326", Enabled = true,
+                            Name = layer,
+                            NativeName = baseName,
+                            Srs = "EPSG:4326",
+                            Enabled = true,
                             Namespace = new NamespaceReference { Name = ExtWs }
                         }));
                         publishedNames.Add(layer);
@@ -78,7 +83,7 @@ namespace GeoServerDesktop.Tests.RealDataTests
             }
             finally
             {
-                try { using var f2 = Fx.Factory(); f2.CreateWorkspaceService().DeleteWorkspaceAsync(ExtWs, true).GetAwaiter().GetResult(); } catch { }
+                try { using var f2 = Fx.Factory(); await f2.CreateWorkspaceService().DeleteWorkspaceAsync(ExtWs, true); } catch { }
             }
             Check.ThrowOnFail(results.ToArray());
         }

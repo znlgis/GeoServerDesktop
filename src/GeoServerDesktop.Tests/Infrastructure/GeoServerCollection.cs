@@ -8,7 +8,7 @@ namespace GeoServerDesktop.Tests.Infrastructure
     /// <summary>GeoServer 可达性探测：不可达时所有集成测试应跳过。</summary>
     public sealed class GeoServerAvailability
     {
-        private static bool? _reachable;
+        private static bool? Reachable;
         private static readonly object Gate = new object();
 
         public static bool IsGeoServerReachable
@@ -17,7 +17,7 @@ namespace GeoServerDesktop.Tests.Infrastructure
             {
                 lock (Gate)
                 {
-                    if (_reachable.HasValue) return _reachable.Value;
+                    if (Reachable.HasValue) return Reachable.Value;
                     try
                     {
                         using (var c = new HttpClient { Timeout = TimeSpan.FromSeconds(8) })
@@ -28,11 +28,11 @@ namespace GeoServerDesktop.Tests.Infrastructure
                                     Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(
                                         TestEnv.User + ":" + TestEnv.Pass)));
                             var ok = c.GetAsync(url).GetAwaiter().GetResult().IsSuccessStatusCode;
-                            _reachable = ok;
+                            Reachable = ok;
                         }
                     }
-                    catch { _reachable = false; }
-                    return _reachable.Value;
+                    catch { Reachable = false; }
+                    return Reachable.Value;
                 }
             }
         }

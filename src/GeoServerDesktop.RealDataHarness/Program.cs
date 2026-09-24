@@ -6,10 +6,10 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
-using Xunit;
 using GeoServerDesktop.GeoServerClient.Configuration;
 using GeoServerDesktop.Tests.Infrastructure;
 using GeoServerDesktop.Tests.RealData;
+using Xunit;
 
 namespace GeoServerDesktop.RealDataHarness
 {
@@ -23,7 +23,7 @@ namespace GeoServerDesktop.RealDataHarness
     /// </summary>
     public static class Program
     {
-        static int Main(string[] args)
+        private static int Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
             Check.Reset();
@@ -64,7 +64,7 @@ namespace GeoServerDesktop.RealDataHarness
         }
 
         // ---------------- 1. 环境 ----------------
-        static void RunEnvChecks()
+        private static void RunEnvChecks()
         {
             Console.WriteLine("-- 环境探测");
             Check.Cond(Directory.Exists(TestEnv.GeneratedDataDir), "Env/DataDir",
@@ -77,7 +77,7 @@ namespace GeoServerDesktop.RealDataHarness
         }
 
         // ---------------- 2. 数据完整性（文件头独立解析交叉校验） ----------------
-        static void RunDataIntegrityChecks()
+        private static void RunDataIntegrityChecks()
         {
             Console.WriteLine("-- 数据完整性");
             if (!Directory.Exists(TestEnv.GeneratedDataDir)) { Check.Warn("Data", "无数据目录，跳过"); return; }
@@ -115,12 +115,12 @@ namespace GeoServerDesktop.RealDataHarness
                 CheckExternalHeaders(TestEnv.RealDataDir);
         }
 
-        static IEnumerable<(string shp, string dbf)> DiscoverPairs(string dir) =>
+        private static IEnumerable<(string shp, string dbf)> DiscoverPairs(string dir) =>
             Directory.EnumerateFiles(dir, "*.shp", SearchOption.AllDirectories)
                 .Where(f => File.Exists(Path.ChangeExtension(f, ".dbf")))
                 .Select(f => (f, Path.ChangeExtension(f, ".dbf")));
 
-        static void CheckExternalHeaders(string dir)
+        private static void CheckExternalHeaders(string dir)
         {
             foreach (var (shp, dbf) in DiscoverPairs(dir))
             {
@@ -137,7 +137,7 @@ namespace GeoServerDesktop.RealDataHarness
         }
 
         // ---------------- 3. 发布 ----------------
-        static void RunPublication()
+        private static void RunPublication()
         {
             Console.WriteLine("-- 发布（被测客户端库路径）");
             E2ePublishHelper.EnsurePublished(new GeoServerFixture());
@@ -146,7 +146,7 @@ namespace GeoServerDesktop.RealDataHarness
         }
 
         // ---------------- 4. 服务面 ----------------
-        static void RunServicePlaneChecks()
+        private static void RunServicePlaneChecks()
         {
             Console.WriteLine("-- 服务面端到端（WFS/WMS/WCS/WMTS）");
             string dataDir = TestEnv.GeneratedDataDir;
@@ -186,14 +186,14 @@ namespace GeoServerDesktop.RealDataHarness
         }
 
         /// <summary>单条检查失败不中断整个 harness：记录后继续跑完全部检查（与 xunit 独立用例语义对齐）。</summary>
-        static void Throw(params CheckResult[] rs)
+        private static void Throw(params CheckResult[] rs)
         {
             try { Check.ThrowOnFail(rs); }
             catch (Exception ex) { Console.WriteLine("  [x] " + ex.Message); }
         }
 
         // ---------------- 5. GWC 缓存 ----------------
-        static void RunGwcChecks()
+        private static void RunGwcChecks()
         {
             Console.WriteLine("-- GWC seed/truncate");
             var gwcDir = DataEnv.GwcDir;
@@ -229,14 +229,14 @@ namespace GeoServerDesktop.RealDataHarness
                 "HTTP " + trunc.Status);
         }
 
-        static int CountFiles(string dir)
+        private static int CountFiles(string dir)
         {
             try { return Directory.GetFiles(dir, "*", SearchOption.AllDirectories).Length; }
             catch { return -1; }
         }
 
         // ---------------- 6. 外部真实数据（可选） ----------------
-        static void RunExternalRealData()
+        private static void RunExternalRealData()
         {
             Console.WriteLine("-- 外部真实数据泛化检查");
             // 头交叉校验已在数据完整性段完成；服务面发布需数据位于容器 data_dir 挂载内：
@@ -265,7 +265,7 @@ namespace GeoServerDesktop.RealDataHarness
             catch { }
         }
 
-        static bool IsUnder(string root, string dir)
+        private static bool IsUnder(string root, string dir)
         {
             var r = Path.GetFullPath(root).TrimEnd('\\', '/');
             var d = Path.GetFullPath(dir).TrimEnd('\\', '/');
@@ -273,7 +273,7 @@ namespace GeoServerDesktop.RealDataHarness
                    d.Equals(r, StringComparison.OrdinalIgnoreCase);
         }
 
-        static void PublishViaLib(string ws, string store, string dirRef)
+        private static void PublishViaLib(string ws, string store, string dirRef)
         {
             using var f = new GeoServerClientFactory(GeoServerAvailability.Options());
             var wsvc = f.CreateWorkspaceService();
@@ -298,7 +298,7 @@ namespace GeoServerDesktop.RealDataHarness
             }
         }
 
-        static void PublishFeatureType(string ws, string store, string layer)
+        private static void PublishFeatureType(string ws, string store, string layer)
         {
             using var f = new GeoServerClientFactory(GeoServerAvailability.Options());
             var ft = f.CreateFeatureTypeService();
@@ -307,13 +307,15 @@ namespace GeoServerDesktop.RealDataHarness
             {
                 ft.CreateFeatureTypeAsync(ws, store, new GeoServerDesktop.GeoServerClient.Models.FeatureType
                 {
-                    Name = layer, NativeName = layer, Enabled = true,
+                    Name = layer,
+                    NativeName = layer,
+                    Enabled = true,
                 }).GetAwaiter().GetResult();
             }
         }
 
         // ---------------- 汇总 ----------------
-        static int ReportAndExit()
+        private static int ReportAndExit()
         {
             Console.WriteLine();
             Console.WriteLine("== 汇总 ==");

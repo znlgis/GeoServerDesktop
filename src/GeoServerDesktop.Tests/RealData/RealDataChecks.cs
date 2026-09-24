@@ -5,9 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
-using SkiaSharp;
 using GeoServerDesktop.Tests.Infrastructure;
 using GeoServerDesktop.Tests.RealData;
+using SkiaSharp;
 
 namespace GeoServerDesktop.Tests.RealData
 {
@@ -280,7 +280,7 @@ namespace GeoServerDesktop.Tests.RealData
             if (bmp == null) return Check.Fail("WmsRedPixels", "PNG 解码失败");
             int red = 0; var distinct = new HashSet<uint>(); int w = bmp.Width, h = bmp.Height;
             for (int y = 0; y < h; y++) for (int x = 0; x < w; x++)
-                { var p = bmp.GetPixel(x, y); distinct.Add(((uint)p.Red << 16) | ((uint)p.Green << 8) | p.Blue); if (p.Red > 150 && p.Green < 80 && p.Blue < 80) red++; }
+            { var p = bmp.GetPixel(x, y); distinct.Add(((uint)p.Red << 16) | ((uint)p.Green << 8) | p.Blue); if (p.Red > 150 && p.Green < 80 && p.Blue < 80) red++; }
             bool ok = red > 0 && distinct.Count > 1;   // 有红色像素 + 非白屏（多色）
             return Check.Cond(ok, "WmsRedPixels",
                 $"红色像素={red}，distinct={distinct.Count}",
@@ -298,7 +298,7 @@ namespace GeoServerDesktop.Tests.RealData
             int w = bmp.Width, h = bmp.Height; var distinct = new HashSet<uint>();
             int samples = 0;
             for (int y = 0; y < h; y += 3) for (int x = 0; x < w; x += 3)
-                { var p = bmp.GetPixel(x, y); distinct.Add(((uint)p.Red << 16) | ((uint)p.Green << 8) | p.Blue); samples++; }
+            { var p = bmp.GetPixel(x, y); distinct.Add(((uint)p.Red << 16) | ((uint)p.Green << 8) | p.Blue); samples++; }
             return Check.Cond(distinct.Count > 1, "WmsDemo/" + tag,
                 $"{layer} 采样 {samples} 点 distinct={distinct.Count}（数据→像素链路成立）",
                 $"仅 {distinct.Count} 色（疑似空白）");
@@ -318,7 +318,7 @@ namespace GeoServerDesktop.Tests.RealData
             if (bmp == null) return Check.Warn("WmsDemoCaps/" + tag, "PNG 解码失败");
             int w = bmp.Width, h = bmp.Height; var distinct = new HashSet<uint>();
             for (int y = 0; y < h; y += 3) for (int x = 0; x < w; x += 3)
-                { var p = bmp.GetPixel(x, y); distinct.Add(((uint)p.Red << 16) | ((uint)p.Green << 8) | p.Blue); }
+            { var p = bmp.GetPixel(x, y); distinct.Add(((uint)p.Red << 16) | ((uint)p.Green << 8) | p.Blue); }
             return Check.Cond(distinct.Count > 1, "WmsDemoCaps/" + tag,
                 $"{layer} bbox=({bbox[0]:F1},{bbox[1]:F1},{bbox[2]:F1},{bbox[3]:F1}) distinct={distinct.Count}（数据→像素链路在既有真实数据成立）",
                 $"仅 {distinct.Count} 色（疑似空白）");

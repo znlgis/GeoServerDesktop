@@ -69,14 +69,14 @@ namespace GeoServerDesktop.Tests.Integration
             Assert.False(string.IsNullOrWhiteSpace(gs!.Settings!.Charset));
 
             // --- 整包 PUT 语义往返：GET 快照 → 改目标字段(numDecimals) → PUT → 逐字段比对 ---
-            var before = Newtonsoft.Json.Linq.JObject.Parse(Fx.Cleanup.GetAsync("/rest/settings.json").GetAwaiter().GetResult())["global"]["settings"];
+            var before = Newtonsoft.Json.Linq.JObject.Parse(await Fx.Cleanup.GetAsync("/rest/settings.json"))["global"]["settings"];
             int origDecimals = (int)before["numDecimals"];
             try
             {
                 gs.Settings.NumDecimals = origDecimals == 7 ? 8 : 7; // 目标字段
                 await svc.UpdateGlobalSettingsAsync(gs);
 
-                var after = Newtonsoft.Json.Linq.JObject.Parse(Fx.Cleanup.GetAsync("/rest/settings.json").GetAwaiter().GetResult())["global"]["settings"];
+                var after = Newtonsoft.Json.Linq.JObject.Parse(await Fx.Cleanup.GetAsync("/rest/settings.json"))["global"]["settings"];
                 Assert.Equal((int)gs.Settings.NumDecimals, (int)after["numDecimals"]); // 目标字段生效
                 // 除 numDecimals 外逐字段比对：ExtensionData 保证 GET 出现但模型未声明的键
                 // （metadata 的 quietOnNotFound map 形态等）也原样保留——GeoServer 3.0.1 整包替换语义

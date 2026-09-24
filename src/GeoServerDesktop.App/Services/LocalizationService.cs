@@ -7,12 +7,12 @@ namespace GeoServerDesktop.App.Services;
 /// </summary>
 public class LocalizationService : ObservableObject
 {
-    private static readonly LocalizationService _instance = new();
+    private static readonly LocalizationService Singleton = new();
 
     /// <summary>
     /// 获取单例实例
     /// </summary>
-    public static LocalizationService Instance => _instance;
+    public static LocalizationService Instance => Singleton;
 
     private bool _isChinese;
 

@@ -88,9 +88,9 @@ namespace GeoServerDesktop.Tests.Integration
             var t2 = f2.CreateLayerService().GetLayersAsync();
             var t3 = f1.CreateStyleService().GetStylesAsync();
             await Task.WhenAll(t1, t2, t3);
-            Assert.NotNull(t1.Result);
-            Assert.NotNull(t2.Result);
-            Assert.NotNull(t3.Result);
+            Assert.NotNull(await t1);
+            Assert.NotNull(await t2);
+            Assert.NotNull(await t3);
         }
     }
 }

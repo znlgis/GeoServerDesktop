@@ -18,7 +18,7 @@ namespace GeoServerDesktop.App.Views
             InitializeComponent();
 
             // 当 DataContext 设置时初始化
-            this.DataContextChanged += async (s, e) =>
+            DataContextChanged += async (s, e) =>
             {
                 if (DataContext is LayersManagementViewModel viewModel)
                 {
