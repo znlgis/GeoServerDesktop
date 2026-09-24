@@ -91,6 +91,31 @@ namespace GeoServerDesktop.Tests.Headless
             return null;
         }
 
+        /// <summary>独立统计全部工作空间数量（workspaces.workspace 数组长度；读取/解析失败返回 null）。</summary>
+        public static int? WorkspaceCount()
+        {
+            var j = Get("/rest/workspaces.json");
+            if (string.IsNullOrEmpty(j)) return null;
+            using var doc = JsonDocument.Parse(j);
+            return CountArray(doc.RootElement, "workspaces", "workspace");
+        }
+
+        /// <summary>独立统计全部图层数量（layers.layer 数组长度；读取/解析失败返回 null）。</summary>
+        public static int? LayerCount()
+        {
+            var j = Get("/rest/layers.json");
+            if (string.IsNullOrEmpty(j)) return null;
+            using var doc = JsonDocument.Parse(j);
+            return CountArray(doc.RootElement, "layers", "layer");
+        }
+
+        private static int? CountArray(JsonElement root, string outer, string inner)
+        {
+            if (!root.TryGetProperty(outer, out var o)) return null;
+            if (!o.TryGetProperty(inner, out var arr) || arr.ValueKind != JsonValueKind.Array) return 0;
+            return arr.GetArrayLength();
+        }
+
         /// <summary>独立解析 WFS settings.json 的 maxFeatures（数字）。</summary>
         public static long? WfsMaxFeatures(string wfsJson)
         {

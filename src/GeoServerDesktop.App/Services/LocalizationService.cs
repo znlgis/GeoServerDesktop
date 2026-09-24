@@ -138,6 +138,37 @@ public class LocalizationService : ObservableObject
     /// <summary>资源树：图层组容器</summary>
     public string TreeLayerGroups => T("Layer Groups", "图层组");
 
+    // ── Dashboard（欢迎页仪表盘）─────────────────────────────────────────────
+
+    /// <summary>仪表盘标题</summary>
+    public string DashboardTitle => T("Dashboard", "仪表盘");
+
+    /// <summary>仪表盘欢迎语（未连接时显示）</summary>
+    public string DashboardWelcomeMessage => T(
+        "Connect to a GeoServer instance using the login form above to begin managing your spatial data services.",
+        "使用上方的登录表单连接到 GeoServer 实例，开始管理您的空间数据服务。");
+
+    /// <summary>仪表盘：连接状态卡片标题</summary>
+    public string DashboardConnectionStatus => T("Connection Status", "连接状态");
+
+    /// <summary>仪表盘：已连接</summary>
+    public string DashboardConnected => T("Connected", "已连接");
+
+    /// <summary>仪表盘：未连接</summary>
+    public string DashboardNotConnected => T("Not connected", "未连接");
+
+    /// <summary>仪表盘：GeoServer 版本卡片标题</summary>
+    public string DashboardGeoServerVersion => T("GeoServer Version", "GeoServer 版本");
+
+    /// <summary>仪表盘：工作空间计数卡片标题</summary>
+    public string DashboardWorkspaces => T("Workspaces", "工作空间");
+
+    /// <summary>仪表盘：图层计数卡片标题</summary>
+    public string DashboardLayers => T("Layers", "图层");
+
+    /// <summary>仪表盘：刷新按钮提示</summary>
+    public string DashboardRefreshToolTip => T("Refresh dashboard overview", "刷新仪表盘速览");
+
     // ── 通用 ────────────────────────────────────────────────────────────────
 
     /// <summary>刷新</summary>
@@ -789,6 +820,15 @@ public class LocalizationService : ObservableObject
 
     /// <summary>刷新失败模板 {0}=消息</summary>
     public string StatusRefreshFailed => T("Failed to refresh: {0}", "刷新失败: {0}");
+
+    /// <summary>正在加载仪表盘</summary>
+    public string StatusDashboardLoading => T("Loading dashboard...", "正在加载仪表盘...");
+
+    /// <summary>仪表盘已加载</summary>
+    public string StatusDashboardLoaded => T("Dashboard loaded", "仪表盘已加载");
+
+    /// <summary>仪表盘加载失败模板 {0}=消息</summary>
+    public string StatusDashboardLoadFailed => T("Failed to load dashboard: {0}", "加载仪表盘失败: {0}");
 
     /// <summary>关于 GeoServer 状态</summary>
     public string StatusAbout => T("About GeoServer", "关于 GeoServer");

@@ -28,7 +28,7 @@ namespace GeoServerDesktop.Tests.Headless
             Assert.False(vm.IsConnected);
             Assert.Equal("Not connected", vm.StatusMessage);
             Assert.Empty(vm.ResourceTree);
-            Assert.IsType<PlaceholderViewModel>(vm.CurrentView);
+            Assert.IsType<DashboardViewModel>(vm.CurrentView);
         }
 
         [Fact]
@@ -87,7 +87,7 @@ namespace GeoServerDesktop.Tests.Headless
 
             Assert.False(vm.IsConnected);
             Assert.Empty(vm.ResourceTree);
-            Assert.IsType<PlaceholderViewModel>(vm.CurrentView);
+            Assert.Same(vm.DashboardViewModel, vm.CurrentView);
             Assert.Equal(vm.L.StatusDisconnected, vm.StatusMessage);
         }
 

@@ -70,6 +70,12 @@ public partial class MainWindowViewModel : ViewModelBase
     private ResourceTreeNode? _selectedNode;
 
     /// <summary>
+    /// 欢迎页仪表盘视图模型
+    /// </summary>
+    [ObservableProperty]
+    private DashboardViewModel _dashboardViewModel;
+
+    /// <summary>
     /// 地图预览视图模型
     /// </summary>
     [ObservableProperty]
@@ -184,6 +190,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         _connectionService = new GeoServerConnectionService();
         _connectionService.ConnectionStatusChanged += OnConnectionStatusChanged;
+        _dashboardViewModel = new DashboardViewModel(_connectionService);
         _mapPreviewViewModel = new MapPreviewViewModel();
         _workspaceManagementViewModel = new WorkspaceManagementViewModel(_connectionService);
         _styleManagementViewModel = new StyleManagementViewModel(_connectionService);
@@ -848,8 +855,7 @@ public partial class MainWindowViewModel : ViewModelBase
     // Factory methods for creating ViewModels
     private ViewModelBase CreateWelcomeViewModel()
     {
-        return new PlaceholderViewModel("Welcome to GeoServer Desktop",
-            "Connect to a GeoServer instance using the login form above to begin managing your spatial data services.");
+        return DashboardViewModel;
     }
 
     private ViewModelBase CreateStoresViewModel()
