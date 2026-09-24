@@ -9,7 +9,7 @@
 | 里程碑 | 主题 | 状态 |
 |---|---|---|
 | **M1** | 工程化地基 + 快速补缺 | 已完成 |
-| M2 | 数据导入向导 | 进行中 |
+| M2 | 数据导入向导 | 已完成 |
 | M3 | SLD 编辑器 + 样式体系强化 | 未开始 |
 | M4 | 批量操作 + 导入/导出 | 未开始 |
 | M5 | 架构收敛 + 版本发布 | 未开始 |
@@ -50,7 +50,7 @@
 - [x] **测试**：L1（参数构造/探测逻辑）、L2（发布闭环）、harness 增加「向导路径」检查项——已实现：L1 全量 375 通过、L2 `ImportWizardIT` 3 用例（发布闭环 + 幂等）、harness 向导检查（内置 shapefile + PostGIS + 外部真实数据）
 - [x] **实测暴露的产品修复**：覆盖度 `nativeCRS`/`crs` 对象形态反序列化（`CrsStringConverter`）；`ExistsAsync` 404 语义修正（幂等重入不再吞错）
 
-**验收**：外部真实数据（`GSD_REAL_DATA_DIR`）经向导路径一键发布并 WFS 计数比对通过。——已实测：16 个真实 shapefile（中国行政区划数据）经向导路径发布，WFS `numberMatched` 与 DBF 记录数全部一致（harness Pass=103 / Warn=2 / Fail=0；Warn 为两个已知 WCS 3.0.1 限制）。
+**验收**：外部真实数据（`GSD_REAL_DATA_DIR`）经向导路径一键发布并 WFS 计数比对通过。——已实测：16 个真实 shapefile（中国行政区划数据）经向导路径发布，WFS `numberMatched` 与 DBF 记录数全部一致（harness Pass=103 / Warn=2 / Fail=0；Warn 为两个已知 WCS 3.0.1 限制）。CI 三 job 全绿（run 36009604934）。
 
 ## M3（第 11–16 周）：SLD 编辑器 + 样式体系强化
 
