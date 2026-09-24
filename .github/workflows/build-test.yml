@@ -128,8 +128,14 @@ jobs:
 
     - name: Generate deterministic test data
       run: |
+        # GeoServer 容器 entrypoint 启动时会递归 chown 挂载的 data_dir 子目录（CHOWN_DATA_DIR 默认 true），
+        # 将 gdtest_data/gwc 属主改为容器用户，导致本步骤（runner 用户）无法写入。
+        # 先恢复 runner 属主再生成；生成后放宽权限位，确保容器内 GeoServer 与 runner 两侧都可读写
+        # （含 shapefile 的 .qix 索引写入）。
+        sudo chown -R "$(id -u):$(id -g)" "$GITHUB_WORKSPACE/gdtest_data" "$GITHUB_WORKSPACE/gwc"
         python3 tests/testdata/generate_testdata.py || echo "::warning::test data generation failed; data-dependent checks will skip"
         bash tests/testdata/load_postgis.sh || echo "::warning::PostGIS load failed; PostGIS-backed checks will skip"
+        sudo chmod -R a+rwX "$GITHUB_WORKSPACE/gdtest_data" "$GITHUB_WORKSPACE/gwc"
 
     - name: L2 integration tests (real GeoServer REST)
       run: dotnet test src/GeoServerDesktop.Tests/GeoServerDesktop.Tests.csproj --configuration Release --no-build --filter "FullyQualifiedName~Tests.Integration"
