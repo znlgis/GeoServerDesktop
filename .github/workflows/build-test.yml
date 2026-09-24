@@ -144,7 +144,22 @@ jobs:
       run: dotnet test src/GeoServerDesktop.Tests/GeoServerDesktop.Tests.csproj --configuration Release --no-build --filter "FullyQualifiedName~Tests.RealDataTests"
 
     - name: Real-data harness (Fail>0 → exit 1)
-      run: dotnet run --project src/GeoServerDesktop.RealDataHarness --configuration Release --no-build
+      run: |
+        # GWC 以 geoserveruser(uid 2000) 运行且镜像 umask 0027，其新建/重建的缓存目录与文件
+        # （750/640）对 runner 用户不可读（数据生成时的 chmod 只覆盖当时已存在的内容，
+        # truncate/seed 会重建目录）。以 root 运行 harness，使"瓦片文件增量"检查读到真实文件
+        # （检查目的为文件存在性，与属主无关）。
+        sudo env "PATH=$PATH" \
+          "GSD_GEOSERVER_URL=$GSD_GEOSERVER_URL" \
+          "GSD_TEST_DATA_DIR=$GSD_TEST_DATA_DIR" \
+          "GSD_CONTAINER_DATA_DIR=$GSD_CONTAINER_DATA_DIR" \
+          "GSD_TEST_PG_HOST=$GSD_TEST_PG_HOST" \
+          "GSD_TEST_PG_PORT=$GSD_TEST_PG_PORT" \
+          "GSD_TEST_PG_DB=$GSD_TEST_PG_DB" \
+          "GSD_TEST_PG_USER=$GSD_TEST_PG_USER" \
+          "GSD_TEST_PG_PASS=$GSD_TEST_PG_PASS" \
+          "GSD_GS_PG_HOST=$GSD_GS_PG_HOST" \
+          dotnet run --project src/GeoServerDesktop.RealDataHarness --configuration Release --no-build
 
     - name: GWC diagnostics (on failure)
       if: failure()
