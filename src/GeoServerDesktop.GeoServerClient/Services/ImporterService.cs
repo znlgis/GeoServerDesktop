@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
+using GeoServerDesktop.GeoServerClient.Import;
 using GeoServerDesktop.GeoServerClient.Models;
 using Newtonsoft.Json;
 
@@ -22,6 +23,48 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public ImporterService(IGeoServerHttpClient httpClient)
         {
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+        }
+
+        /// <summary>
+        /// 探测 Importer 扩展可用性（环境探测）：GET /rest/imports。
+        /// 404 → 扩展未安装（3.0.1 默认镜像基线）；2xx → 可用；其它错误 → Unknown。
+        /// </summary>
+        /// <returns>探测结果（状态与说明）。</returns>
+        public async Task<ImporterAvailability> ProbeAvailabilityAsync()
+        {
+            try
+            {
+                await _httpClient.GetAsync("/rest/imports.json");
+                return new ImporterAvailability
+                {
+                    State = ImporterAvailabilityState.Available,
+                    Message = "Importer 扩展可用",
+                };
+            }
+            catch (GeoServerRequestException ex)
+            {
+                if (ex.StatusCode == 404)
+                {
+                    return new ImporterAvailability
+                    {
+                        State = ImporterAvailabilityState.NotInstalled,
+                        Message = "Importer 扩展未安装（HTTP 404）；将使用内置发布向导",
+                    };
+                }
+                return new ImporterAvailability
+                {
+                    State = ImporterAvailabilityState.Unknown,
+                    Message = "探测失败（HTTP " + ex.StatusCode + "）",
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ImporterAvailability
+                {
+                    State = ImporterAvailabilityState.Unknown,
+                    Message = "探测失败：" + ex.Message,
+                };
+            }
         }
 
         /// <summary>

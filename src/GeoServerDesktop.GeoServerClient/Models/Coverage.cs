@@ -140,9 +140,10 @@ namespace GeoServerDesktop.GeoServerClient.Models
         public KeywordInfo Keywords { get; set; }
 
         /// <summary>
-        /// 获取或设置原始坐标参考系统
+        /// 获取或设置原始坐标参考系统（GeoServer 可能返回字符串或 {"@class","$"} 引用对象，统一宽容为字符串）
         /// </summary>
         [JsonProperty("nativeCRS")]
+        [JsonConverter(typeof(CrsStringConverter))]
         public string NativeCRS { get; set; }
 
         /// <summary>

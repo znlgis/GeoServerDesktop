@@ -322,6 +322,15 @@ namespace GeoServerDesktop.GeoServerClient.Configuration
         }
 
         /// <summary>
+        /// 创建新的 ImportWizardService 实例
+        /// </summary>
+        /// <returns>ImportWizardService 实例</returns>
+        public ImportWizardService CreateImportWizardService()
+        {
+            return new ImportWizardService(GetHttpClient());
+        }
+
+        /// <summary>
         /// 创建新的 MonitoringService 实例
         /// </summary>
         /// <returns>MonitoringService 实例</returns>

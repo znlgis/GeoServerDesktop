@@ -1,4 +1,6 @@
+using System;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace GeoServerDesktop.GeoServerClient.Models
 {
@@ -180,9 +182,10 @@ namespace GeoServerDesktop.GeoServerClient.Models
         public double MaxY { get; set; }
 
         /// <summary>
-        /// 坐标参考系统
+        /// 坐标参考系统（GeoServer 可能返回字符串或 {"@class","$"} 引用对象，统一宽容为字符串）
         /// </summary>
         [JsonProperty("crs")]
+        [JsonConverter(typeof(CrsStringConverter))]
         public string Crs { get; set; }
     }
 
@@ -220,5 +223,39 @@ namespace GeoServerDesktop.GeoServerClient.Models
         /// </summary>
         [JsonProperty("featureTypes")]
         public FeatureTypeList FeatureTypeList { get; set; }
+    }
+
+    /// <summary>
+    /// 宽容 CRS 字符串：接受字符串或 {"@class":...,"$":"..."} 引用对象，统一转为字符串。
+    /// GeoServer 3.0.1 对 coverage 的 nativeCRS / 边界框 crs 返回对象形态，对部分资源返回字符串形态。
+    /// </summary>
+    internal sealed class CrsStringConverter : JsonConverter
+    {
+        /// <summary>仅处理字符串属性的转换。</summary>
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(string);
+        }
+
+        /// <summary>读取：字符串原样返回；引用对象取 "$" 值；null 返回 null。</summary>
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            if (reader.TokenType == JsonToken.Null) return null;
+            if (reader.TokenType == JsonToken.String) return (string)reader.Value;
+            if (reader.TokenType == JsonToken.StartObject)
+            {
+                var jo = JObject.Load(reader);
+                var dollar = jo["$"];
+                return dollar == null ? null : dollar.ToString();
+            }
+            reader.Skip();
+            return null;
+        }
+
+        /// <summary>写入：字符串原样写出。</summary>
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            writer.WriteValue((string)value);
+        }
     }
 }
