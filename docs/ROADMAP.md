@@ -8,8 +8,8 @@
 
 | 里程碑 | 主题 | 状态 |
 |---|---|---|
-| **M1** | 工程化地基 + 快速补缺 | 进行中 |
-| M2 | 数据导入向导 | 未开始 |
+| **M1** | 工程化地基 + 快速补缺 | 已完成 |
+| M2 | 数据导入向导 | 进行中 |
 | M3 | SLD 编辑器 + 样式体系强化 | 未开始 |
 | M4 | 批量操作 + 导入/导出 | 未开始 |
 | M5 | 架构收敛 + 版本发布 | 未开始 |
@@ -24,7 +24,7 @@
 - [x] `build-test.yml`：push/PR 触发 → `dotnet build` + L1 单元测试 + L4 无头测试（build-test job）
 - [x] Lint：`dotnet format --verify-no-changes` 检查（lint job）
 - [x] 可选集成 job：容器起 GeoServer + PostGIS 跑 L2/L3 与 harness（缺环境自动跳过协议）
-- [ ] 推送后实测验证 CI 全绿（含集成 job 真实执行）
+- [x] 推送后实测验证 CI 全绿（build-test / lint / integration 三 job 真实执行；run 35970416303）
 
 ### 2. 文档治理
 - [x] 过时报告归档至 `docs/archive/`（14 份 2024 年阶段报告）
@@ -44,12 +44,13 @@
 
 **目标**：打通「本地数据 → 发布为服务」的最短路径，这是桌面工具相对 web admin 的最大价值点。
 
-1. **库层**：`ImporterService` 环境探测（扩展是否安装，404 → 明确状态）；不依赖扩展的内置发布向导数据面——目录浏览（file URL 校验）、数据源类型识别（shp 目录 / GeoTIFF / PostGIS 连接探测）、按 store type 的发布参数模板（替代 App 端手拼载荷）。
-2. **App 层**：三步向导 UI（选数据 → 配参数/预检（bbox、SRID、字段、记录数预览）→ 发布结果反馈含 WMS/WFS 预览链接）。
-3. **扩展自适应**：Importer 扩展可用时走扩展 API，不可用时走内置向导，UI 统一。
-4. **测试**：L1（参数构造/探测逻辑）、L2（发布闭环）、harness 增加「向导路径」检查项。
+- [x] **库层**：`ImporterService` 环境探测（404 → NotInstalled 明确状态）；不依赖扩展的内置发布向导数据面——目录浏览（file URL 校验）、数据源类型识别（shp 目录 / GeoTIFF / PostGIS 连接探测）、按 store type 的发布参数模板（替代 App 端手拼载荷）——已实现：`ImportWizardService`（三类数据源发布编排，幂等）+ `GeoFileInspector`（SHP/DBF/TIFF 文件头解析预览）+ 发布名/磁盘名分离（`NativeName`）
+- [x] **App 层**：三步向导 UI（选数据 → 配参数/预检（bbox、SRID、字段、记录数预览）→ 发布结果反馈含 WMS/WFS 预览链接）——已实现：`ImportWizardView` / `ImportWizardViewModel`（三步状态机、连接守卫、PostGIS 探测、本地预检、发布重入、中英 L10n）
+- [x] **扩展自适应**：扩展可用性探测就位（Available / NotInstalled / Unknown，库层）；App 以内置向导为统一路径（扩展 API 直连分支未接入，待扩展环境时补充）
+- [x] **测试**：L1（参数构造/探测逻辑）、L2（发布闭环）、harness 增加「向导路径」检查项——已实现：L1 全量 375 通过、L2 `ImportWizardIT` 3 用例（发布闭环 + 幂等）、harness 向导检查（内置 shapefile + PostGIS + 外部真实数据）
+- [x] **实测暴露的产品修复**：覆盖度 `nativeCRS`/`crs` 对象形态反序列化（`CrsStringConverter`）；`ExistsAsync` 404 语义修正（幂等重入不再吞错）
 
-**验收**：外部真实数据（`GSD_REAL_DATA_DIR`）经向导路径一键发布并 WFS 计数比对通过。
+**验收**：外部真实数据（`GSD_REAL_DATA_DIR`）经向导路径一键发布并 WFS 计数比对通过。——已实测：16 个真实 shapefile（中国行政区划数据）经向导路径发布，WFS `numberMatched` 与 DBF 记录数全部一致（harness Pass=103 / Warn=2 / Fail=0；Warn 为两个已知 WCS 3.0.1 限制）。
 
 ## M3（第 11–16 周）：SLD 编辑器 + 样式体系强化
 
