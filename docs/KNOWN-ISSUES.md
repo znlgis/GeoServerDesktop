@@ -1,7 +1,7 @@
 # 已知问题与兼容性清单（Known Issues）
 
 > 本文件承接《GeoServerDesktop 功能总结与中期开发规划（2026-09）》§2.1 / §2.2 基线清单，随每次合入更新。
-> 最后更新：2026-09-24 ｜ 实测基线：GeoServer 3.0.1
+> 最后更新：2026-09-25 ｜ 实测基线：GeoServer 3.0.1
 
 ## 一、兼容性总览
 
@@ -28,6 +28,7 @@
 - **WCS 2.0.1 GeoTIFF 输出丢弃 ModelPixelScale/Tiepoint**；**WCS 1.0.0 不受理 GetCoverage**。
 - **WMTS 矢量层默认 `format=mvt`**——预览需显式指定 `png`。
 - **imports / transforms / structuredcoverage 等扩展未安装时返回 404**——服务保留 + 注释，基线不翻转。
+- **样式 SLD 读回时 NamedLayer/UserStyle 名被规范化**（3.0.1 实测重写为 "Default Styler"；颜色等样式体保留）——编辑器加载已有样式时以 REST 资源名为准（客户端已适配）。
 
 ## 四、2.x 兼容性差异（预期兼容，待回归验证）
 
