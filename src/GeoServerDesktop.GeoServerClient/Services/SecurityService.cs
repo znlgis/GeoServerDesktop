@@ -12,7 +12,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// acl/{layers|services|rest} 回扁平 {"&lt;资源模式&gt;":"逗号分隔角色"} map）；带 .json 后缀实测 404。
     /// 模型改用 <see cref="SecurityACL.Parse(string)"/> 承接两种形态。
     /// </summary>
-    public class SecurityService : ServiceBase
+    public class SecurityService : ServiceBase, ISecurityService
     {
 
         /// <summary>

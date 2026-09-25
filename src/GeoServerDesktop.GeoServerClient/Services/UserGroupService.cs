@@ -17,7 +17,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     ///    组详情无独立路由 → 由 GET /group/{group}/users.json 合成成员列表；
     ///  - 服务列表路由为 /rest/security/usergroupservices.json（UserGroupServiceController），旧 /usergroup/services 404。
     /// </summary>
-    public class UserGroupService : ServiceBase
+    public class UserGroupService : ServiceBase, IUserGroupService
     {
 
         /// <summary>

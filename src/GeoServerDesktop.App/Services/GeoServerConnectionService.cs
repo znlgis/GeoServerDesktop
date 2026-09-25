@@ -65,7 +65,7 @@ namespace GeoServerDesktop.App.Services
         /// 获取工作空间服务
         /// </summary>
         /// <returns>WorkspaceService 实例</returns>
-        public WorkspaceService GetWorkspaceService()
+        public IWorkspaceService GetWorkspaceService()
         {
             EnsureConnected();
             return _factory!.CreateWorkspaceService();
@@ -75,7 +75,7 @@ namespace GeoServerDesktop.App.Services
         /// 获取数据存储服务
         /// </summary>
         /// <returns>DataStoreService 实例</returns>
-        public DataStoreService GetDataStoreService()
+        public IDataStoreService GetDataStoreService()
         {
             EnsureConnected();
             return _factory!.CreateDataStoreService();
@@ -85,7 +85,7 @@ namespace GeoServerDesktop.App.Services
         /// 获取覆盖存储服务（M4：批量操作需要枚举存储类型）
         /// </summary>
         /// <returns>CoverageStoreService 实例</returns>
-        public CoverageStoreService GetCoverageStoreService()
+        public ICoverageStoreService GetCoverageStoreService()
         {
             EnsureConnected();
             return _factory!.CreateCoverageStoreService();
@@ -95,7 +95,7 @@ namespace GeoServerDesktop.App.Services
         /// 获取图层服务
         /// </summary>
         /// <returns>LayerService 实例</returns>
-        public LayerService GetLayerService()
+        public ILayerService GetLayerService()
         {
             EnsureConnected();
             return _factory!.CreateLayerService();
@@ -105,7 +105,7 @@ namespace GeoServerDesktop.App.Services
         /// 获取样式服务
         /// </summary>
         /// <returns>StyleService 实例</returns>
-        public StyleService GetStyleService()
+        public IStyleService GetStyleService()
         {
             EnsureConnected();
             return _factory!.CreateStyleService();
@@ -115,7 +115,7 @@ namespace GeoServerDesktop.App.Services
         /// 获取图层组服务
         /// </summary>
         /// <returns>LayerGroupService 实例</returns>
-        public LayerGroupService GetLayerGroupService()
+        public ILayerGroupService GetLayerGroupService()
         {
             EnsureConnected();
             return _factory!.CreateLayerGroupService();
@@ -125,7 +125,7 @@ namespace GeoServerDesktop.App.Services
         /// 获取要素类型服务
         /// </summary>
         /// <returns>FeatureTypeService 实例</returns>
-        public FeatureTypeService GetFeatureTypeService()
+        public IFeatureTypeService GetFeatureTypeService()
         {
             EnsureConnected();
             return _factory!.CreateFeatureTypeService();
@@ -135,7 +135,7 @@ namespace GeoServerDesktop.App.Services
         /// 获取预览服务
         /// </summary>
         /// <returns>PreviewService 实例</returns>
-        public PreviewService GetPreviewService()
+        public IPreviewService GetPreviewService()
         {
             EnsureConnected();
             return _factory!.CreatePreviewService();
@@ -145,7 +145,7 @@ namespace GeoServerDesktop.App.Services
         /// 获取关于服务
         /// </summary>
         /// <returns>AboutService 实例</returns>
-        public AboutService GetAboutService()
+        public IAboutService GetAboutService()
         {
             EnsureConnected();
             return _factory!.CreateAboutService();
@@ -155,7 +155,7 @@ namespace GeoServerDesktop.App.Services
         /// 获取 GeoServer 全局设置服务
         /// </summary>
         /// <returns>GeoServer SettingsService 实例</returns>
-        public GeoServerClient.Services.SettingsService GetGlobalSettingsService()
+        public GeoServerClient.Services.ISettingsService GetGlobalSettingsService()
         {
             EnsureConnected();
             return _factory!.CreateSettingsService();
@@ -165,7 +165,7 @@ namespace GeoServerDesktop.App.Services
         /// 获取日志服务
         /// </summary>
         /// <returns>LoggingService 实例</returns>
-        public LoggingService GetLoggingService()
+        public ILoggingService GetLoggingService()
         {
             EnsureConnected();
             return _factory!.CreateLoggingService();
@@ -175,7 +175,7 @@ namespace GeoServerDesktop.App.Services
         /// 获取 WMS 服务设置服务
         /// </summary>
         /// <returns>WMSSettingsService 实例</returns>
-        public WMSSettingsService GetWMSSettingsService()
+        public IWMSSettingsService GetWMSSettingsService()
         {
             EnsureConnected();
             return _factory!.CreateWMSSettingsService();
@@ -185,7 +185,7 @@ namespace GeoServerDesktop.App.Services
         /// 获取 WFS 服务设置服务
         /// </summary>
         /// <returns>WFSSettingsService 实例</returns>
-        public WFSSettingsService GetWFSSettingsService()
+        public IWFSSettingsService GetWFSSettingsService()
         {
             EnsureConnected();
             return _factory!.CreateWFSSettingsService();
@@ -195,7 +195,7 @@ namespace GeoServerDesktop.App.Services
         /// 获取 WCS 服务设置服务
         /// </summary>
         /// <returns>WCSSettingsService 实例</returns>
-        public WCSSettingsService GetWCSSettingsService()
+        public IWCSSettingsService GetWCSSettingsService()
         {
             EnsureConnected();
             return _factory!.CreateWCSSettingsService();
@@ -205,7 +205,7 @@ namespace GeoServerDesktop.App.Services
         /// 获取磁盘配额服务
         /// </summary>
         /// <returns>DiskQuotaService 实例</returns>
-        public DiskQuotaService GetDiskQuotaService()
+        public IDiskQuotaService GetDiskQuotaService()
         {
             EnsureConnected();
             return _factory!.CreateDiskQuotaService();
@@ -215,7 +215,7 @@ namespace GeoServerDesktop.App.Services
         /// 获取格网集服务
         /// </summary>
         /// <returns>GridsetService 实例</returns>
-        public GridsetService GetGridsetService()
+        public IGridsetService GetGridsetService()
         {
             EnsureConnected();
             return _factory!.CreateGridsetService();
@@ -225,7 +225,7 @@ namespace GeoServerDesktop.App.Services
         /// 获取安全访问控制服务
         /// </summary>
         /// <returns>SecurityService 实例</returns>
-        public SecurityService GetSecurityService()
+        public ISecurityService GetSecurityService()
         {
             EnsureConnected();
             return _factory!.CreateSecurityService();
@@ -235,7 +235,7 @@ namespace GeoServerDesktop.App.Services
         /// 获取用户组服务
         /// </summary>
         /// <returns>UserGroupService 实例</returns>
-        public UserGroupService GetUserGroupService()
+        public IUserGroupService GetUserGroupService()
         {
             EnsureConnected();
             return _factory!.CreateUserGroupService();
@@ -245,7 +245,7 @@ namespace GeoServerDesktop.App.Services
         /// 获取角色服务
         /// </summary>
         /// <returns>RoleService 实例</returns>
-        public RoleService GetRoleService()
+        public IRoleService GetRoleService()
         {
             EnsureConnected();
             return _factory!.CreateRoleService();
@@ -255,7 +255,7 @@ namespace GeoServerDesktop.App.Services
         /// 获取资源服务
         /// </summary>
         /// <returns>ResourceService 实例</returns>
-        public ResourceService GetResourceService()
+        public IResourceService GetResourceService()
         {
             EnsureConnected();
             return _factory!.CreateResourceService();
@@ -265,7 +265,7 @@ namespace GeoServerDesktop.App.Services
         /// 获取数据导入向导服务
         /// </summary>
         /// <returns>ImportWizardService 实例</returns>
-        public ImportWizardService GetImportWizardService()
+        public IImportWizardService GetImportWizardService()
         {
             EnsureConnected();
             return _factory!.CreateImportWizardService();
@@ -275,7 +275,7 @@ namespace GeoServerDesktop.App.Services
         /// 获取样式使用聚合服务（M3：样式库绑定总览）
         /// </summary>
         /// <returns>StyleUsageService 实例</returns>
-        public StyleUsageService GetStyleUsageService()
+        public IStyleUsageService GetStyleUsageService()
         {
             EnsureConnected();
             return _factory!.CreateStyleUsageService();
@@ -285,7 +285,7 @@ namespace GeoServerDesktop.App.Services
         /// 获取批量操作服务（M4：批量启停/删除/改样式）
         /// </summary>
         /// <returns>BatchOperationService 实例</returns>
-        public BatchOperationService GetBatchOperationService()
+        public IBatchOperationService GetBatchOperationService()
         {
             EnsureConnected();
             return _factory!.CreateBatchOperationService();

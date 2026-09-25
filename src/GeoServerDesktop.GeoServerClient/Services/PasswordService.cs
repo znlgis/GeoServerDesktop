@@ -8,7 +8,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// 用于管理用户密码的服务
     /// </summary>
-    public class PasswordService : ServiceBase
+    public class PasswordService : ServiceBase, IPasswordService
     {
 
         /// <summary>

@@ -8,7 +8,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// 用于管理 GeoServer 数据存储的服务
     /// </summary>
-    public class DataStoreService : ServiceBase
+    public class DataStoreService : ServiceBase, IDataStoreService
     {
 
         /// <summary>

@@ -9,7 +9,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for managing GeoWebCache gridsets
     /// </summary>
-    public class GridsetService : ServiceBase
+    public class GridsetService : ServiceBase, IGridsetService
     {
 
         /// <summary>

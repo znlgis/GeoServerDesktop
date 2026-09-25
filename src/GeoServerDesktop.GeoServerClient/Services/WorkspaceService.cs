@@ -8,7 +8,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// 用于管理 GeoServer 工作空间的服务
     /// </summary>
-    public class WorkspaceService : ServiceBase
+    public class WorkspaceService : ServiceBase, IWorkspaceService
     {
 
         /// <summary>

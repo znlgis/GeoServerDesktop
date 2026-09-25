@@ -8,7 +8,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// 用于管理 GeoServer 样式的服务
     /// </summary>
-    public class StyleService : ServiceBase
+    public class StyleService : ServiceBase, IStyleService
     {
 
         /// <summary>

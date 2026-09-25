@@ -8,7 +8,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// 用于管理 GeoServer WMS 存储（级联 WMS）的服务
     /// </summary>
-    public class WMSStoreService : ServiceBase
+    public class WMSStoreService : ServiceBase, IWMSStoreService
     {
 
         /// <summary>

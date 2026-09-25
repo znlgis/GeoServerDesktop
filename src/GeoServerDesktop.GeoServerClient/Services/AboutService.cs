@@ -9,7 +9,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// 用于检索 GeoServer 系统信息的服务
     /// </summary>
-    public class AboutService : ServiceBase
+    public class AboutService : ServiceBase, IAboutService
     {
 
         /// <summary>

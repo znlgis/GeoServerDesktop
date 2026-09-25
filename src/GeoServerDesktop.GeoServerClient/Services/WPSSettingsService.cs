@@ -9,7 +9,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for managing WPS (Web Processing Service) settings
     /// </summary>
-    public class WPSSettingsService : ServiceBase
+    public class WPSSettingsService : ServiceBase, IWPSSettingsService
     {
 
         /// <summary>

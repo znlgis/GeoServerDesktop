@@ -9,7 +9,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for managing WFS service settings
     /// </summary>
-    public class WFSSettingsService : ServiceBase
+    public class WFSSettingsService : ServiceBase, IWFSSettingsService
     {
 
         /// <summary>

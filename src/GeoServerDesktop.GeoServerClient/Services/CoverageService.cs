@@ -8,7 +8,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// 用于管理 GeoServer 覆盖范围的服务 (raster layers)
     /// </summary>
-    public class CoverageService : ServiceBase
+    public class CoverageService : ServiceBase, ICoverageService
     {
 
         /// <summary>

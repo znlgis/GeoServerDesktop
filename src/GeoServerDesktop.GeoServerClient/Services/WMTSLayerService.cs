@@ -8,7 +8,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// 用于管理 GeoServer WMTS 图层的服务 (layers from cascaded WMTS services)
     /// </summary>
-    public class WMTSLayerService : ServiceBase
+    public class WMTSLayerService : ServiceBase, IWMTSLayerService
     {
 
         /// <summary>

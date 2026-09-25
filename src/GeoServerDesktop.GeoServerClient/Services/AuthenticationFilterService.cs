@@ -8,7 +8,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for managing authentication filters
     /// </summary>
-    public class AuthenticationFilterService : ServiceBase
+    public class AuthenticationFilterService : ServiceBase, IAuthenticationFilterService
     {
 
         /// <summary>

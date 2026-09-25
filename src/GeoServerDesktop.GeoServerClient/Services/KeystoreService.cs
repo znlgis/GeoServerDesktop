@@ -13,7 +13,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// UserPasswordController / MasterPasswordController 等，无 keystore 控制器）。
     /// 方法签名保留以兼容既有调用面，调用即抛 <see cref="NotSupportedException"/>。
     /// </summary>
-    public class KeystoreService : ServiceBase
+    public class KeystoreService : ServiceBase, IKeystoreService
     {
         private const string NoEndpointMessage =
             "GeoServer 3.0.1 无 keystore REST 端点（/rest/security/keystore(s) 实测 404），该功能仅 GUI 可用。";

@@ -8,7 +8,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// 用于管理 GeoServer 命名空间的服务
     /// </summary>
-    public class NamespaceService : ServiceBase
+    public class NamespaceService : ServiceBase, INamespaceService
     {
 
         /// <summary>

@@ -8,7 +8,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for managing GeoServer resource files
     /// </summary>
-    public class ResourceService : ServiceBase
+    public class ResourceService : ServiceBase, IResourceService
     {
 
         /// <summary>

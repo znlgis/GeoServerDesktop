@@ -9,7 +9,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for managing fonts in GeoServer
     /// </summary>
-    public class FontService : ServiceBase
+    public class FontService : ServiceBase, IFontService
     {
 
         /// <summary>

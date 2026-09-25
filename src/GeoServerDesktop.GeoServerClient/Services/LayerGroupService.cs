@@ -8,7 +8,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// 用于管理 GeoServer 图层组的服务
     /// </summary>
-    public class LayerGroupService : ServiceBase
+    public class LayerGroupService : ServiceBase, ILayerGroupService
     {
 
         /// <summary>

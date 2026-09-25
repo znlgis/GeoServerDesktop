@@ -9,7 +9,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for managing coverage views
     /// </summary>
-    public class CoverageViewService : ServiceBase
+    public class CoverageViewService : ServiceBase, ICoverageViewService
     {
 
         /// <summary>

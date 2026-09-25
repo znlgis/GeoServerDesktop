@@ -39,139 +39,139 @@ namespace GeoServerDesktop.App.Services
         /// 获取工作空间服务
         /// </summary>
         /// <returns>WorkspaceService 实例</returns>
-        WorkspaceService GetWorkspaceService();
+        IWorkspaceService GetWorkspaceService();
 
         /// <summary>
         /// 获取数据存储服务
         /// </summary>
         /// <returns>DataStoreService 实例</returns>
-        DataStoreService GetDataStoreService();
+        IDataStoreService GetDataStoreService();
 
         /// <summary>
         /// 获取覆盖存储服务（M4：批量操作需要枚举存储类型）
         /// </summary>
         /// <returns>CoverageStoreService 实例</returns>
-        CoverageStoreService GetCoverageStoreService();
+        ICoverageStoreService GetCoverageStoreService();
 
         /// <summary>
         /// 获取图层服务
         /// </summary>
         /// <returns>LayerService 实例</returns>
-        LayerService GetLayerService();
+        ILayerService GetLayerService();
 
         /// <summary>
         /// 获取样式服务
         /// </summary>
         /// <returns>StyleService 实例</returns>
-        StyleService GetStyleService();
+        IStyleService GetStyleService();
 
         /// <summary>
         /// 获取图层组服务
         /// </summary>
         /// <returns>LayerGroupService 实例</returns>
-        LayerGroupService GetLayerGroupService();
+        ILayerGroupService GetLayerGroupService();
 
         /// <summary>
         /// 获取要素类型服务
         /// </summary>
         /// <returns>FeatureTypeService 实例</returns>
-        FeatureTypeService GetFeatureTypeService();
+        IFeatureTypeService GetFeatureTypeService();
 
         /// <summary>
         /// 获取预览服务
         /// </summary>
         /// <returns>PreviewService 实例</returns>
-        PreviewService GetPreviewService();
+        IPreviewService GetPreviewService();
 
         /// <summary>
         /// 获取关于服务
         /// </summary>
         /// <returns>AboutService 实例</returns>
-        AboutService GetAboutService();
+        IAboutService GetAboutService();
 
         /// <summary>
         /// 获取 GeoServer 全局设置服务
         /// </summary>
         /// <returns>GeoServer SettingsService 实例</returns>
-        GeoServerClient.Services.SettingsService GetGlobalSettingsService();
+        GeoServerClient.Services.ISettingsService GetGlobalSettingsService();
 
         /// <summary>
         /// 获取日志服务
         /// </summary>
         /// <returns>LoggingService 实例</returns>
-        LoggingService GetLoggingService();
+        ILoggingService GetLoggingService();
 
         /// <summary>
         /// 获取 WMS 服务设置服务
         /// </summary>
         /// <returns>WMSSettingsService 实例</returns>
-        WMSSettingsService GetWMSSettingsService();
+        IWMSSettingsService GetWMSSettingsService();
 
         /// <summary>
         /// 获取 WFS 服务设置服务
         /// </summary>
         /// <returns>WFSSettingsService 实例</returns>
-        WFSSettingsService GetWFSSettingsService();
+        IWFSSettingsService GetWFSSettingsService();
 
         /// <summary>
         /// 获取 WCS 服务设置服务
         /// </summary>
         /// <returns>WCSSettingsService 实例</returns>
-        WCSSettingsService GetWCSSettingsService();
+        IWCSSettingsService GetWCSSettingsService();
 
         /// <summary>
         /// 获取磁盘配额服务
         /// </summary>
         /// <returns>DiskQuotaService 实例</returns>
-        DiskQuotaService GetDiskQuotaService();
+        IDiskQuotaService GetDiskQuotaService();
 
         /// <summary>
         /// 获取格网集服务
         /// </summary>
         /// <returns>GridsetService 实例</returns>
-        GridsetService GetGridsetService();
+        IGridsetService GetGridsetService();
 
         /// <summary>
         /// 获取安全访问控制服务
         /// </summary>
         /// <returns>SecurityService 实例</returns>
-        SecurityService GetSecurityService();
+        ISecurityService GetSecurityService();
 
         /// <summary>
         /// 获取用户组服务
         /// </summary>
         /// <returns>UserGroupService 实例</returns>
-        UserGroupService GetUserGroupService();
+        IUserGroupService GetUserGroupService();
 
         /// <summary>
         /// 获取角色服务
         /// </summary>
         /// <returns>RoleService 实例</returns>
-        RoleService GetRoleService();
+        IRoleService GetRoleService();
 
         /// <summary>
         /// 获取资源服务
         /// </summary>
         /// <returns>ResourceService 实例</returns>
-        ResourceService GetResourceService();
+        IResourceService GetResourceService();
 
         /// <summary>
         /// 获取数据导入向导服务
         /// </summary>
         /// <returns>ImportWizardService 实例</returns>
-        ImportWizardService GetImportWizardService();
+        IImportWizardService GetImportWizardService();
 
         /// <summary>
         /// 获取样式使用聚合服务（M3：样式库绑定总览）
         /// </summary>
         /// <returns>StyleUsageService 实例</returns>
-        StyleUsageService GetStyleUsageService();
+        IStyleUsageService GetStyleUsageService();
 
         /// <summary>
         /// 获取批量操作服务（M4：批量启停/删除/改样式）
         /// </summary>
         /// <returns>BatchOperationService 实例</returns>
-        BatchOperationService GetBatchOperationService();
+        IBatchOperationService GetBatchOperationService();
 
         /// <summary>
         /// 获取工作空间迁移服务（M4：导出/导入归档）

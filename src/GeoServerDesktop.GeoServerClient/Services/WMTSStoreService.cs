@@ -8,7 +8,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for managing GeoServer WMTS stores (cascaded WMTS services)
     /// </summary>
-    public class WMTSStoreService : ServiceBase
+    public class WMTSStoreService : ServiceBase, IWMTSStoreService
     {
 
         /// <summary>

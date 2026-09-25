@@ -9,7 +9,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// 用于管理 GeoServer 全局设置的服务
     /// </summary>
-    public class SettingsService : ServiceBase
+    public class SettingsService : ServiceBase, ISettingsService
     {
 
         /// <summary>

@@ -11,7 +11,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// 注：3.0.1 默认镜像未安装 WPS/XSLT 转换扩展，/rest/transforms 实测 404——
     /// 列表模型基线（{"transforms":[...]}）维持不变（清单+基线不动）。
     /// </summary>
-    public class TransformService : ServiceBase
+    public class TransformService : ServiceBase, ITransformService
     {
 
         /// <summary>

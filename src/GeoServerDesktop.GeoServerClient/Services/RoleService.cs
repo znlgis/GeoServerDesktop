@@ -9,7 +9,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for managing security roles
     /// </summary>
-    public class RoleService : ServiceBase
+    public class RoleService : ServiceBase, IRoleService
     {
 
         /// <summary>

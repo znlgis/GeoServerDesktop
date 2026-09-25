@@ -12,7 +12,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// 引用匹配：defaultStyle 的 href 含 "/workspaces/" 视为工作空间样式引用（不计入全局样式总览）；
     /// 否则按名字精确匹配全局样式（服务端资源名大小写敏感；在用样式删除有服务端 403 保护兜底）。
     /// </summary>
-    public class StyleUsageService : ServiceBase
+    public class StyleUsageService : ServiceBase, IStyleUsageService
     {
 
         /// <summary>

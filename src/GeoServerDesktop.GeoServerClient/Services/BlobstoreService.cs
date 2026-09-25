@@ -9,7 +9,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for managing GeoWebCache blobstores
     /// </summary>
-    public class BlobstoreService : ServiceBase
+    public class BlobstoreService : ServiceBase, IBlobstoreService
     {
 
         /// <summary>

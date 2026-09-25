@@ -9,7 +9,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for managing CSW (Catalogue Service for the Web) settings
     /// </summary>
-    public class CSWSettingsService : ServiceBase
+    public class CSWSettingsService : ServiceBase, ICSWSettingsService
     {
 
         /// <summary>

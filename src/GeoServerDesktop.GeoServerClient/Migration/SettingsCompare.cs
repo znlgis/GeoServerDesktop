@@ -378,7 +378,7 @@ namespace GeoServerDesktop.GeoServerClient.Migration
     /// <summary>
     /// 设置比对服务：跨实例读取同域设置并产出差异；应用差异时以目标实例为基底合并勾选路径后整包 PUT。
     /// </summary>
-    public class SettingsCompareService : ServiceBase
+    public class SettingsCompareService : ServiceBase, ISettingsCompareService
     {
 
         /// <summary>

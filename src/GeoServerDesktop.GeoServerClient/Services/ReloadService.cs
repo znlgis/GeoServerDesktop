@@ -7,7 +7,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// 用于重新加载和重置 GeoServer 目录和配置的服务
     /// </summary>
-    public class ReloadService : ServiceBase
+    public class ReloadService : ServiceBase, IReloadService
     {
 
         /// <summary>

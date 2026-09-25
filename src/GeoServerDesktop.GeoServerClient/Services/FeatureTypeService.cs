@@ -8,7 +8,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// 用于管理 GeoServer 要素类型的服务
     /// </summary>
-    public class FeatureTypeService : ServiceBase
+    public class FeatureTypeService : ServiceBase, IFeatureTypeService
     {
 
         /// <summary>

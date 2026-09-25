@@ -9,7 +9,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for managing security filter chains
     /// </summary>
-    public class FilterChainService : ServiceBase
+    public class FilterChainService : ServiceBase, IFilterChainService
     {
 
         /// <summary>

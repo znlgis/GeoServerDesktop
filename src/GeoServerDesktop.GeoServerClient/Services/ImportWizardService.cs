@@ -12,7 +12,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// （Shapefile 目录 / GeoTIFF / PostGIS 表 → store + 图层，幂等）。
     /// 与集成测试 fixture 同源的发布形态（参数键名、最小请求体）。
     /// </summary>
-    public class ImportWizardService : ServiceBase
+    public class ImportWizardService : ServiceBase, IImportWizardService
     {
 
         /// <summary>

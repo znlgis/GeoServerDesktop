@@ -9,7 +9,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// 用于管理 GeoServer 日志配置的服务
     /// </summary>
-    public class LoggingService : ServiceBase
+    public class LoggingService : ServiceBase, ILoggingService
     {
 
         /// <summary>

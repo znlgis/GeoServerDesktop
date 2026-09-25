@@ -11,7 +11,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// 注：3.0.1 默认镜像未安装 structured coverage observer 扩展（相关路由 404），
     /// E5/E21 等形态基线维持不变，安装扩展后需按实测复核。
     /// </summary>
-    public class StructuredCoverageService : ServiceBase
+    public class StructuredCoverageService : ServiceBase, IStructuredCoverageService
     {
 
         /// <summary>

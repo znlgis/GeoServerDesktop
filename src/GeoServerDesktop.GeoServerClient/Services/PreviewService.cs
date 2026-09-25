@@ -7,7 +7,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// 用于生成 WMS 预览 URL 的服务
     /// </summary>
-    public class PreviewService
+    public class PreviewService : IPreviewService
     {
         private readonly string _baseUrl;
 

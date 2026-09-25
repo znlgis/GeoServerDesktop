@@ -9,7 +9,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for monitoring GeoServer requests
     /// </summary>
-    public class MonitoringService : ServiceBase
+    public class MonitoringService : ServiceBase, IMonitoringService
     {
 
         /// <summary>

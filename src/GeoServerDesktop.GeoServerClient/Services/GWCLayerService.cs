@@ -9,7 +9,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for managing GeoWebCache layers
     /// </summary>
-    public class GWCLayerService : ServiceBase
+    public class GWCLayerService : ServiceBase, IGWCLayerService
     {
 
         /// <summary>

@@ -8,7 +8,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for managing GeoWebCache disk quotas
     /// </summary>
-    public class DiskQuotaService : ServiceBase
+    public class DiskQuotaService : ServiceBase, IDiskQuotaService
     {
 
         /// <summary>

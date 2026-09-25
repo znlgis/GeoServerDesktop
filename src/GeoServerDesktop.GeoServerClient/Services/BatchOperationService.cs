@@ -21,7 +21,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// ④ DELETE 工作空间 recurse=true 级联回收其孤立命名空间（实测工作空间创建即自动建同名 namespace，
     ///    recurse 删除后 namespace 一并消失）。
     /// </summary>
-    public class BatchOperationService : ServiceBase
+    public class BatchOperationService : ServiceBase, IBatchOperationService
     {
 
         /// <summary>

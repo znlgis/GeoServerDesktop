@@ -8,7 +8,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for managing URL validation checks
     /// </summary>
-    public class URLCheckService : ServiceBase
+    public class URLCheckService : ServiceBase, IURLCheckService
     {
 
         /// <summary>

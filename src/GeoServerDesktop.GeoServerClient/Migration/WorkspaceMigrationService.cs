@@ -28,7 +28,7 @@ namespace GeoServerDesktop.GeoServerClient.Migration
     /// ③ PUT/POST 请求体含 null 引用字段会触发 XStream NPE（500），回放前剥离 href/id/dateCreated/
     ///    dateModified/_default 等服务端字段；store/namespace 的限定名引用整体替换。
     /// </summary>
-    public class WorkspaceMigrationService : ServiceBase
+    public class WorkspaceMigrationService : ServiceBase, IWorkspaceMigrationService
     {
         private const string ManifestName = "manifest.json";
 

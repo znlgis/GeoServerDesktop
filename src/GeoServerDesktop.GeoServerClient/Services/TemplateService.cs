@@ -8,7 +8,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for managing feature templates
     /// </summary>
-    public class TemplateService : ServiceBase
+    public class TemplateService : ServiceBase, ITemplateService
     {
 
         /// <summary>

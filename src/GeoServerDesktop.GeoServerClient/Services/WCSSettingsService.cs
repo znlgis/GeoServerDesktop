@@ -9,7 +9,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for managing WCS service settings
     /// </summary>
-    public class WCSSettingsService : ServiceBase
+    public class WCSSettingsService : ServiceBase, IWCSSettingsService
     {
 
         /// <summary>

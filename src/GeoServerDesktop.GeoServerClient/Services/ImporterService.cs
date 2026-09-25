@@ -11,7 +11,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for managing bulk data imports
     /// </summary>
-    public class ImporterService : ServiceBase
+    public class ImporterService : ServiceBase, IImporterService
     {
 
         /// <summary>
