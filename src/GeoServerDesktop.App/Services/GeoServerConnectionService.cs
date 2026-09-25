@@ -262,6 +262,16 @@ namespace GeoServerDesktop.App.Services
         }
 
         /// <summary>
+        /// 获取样式使用聚合服务（M3：样式库绑定总览）
+        /// </summary>
+        /// <returns>StyleUsageService 实例</returns>
+        public StyleUsageService GetStyleUsageService()
+        {
+            EnsureConnected();
+            return _factory!.CreateStyleUsageService();
+        }
+
+        /// <summary>
         /// 确保已连接到 GeoServer 实例
         /// </summary>
         private void EnsureConnected()

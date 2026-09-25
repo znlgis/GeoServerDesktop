@@ -154,5 +154,11 @@ namespace GeoServerDesktop.App.Services
         /// </summary>
         /// <returns>ImportWizardService 实例</returns>
         ImportWizardService GetImportWizardService();
+
+        /// <summary>
+        /// 获取样式使用聚合服务（M3：样式库绑定总览）
+        /// </summary>
+        /// <returns>StyleUsageService 实例</returns>
+        StyleUsageService GetStyleUsageService();
     }
 }

@@ -141,6 +141,18 @@
                                         HorizontalContentAlignment="Left"
                                         Background="Transparent"
                                         Margin="0,2"/>
+                                <Button Content="{Binding L.NavSldEditor}"
+                                        Command="{Binding ShowSldEditorCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Background="Transparent"
+                                        Margin="0,2"/>
+                                <Button Content="{Binding L.NavStyleLibrary}"
+                                        Command="{Binding ShowStyleLibraryCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Background="Transparent"
+                                        Margin="0,2"/>
                             </StackPanel>
                         </Expander>
 

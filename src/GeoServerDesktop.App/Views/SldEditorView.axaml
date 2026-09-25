@@ -1,0 +1,174 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:GeoServerDesktop.App.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="760"
+             x:Class="GeoServerDesktop.App.Views.SldEditorView"
+             x:DataType="vm:SldEditorViewModel">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#F5F5F5" Padding="15" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
+            <StackPanel>
+                <TextBlock Text="{Binding L.SldEditorTitle}" FontSize="24" FontWeight="Bold"/>
+                <TextBlock Text="{Binding L.SldEditorSubtitle}" FontSize="13" Foreground="#666666" Margin="0,5,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Content -->
+        <ScrollViewer Grid.Row="1">
+            <StackPanel Margin="15" Spacing="12">
+
+                <!-- 目标与操作栏 -->
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="{Binding L.SldEditorStyleSelectLabel}" VerticalAlignment="Center"/>
+                    <ComboBox ItemsSource="{Binding Styles}"
+                              SelectedItem="{Binding SelectedStyle}"
+                              MinWidth="220"/>
+                    <Button Content="{Binding L.SldEditorLoadButton}" Command="{Binding LoadSelectedStyleCommand}"/>
+                    <Button Content="{Binding L.SldEditorNewButton}" Command="{Binding NewStyleCommand}"/>
+                    <Separator Width="1" Height="24" Background="#CCCCCC" Margin="6,0"/>
+                    <TextBlock Text="{Binding L.SldEditorNameLabel}" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding StyleName}" MinWidth="180"/>
+                    <Button Content="{Binding L.SldEditorSaveButton}" Command="{Binding SaveStyleCommand}"/>
+                    <Button Content="{Binding L.SldEditorValidateButton}" Command="{Binding ValidateSldCommand}"/>
+                </StackPanel>
+
+                <!-- 模式切换 -->
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="{Binding L.SldEditorModeLabel}" VerticalAlignment="Center" FontWeight="Bold"/>
+                    <Button Content="{Binding L.SldEditorSwitchToSource}" Command="{Binding SwitchToSourceCommand}"
+                            IsVisible="{Binding !IsSourceMode}"/>
+                    <Button Content="{Binding L.SldEditorSwitchToStructured}" Command="{Binding SwitchToStructuredCommand}"
+                            IsVisible="{Binding IsSourceMode}"/>
+                </StackPanel>
+
+                <!-- 结构化面板 -->
+                <Grid ColumnDefinitions="280,*" ColumnSpacing="12" IsVisible="{Binding !IsSourceMode}">
+                    <StackPanel Grid.Column="0" Spacing="6">
+                        <TextBlock Text="{Binding L.SldEditorRulesLabel}" FontWeight="Bold"/>
+                        <ListBox ItemsSource="{Binding Rules}"
+                                 SelectedItem="{Binding SelectedRule}"
+                                 Height="320">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="vm:SldRuleEditor">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Name}" Padding="2,0"/>
+                                        <TextBlock Text="{Binding SymbolizerKind}" FontSize="11" Foreground="#888888" Padding="2,0"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Button Content="{Binding L.SldEditorAddRuleButton}" Command="{Binding AddRuleCommand}"/>
+                            <Button Content="{Binding L.SldEditorRemoveRuleButton}" Command="{Binding RemoveRuleCommand}"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- 规则表单 -->
+                    <Border Grid.Column="1" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="4" Padding="12">
+                        <ScrollViewer>
+                            <StackPanel Spacing="10" IsVisible="{Binding !!SelectedRule}">
+                                <Grid ColumnDefinitions="150,*" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="6">
+                                    <TextBlock Grid.Row="0" Text="{Binding L.SldEditorRuleNameLabel}" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SelectedRule.Name}"/>
+                                    <TextBlock Grid.Row="1" Text="{Binding L.SldEditorSymbolizerKindLabel}" VerticalAlignment="Center"/>
+                                    <ComboBox Grid.Row="1" Grid.Column="1"
+                                              ItemsSource="{x:Static vm:SldRuleEditor.SymbolizerKinds}"
+                                              SelectedItem="{Binding SelectedRule.SymbolizerKind}"
+                                              HorizontalAlignment="Left" MinWidth="140"/>
+                                </Grid>
+
+                                <!-- 点专有 -->
+                                <Grid ColumnDefinitions="150,*" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="6"
+                                      IsVisible="{Binding SelectedRule.IsPoint}">
+                                    <TextBlock Grid.Row="0" Text="{Binding L.SldEditorWellKnownNameLabel}" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SelectedRule.WellKnownName}" MaxWidth="180" HorizontalAlignment="Left"/>
+                                    <TextBlock Grid.Row="1" Text="{Binding L.SldEditorSizeLabel}" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SelectedRule.Size}" MaxWidth="120" HorizontalAlignment="Left"/>
+                                </Grid>
+
+                                <!-- 填充（点/面） -->
+                                <Grid ColumnDefinitions="150,*" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="6"
+                                      IsVisible="{Binding SelectedRule.HasFill}">
+                                    <TextBlock Grid.Row="0" Text="{Binding L.SldEditorFillColorLabel}" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SelectedRule.FillColor}" MaxWidth="180" HorizontalAlignment="Left"/>
+                                    <TextBlock Grid.Row="1" Text="{Binding L.SldEditorFillOpacityLabel}" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SelectedRule.FillOpacity}" MaxWidth="120" HorizontalAlignment="Left"/>
+                                </Grid>
+
+                                <!-- 描边 -->
+                                <Grid ColumnDefinitions="150,*" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="6">
+                                    <TextBlock Grid.Row="0" Text="{Binding L.SldEditorStrokeColorLabel}" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SelectedRule.StrokeColor}" MaxWidth="180" HorizontalAlignment="Left"/>
+                                    <TextBlock Grid.Row="1" Text="{Binding L.SldEditorStrokeWidthLabel}" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SelectedRule.StrokeWidth}" MaxWidth="120" HorizontalAlignment="Left"/>
+                                </Grid>
+
+                                <!-- 过滤表达式 -->
+                                <CheckBox Content="{Binding L.SldEditorFilterLabel}" IsChecked="{Binding SelectedRule.FilterEnabled}"/>
+                                <Grid ColumnDefinitions="150,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="8" RowSpacing="6"
+                                      IsVisible="{Binding SelectedRule.FilterEnabled}">
+                                    <TextBlock Grid.Row="0" Text="{Binding L.SldEditorFilterPropertyLabel}" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SelectedRule.FilterProperty}" MaxWidth="220" HorizontalAlignment="Left"/>
+                                    <TextBlock Grid.Row="1" Text="{Binding L.SldEditorFilterOperatorLabel}" VerticalAlignment="Center"/>
+                                    <ComboBox Grid.Row="1" Grid.Column="1"
+                                              ItemsSource="{x:Static vm:SldRuleEditor.FilterOperators}"
+                                              SelectedItem="{Binding SelectedRule.FilterOperator}"
+                                              HorizontalAlignment="Left" MinWidth="120"/>
+                                    <TextBlock Grid.Row="2" Text="{Binding L.SldEditorFilterValueLabel}" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding SelectedRule.FilterValue}" MaxWidth="220" HorizontalAlignment="Left"/>
+                                </Grid>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+                </Grid>
+
+                <!-- 源码面板 -->
+                <StackPanel Spacing="8" IsVisible="{Binding IsSourceMode}">
+                    <TextBlock Text="{Binding L.SldEditorSourceLabel}" FontWeight="Bold"/>
+                    <TextBox Text="{Binding SourceXml}"
+                             AcceptsReturn="True"
+                             TextWrapping="NoWrap"
+                             FontFamily="Consolas,Courier New,monospace"
+                             FontSize="12"
+                             MinHeight="360"
+                             VerticalContentAlignment="Top"
+                             HorizontalContentAlignment="Left"
+                             ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                </StackPanel>
+
+                <!-- 预览 -->
+                <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="4" Padding="12">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="{Binding L.SldEditorPreviewSectionLabel}" FontWeight="Bold"/>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="{Binding L.SldEditorPreviewLayerLabel}" VerticalAlignment="Center"/>
+                            <ComboBox ItemsSource="{Binding PreviewLayers}"
+                                      SelectedItem="{Binding SelectedPreviewLayer}"
+                                      MinWidth="280"/>
+                            <Button Content="{Binding L.SldEditorPreviewButton}" Command="{Binding PreviewStyleCommand}"/>
+                        </StackPanel>
+                        <Border Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="4"
+                                IsVisible="{Binding !!PreviewUrl}">
+                            <SelectableTextBlock Text="{Binding PreviewUrl}"
+                                                 TextWrapping="Wrap"
+                                                 FontFamily="Consolas,Courier New,monospace"
+                                                 FontSize="12"/>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Status -->
+        <Border Grid.Row="2" Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="0,1,0,0">
+            <Grid ColumnDefinitions="Auto,*">
+                <TextBlock Grid.Column="0" Text="{Binding L.SldEditorTitle}" FontWeight="Bold" Margin="0,0,20,0"/>
+                <TextBlock Grid.Column="1" Text="{Binding StatusMessage}" Foreground="#666666" TextWrapping="Wrap"/>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

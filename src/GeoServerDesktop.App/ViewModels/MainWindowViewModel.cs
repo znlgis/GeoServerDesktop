@@ -184,6 +184,18 @@ public partial class MainWindowViewModel : ViewModelBase
     private ImportWizardViewModel _importWizardViewModel;
 
     /// <summary>
+    /// SLD 编辑器视图模型（M3）
+    /// </summary>
+    [ObservableProperty]
+    private SldEditorViewModel _sldEditorViewModel;
+
+    /// <summary>
+    /// 样式库视图模型（M3）
+    /// </summary>
+    [ObservableProperty]
+    private StyleLibraryViewModel _styleLibraryViewModel;
+
+    /// <summary>
     /// 当前显示的视图
     /// </summary>
     [ObservableProperty]
@@ -215,6 +227,8 @@ public partial class MainWindowViewModel : ViewModelBase
         _securitySettingsViewModel = new SecuritySettingsViewModel(_connectionService);
         _usersGroupsRolesViewModel = new UsersGroupsRolesViewModel(_connectionService);
         _importWizardViewModel = new ImportWizardViewModel(_connectionService);
+        _sldEditorViewModel = new SldEditorViewModel(_connectionService);
+        _styleLibraryViewModel = new StyleLibraryViewModel(_connectionService);
 
         // 设置默认视图为欢迎页面
         _currentView = CreateWelcomeViewModel();
@@ -476,6 +490,39 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         CurrentView = StyleManagementViewModel;
         StatusMessage = L.StatusStyles;
+    }
+
+    /// <summary>
+    /// 显示 SLD 编辑器页面（M3）
+    /// </summary>
+    [RelayCommand]
+    private void ShowSldEditor()
+    {
+        if (!IsConnected)
+        {
+            StatusMessage = L.StatusPleaseConnect;
+            return;
+        }
+        CurrentView = SldEditorViewModel;
+        _ = SldEditorViewModel.LoadStylesCommand.ExecuteAsync(null);
+        _ = SldEditorViewModel.LoadPreviewLayersCommand.ExecuteAsync(null);
+        StatusMessage = L.NavSldEditor;
+    }
+
+    /// <summary>
+    /// 显示样式库页面（M3）
+    /// </summary>
+    [RelayCommand]
+    private void ShowStyleLibrary()
+    {
+        if (!IsConnected)
+        {
+            StatusMessage = L.StatusPleaseConnect;
+            return;
+        }
+        CurrentView = StyleLibraryViewModel;
+        _ = StyleLibraryViewModel.LoadUsagesCommand.ExecuteAsync(null);
+        StatusMessage = L.NavStyleLibrary;
     }
 
     /// <summary>

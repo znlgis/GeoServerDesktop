@@ -1560,4 +1560,222 @@ public class LocalizationService : ObservableObject
 
     /// <summary>探测失败模板 {0}=消息</summary>
     public string WizardProbeFailed => T("Connection failed: {0}", "连接失败：{0}");
+
+    // ── SLD Editor（SLD 编辑器，M3） ─────────────────────────────────────
+
+    /// <summary>导航：SLD 编辑器</summary>
+    public string NavSldEditor => T("SLD Editor", "SLD 编辑器");
+
+    /// <summary>编辑器标题</summary>
+    public string SldEditorTitle => T("SLD Style Editor", "SLD 样式编辑器");
+
+    /// <summary>编辑器副标题</summary>
+    public string SldEditorSubtitle => T(
+        "Structured and source dual-mode editing with pre-apply validation and WMS preview",
+        "结构化与源码双模式编辑，应用前校验，WMS 预览");
+
+    /// <summary>样式选择下拉水印</summary>
+    public string SldEditorStyleSelectLabel => T("Select a style to load", "选择要加载的样式");
+
+    /// <summary>加载按钮</summary>
+    public string SldEditorLoadButton => T("Load", "加载");
+
+    /// <summary>新建按钮</summary>
+    public string SldEditorNewButton => T("New Style", "新建样式");
+
+    /// <summary>样式名标签</summary>
+    public string SldEditorNameLabel => T("Style name:", "样式名：");
+
+    /// <summary>保存按钮</summary>
+    public string SldEditorSaveButton => T("Save", "保存");
+
+    /// <summary>校验按钮</summary>
+    public string SldEditorValidateButton => T("Validate", "校验");
+
+    /// <summary>模式标签</summary>
+    public string SldEditorModeLabel => T("Mode:", "模式：");
+
+    /// <summary>切换到源码按钮</summary>
+    public string SldEditorSwitchToSource => T("Switch to Source XML", "切换到源码");
+
+    /// <summary>切换到结构化按钮</summary>
+    public string SldEditorSwitchToStructured => T("Switch to Structured", "切换到结构化");
+
+    /// <summary>规则列表标签</summary>
+    public string SldEditorRulesLabel => T("Rules", "规则列表");
+
+    /// <summary>添加规则按钮</summary>
+    public string SldEditorAddRuleButton => T("Add Rule", "添加规则");
+
+    /// <summary>删除规则按钮</summary>
+    public string SldEditorRemoveRuleButton => T("Remove Rule", "删除规则");
+
+    /// <summary>规则名标签</summary>
+    public string SldEditorRuleNameLabel => T("Rule name (optional)", "规则名（可选）");
+
+    /// <summary>符号化器标签</summary>
+    public string SldEditorSymbolizerKindLabel => T("Symbolizer", "符号化器");
+
+    /// <summary>点形状标签</summary>
+    public string SldEditorWellKnownNameLabel => T("Mark shape (point)", "点形状（仅点）");
+
+    /// <summary>尺寸标签</summary>
+    public string SldEditorSizeLabel => T("Size (point)", "尺寸（仅点）");
+
+    /// <summary>填充颜色标签</summary>
+    public string SldEditorFillColorLabel => T("Fill color", "填充颜色");
+
+    /// <summary>填充不透明度标签</summary>
+    public string SldEditorFillOpacityLabel => T("Fill opacity (0-1)", "填充不透明度（0-1）");
+
+    /// <summary>描边颜色标签</summary>
+    public string SldEditorStrokeColorLabel => T("Stroke color", "描边颜色");
+
+    /// <summary>描边宽度标签</summary>
+    public string SldEditorStrokeWidthLabel => T("Stroke width", "描边宽度");
+
+    /// <summary>过滤条件标签</summary>
+    public string SldEditorFilterLabel => T("Filter (optional)", "过滤条件（可选）");
+
+    /// <summary>过滤属性标签</summary>
+    public string SldEditorFilterPropertyLabel => T("Property", "属性");
+
+    /// <summary>过滤操作符标签</summary>
+    public string SldEditorFilterOperatorLabel => T("Operator", "操作符");
+
+    /// <summary>过滤值标签</summary>
+    public string SldEditorFilterValueLabel => T("Value", "值");
+
+    /// <summary>源码标签</summary>
+    public string SldEditorSourceLabel => T("SLD source (XML)", "SLD 源码（XML）");
+
+    /// <summary>预览区标签</summary>
+    public string SldEditorPreviewSectionLabel => T("Preview", "预览");
+
+    /// <summary>预览图层水印</summary>
+    public string SldEditorPreviewLayerLabel => T("Preview layer", "预览图层");
+
+    /// <summary>生成预览按钮</summary>
+    public string SldEditorPreviewButton => T("Generate Preview URL", "生成预览地址");
+
+    /// <summary>就绪</summary>
+    public string SldEditorReady => T("Ready. Load an existing style or create a new one.", "就绪。请加载现有样式或新建。");
+
+    /// <summary>样式列表已加载 {0}=数量</summary>
+    public string SldEditorStatusStylesLoaded => T("Loaded {0} styles", "已加载 {0} 个样式");
+
+    /// <summary>提示：先选择样式</summary>
+    public string SldEditorStatusSelectStyle => T("Select a style to load first", "请先选择要加载的样式");
+
+    /// <summary>样式已加载 {0}=样式名</summary>
+    public string SldEditorStatusStyleLoaded => T("Style \"{0}\" loaded", "已加载样式 \"{0}\"");
+
+    /// <summary>样式已加载（带警告） {0}=样式名 {1}=警告</summary>
+    public string SldEditorStatusStyleLoadedWarn => T("Style \"{0}\" loaded with warnings: {1}", "已加载样式 \"{0}\"，警告：{1}");
+
+    /// <summary>解析失败 {0}=错误</summary>
+    public string SldEditorStatusParseFailed => T("Parse failed: {0}", "解析失败：{0}");
+
+    /// <summary>新建就绪</summary>
+    public string SldEditorStatusNewReady => T("New style: enter a name and edit rules", "新建样式：请填写名称并编辑规则");
+
+    /// <summary>规则已添加</summary>
+    public string SldEditorStatusRuleAdded => T("Rule added", "已添加规则");
+
+    /// <summary>规则已删除</summary>
+    public string SldEditorStatusRuleRemoved => T("Rule removed", "已删除规则");
+
+    /// <summary>提示：先选择规则</summary>
+    public string SldEditorStatusNoRuleSelected => T("Select a rule first", "请先选择规则");
+
+    /// <summary>提示：先填写样式名</summary>
+    public string SldEditorStatusNeedName => T("Enter a style name first", "请先填写样式名");
+
+    /// <summary>已切换到源码模式</summary>
+    public string SldEditorStatusSwitchedToSource => T("Switched to source mode (XML regenerated from rules)", "已切换到源码模式（XML 由规则重新生成）");
+
+    /// <summary>已切换到结构化模式</summary>
+    public string SldEditorStatusSwitchedToStructured => T("Switched to structured mode", "已切换到结构化模式");
+
+    /// <summary>已切换到结构化模式（带警告） {0}=警告</summary>
+    public string SldEditorStatusSwitchedWarn => T("Switched to structured mode with warnings: {0}", "已切换到结构化模式，警告：{0}");
+
+    /// <summary>切换失败 {0}=错误</summary>
+    public string SldEditorStatusSwitchFailed => T("Cannot switch to source: {0}", "无法切换到源码：{0}");
+
+    /// <summary>校验通过</summary>
+    public string SldEditorStatusValid => T("Validation passed", "校验通过");
+
+    /// <summary>校验未通过 {0}=错误列表</summary>
+    public string SldEditorStatusInvalid => T("Validation failed: {0}", "校验未通过：{0}");
+
+    /// <summary>已保存 {0}=样式名</summary>
+    public string SldEditorStatusSaved => T("Style \"{0}\" saved", "样式 \"{0}\" 已保存");
+
+    /// <summary>保存失败 {0}=消息</summary>
+    public string SldEditorStatusSaveFailed => T("Save failed: {0}", "保存失败：{0}");
+
+    /// <summary>加载失败 {0}=消息</summary>
+    public string SldEditorStatusLoadFailed => T("Load failed: {0}", "加载失败：{0}");
+
+    /// <summary>提示：先保存再预览</summary>
+    public string SldEditorStatusNeedSaveForPreview => T("Save the style before previewing", "请先保存样式再预览");
+
+    /// <summary>提示：先选择预览图层</summary>
+    public string SldEditorStatusNeedLayer => T("Select a preview layer first", "请先选择预览图层");
+
+    /// <summary>预览地址已生成 {0}=图层名</summary>
+    public string SldEditorStatusPreviewReady => T("Preview URL generated for {0}", "已生成 {0} 的预览地址");
+
+    // ── Style Library（样式库，M3） ─────────────────────────────────────
+
+    /// <summary>导航：样式库</summary>
+    public string NavStyleLibrary => T("Style Library", "样式库");
+
+    /// <summary>样式库标题</summary>
+    public string StyleLibTitle => T("Style Library", "样式库");
+
+    /// <summary>样式库副标题</summary>
+    public string StyleLibSubtitle => T(
+        "Default-style bindings across all layers; unused styles can be cleaned up",
+        "全部图层的默认样式绑定总览；未引用样式可清理");
+
+    /// <summary>刷新按钮</summary>
+    public string StyleLibRefreshButton => T("Refresh", "刷新");
+
+    /// <summary>仅显示未引用</summary>
+    public string StyleLibUnusedOnly => T("Unused only", "仅显示未引用");
+
+    /// <summary>删除选中按钮</summary>
+    public string StyleLibDeleteButton => T("Delete Selected", "删除选中");
+
+    /// <summary>列头：样式</summary>
+    public string StyleLibColumnStyle => T("Style", "样式");
+
+    /// <summary>列头：引用图层</summary>
+    public string StyleLibColumnLayers => T("Referenced by layers", "引用图层");
+
+    /// <summary>未引用标记</summary>
+    public string StyleLibUnused => T("Unused", "未引用");
+
+    /// <summary>就绪</summary>
+    public string StyleLibReady => T("Ready", "就绪");
+
+    /// <summary>已加载 {0}=总数 {1}=未引用数</summary>
+    public string StyleLibStatusLoaded => T("Loaded {0} styles ({1} unused)", "已加载 {0} 个样式（{1} 个未引用）");
+
+    /// <summary>加载失败 {0}=消息</summary>
+    public string StyleLibStatusLoadFailed => T("Load failed: {0}", "加载失败：{0}");
+
+    /// <summary>提示：先选择样式</summary>
+    public string StyleLibStatusSelectFirst => T("Select a style first", "请先选择样式");
+
+    /// <summary>无法删除：仍被引用</summary>
+    public string StyleLibStatusDeleteInUse => T("Cannot delete: style is still referenced by layers", "无法删除：样式仍被图层引用");
+
+    /// <summary>已删除 {0}=样式名</summary>
+    public string StyleLibStatusDeleted => T("Deleted style \"{0}\"", "已删除样式 \"{0}\"");
+
+    /// <summary>删除失败 {0}=消息</summary>
+    public string StyleLibStatusDeleteFailed => T("Delete failed: {0}", "删除失败：{0}");
 }

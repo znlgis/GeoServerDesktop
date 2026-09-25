@@ -1,0 +1,62 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:GeoServerDesktop.App.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="640"
+             x:Class="GeoServerDesktop.App.Views.StyleLibraryView"
+             x:DataType="vm:StyleLibraryViewModel">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#F5F5F5" Padding="15" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
+            <StackPanel>
+                <TextBlock Text="{Binding L.StyleLibTitle}" FontSize="24" FontWeight="Bold"/>
+                <TextBlock Text="{Binding L.StyleLibSubtitle}" FontSize="13" Foreground="#666666" Margin="0,5,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Content -->
+        <Grid Grid.Row="1" RowDefinitions="Auto,*" Margin="15">
+            <!-- Toolbar -->
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8" Margin="0,0,0,10">
+                <Button Content="{Binding L.StyleLibRefreshButton}" Command="{Binding LoadUsagesCommand}"/>
+                <CheckBox Content="{Binding L.StyleLibUnusedOnly}" IsChecked="{Binding ShowUnusedOnly}" VerticalAlignment="Center"/>
+                <Separator Width="1" Height="24" Background="#CCCCCC" Margin="6,0"/>
+                <Button Content="{Binding L.StyleLibDeleteButton}" Command="{Binding DeleteSelectedCommand}"/>
+            </StackPanel>
+
+            <!-- List -->
+            <Border Grid.Row="1" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="4">
+                <Grid RowDefinitions="Auto,*">
+                    <Grid Grid.Row="0" ColumnDefinitions="260,*" Background="#F0F0F0" Margin="1">
+                        <TextBlock Grid.Column="0" Text="{Binding L.StyleLibColumnStyle}" FontWeight="Bold" Padding="8,6"/>
+                        <TextBlock Grid.Column="1" Text="{Binding L.StyleLibColumnLayers}" FontWeight="Bold" Padding="8,6"/>
+                    </Grid>
+                    <ListBox Grid.Row="1"
+                             ItemsSource="{Binding Usages}"
+                             SelectedItem="{Binding SelectedUsage}"
+                             BorderThickness="0">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="vm:StyleUsageItem">
+                                <Grid ColumnDefinitions="260,*">
+                                    <TextBlock Grid.Column="0" Text="{Binding StyleName}" Padding="4,2"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding LayersDisplay}" Padding="4,2"
+                                               Foreground="#555555" TextWrapping="Wrap"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Status -->
+        <Border Grid.Row="2" Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="0,1,0,0">
+            <Grid ColumnDefinitions="Auto,*">
+                <TextBlock Grid.Column="0" Text="{Binding L.StyleLibTitle}" FontWeight="Bold" Margin="0,0,20,0"/>
+                <TextBlock Grid.Column="1" Text="{Binding StatusMessage}" Foreground="#666666" TextWrapping="Wrap"/>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
