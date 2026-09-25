@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading;
 using GeoServerDesktop.GeoServerClient.Configuration;
 using GeoServerDesktop.GeoServerClient.Import;
+using GeoServerDesktop.GeoServerClient.Models;
+using GeoServerDesktop.GeoServerClient.Sld;
 using GeoServerDesktop.Tests.Infrastructure;
 using GeoServerDesktop.Tests.RealData;
 using Xunit;
@@ -44,6 +46,7 @@ namespace GeoServerDesktop.RealDataHarness
                 {
                     RunPublication();
                     RunWizardPublishChecks();
+                    RunStyleChecks();
                     RunServicePlaneChecks();
                     RunGwcChecks();
                 }
@@ -259,6 +262,121 @@ namespace GeoServerDesktop.RealDataHarness
                 Check.Fail("Wizard/crash", ex.GetType().Name + ": " + ex.Message);
             }
         }
+
+        // ---------------- 3.7 样式路径（M3：SLD 编辑器 + 样式库） ----------------
+        private static void RunStyleChecks()
+        {
+            Console.WriteLine("-- 样式路径（SLD 编辑器 + 样式库）");
+            string styleName = "gdtest_sld_harness";
+            string layerFull = E2ePublishHelper.Ws + ":" + E2ePublishHelper.PolyLayer;
+            string originalStyle = "polygon";
+            try
+            {
+                using var f = new GeoServerClientFactory(GeoServerAvailability.Options());
+                var stSvc = f.CreateStyleService();
+                var lySvc = f.CreateLayerService();
+
+                try { stSvc.DeleteStyleAsync(styleName, purge: true).GetAwaiter().GetResult(); } catch { }
+                var orig = lySvc.GetLayerAsync(E2ePublishHelper.PolyLayer).GetAwaiter().GetResult();
+                originalStyle = orig?.DefaultStyle?.Name ?? originalStyle;
+
+                // 1) 结构化模型 → 生成 SLD → 本地校验（M3 生成器/校验器）
+                var redSld = SldBuilder.Build(PolygonDoc(styleName, "#FF0000"));
+                Throw(Check.Cond(SldValidator.Validate(redSld).IsValid, "Style/sld-validate",
+                    "生成 SLD 本地校验通过", "生成 SLD 本地校验失败"));
+
+                // 2) 保存（POST 元数据 + PUT SLD 两步）→ 读回解析（round-trip；颜色保留）
+                stSvc.CreateStyleAsync(styleName, redSld).GetAwaiter().GetResult();
+                var fetched = stSvc.GetStyleSldAsync(styleName).GetAwaiter().GetResult();
+                var parsed = SldParser.Parse(fetched);
+                Throw(Check.Cond(parsed.Success, "Style/sld-roundtrip", "读回可解析", "读回解析失败：" + parsed.Error));
+                string fill = null;
+                if (parsed.Success && parsed.Document != null && parsed.Document.Rules.Count > 0)
+                    fill = (parsed.Document.Rules[0].Symbolizer as SldPolygonSymbolizer)?.FillColor;
+                Throw(Check.Cond(fill == "#FF0000", "Style/sld-roundtrip-color", "读回填充色保留 #FF0000", "读回填充色=" + (fill ?? "(null)")));
+
+                // 3) 绑定图层 → 使用关系聚合（库层）→ 全量交叉核对（裸 REST 重建期望）
+                var layer = lySvc.GetLayerAsync(E2ePublishHelper.PolyLayer).GetAwaiter().GetResult();
+                lySvc.UpdateLayerAsync(E2ePublishHelper.PolyLayer, BuildLayerUpdate(layer, styleName)).GetAwaiter().GetResult();
+                var bound = lySvc.GetLayerAsync(E2ePublishHelper.PolyLayer).GetAwaiter().GetResult();
+                Throw(Check.Cond(bound?.DefaultStyle?.Name == styleName, "Style/bind",
+                    "图层默认样式绑定=" + styleName, "绑定后默认样式=" + (bound?.DefaultStyle?.Name ?? "(null)")));
+
+                var usages = f.CreateStyleUsageService().GetStyleUsageAsync().GetAwaiter().GetResult();
+                var mine = usages.FirstOrDefault(u => u.StyleName == styleName);
+                Throw(Check.Cond(mine != null && mine.IsUsed && mine.Layers.Contains(layerFull), "Style/usage-bound",
+                    "聚合结果含 " + styleName + " → [" + layerFull + "]",
+                    "聚合未记录绑定关系：" + (mine == null ? "样式缺失" : "used=" + mine.IsUsed + " layers=[" + string.Join(",", mine.Layers) + "]")));
+                Throw(StyleChecks.UsageCrossCheck(usages));
+
+                // 4) WMS 出图像素验证：红 → 编辑为蓝 → 蓝（更新即时生效）
+                Throw(RealDataChecks.WmsColorPixels(layerFull, styleName, "red", "style/red"));
+                stSvc.UpdateStyleAsync(styleName, SldBuilder.Build(PolygonDoc(styleName, "#0000FF"))).GetAwaiter().GetResult();
+                Throw(RealDataChecks.WmsColorPixels(layerFull, styleName, "blue", "style/blue"));
+
+                // 5) 删除保护：引用中 DELETE → 403 拒绝且样式仍在（probe6 实测基线）
+                var del = OgcProbe.Delete(TestEnv.RestBase + "/rest/styles/" + Uri.EscapeDataString(styleName) + "?purge=true");
+                var still = OgcProbe.Get(TestEnv.RestBase + "/rest/styles/" + Uri.EscapeDataString(styleName) + ".json");
+                Throw(Check.Cond(del.Status == 403 && still.Ok, "Style/delete-protected",
+                    $"引用中删除被拒（HTTP {del.Status}）且样式仍在", $"删除 HTTP {del.Status}，样式在否={still.Ok}"));
+
+                // 6) 解绑（恢复原始默认样式）→ 删除 → 404
+                lySvc.UpdateLayerAsync(E2ePublishHelper.PolyLayer, BuildLayerUpdate(layer, originalStyle)).GetAwaiter().GetResult();
+                stSvc.DeleteStyleAsync(styleName, purge: true).GetAwaiter().GetResult();
+                var gone = OgcProbe.Get(TestEnv.RestBase + "/rest/styles/" + Uri.EscapeDataString(styleName) + ".json");
+                Throw(Check.Cond(gone.Status == 404, "Style/delete-404", "解绑后删除 → GET 404", "删除后 GET HTTP " + gone.Status));
+            }
+            catch (Exception ex)
+            {
+                Check.Fail("Style/crash", ex.GetType().Name + ": " + ex.Message);
+            }
+            finally
+            {
+                // 兜底：恢复图层默认样式 + 清理探针样式
+                try
+                {
+                    using var f2 = new GeoServerClientFactory(GeoServerAvailability.Options());
+                    var ly = f2.CreateLayerService();
+                    var l = ly.GetLayerAsync(E2ePublishHelper.PolyLayer).GetAwaiter().GetResult();
+                    if (l?.DefaultStyle?.Name == styleName)
+                        ly.UpdateLayerAsync(E2ePublishHelper.PolyLayer, BuildLayerUpdate(l, originalStyle)).GetAwaiter().GetResult();
+                    try { f2.CreateStyleService().DeleteStyleAsync(styleName, purge: true).GetAwaiter().GetResult(); } catch { }
+                }
+                catch { }
+            }
+        }
+
+        /// <summary>纯色面文档（Fill + Stroke 同色）。</summary>
+        private static SldDocument PolygonDoc(string styleName, string color)
+        {
+            var doc = new SldDocument { LayerName = styleName };
+            doc.Rules.Add(new SldRule
+            {
+                Symbolizer = new SldPolygonSymbolizer
+                {
+                    FillColor = color,
+                    FillOpacity = 1,
+                    StrokeColor = color,
+                    StrokeWidth = 1,
+                },
+            });
+            return doc;
+        }
+
+        /// <summary>PUT layer 必须回传填实的 resource 引用（与 L2 集成测试同一形态）。</summary>
+        private static Layer BuildLayerUpdate(Layer orig, string defaultStyleName) => new Layer
+        {
+            Name = orig.Name,
+            Type = orig.Type,
+            DefaultStyle = new StyleReference { Name = defaultStyleName, Href = "" },
+            Resource = new ResourceReference
+            {
+                Class = orig.Resource?.Class ?? "featureType",
+                Name = orig.Resource?.Name ?? "",
+                Href = "",
+            },
+            Href = "",
+        };
 
         // ---------------- 4. 服务面 ----------------
         private static void RunServicePlaneChecks()

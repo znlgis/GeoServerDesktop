@@ -294,6 +294,31 @@ namespace GeoServerDesktop.Tests.RealData
                 $"red={red} distinct={distinct.Count}（应>0且>1，防白屏）");
         }
 
+        /// <summary>WMS GetMap 目标色像素检查（color: red/blue）：命中像素&gt;0 且非白屏（distinct&gt;1）。</summary>
+        public static CheckResult WmsColorPixels(string layer, string styleName, string color, string tag)
+        {
+            var r = OgcProbe.Get(OgcProbe.Wms("request=GetMap", "version=1.1.1", "layers=" + layer,
+                "styles=" + styleName, "bbox=0,0,11,6", "width=220", "height=120", "srs=EPSG:4326", "format=image/png"));
+            if (!(r.Ok && IsPng(r.Bytes))) return Check.Fail("WmsPixels/" + tag, $"GetMap 非 PNG（HTTP {r.Status}）");
+            using var bmp = SKBitmap.Decode(r.Bytes);
+            if (bmp == null) return Check.Fail("WmsPixels/" + tag, "PNG 解码失败");
+            int hit = 0; var distinct = new HashSet<uint>(); int w = bmp.Width, h = bmp.Height;
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    var p = bmp.GetPixel(x, y);
+                    distinct.Add(((uint)p.Red << 16) | ((uint)p.Green << 8) | p.Blue);
+                    if (color == "red" && p.Red > 150 && p.Green < 80 && p.Blue < 80) hit++;
+                    if (color == "blue" && p.Blue > 150 && p.Red < 80 && p.Green < 80) hit++;
+                }
+            }
+            bool ok = hit > 0 && distinct.Count > 1;   // 有目标色像素 + 非白屏（多色）
+            return Check.Cond(ok, "WmsPixels/" + tag,
+                $"{color} 像素={hit}，distinct={distinct.Count}",
+                $"{color}={hit} distinct={distinct.Count}（应>0且>1，防白屏）");
+        }
+
         public static CheckResult WmsDemoLayerNonMonochrome(string layer, double[] bbox, string tag)
         {
             var r = OgcProbe.Get(OgcProbe.Wms("request=GetMap", "version=1.3.0", "layers=" + layer,

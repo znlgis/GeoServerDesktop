@@ -82,6 +82,22 @@ namespace GeoServerDesktop.Tests.RealData
             }
         }
 
+        public static Resp Delete(string url)
+        {
+            try
+            {
+                using var req = new HttpRequestMessage(HttpMethod.Delete, url);
+                using var resp = Http.Send(req);
+                var bytes = resp.Content?.ReadAsByteArrayAsync().GetAwaiter().GetResult() ?? Array.Empty<byte>();
+                var ct = resp.Content?.Headers?.ContentType?.MediaType ?? "";
+                return new Resp((int)resp.StatusCode, bytes, ct);
+            }
+            catch (Exception ex)
+            {
+                return new Resp(0, Encoding.UTF8.GetBytes("EX:" + ex.Message), "");
+            }
+        }
+
         // ---- URL 组装（OGC 端点公共，无鉴权）----
         // 实测（GeoServer 3.0.1）：已移除工作空间级 OGC 端点 /geoserver/{ws}/ows（GET 返回 JSON 404 "No endpoint"），
         // 仅全局 /geoserver/wfs、/wms、/wcs 可用（/{ws}/wms 等亦无）。故所有服务面请求走全局端点 +
