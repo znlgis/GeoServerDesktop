@@ -196,6 +196,24 @@ public partial class MainWindowViewModel : ViewModelBase
     private StyleLibraryViewModel _styleLibraryViewModel;
 
     /// <summary>
+    /// 批量操作视图模型（M4）
+    /// </summary>
+    [ObservableProperty]
+    private BatchOperationsViewModel _batchOperationsViewModel;
+
+    /// <summary>
+    /// 工作空间迁移视图模型（M4）
+    /// </summary>
+    [ObservableProperty]
+    private WorkspaceMigrationViewModel _workspaceMigrationViewModel;
+
+    /// <summary>
+    /// 设置同步视图模型（M4）
+    /// </summary>
+    [ObservableProperty]
+    private SettingsSyncViewModel _settingsSyncViewModel;
+
+    /// <summary>
     /// 当前显示的视图
     /// </summary>
     [ObservableProperty]
@@ -229,6 +247,9 @@ public partial class MainWindowViewModel : ViewModelBase
         _importWizardViewModel = new ImportWizardViewModel(_connectionService);
         _sldEditorViewModel = new SldEditorViewModel(_connectionService);
         _styleLibraryViewModel = new StyleLibraryViewModel(_connectionService);
+        _batchOperationsViewModel = new BatchOperationsViewModel(_connectionService);
+        _workspaceMigrationViewModel = new WorkspaceMigrationViewModel(_connectionService);
+        _settingsSyncViewModel = new SettingsSyncViewModel(_connectionService);
 
         // 设置默认视图为欢迎页面
         _currentView = CreateWelcomeViewModel();
@@ -523,6 +544,65 @@ public partial class MainWindowViewModel : ViewModelBase
         CurrentView = StyleLibraryViewModel;
         _ = StyleLibraryViewModel.LoadUsagesCommand.ExecuteAsync(null);
         StatusMessage = L.NavStyleLibrary;
+    }
+
+    /// <summary>
+    /// 挂接工作空间迁移的文件对话框（由 MainWindow 代码后台调用；ViewModel 保持无头可测）
+    /// </summary>
+    /// <param name="window">主窗口</param>
+    public void BindFilePickers(Views.MainWindow window)
+    {
+        WorkspaceMigrationViewModel.SaveFilePicker =
+            (description, defaultName) => window.PickSavePathAsync(description, defaultName);
+        WorkspaceMigrationViewModel.OpenFilePicker =
+            description => window.PickOpenPathAsync(description);
+    }
+
+    /// <summary>
+    /// 显示批量操作页面（M4）
+    /// </summary>
+    [RelayCommand]
+    private void ShowBatchOperations()
+    {
+        if (!IsConnected)
+        {
+            StatusMessage = L.StatusPleaseConnect;
+            return;
+        }
+        CurrentView = BatchOperationsViewModel;
+        _ = BatchOperationsViewModel.LoadItemsCommand.ExecuteAsync(null);
+        StatusMessage = L.NavBatch;
+    }
+
+    /// <summary>
+    /// 显示工作空间迁移页面（M4）
+    /// </summary>
+    [RelayCommand]
+    private void ShowWorkspaceMigration()
+    {
+        if (!IsConnected)
+        {
+            StatusMessage = L.StatusPleaseConnect;
+            return;
+        }
+        CurrentView = WorkspaceMigrationViewModel;
+        _ = WorkspaceMigrationViewModel.LoadCommand.ExecuteAsync(null);
+        StatusMessage = L.NavMigration;
+    }
+
+    /// <summary>
+    /// 显示设置同步页面（M4）
+    /// </summary>
+    [RelayCommand]
+    private void ShowSettingsSync()
+    {
+        if (!IsConnected)
+        {
+            StatusMessage = L.StatusPleaseConnect;
+            return;
+        }
+        CurrentView = SettingsSyncViewModel;
+        StatusMessage = L.NavSettingsSync;
     }
 
     /// <summary>

@@ -48,6 +48,12 @@ namespace GeoServerDesktop.App.Services
         DataStoreService GetDataStoreService();
 
         /// <summary>
+        /// 获取覆盖存储服务（M4：批量操作需要枚举存储类型）
+        /// </summary>
+        /// <returns>CoverageStoreService 实例</returns>
+        CoverageStoreService GetCoverageStoreService();
+
+        /// <summary>
         /// 获取图层服务
         /// </summary>
         /// <returns>LayerService 实例</returns>
@@ -160,5 +166,23 @@ namespace GeoServerDesktop.App.Services
         /// </summary>
         /// <returns>StyleUsageService 实例</returns>
         StyleUsageService GetStyleUsageService();
+
+        /// <summary>
+        /// 获取批量操作服务（M4：批量启停/删除/改样式）
+        /// </summary>
+        /// <returns>BatchOperationService 实例</returns>
+        BatchOperationService GetBatchOperationService();
+
+        /// <summary>
+        /// 获取工作空间迁移服务（M4：导出/导入归档）
+        /// </summary>
+        /// <returns>WorkspaceMigrationService 实例</returns>
+        GeoServerClient.Migration.WorkspaceMigrationService GetWorkspaceMigrationService();
+
+        /// <summary>
+        /// 获取设置比对服务（M4：设置同步，作用于当前连接=目标实例）
+        /// </summary>
+        /// <returns>SettingsCompareService 实例</returns>
+        GeoServerClient.Migration.SettingsCompareService GetSettingsCompareService();
     }
 }

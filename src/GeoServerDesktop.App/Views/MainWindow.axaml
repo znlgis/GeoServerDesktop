@@ -153,6 +153,24 @@
                                         HorizontalContentAlignment="Left"
                                         Background="Transparent"
                                         Margin="0,2"/>
+                                <Button Content="{Binding L.NavBatch}"
+                                        Command="{Binding ShowBatchOperationsCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Background="Transparent"
+                                        Margin="0,2"/>
+                            </StackPanel>
+                        </Expander>
+
+                        <!-- Tools Section (M4) -->
+                        <Expander Header="{Binding L.NavTools}" Margin="5" HorizontalAlignment="Stretch">
+                            <StackPanel Margin="10,5">
+                                <Button Content="{Binding L.NavMigration}"
+                                        Command="{Binding ShowWorkspaceMigrationCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Background="Transparent"
+                                        Margin="0,2"/>
                             </StackPanel>
                         </Expander>
 
@@ -191,6 +209,12 @@
                                         Margin="0,2"/>
                                 <Button Content="{Binding L.NavLogging}" 
                                         Command="{Binding ShowLoggingCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Background="Transparent"
+                                        Margin="0,2"/>
+                                <Button Content="{Binding L.NavSettingsSync}"
+                                        Command="{Binding ShowSettingsSyncCommand}"
                                         HorizontalAlignment="Stretch"
                                         HorizontalContentAlignment="Left"
                                         Background="Transparent"

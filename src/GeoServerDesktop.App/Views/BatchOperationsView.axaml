@@ -1,0 +1,76 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:GeoServerDesktop.App.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="640"
+             x:Class="GeoServerDesktop.App.Views.BatchOperationsView"
+             x:DataType="vm:BatchOperationsViewModel">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#F5F5F5" Padding="15" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
+            <StackPanel>
+                <TextBlock Text="{Binding L.NavBatch}" FontSize="24" FontWeight="Bold"/>
+                <TextBlock Text="{Binding L.BatchSubtitle}" FontSize="13" Foreground="#666666" Margin="0,5,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Content -->
+        <Grid Grid.Row="1" RowDefinitions="Auto,*" Margin="15">
+            <!-- Toolbar -->
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
+                <TextBlock Text="{Binding L.BatchScopeLabel}" VerticalAlignment="Center"/>
+                <ComboBox ItemsSource="{Binding Scopes}" SelectedItem="{Binding Scope}" MinWidth="110"/>
+                <TextBlock Text="{Binding L.BatchWorkspaceLabel}" VerticalAlignment="Center"/>
+                <ComboBox ItemsSource="{Binding Workspaces}" SelectedItem="{Binding SelectedWorkspace}"
+                          MinWidth="150" PlaceholderText="(all)"/>
+                <Button Content="{Binding L.BatchRefresh}" Command="{Binding LoadItemsCommand}"/>
+                <Button Content="{Binding L.BatchToggleAll}" Command="{Binding ToggleSelectAllCommand}"/>
+                <CheckBox Content="{Binding L.BatchCascade}" IsChecked="{Binding CascadeDelete}" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <Grid Grid.Row="1" ColumnDefinitions="*,Auto">
+                <!-- Item list with checkboxes -->
+                <Border Grid.Column="0" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="4">
+                    <ScrollViewer>
+                        <ItemsControl ItemsSource="{Binding Items}" Margin="4">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:BatchItem">
+                                    <CheckBox IsChecked="{Binding IsSelected}" Margin="4,2">
+                                        <TextBlock Text="{Binding Display}"/>
+                                    </CheckBox>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Border>
+
+                <!-- Action pane -->
+                <StackPanel Grid.Column="1" Width="260" Margin="12,0,0,0" Spacing="8">
+                    <TextBlock Text="{Binding L.BatchNewStyle}" FontWeight="Bold"/>
+                    <ComboBox ItemsSource="{Binding StyleNames}" SelectedItem="{Binding SelectedStyleName}"
+                              HorizontalAlignment="Stretch"/>
+                    <Button Content="{Binding L.BatchApplyStyle}" Command="{Binding ApplyDefaultStyleCommand}"
+                            HorizontalAlignment="Stretch"/>
+                    <Separator Margin="0,6"/>
+                    <Button Content="{Binding L.BatchEnable}" Command="{Binding EnableSelectedCommand}"
+                            HorizontalAlignment="Stretch"/>
+                    <Button Content="{Binding L.BatchDisable}" Command="{Binding DisableSelectedCommand}"
+                            HorizontalAlignment="Stretch"/>
+                    <Separator Margin="0,6"/>
+                    <Button Content="{Binding L.BatchDelete}" Command="{Binding DeleteSelectedCommand}"
+                            HorizontalAlignment="Stretch"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+        <!-- Status -->
+        <Border Grid.Row="2" Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="0,1,0,0">
+            <Grid ColumnDefinitions="Auto,*">
+                <TextBlock Grid.Column="0" Text="{Binding L.NavBatch}" FontWeight="Bold" Margin="0,0,20,0"/>
+                <TextBlock Grid.Column="1" Text="{Binding StatusMessage}" Foreground="#666666" TextWrapping="Wrap"/>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

@@ -1778,4 +1778,267 @@ public class LocalizationService : ObservableObject
 
     /// <summary>删除失败 {0}=消息</summary>
     public string StyleLibStatusDeleteFailed => T("Delete failed: {0}", "删除失败：{0}");
+
+    // ── M4：批量操作 ───────────────────────────────────────────────────────
+
+    /// <summary>导航分组：工具</summary>
+    public string NavTools => T("Tools", "工具");
+
+    /// <summary>导航/标题：批量操作</summary>
+    public string NavBatch => T("Batch Operations", "批量操作");
+
+    /// <summary>批量操作副标题</summary>
+    public string BatchSubtitle => T(
+        "Multi-select layers, styles, stores and workspaces; bulk set default style, enable/disable stores, cascade delete",
+        "多选图层/样式/存储/工作空间；批量改默认样式、启停存储、级联删除");
+
+    /// <summary>资源类型</summary>
+    public string BatchScopeLabel => T("Type", "资源类型");
+
+    /// <summary>工作空间筛选</summary>
+    public string BatchWorkspaceLabel => T("Workspace", "工作空间");
+
+    /// <summary>刷新</summary>
+    public string BatchRefresh => T("Reload", "重新加载");
+
+    /// <summary>全选/全不选</summary>
+    public string BatchToggleAll => T("Select All / None", "全选/全不选");
+
+    /// <summary>级联选项</summary>
+    public string BatchCascade => T("Cascade (recurse/purge)", "级联（recurse/purge）");
+
+    /// <summary>新默认样式选择</summary>
+    public string BatchNewStyle => T("New default style", "新默认样式");
+
+    /// <summary>应用默认样式按钮</summary>
+    public string BatchApplyStyle => T("Set Default Style", "批量改默认样式");
+
+    /// <summary>启用按钮</summary>
+    public string BatchEnable => T("Enable", "批量启用");
+
+    /// <summary>禁用按钮</summary>
+    public string BatchDisable => T("Disable", "批量禁用");
+
+    /// <summary>删除按钮</summary>
+    public string BatchDelete => T("Delete Selected", "删除选中");
+
+    /// <summary>列：名称</summary>
+    public string BatchColumnName => T("Name", "名称");
+
+    /// <summary>列：当前默认样式</summary>
+    public string BatchColumnStyle => T("Default Style", "默认样式");
+
+    /// <summary>列：类型</summary>
+    public string BatchColumnType => T("Kind", "类型");
+
+    /// <summary>提示：选择图层后再改样式</summary>
+    public string BatchStatusNeedLayers => T("Select layers first (type = Layer)", "请先勾选图层（类型=图层）");
+
+    /// <summary>提示：选择新样式</summary>
+    public string BatchStatusNeedStyle => T("Choose a new default style", "请选择新默认样式");
+
+    /// <summary>提示：选择存储后再启停</summary>
+    public string BatchStatusNeedStores => T(
+        "Select stores first (type = Store). Layer-level enable/disable has no REST channel in GeoServer 3.0.1; toggling stores is the supported bulk switch",
+        "请先勾选存储（类型=存储）。GeoServer 3.0.1 图层无启停 REST 通道，存储级启停即为可用的批量开关");
+
+    /// <summary>提示：先选择条目</summary>
+    public string BatchStatusNeedSelection => T("Select items first", "请先勾选条目");
+
+    /// <summary>提示：该类型不支持批量删除</summary>
+    public string BatchStatusDeleteUnsupported => T("Bulk delete not supported for this type", "该类型不支持批量删除");
+
+    /// <summary>就绪</summary>
+    public string BatchReady => T("Ready", "就绪");
+
+    /// <summary>已加载 {0} 条（已选 {1}）</summary>
+    public string BatchStatusLoaded => T("Loaded {0} items ({1} selected)", "已加载 {0} 条（选中 {1}）");
+
+    /// <summary>全部成功 {0} 项</summary>
+    public string BatchStatusAllOk => T("All {0} items succeeded", "{0} 项全部成功");
+
+    /// <summary>部分失败：成功 {0} 失败 {1}：{2}</summary>
+    public string BatchStatusPartial => T(
+        "Succeeded {0}, failed {1}: {2}", "成功 {0} 项，失败 {1} 项：{2}");
+
+    /// <summary>批量操作失败 {0}</summary>
+    public string BatchStatusFailed => T("Batch operation failed: {0}", "批量操作失败：{0}");
+
+    // ── M4：工作空间迁移（导入/导出） ─────────────────────────────────────
+
+    /// <summary>导航/标题：工作空间迁移</summary>
+    public string NavMigration => T("Workspace Import/Export", "工作空间迁移");
+
+    /// <summary>迁移副标题</summary>
+    public string MigSubtitle => T(
+        "Export a workspace to an archive (JSON manifest + SLDs) and import it into another instance with dependency order",
+        "将工作空间导出为归档（JSON 清单 + SLD），并按依赖顺序导入到目标实例");
+
+    /// <summary>导出分组</summary>
+    public string MigExportGroup => T("Export", "导出");
+
+    /// <summary>导入分组</summary>
+    public string MigImportGroup => T("Import", "导入");
+
+    /// <summary>导出按钮</summary>
+    public string MigExport => T("Export Workspace", "导出工作空间");
+
+    /// <summary>保存按钮</summary>
+    public string MigSave => T("Save Archive...", "保存归档...");
+
+    /// <summary>浏览按钮</summary>
+    public string MigBrowse => T("Browse...", "浏览...");
+
+    /// <summary>导入按钮</summary>
+    public string MigImport => T("Import Archive", "导入归档");
+
+    /// <summary>归档路径</summary>
+    public string MigArchivePath => T("Archive file", "归档文件");
+
+    /// <summary>目标工作空间</summary>
+    public string MigTargetWs => T("Target workspace (empty = source name)", "目标工作空间（留空沿用源名）");
+
+    /// <summary>目标命名空间前缀</summary>
+    public string MigTargetPrefix => T("Namespace prefix (empty = target ws)", "命名空间前缀（留空同目标名）");
+
+    /// <summary>目标命名空间 URI</summary>
+    public string MigTargetUri => T("Namespace URI (empty = source URI)", "命名空间 URI（留空沿用源 URI）");
+
+    /// <summary>覆盖已存在</summary>
+    public string MigOverwrite => T("Overwrite existing resources", "覆盖已存在资源");
+
+    /// <summary>列：步骤</summary>
+    public string MigColumnStep => T("Step", "步骤");
+
+    /// <summary>列：目标</summary>
+    public string MigColumnTarget => T("Target", "目标");
+
+    /// <summary>列：状态</summary>
+    public string MigColumnStatus => T("Status", "状态");
+
+    /// <summary>列：说明</summary>
+    public string MigColumnMessage => T("Message", "说明");
+
+    /// <summary>状态：已创建</summary>
+    public string MigStatusCreated => T("Created", "已创建");
+
+    /// <summary>状态：已更新</summary>
+    public string MigStatusUpdated => T("Updated", "已更新");
+
+    /// <summary>状态：已跳过</summary>
+    public string MigStatusSkipped => T("Skipped", "已跳过");
+
+    /// <summary>状态：失败</summary>
+    public string MigStatusFailedItem => T("Failed", "失败");
+
+    /// <summary>就绪</summary>
+    public string MigReady => T("Ready", "就绪");
+
+    /// <summary>已加载 {0} 个工作空间</summary>
+    public string MigStatusLoaded => T("Loaded {0} workspaces", "已加载 {0} 个工作空间");
+
+    /// <summary>导出完成：{0} 工作空间，{1} 项资源，{2} 警告，{3} 字节</summary>
+    public string MigExportDone => T(
+        "Exported \"{0}\": {1} resources, {2} warnings, {3} bytes",
+        "已导出 \"{0}\"：{1} 项资源，{2} 条警告，{3} 字节");
+
+    /// <summary>已保存到 {0}</summary>
+    public string MigSaved => T("Archive saved to {0}", "归档已保存到 {0}");
+
+    /// <summary>导入完成：创建 {0} 项，跳过 {1} 项</summary>
+    public string MigImportDone => T("Import finished: {0} created, {1} skipped", "导入完成：创建 {0} 项，跳过 {1} 项");
+
+    /// <summary>导入有失败：{0} 项失败：{1}</summary>
+    public string MigImportPartial => T("Import had {0} failures: {1}", "导入出现 {0} 项失败：{1}");
+
+    /// <summary>请先选择工作空间</summary>
+    public string MigStatusNeedWorkspace => T("Select a workspace first", "请先选择要导出的工作空间");
+
+    /// <summary>请先导出</summary>
+    public string MigStatusExportFirst => T("Export a workspace first", "请先执行导出");
+
+    /// <summary>未选择保存路径</summary>
+    public string MigStatusNoPath => T("No save path chosen", "未选择保存路径");
+
+    /// <summary>归档文件不存在</summary>
+    public string MigStatusNeedArchive => T("Choose an existing archive file", "请选择存在的归档文件");
+
+    /// <summary>失败 {0}</summary>
+    public string MigStatusFailed => T("Failed: {0}", "失败：{0}");
+
+    // ── M4：设置同步 ───────────────────────────────────────────────────────
+
+    /// <summary>导航/标题：设置同步</summary>
+    public string NavSettingsSync => T("Settings Sync", "设置同步");
+
+    /// <summary>设置同步副标题</summary>
+    public string SyncSubtitle => T(
+        "Compare settings between two connections and apply selected differences to the current instance",
+        "比对两个连接间的设置差异，选择性应用到当前实例");
+
+    /// <summary>源连接分组</summary>
+    public string SyncSourceGroup => T("Source connection", "源连接");
+
+    /// <summary>URL 标签</summary>
+    public string SyncUrl => T("Source URL", "源实例 URL");
+
+    /// <summary>用户标签</summary>
+    public string SyncUser => T("User", "用户");
+
+    /// <summary>密码标签</summary>
+    public string SyncPassword => T("Password", "密码");
+
+    /// <summary>域标签</summary>
+    public string SyncDomain => T("Domain", "设置域");
+
+    /// <summary>比对按钮</summary>
+    public string SyncCompare => T("Compare", "比对差异");
+
+    /// <summary>应用按钮</summary>
+    public string SyncApply => T("Apply Selected", "应用勾选项");
+
+    /// <summary>列：路径</summary>
+    public string SyncColumnPath => T("Path", "路径");
+
+    /// <summary>列：源值</summary>
+    public string SyncColumnSource => T("Source", "源值");
+
+    /// <summary>列：目标值</summary>
+    public string SyncColumnTarget => T("Target (current)", "目标值（当前）");
+
+    /// <summary>列：类型</summary>
+    public string SyncColumnKind => T("Kind", "类型");
+
+    /// <summary>差异类型：源侧新增</summary>
+    public string SyncKindAdded => T("Added", "源新增");
+
+    /// <summary>差异类型：源侧删除</summary>
+    public string SyncKindRemoved => T("Removed", "源删除");
+
+    /// <summary>差异类型：变更</summary>
+    public string SyncKindChanged => T("Changed", "变更");
+
+    /// <summary>就绪</summary>
+    public string SyncReady => T("Ready", "就绪");
+
+    /// <summary>两侧一致</summary>
+    public string SyncStatusIdentical => T("Settings are identical", "两侧设置一致，无差异");
+
+    /// <summary>发现 {0} 项差异</summary>
+    public string SyncStatusLoaded => T("Found {0} differences", "发现 {0} 项差异");
+
+    /// <summary>已应用 {0} 项</summary>
+    public string SyncStatusApplied => T("Applied {0} settings", "已应用 {0} 项设置");
+
+    /// <summary>请填写源 URL</summary>
+    public string SyncStatusNeedUrl => T("Enter the source instance URL", "请填写源实例 URL");
+
+    /// <summary>先比对</summary>
+    public string SyncStatusCompareFirst => T("Run a comparison first", "请先执行比对");
+
+    /// <summary>勾选差异项</summary>
+    public string SyncStatusNeedSelection => T("Select differences to apply", "请勾选要应用的差异项");
+
+    /// <summary>失败 {0}</summary>
+    public string SyncStatusFailed => T("Failed: {0}", "失败：{0}");
 }

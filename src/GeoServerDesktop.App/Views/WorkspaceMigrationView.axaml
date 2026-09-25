@@ -1,0 +1,98 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:GeoServerDesktop.App.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="640"
+             x:Class="GeoServerDesktop.App.Views.WorkspaceMigrationView"
+             x:DataType="vm:WorkspaceMigrationViewModel">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#F5F5F5" Padding="15" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
+            <StackPanel>
+                <TextBlock Text="{Binding L.NavMigration}" FontSize="24" FontWeight="Bold"/>
+                <TextBlock Text="{Binding L.MigSubtitle}" FontSize="13" Foreground="#666666" Margin="0,5,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Content -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,*" Margin="15">
+            <!-- Export pane -->
+            <Border Grid.Column="0" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="4" Margin="0,0,8,0">
+                <StackPanel Margin="12" Spacing="8">
+                    <TextBlock Text="{Binding L.MigExportGroup}" FontSize="16" FontWeight="Bold"/>
+                    <ComboBox ItemsSource="{Binding Workspaces}" SelectedItem="{Binding SelectedWorkspace}"
+                              HorizontalAlignment="Stretch" PlaceholderText="(workspace)"/>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button Content="{Binding L.MigExport}" Command="{Binding ExportCommand}"/>
+                        <Button Content="{Binding L.MigSave}" Command="{Binding SaveArchiveCommand}"/>
+                    </StackPanel>
+                    <TextBlock Text="{Binding ExportStatus}" TextWrapping="Wrap" Foreground="#555555"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Import pane -->
+            <Border Grid.Column="1" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="4" Margin="8,0,0,0">
+                <Grid RowDefinitions="Auto,Auto,*">
+                    <StackPanel Grid.Row="0" Margin="12" Spacing="8">
+                        <TextBlock Text="{Binding L.MigImportGroup}" FontSize="16" FontWeight="Bold"/>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBox Grid.Column="0" Text="{Binding ArchivePath}"
+                                     Watermark="{Binding L.MigArchivePath}"/>
+                            <Button Grid.Column="1" Margin="6,0,0,0" Content="{Binding L.MigBrowse}"
+                                    Command="{Binding BrowseArchiveCommand}"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" Margin="0,4,0,0">
+                            <TextBlock Grid.Column="0" Text="{Binding L.MigTargetWs}" Width="220" VerticalAlignment="Center"/>
+                            <TextBox Grid.Column="1" Text="{Binding TargetWorkspace}"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*">
+                            <TextBlock Grid.Column="0" Text="{Binding L.MigTargetPrefix}" Width="220" VerticalAlignment="Center"/>
+                            <TextBox Grid.Column="1" Text="{Binding TargetNamespacePrefix}"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*">
+                            <TextBlock Grid.Column="0" Text="{Binding L.MigTargetUri}" Width="220" VerticalAlignment="Center"/>
+                            <TextBox Grid.Column="1" Text="{Binding TargetNamespaceUri}"/>
+                        </Grid>
+                        <CheckBox Content="{Binding L.MigOverwrite}" IsChecked="{Binding OverwriteExisting}"/>
+                        <Button Content="{Binding L.MigImport}" Command="{Binding ImportCommand}"
+                                HorizontalAlignment="Left"/>
+                    </StackPanel>
+
+                    <!-- Results header -->
+                    <Grid Grid.Row="1" ColumnDefinitions="140,*,110,*" Background="#F0F0F0" Margin="12,4">
+                        <TextBlock Grid.Column="0" Text="{Binding L.MigColumnStep}" FontWeight="Bold" Padding="4,2"/>
+                        <TextBlock Grid.Column="1" Text="{Binding L.MigColumnTarget}" FontWeight="Bold" Padding="4,2"/>
+                        <TextBlock Grid.Column="2" Text="{Binding L.MigColumnStatus}" FontWeight="Bold" Padding="4,2"/>
+                        <TextBlock Grid.Column="3" Text="{Binding L.MigColumnMessage}" FontWeight="Bold" Padding="4,2"/>
+                    </Grid>
+
+                    <!-- Results list -->
+                    <ScrollViewer Grid.Row="2" Margin="12,0,12,12">
+                        <ItemsControl ItemsSource="{Binding ImportResults}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:MigrationStepItem">
+                                    <Grid ColumnDefinitions="140,*,110,*" Margin="0,2">
+                                        <TextBlock Grid.Column="0" Text="{Binding Step}" Padding="4,0"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Target}" Padding="4,0" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding StatusDisplay}" Padding="4,0"/>
+                                        <TextBlock Grid.Column="3" Text="{Binding Message}" Padding="4,0" TextWrapping="Wrap"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Status -->
+        <Border Grid.Row="2" Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="0,1,0,0">
+            <Grid ColumnDefinitions="Auto,*">
+                <TextBlock Grid.Column="0" Text="{Binding L.NavMigration}" FontWeight="Bold" Margin="0,0,20,0"/>
+                <TextBlock Grid.Column="1" Text="{Binding StatusMessage}" Foreground="#666666" TextWrapping="Wrap"/>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

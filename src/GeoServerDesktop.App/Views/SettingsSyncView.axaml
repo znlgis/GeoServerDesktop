@@ -1,0 +1,76 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:GeoServerDesktop.App.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="640"
+             x:Class="GeoServerDesktop.App.Views.SettingsSyncView"
+             x:DataType="vm:SettingsSyncViewModel">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#F5F5F5" Padding="15" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
+            <StackPanel>
+                <TextBlock Text="{Binding L.NavSettingsSync}" FontSize="24" FontWeight="Bold"/>
+                <TextBlock Text="{Binding L.SyncSubtitle}" FontSize="13" Foreground="#666666" Margin="0,5,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Content -->
+        <Grid Grid.Row="1" RowDefinitions="Auto,*" Margin="15">
+            <!-- Source connection form -->
+            <StackPanel Grid.Row="0" Spacing="8" Margin="0,0,0,10">
+                <Grid ColumnDefinitions="Auto,*,Auto,160,Auto,160,Auto,*" Margin="0,0,0,4">
+                    <TextBlock Grid.Column="0" Text="{Binding L.SyncDomain}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                    <ComboBox Grid.Column="1" ItemsSource="{Binding Domains}" SelectedItem="{Binding Domain}"
+                              HorizontalAlignment="Left" MinWidth="120"/>
+                    <TextBlock Grid.Column="2" Text="{Binding L.SyncUrl}" VerticalAlignment="Center" Margin="12,0,6,0"/>
+                    <TextBox Grid.Column="3" Text="{Binding SourceUrl}"/>
+                    <TextBlock Grid.Column="4" Text="{Binding L.SyncUser}" VerticalAlignment="Center" Margin="12,0,6,0"/>
+                    <TextBox Grid.Column="5" Text="{Binding SourceUser}"/>
+                    <TextBlock Grid.Column="6" Text="{Binding L.SyncPassword}" VerticalAlignment="Center" Margin="12,0,6,0"/>
+                    <TextBox Grid.Column="7" Text="{Binding SourcePassword}"/>
+                </Grid>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Content="{Binding L.SyncCompare}" Command="{Binding CompareCommand}"/>
+                    <Button Content="{Binding L.SyncApply}" Command="{Binding ApplySelectedCommand}"/>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Diff table -->
+            <Border Grid.Row="1" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="4">
+                <Grid RowDefinitions="Auto,*">
+                    <Grid Grid.Row="0" ColumnDefinitions="36,260,*,*,100" Background="#F0F0F0" Margin="1">
+                        <TextBlock Grid.Column="1" Text="{Binding L.SyncColumnPath}" FontWeight="Bold" Padding="4,6"/>
+                        <TextBlock Grid.Column="2" Text="{Binding L.SyncColumnSource}" FontWeight="Bold" Padding="4,6"/>
+                        <TextBlock Grid.Column="3" Text="{Binding L.SyncColumnTarget}" FontWeight="Bold" Padding="4,6"/>
+                        <TextBlock Grid.Column="4" Text="{Binding L.SyncColumnKind}" FontWeight="Bold" Padding="4,6"/>
+                    </Grid>
+                    <ScrollViewer Grid.Row="1">
+                        <ItemsControl ItemsSource="{Binding Diffs}" Margin="4">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:SettingsDiffEntry">
+                                    <Grid ColumnDefinitions="36,260,*,*,100" Margin="0,2">
+                                        <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected}" HorizontalAlignment="Center"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Path}" Padding="4,0" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding SourceValue}" Padding="4,0" TextWrapping="Wrap"/>
+                                        <TextBlock Grid.Column="3" Text="{Binding TargetValue}" Padding="4,0" TextWrapping="Wrap"/>
+                                        <TextBlock Grid.Column="4" Text="{Binding KindDisplay}" Padding="4,0"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Status -->
+        <Border Grid.Row="2" Background="#F5F5F5" Padding="10" BorderBrush="#CCCCCC" BorderThickness="0,1,0,0">
+            <Grid ColumnDefinitions="Auto,*">
+                <TextBlock Grid.Column="0" Text="{Binding L.NavSettingsSync}" FontWeight="Bold" Margin="0,0,20,0"/>
+                <TextBlock Grid.Column="1" Text="{Binding StatusMessage}" Foreground="#666666" TextWrapping="Wrap"/>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

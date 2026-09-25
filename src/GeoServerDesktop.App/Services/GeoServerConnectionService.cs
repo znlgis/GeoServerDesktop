@@ -82,6 +82,16 @@ namespace GeoServerDesktop.App.Services
         }
 
         /// <summary>
+        /// 获取覆盖存储服务（M4：批量操作需要枚举存储类型）
+        /// </summary>
+        /// <returns>CoverageStoreService 实例</returns>
+        public CoverageStoreService GetCoverageStoreService()
+        {
+            EnsureConnected();
+            return _factory!.CreateCoverageStoreService();
+        }
+
+        /// <summary>
         /// 获取图层服务
         /// </summary>
         /// <returns>LayerService 实例</returns>
@@ -269,6 +279,36 @@ namespace GeoServerDesktop.App.Services
         {
             EnsureConnected();
             return _factory!.CreateStyleUsageService();
+        }
+
+        /// <summary>
+        /// 获取批量操作服务（M4：批量启停/删除/改样式）
+        /// </summary>
+        /// <returns>BatchOperationService 实例</returns>
+        public BatchOperationService GetBatchOperationService()
+        {
+            EnsureConnected();
+            return _factory!.CreateBatchOperationService();
+        }
+
+        /// <summary>
+        /// 获取工作空间迁移服务（M4：导出/导入归档）
+        /// </summary>
+        /// <returns>WorkspaceMigrationService 实例</returns>
+        public GeoServerClient.Migration.WorkspaceMigrationService GetWorkspaceMigrationService()
+        {
+            EnsureConnected();
+            return _factory!.CreateWorkspaceMigrationService();
+        }
+
+        /// <summary>
+        /// 获取设置比对服务（M4：设置同步，作用于当前连接=目标实例）
+        /// </summary>
+        /// <returns>SettingsCompareService 实例</returns>
+        public GeoServerClient.Migration.SettingsCompareService GetSettingsCompareService()
+        {
+            EnsureConnected();
+            return _factory!.CreateSettingsCompareService();
         }
 
         /// <summary>
