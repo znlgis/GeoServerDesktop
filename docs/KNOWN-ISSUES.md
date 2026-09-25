@@ -29,6 +29,20 @@
 - **WMTS 矢量层默认 `format=mvt`**——预览需显式指定 `png`。
 - **imports / transforms / structuredcoverage 等扩展未安装时返回 404**——服务保留 + 注释，基线不翻转。
 - **样式 SLD 读回时 NamedLayer/UserStyle 名被规范化**（3.0.1 实测重写为 "Default Styler"；颜色等样式体保留）——编辑器加载已有样式时以 REST 资源名为准（客户端已适配）。
+- **图层（LayerInfo）REST 无 `enabled` 通道**——`PUT {"layer":{"enabled":...}}` 被服务端静默忽略（200 OK 但读回原样）；
+  M4 批量启停因此落到存储层：`PUT {"dataStore":{"enabled":false}}` 或 `PUT {"coverageStore":{"enabled":false}}`
+  生效，且实测该操作会即时从 WMS/WFS GetCapabilities 中摘除其下图层（能力面复核：BatchOperationIT / harness 3.8）。
+- **PUT 局部更新语义**——`PUT /rest/layers/{name}` 只带变更字段（如 `{"layer":{"name":..., "defaultStyle":{"name":...}}}`）
+  即生效且其它字段保持；`dateModified` 不一定推进，不能用来判定变更是否被受理（M4 harness 复核依赖独立读回）。
+- **绑定不存在的样式名服务端返回 200 且静默忽略**（M4 harness 探针发现）——批量改默认样式必须先确保样式存在，
+  否则 GET 回读会保持原样式（不是产品缺陷，属服务端契约）。
+- **无 `GET /rest/workspaces/{ws}/namespace` 反查端点**——M4 迁移按命名约定 `prefix=workspaceName` +
+  `GET /rest/namespaces/{prefix}.json` 探测；新建工作空间自动生成占位命名空间 `uri=http://{ws}`。
+- **`DELETE /rest/workspaces/{ws}?recurse=true` 级联回收孤立命名空间**（实测 3.0.1 与其 namespace 一并 404）。
+- **服务级 WMS/WFS/WCS/WMTS 设置为平铺字段**（如 `/rest/services/wms/settings.json` 根 `wms` 下直接
+  `enabled/title/...`，无 `service` 包装）——M4 设置比对按实测形态扁平化。
+- **工作空间级 WMS 设置 `/rest/services/wms/workspaces/{ws}/settings` 仅在服务端已注册时存在**——
+  未注册的工作空间返回 404（非产品缺陷；M4 SettingsSyncIT 采用环境自适应发现，全无则 SkipLog 登记）。
 
 ## 四、2.x 兼容性差异（预期兼容，待回归验证）
 

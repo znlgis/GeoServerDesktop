@@ -11,7 +11,7 @@
 | **M1** | 工程化地基 + 快速补缺 | 已完成 |
 | M2 | 数据导入向导 | 已完成 |
 | M3 | SLD 编辑器 + 样式体系强化 | 已完成 |
-| M4 | 批量操作 + 导入/导出 | 未开始 |
+| M4 | 批量操作 + 导入/导出 + 设置同步 | 已完成 |
 | M5 | 架构收敛 + 版本发布 | 未开始 |
 
 ---
@@ -65,12 +65,50 @@
 
 ## M4（第 17–22 周）：批量操作 + 导入/导出
 
+**目标**：Roadmap 收尾——把「多选批量」与「实例间迁移 / 跨连接设置同步」做成一等公民能力。
+
 1. **批量操作**：图层/样式/工作空间多选列表、批量启停、批量删（级联选项）、批量改默认样式。
-2. **导入/导出**：工作空间级配置导出（REST 读全量资源 → JSON 归档）/ 导入（目标实例重建，含依赖顺序 ws → store → style → layer → group），作为 GeoServer 实例迁移工具。
+   —— 已实现：库层 `BatchOperationService`（部分成功语义：单项失败不中断整批，逐项结果 + FailureSummary
+   汇总；引用中样式 403、coverageStore 404 回落路径按实测基线固化）；App 层 `BatchOperationsView` /
+   `BatchOperationsViewModel`（多选列表 + 全选切换 + 级联选项 + 三类批量入口）。
+   **实测基线**：GeoServer 3.0.1 图层无 `enabled` REST 通道，批量启停落到存储层——禁用 `dataStore` /
+   `coverageStore` 后其图层即时从 WMS/WFS GetCapabilities 摘除（能力面复核：BatchOperationIT + harness）；
+   绑定不存在的样式名服务端 200 静默忽略，批量改样式前需保证目标样式存在。
+2. **导入/导出（工作空间级迁移工具）**：REST 读全量资源 → ZIP 归档（`manifest.json` + `styles/*.sld`）
+   / 目标实例按依赖顺序重建（ws → namespace → store → style → featureType/coverage → 图层绑定 → layerGroup）。
+   —— 已实现：库层 `WorkspaceMigrationService`（导出/导入 + 引用重写：workspace/namespace/store 名、
+   连接参数 namespace URI、限定名 `ws:store`/`ws:layer`、layerGroup 自引用；剥离 `href/id/dateCreated/
+   dateModified/_default` 等服务端字段；幂等：已存在默认跳过，Overwrite 时更新）+ `WorkspaceManifest` v1；
+   App 层 `WorkspaceMigrationView` / `WorkspaceMigrationViewModel`（导出→内存归档→SaveFilePicker 落盘；
+   OpenFilePicker→目标工作空间/前缀/URI 覆写→逐项结果表；文件对话框经委托注入保持无头可测）。
+   **实测基线**：3.0.1 无 workspace→namespace 反查端点（按前缀=工作空间名 + `GET /rest/namespaces/{p}.json`
+   探测）；新建工作空间自动生成占位命名空间 `uri=http://{ws}`；`recurse=true` 删除工作空间级联回收孤立命名空间。
 3. **设置同步**：多连接间的 settings 差异比对视图（读-比-选择性应用）。
-4. **测试**：导出 → 清空 → 导入 → 资源等价性断言（L2 级）。
+   —— 已实现：库层 `SettingsCompare`（叶子级 diff，volatile 键 `id/updateSequence/href/dateCreated/
+   dateModified` 排除；数组整体叶子语义；`Apply` 以目标实例为基底合并勾选路径后整包 PUT——与「整包替换 +
+   ExtensionData 防丢键」契约一致）+ `SettingsCompareService`（双连接 CompareAsync / ApplyAsync /
+   任意路径读写）；App 层 `SettingsSyncView` / `SettingsSyncViewModel`（源连接表单 + 5 域 + 差异勾选表 +
+   选择性应用后自动重比对收敛）。
+   **实测基线**：服务级 WMS/WFS/WCS/WMTS 设置为平铺字段（无 service 包装）；工作空间级 WMS 设置仅在
+   已注册时存在，否则 404（SettingsSyncIT 环境自适应发现，全无则 SkipLog 登记）。
+4. **测试**：
+   - L1 新增 32 例（`BatchOperationServiceTests` 14 / `WorkspaceMigrationServiceTests` 10 /
+     `SettingsCompareTests` 8；新基建 `PathFakeClient` 支持按路径应答与 404 注入）。
+   - L2 新增 8 例（`BatchOperationIT` 3 / `WorkspaceMigrationIT` 3 / `SettingsSyncIT` 2）：批量样式落库 +
+     存储启停 WMS 能力面 + 级联删除回收命名空间 + 403/回落/缺参失败面；迁移清单结构、跨空间等价
+     （图层/绑定/WFS 计数 vs DBF 头独立真值）、导出→清空→导入还原；设置扰动→差异→选择性应用→恢复。
+   - L4 新增 9 例（批量 4 / 迁移 2 / 同步 3，含 VmRest 交叉复核与文件对话框注入）+ `MainWindowViewModelTests`
+     M4 命令流/守卫 + `LocalizationServiceTests` 7 条 M4 双语探针。
+   - harness 新增 3 段 13 检查项（批量 5 / 迁移 5 / 同步 3）：全量 Pass=70 Warn=2 Fail=0；
+     注入 `GSD_REAL_DATA_DIR` 后 Pass=134 Warn=2 Fail=0。
+   - `dotnet test` 合计 **675/675**（L1 487 + L2/L3 88 + L4 100），0 失败 0 跳过；
+     `dotnet format --verify-no-changes` 干净。
 
 **验收**：A 实例工作空间迁移到 B 实例后，WMS/WFS 能力与图层清单等价。
+—— 已实测：`WorkspaceMigrationIT` 覆盖 A→B（同实例双空间）与 A→A'（清空→导入还原）两种形态，
+图层清单/默认样式绑定/WFS `numberMatched` 与 DBF 头独立真值全部对齐；harness 迁移段同步通过。
+同实例双空间已覆盖迁移路径全部代码分支（引用重写、工作空间/全局两级样式注册、幂等跳过、
+绑定还原），跨真实双实例为同一代码路径、仅 HTTP 基址不同。
 
 ## M5（第 23–26 周）：架构收敛 + 版本发布
 
