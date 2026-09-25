@@ -1,27 +1,23 @@
 using System;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 using GeoServerDesktop.GeoServerClient.Models;
-using Newtonsoft.Json;
 
 namespace GeoServerDesktop.GeoServerClient.Services
 {
     /// <summary>
     /// 用于管理 GeoServer 数据存储的服务
     /// </summary>
-    public class DataStoreService
+    public class DataStoreService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 DataStoreService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public DataStoreService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -31,8 +27,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>数据存储数组</returns>
         public async Task<DataStore[]> GetDataStoresAsync(string workspaceName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/datastores.json");
-            var wrapper = JsonConvert.DeserializeObject<DataStoreListWrapper>(response);
+            var wrapper = await GetJsonAsync<DataStoreListWrapper>($"/rest/workspaces/{Esc(workspaceName)}/datastores.json");
             return wrapper?.DataStoreList?.DataStores ?? Array.Empty<DataStore>();
         }
 
@@ -44,8 +39,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>数据存储详细信息</returns>
         public async Task<DataStore> GetDataStoreAsync(string workspaceName, string dataStoreName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/datastores/{Uri.EscapeDataString(dataStoreName)}.json");
-            var wrapper = JsonConvert.DeserializeObject<DataStoreWrapper>(response);
+            var wrapper = await GetJsonAsync<DataStoreWrapper>($"/rest/workspaces/{Esc(workspaceName)}/datastores/{Esc(dataStoreName)}.json");
             return wrapper?.DataStore;
         }
 
@@ -58,11 +52,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task CreateDataStoreAsync(string workspaceName, DataStore dataStore)
         {
             var wrapper = new { dataStore = dataStore };
-            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PostAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/datastores", content);
-            }
+            await PostJsonAsync($"/rest/workspaces/{Esc(workspaceName)}/datastores", wrapper);
         }
 
         /// <summary>
@@ -75,11 +65,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task UpdateDataStoreAsync(string workspaceName, string dataStoreName, DataStore dataStore)
         {
             var wrapper = new { dataStore = dataStore };
-            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PutAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/datastores/{Uri.EscapeDataString(dataStoreName)}", content);
-            }
+            await PutJsonAsync($"/rest/workspaces/{Esc(workspaceName)}/datastores/{Esc(dataStoreName)}", wrapper);
         }
 
         /// <summary>
@@ -91,8 +77,8 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteDataStoreAsync(string workspaceName, string dataStoreName, bool recurse = false)
         {
-            var path = $"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/datastores/{Uri.EscapeDataString(dataStoreName)}?recurse={recurse.ToString().ToLowerInvariant()}";
-            await _httpClient.DeleteAsync(path);
+            var path = $"/rest/workspaces/{Esc(workspaceName)}/datastores/{Esc(dataStoreName)}?recurse={Bool(recurse)}";
+            await Http.DeleteAsync(path);
         }
 
         /// <summary>
@@ -103,7 +89,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task ResetDataStoreAsync(string workspaceName, string dataStoreName)
         {
-            await _httpClient.PutAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/datastores/{Uri.EscapeDataString(dataStoreName)}/reset", null);
+            await Http.PutAsync($"/rest/workspaces/{Esc(workspaceName)}/datastores/{Esc(dataStoreName)}/reset", null);
         }
 
         /// <summary>
@@ -117,11 +103,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task UploadFileAsync(string workspaceName, string dataStoreName, string fileFormat, byte[] fileContent, string contentType = "application/octet-stream")
         {
-            using (var content = new ByteArrayContent(fileContent))
-            {
-                content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(contentType);
-                await _httpClient.PutAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/datastores/{Uri.EscapeDataString(dataStoreName)}/file.{Uri.EscapeDataString(fileFormat)}", content);
-            }
+            await PutContentAsync(
+                $"/rest/workspaces/{Esc(workspaceName)}/datastores/{Esc(dataStoreName)}/file.{Esc(fileFormat)}",
+                BytesContent(fileContent, contentType));
         }
     }
 }

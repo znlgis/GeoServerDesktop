@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 using GeoServerDesktop.GeoServerClient.Models;
-using Newtonsoft.Json;
 
 namespace GeoServerDesktop.GeoServerClient.Services
 {
@@ -15,17 +12,16 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// acl/{layers|services|rest} 回扁平 {"&lt;资源模式&gt;":"逗号分隔角色"} map）；带 .json 后缀实测 404。
     /// 模型改用 <see cref="SecurityACL.Parse(string)"/> 承接两种形态。
     /// </summary>
-    public class SecurityService
+    public class SecurityService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 SecurityService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public SecurityService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -35,7 +31,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>Security ACL for the resource</returns>
         public async Task<SecurityACL> GetACLAsync(string resource)
         {
-            var response = await _httpClient.GetAsync($"/rest/security/acl/{resource}");
+            var response = await Http.GetAsync($"/rest/security/acl/{resource}");
             return SecurityACL.Parse(response);
         }
 
@@ -51,7 +47,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             string json;
             if (acl == null) json = "{}";
-            else if (acl.Mode != null) json = JsonConvert.SerializeObject(new { mode = acl.Mode }, GeoServerJson.Request);
+            else if (acl.Mode != null) json = ToJson(new { mode = acl.Mode });
             else
             {
                 var map = acl.RawRules;
@@ -62,12 +58,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
                         foreach (var r in acl.Rules)
                             if (r != null && r.Role != null) map[r.Role] = r.Access;
                 }
-                json = JsonConvert.SerializeObject(map, GeoServerJson.Request);
+                json = ToJson(map);
             }
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PostAsync($"/rest/security/acl/{resource}", content);
-            }
+            await PostContentAsync($"/rest/security/acl/{resource}", TextContent(json, "application/json"));
         }
 
         /// <summary>
@@ -77,7 +70,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteACLAsync(string resource)
         {
-            await _httpClient.DeleteAsync($"/rest/security/acl/{resource}");
+            await Http.DeleteAsync($"/rest/security/acl/{resource}");
         }
     }
 }

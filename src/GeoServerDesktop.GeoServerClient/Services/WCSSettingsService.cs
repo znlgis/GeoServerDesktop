@@ -1,6 +1,4 @@
 using System;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 using GeoServerDesktop.GeoServerClient.Models;
@@ -11,17 +9,16 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for managing WCS service settings
     /// </summary>
-    public class WCSSettingsService
+    public class WCSSettingsService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 WCSSettingsService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public WCSSettingsService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -30,7 +27,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>WCS 设置</returns>
         public async Task<WCSSettings> GetWCSSettingsAsync()
         {
-            var response = await _httpClient.GetAsync("/rest/services/wcs/settings.json");
+            var response = await Http.GetAsync("/rest/services/wcs/settings.json");
             return JsonConvert.DeserializeObject<WCSSettings>(response);
         }
 
@@ -41,11 +38,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task UpdateWCSSettingsAsync(WCSSettings settings)
         {
-            var json = JsonConvert.SerializeObject(settings, GeoServerJson.Request);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PutAsync("/rest/services/wcs/settings", content);
-            }
+            await PutJsonAsync("/rest/services/wcs/settings", settings);
         }
 
         /// <summary>
@@ -55,7 +48,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>WCS 设置 for the workspace</returns>
         public async Task<WCSSettings> GetWorkspaceWCSSettingsAsync(string workspace)
         {
-            var response = await _httpClient.GetAsync($"/rest/services/wcs/workspaces/{Uri.EscapeDataString(workspace)}/settings.json");
+            var response = await Http.GetAsync($"/rest/services/wcs/workspaces/{Esc(workspace)}/settings.json");
             return JsonConvert.DeserializeObject<WCSSettings>(response);
         }
 
@@ -67,11 +60,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task UpdateWorkspaceWCSSettingsAsync(string workspace, WCSSettings settings)
         {
-            var json = JsonConvert.SerializeObject(settings, GeoServerJson.Request);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PutAsync($"/rest/services/wcs/workspaces/{Uri.EscapeDataString(workspace)}/settings", content);
-            }
+            await PutJsonAsync($"/rest/services/wcs/workspaces/{Esc(workspace)}/settings", settings);
         }
     }
 }

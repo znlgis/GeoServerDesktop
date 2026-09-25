@@ -13,20 +13,19 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// UserPasswordController / MasterPasswordController 等，无 keystore 控制器）。
     /// 方法签名保留以兼容既有调用面，调用即抛 <see cref="NotSupportedException"/>。
     /// </summary>
-    public class KeystoreService
+    public class KeystoreService : ServiceBase
     {
         private const string NoEndpointMessage =
             "GeoServer 3.0.1 无 keystore REST 端点（/rest/security/keystore(s) 实测 404），该功能仅 GUI 可用。";
 
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 KeystoreService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public KeystoreService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>

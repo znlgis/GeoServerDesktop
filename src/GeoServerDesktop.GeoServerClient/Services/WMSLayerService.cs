@@ -1,27 +1,23 @@
 using System;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 using GeoServerDesktop.GeoServerClient.Models;
-using Newtonsoft.Json;
 
 namespace GeoServerDesktop.GeoServerClient.Services
 {
     /// <summary>
     /// 用于管理 GeoServer WMS 图层的服务 (cascaded WMS layers)
     /// </summary>
-    public class WMSLayerService
+    public class WMSLayerService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 WMSLayerService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public WMSLayerService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -32,8 +28,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>WMS 图层数组</returns>
         public async Task<WMSLayer[]> GetWMSLayersAsync(string workspaceName, string wmsStoreName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/wmsstores/{Uri.EscapeDataString(wmsStoreName)}/wmslayers.json");
-            var wrapper = JsonConvert.DeserializeObject<WMSLayerListWrapper>(response);
+            var wrapper = await GetJsonAsync<WMSLayerListWrapper>($"/rest/workspaces/{Esc(workspaceName)}/wmsstores/{Esc(wmsStoreName)}/wmslayers.json");
             return wrapper?.WMSLayerList?.WMSLayers ?? Array.Empty<WMSLayer>();
         }
 
@@ -46,8 +41,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>WMS 图层详细信息</returns>
         public async Task<WMSLayer> GetWMSLayerAsync(string workspaceName, string wmsStoreName, string wmsLayerName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/wmsstores/{Uri.EscapeDataString(wmsStoreName)}/wmslayers/{Uri.EscapeDataString(wmsLayerName)}.json");
-            var wrapper = JsonConvert.DeserializeObject<WMSLayerWrapper>(response);
+            var wrapper = await GetJsonAsync<WMSLayerWrapper>($"/rest/workspaces/{Esc(workspaceName)}/wmsstores/{Esc(wmsStoreName)}/wmslayers/{Esc(wmsLayerName)}.json");
             return wrapper?.WMSLayer;
         }
 
@@ -61,11 +55,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task CreateWMSLayerAsync(string workspaceName, string wmsStoreName, WMSLayer wmsLayer)
         {
             var wrapper = new { wmsLayer = wmsLayer };
-            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PostAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/wmsstores/{Uri.EscapeDataString(wmsStoreName)}/wmslayers", content);
-            }
+            await PostJsonAsync($"/rest/workspaces/{Esc(workspaceName)}/wmsstores/{Esc(wmsStoreName)}/wmslayers", wrapper);
         }
 
         /// <summary>
@@ -79,11 +69,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task UpdateWMSLayerAsync(string workspaceName, string wmsStoreName, string wmsLayerName, WMSLayer wmsLayer)
         {
             var wrapper = new { wmsLayer = wmsLayer };
-            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PutAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/wmsstores/{Uri.EscapeDataString(wmsStoreName)}/wmslayers/{Uri.EscapeDataString(wmsLayerName)}", content);
-            }
+            await PutJsonAsync($"/rest/workspaces/{Esc(workspaceName)}/wmsstores/{Esc(wmsStoreName)}/wmslayers/{Esc(wmsLayerName)}", wrapper);
         }
 
         /// <summary>
@@ -97,8 +83,8 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task DeleteWMSLayerAsync(string workspaceName, string wmsStoreName, string wmsLayerName, bool recurse = false)
         {
             var recurseValue = recurse ? "true" : "false";
-            var path = $"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/wmsstores/{Uri.EscapeDataString(wmsStoreName)}/wmslayers/{Uri.EscapeDataString(wmsLayerName)}?recurse={recurseValue}";
-            await _httpClient.DeleteAsync(path);
+            var path = $"/rest/workspaces/{Esc(workspaceName)}/wmsstores/{Esc(wmsStoreName)}/wmslayers/{Esc(wmsLayerName)}?recurse={recurseValue}";
+            await Http.DeleteAsync(path);
         }
     }
 }

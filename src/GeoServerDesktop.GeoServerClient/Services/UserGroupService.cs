@@ -1,6 +1,4 @@
 using System;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 using GeoServerDesktop.GeoServerClient.Models;
@@ -19,17 +17,16 @@ namespace GeoServerDesktop.GeoServerClient.Services
     ///    组详情无独立路由 → 由 GET /group/{group}/users.json 合成成员列表；
     ///  - 服务列表路由为 /rest/security/usergroupservices.json（UserGroupServiceController），旧 /usergroup/services 404。
     /// </summary>
-    public class UserGroupService
+    public class UserGroupService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 UserGroupService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public UserGroupService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -38,7 +35,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>List of user group services</returns>
         public async Task<UserGroupServiceList> GetServicesAsync()
         {
-            var response = await _httpClient.GetAsync("/rest/security/usergroupservices.json");
+            var response = await Http.GetAsync("/rest/security/usergroupservices.json");
             return UserGroupServiceList.Parse(response);
         }
 
@@ -49,7 +46,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>List of users</returns>
         public async Task<UserListWrapper> GetUsersAsync()
         {
-            var response = await _httpClient.GetAsync("/rest/security/usergroup/users.json");
+            var response = await Http.GetAsync("/rest/security/usergroup/users.json");
             return JsonConvert.DeserializeObject<UserListWrapper>(response);
         }
 
@@ -70,8 +67,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
                     if (u != null && string.Equals(u.UserName, username, StringComparison.Ordinal)) { match = u; break; }
             if (match != null)
             {
-                var groupsJson = await _httpClient.GetAsync($"/rest/security/usergroup/user/{Uri.EscapeDataString(username)}/groups.json");
-                var gw = JsonConvert.DeserializeObject<GroupListWrapper>(groupsJson);
+                var gw = await GetJsonAsync<GroupListWrapper>($"/rest/security/usergroup/user/{Esc(username)}/groups.json");
                 match.Groups = gw?.Groups;
             }
             return new UserWrapper { User = match };
@@ -86,11 +82,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task CreateUserAsync(User user)
         {
             if (user != null && user.Enabled == null) user.Enabled = true;
-            var json = JsonConvert.SerializeObject(new { user }, GeoServerJson.Request);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PostAsync("/rest/security/usergroup/users", content);
-            }
+            await PostJsonAsync("/rest/security/usergroup/users", new { user });
         }
 
         /// <summary>
@@ -103,11 +95,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task UpdateUserAsync(string username, User user)
         {
             if (user != null && user.Enabled == null) user.Enabled = true;
-            var json = JsonConvert.SerializeObject(new { user }, GeoServerJson.Request);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PostAsync($"/rest/security/usergroup/user/{Uri.EscapeDataString(username)}", content);
-            }
+            await PostJsonAsync($"/rest/security/usergroup/user/{Esc(username)}", new { user });
         }
 
         /// <summary>
@@ -117,7 +105,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteUserAsync(string username)
         {
-            await _httpClient.DeleteAsync($"/rest/security/usergroup/user/{Uri.EscapeDataString(username)}");
+            await Http.DeleteAsync($"/rest/security/usergroup/user/{Esc(username)}");
         }
 
         /// <summary>
@@ -126,7 +114,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>List of groups</returns>
         public async Task<GroupListWrapper> GetGroupsAsync()
         {
-            var response = await _httpClient.GetAsync("/rest/security/usergroup/groups.json");
+            var response = await Http.GetAsync("/rest/security/usergroup/groups.json");
             return JsonConvert.DeserializeObject<GroupListWrapper>(response);
         }
 
@@ -150,11 +138,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task CreateGroupAsync(UserGroup group)
         {
             if (group != null && group.Enabled == null) group.Enabled = true;
-            var json = JsonConvert.SerializeObject(new { group }, GeoServerJson.Request);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PostAsync($"/rest/security/usergroup/group/{Uri.EscapeDataString(group?.GroupName)}", content);
-            }
+            await PostJsonAsync($"/rest/security/usergroup/group/{Esc(group?.GroupName)}", new { group });
         }
 
         /// <summary>
@@ -164,7 +148,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteGroupAsync(string groupname)
         {
-            await _httpClient.DeleteAsync($"/rest/security/usergroup/group/{Uri.EscapeDataString(groupname)}");
+            await Http.DeleteAsync($"/rest/security/usergroup/group/{Esc(groupname)}");
         }
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 using GeoServerDesktop.GeoServerClient.Models;
@@ -10,17 +9,16 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for managing fonts in GeoServer
     /// </summary>
-    public class FontService
+    public class FontService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 FontService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public FontService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -29,7 +27,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>List of fonts</returns>
         public async Task<FontListWrapper> GetFontsAsync()
         {
-            var response = await _httpClient.GetAsync("/rest/fonts.json");
+            var response = await Http.GetAsync("/rest/fonts.json");
             return JsonConvert.DeserializeObject<FontListWrapper>(response);
         }
 
@@ -41,11 +39,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task UploadFontAsync(string fontName, byte[] fontContent)
         {
-            using (var content = new ByteArrayContent(fontContent))
-            {
-                content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
-                await _httpClient.PutAsync($"/rest/fonts/{fontName}", content);
-            }
+            await PutContentAsync($"/rest/fonts/{fontName}", BytesContent(fontContent, "application/octet-stream"));
         }
     }
 }

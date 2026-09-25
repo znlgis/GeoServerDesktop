@@ -1,27 +1,23 @@
 using System;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 using GeoServerDesktop.GeoServerClient.Models;
-using Newtonsoft.Json;
 
 namespace GeoServerDesktop.GeoServerClient.Services
 {
     /// <summary>
     /// 用于管理 GeoServer 命名空间的服务
     /// </summary>
-    public class NamespaceService
+    public class NamespaceService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 NamespaceService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public NamespaceService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -30,8 +26,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>命名空间数组</returns>
         public async Task<Namespace[]> GetNamespacesAsync()
         {
-            var response = await _httpClient.GetAsync("/rest/namespaces.json");
-            var wrapper = JsonConvert.DeserializeObject<NamespaceListWrapper>(response);
+            var wrapper = await GetJsonAsync<NamespaceListWrapper>("/rest/namespaces.json");
             return wrapper?.NamespaceList?.Namespaces ?? Array.Empty<Namespace>();
         }
 
@@ -42,8 +37,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>命名空间详细信息</returns>
         public async Task<Namespace> GetNamespaceAsync(string namespacePrefix)
         {
-            var response = await _httpClient.GetAsync($"/rest/namespaces/{Uri.EscapeDataString(namespacePrefix)}.json");
-            var wrapper = JsonConvert.DeserializeObject<NamespaceWrapper>(response);
+            var wrapper = await GetJsonAsync<NamespaceWrapper>($"/rest/namespaces/{Esc(namespacePrefix)}.json");
             return wrapper?.Namespace;
         }
 
@@ -56,11 +50,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task CreateNamespaceAsync(string namespacePrefix, string uri)
         {
             var ns = new { @namespace = new { prefix = namespacePrefix, uri = uri } };
-            var json = JsonConvert.SerializeObject(ns, GeoServerJson.Request);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PostAsync("/rest/namespaces", content);
-            }
+            await PostJsonAsync("/rest/namespaces", ns);
         }
 
         /// <summary>
@@ -72,11 +62,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task UpdateNamespaceAsync(string namespacePrefix, string uri)
         {
             var ns = new { @namespace = new { prefix = namespacePrefix, uri = uri } };
-            var json = JsonConvert.SerializeObject(ns, GeoServerJson.Request);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PutAsync($"/rest/namespaces/{Uri.EscapeDataString(namespacePrefix)}", content);
-            }
+            await PutJsonAsync($"/rest/namespaces/{Esc(namespacePrefix)}", ns);
         }
 
         /// <summary>
@@ -86,7 +72,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteNamespaceAsync(string namespacePrefix)
         {
-            await _httpClient.DeleteAsync($"/rest/namespaces/{Uri.EscapeDataString(namespacePrefix)}");
+            await Http.DeleteAsync($"/rest/namespaces/{Esc(namespacePrefix)}");
         }
     }
 }

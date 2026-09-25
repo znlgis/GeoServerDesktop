@@ -1,27 +1,23 @@
 using System;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 using GeoServerDesktop.GeoServerClient.Models;
-using Newtonsoft.Json;
 
 namespace GeoServerDesktop.GeoServerClient.Services
 {
     /// <summary>
     /// Service for managing URL validation checks
     /// </summary>
-    public class URLCheckService
+    public class URLCheckService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 URLCheckService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public URLCheckService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -30,7 +26,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>List of URL checks</returns>
         public async Task<URLCheckListWrapper> GetURLChecksAsync()
         {
-            var response = await _httpClient.GetAsync("/rest/urlchecks.json");
+            var response = await Http.GetAsync("/rest/urlchecks.json");
             // FIXED-E7：3.0.1 根键为 urlChecks 且空态为 {"urlChecks":""}，改用容错 Parse
             return URLCheckListWrapper.Parse(response);
         }
@@ -46,11 +42,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task CreateURLCheckAsync(URLCheck check)
         {
-            var json = JsonConvert.SerializeObject(check, GeoServerJson.Request);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PostAsync("/rest/urlchecks", content);
-            }
+            await PostJsonAsync("/rest/urlchecks", check);
         }
 
         /// <summary>
@@ -60,7 +52,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteURLCheckAsync(string checkName)
         {
-            await _httpClient.DeleteAsync($"/rest/urlchecks/{checkName}");
+            await Http.DeleteAsync($"/rest/urlchecks/{checkName}");
         }
     }
 }

@@ -1,6 +1,4 @@
 using System;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 using GeoServerDesktop.GeoServerClient.Models;
@@ -11,17 +9,16 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for managing GeoWebCache blobstores
     /// </summary>
-    public class BlobstoreService
+    public class BlobstoreService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 BlobstoreService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public BlobstoreService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -30,7 +27,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>List of blobstores</returns>
         public async Task<BlobstoreListWrapper> GetBlobstoresAsync()
         {
-            var response = await _httpClient.GetAsync("/gwc/rest/blobstores.json");
+            var response = await Http.GetAsync("/gwc/rest/blobstores.json");
             return JsonConvert.DeserializeObject<BlobstoreListWrapper>(response);
         }
 
@@ -41,7 +38,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>Blob 存储详细信息</returns>
         public async Task<BlobstoreWrapper> GetBlobstoreAsync(string blobstoreId)
         {
-            var response = await _httpClient.GetAsync($"/gwc/rest/blobstores/{Uri.EscapeDataString(blobstoreId)}.json");
+            var response = await Http.GetAsync($"/gwc/rest/blobstores/{Esc(blobstoreId)}.json");
             // FIXED-E11：单体实测根为实现类名 {"FileBlobStore":{...}}，动态键需 ParseSingle
             return new BlobstoreWrapper { Blobstore = Blobstore.ParseSingle(response, blobstoreId) };
         }
@@ -56,10 +53,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
             // FIXED-E11：BlobStoreController 创建为 PUT /gwc/rest/blobstores/{name} + XStream XML
             // （{"FileBlobStore">...}，实测 201）；集合 POST JSON 不被接受。
             var xml = (blobstore ?? new Blobstore()).ToXmlBody(null);
-            using (var content = new StringContent(xml, Encoding.UTF8, "application/xml"))
-            {
-                await _httpClient.PutAsync($"/gwc/rest/blobstores/{Uri.EscapeDataString(blobstore?.Id)}", content);
-            }
+            await PutContentAsync($"/gwc/rest/blobstores/{Esc(blobstore?.Id)}", TextContent(xml, "application/xml"));
         }
 
         /// <summary>
@@ -72,10 +66,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             // FIXED-E11：更新与创建同路由 PUT /gwc/rest/blobstores/{name}，同样仅接受 XStream XML。
             var xml = (blobstore ?? new Blobstore()).ToXmlBody(blobstoreId);
-            using (var content = new StringContent(xml, Encoding.UTF8, "application/xml"))
-            {
-                await _httpClient.PutAsync($"/gwc/rest/blobstores/{Uri.EscapeDataString(blobstoreId)}", content);
-            }
+            await PutContentAsync($"/gwc/rest/blobstores/{Esc(blobstoreId)}", TextContent(xml, "application/xml"));
         }
 
         /// <summary>
@@ -85,7 +76,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteBlobstoreAsync(string blobstoreId)
         {
-            await _httpClient.DeleteAsync($"/gwc/rest/blobstores/{Uri.EscapeDataString(blobstoreId)}");
+            await Http.DeleteAsync($"/gwc/rest/blobstores/{Esc(blobstoreId)}");
         }
     }
 }

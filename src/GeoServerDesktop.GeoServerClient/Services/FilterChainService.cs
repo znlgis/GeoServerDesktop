@@ -1,6 +1,4 @@
 using System;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 using GeoServerDesktop.GeoServerClient.Models;
@@ -11,17 +9,16 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for managing security filter chains
     /// </summary>
-    public class FilterChainService
+    public class FilterChainService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 FilterChainService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public FilterChainService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -30,7 +27,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>List of filter chains</returns>
         public async Task<FilterChainListWrapper> GetFilterChainsAsync()
         {
-            var response = await _httpClient.GetAsync("/rest/security/filterchain.json");
+            var response = await Http.GetAsync("/rest/security/filterchain.json");
             // FIXED-E3：3.0.1 列表实测 {"filterchain":{"filters":[...]}}，双层解析
             return FilterChainListWrapper.Parse(response);
         }
@@ -42,7 +39,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>过滤器链详细信息</returns>
         public async Task<FilterChainWrapper> GetFilterChainAsync(string chainName)
         {
-            var response = await _httpClient.GetAsync($"/rest/security/filterchain/{chainName}.json");
+            var response = await Http.GetAsync($"/rest/security/filterchain/{chainName}.json");
             return JsonConvert.DeserializeObject<FilterChainWrapper>(response);
         }
 
@@ -55,11 +52,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task UpdateFilterChainAsync(string chainName, FilterChain chain)
         {
             var wrapper = new { filterChain = chain };
-            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PutAsync($"/rest/security/filterchain/{chainName}", content);
-            }
+            await PutJsonAsync($"/rest/security/filterchain/{chainName}", wrapper);
         }
     }
 }

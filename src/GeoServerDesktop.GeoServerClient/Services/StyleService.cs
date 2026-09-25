@@ -1,27 +1,23 @@
 using System;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 using GeoServerDesktop.GeoServerClient.Models;
-using Newtonsoft.Json;
 
 namespace GeoServerDesktop.GeoServerClient.Services
 {
     /// <summary>
     /// 用于管理 GeoServer 样式的服务
     /// </summary>
-    public class StyleService
+    public class StyleService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 StyleService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public StyleService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -30,8 +26,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>样式数组</returns>
         public async Task<Style[]> GetStylesAsync()
         {
-            var response = await _httpClient.GetAsync("/rest/styles.json");
-            var wrapper = JsonConvert.DeserializeObject<StyleListWrapper>(response);
+            var wrapper = await GetJsonAsync<StyleListWrapper>("/rest/styles.json");
             return wrapper?.StyleList?.Styles ?? Array.Empty<Style>();
         }
 
@@ -42,8 +37,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>样式详细信息</returns>
         public async Task<Style> GetStyleAsync(string styleName)
         {
-            var response = await _httpClient.GetAsync($"/rest/styles/{Uri.EscapeDataString(styleName)}.json");
-            var wrapper = JsonConvert.DeserializeObject<StyleWrapper>(response);
+            var wrapper = await GetJsonAsync<StyleWrapper>($"/rest/styles/{Esc(styleName)}.json");
             return wrapper?.Style;
         }
 
@@ -54,8 +48,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>SLD 内容字符串</returns>
         public async Task<string> GetStyleSldAsync(string styleName)
         {
-            var response = await _httpClient.GetAsync($"/rest/styles/{Uri.EscapeDataString(styleName)}.sld");
-            return response;
+            return await GetAsync($"/rest/styles/{Esc(styleName)}.sld");
         }
 
         /// <summary>
@@ -68,17 +61,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             // 首先创建样式元数据
             var style = new { style = new { name = styleName, filename = $"{styleName}.sld" } };
-            var json = JsonConvert.SerializeObject(style, GeoServerJson.Request);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PostAsync("/rest/styles", content);
-            }
+            await PostJsonAsync("/rest/styles", style);
 
             // 然后上传 SLD 内容
-            using (var sldContentData = new StringContent(sldContent, Encoding.UTF8, "application/vnd.ogc.sld+xml"))
-            {
-                await _httpClient.PutAsync($"/rest/styles/{Uri.EscapeDataString(styleName)}", sldContentData);
-            }
+            await PutContentAsync($"/rest/styles/{Esc(styleName)}", TextContent(sldContent, "application/vnd.ogc.sld+xml"));
         }
 
         /// <summary>
@@ -89,10 +75,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task UpdateStyleAsync(string styleName, string sldContent)
         {
-            using (var content = new StringContent(sldContent, Encoding.UTF8, "application/vnd.ogc.sld+xml"))
-            {
-                await _httpClient.PutAsync($"/rest/styles/{Uri.EscapeDataString(styleName)}", content);
-            }
+            await PutContentAsync($"/rest/styles/{Esc(styleName)}", TextContent(sldContent, "application/vnd.ogc.sld+xml"));
         }
 
         /// <summary>
@@ -103,8 +86,8 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteStyleAsync(string styleName, bool purge = false)
         {
-            var path = $"/rest/styles/{Uri.EscapeDataString(styleName)}?purge={purge.ToString().ToLowerInvariant()}";
-            await _httpClient.DeleteAsync(path);
+            var path = $"/rest/styles/{Esc(styleName)}?purge={Bool(purge)}";
+            await Http.DeleteAsync(path);
         }
 
         /// <summary>
@@ -114,8 +97,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>工作空间中的样式数组</returns>
         public async Task<Style[]> GetWorkspaceStylesAsync(string workspaceName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/styles.json");
-            var wrapper = JsonConvert.DeserializeObject<StyleListWrapper>(response);
+            var wrapper = await GetJsonAsync<StyleListWrapper>($"/rest/workspaces/{Esc(workspaceName)}/styles.json");
             return wrapper?.StyleList?.Styles ?? Array.Empty<Style>();
         }
 
@@ -127,8 +109,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>样式详细信息</returns>
         public async Task<Style> GetWorkspaceStyleAsync(string workspaceName, string styleName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/styles/{Uri.EscapeDataString(styleName)}.json");
-            var wrapper = JsonConvert.DeserializeObject<StyleWrapper>(response);
+            var wrapper = await GetJsonAsync<StyleWrapper>($"/rest/workspaces/{Esc(workspaceName)}/styles/{Esc(styleName)}.json");
             return wrapper?.Style;
         }
 
@@ -140,8 +121,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>SLD 内容字符串</returns>
         public async Task<string> GetWorkspaceStyleSldAsync(string workspaceName, string styleName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/styles/{Uri.EscapeDataString(styleName)}.sld");
-            return response;
+            return await GetAsync($"/rest/workspaces/{Esc(workspaceName)}/styles/{Esc(styleName)}.sld");
         }
 
         /// <summary>
@@ -155,17 +135,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             // 首先创建样式元数据
             var style = new { style = new { name = styleName, filename = $"{styleName}.sld" } };
-            var json = JsonConvert.SerializeObject(style, GeoServerJson.Request);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PostAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/styles", content);
-            }
+            await PostJsonAsync($"/rest/workspaces/{Esc(workspaceName)}/styles", style);
 
             // 然后上传 SLD 内容
-            using (var sldContentData = new StringContent(sldContent, Encoding.UTF8, "application/vnd.ogc.sld+xml"))
-            {
-                await _httpClient.PutAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/styles/{Uri.EscapeDataString(styleName)}", sldContentData);
-            }
+            await PutContentAsync($"/rest/workspaces/{Esc(workspaceName)}/styles/{Esc(styleName)}", TextContent(sldContent, "application/vnd.ogc.sld+xml"));
         }
 
         /// <summary>
@@ -177,10 +150,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task UpdateWorkspaceStyleAsync(string workspaceName, string styleName, string sldContent)
         {
-            using (var content = new StringContent(sldContent, Encoding.UTF8, "application/vnd.ogc.sld+xml"))
-            {
-                await _httpClient.PutAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/styles/{Uri.EscapeDataString(styleName)}", content);
-            }
+            await PutContentAsync($"/rest/workspaces/{Esc(workspaceName)}/styles/{Esc(styleName)}", TextContent(sldContent, "application/vnd.ogc.sld+xml"));
         }
 
         /// <summary>
@@ -192,8 +162,8 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteWorkspaceStyleAsync(string workspaceName, string styleName, bool purge = false)
         {
-            var path = $"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/styles/{Uri.EscapeDataString(styleName)}?purge={purge.ToString().ToLowerInvariant()}";
-            await _httpClient.DeleteAsync(path);
+            var path = $"/rest/workspaces/{Esc(workspaceName)}/styles/{Esc(styleName)}?purge={Bool(purge)}";
+            await Http.DeleteAsync(path);
         }
     }
 }

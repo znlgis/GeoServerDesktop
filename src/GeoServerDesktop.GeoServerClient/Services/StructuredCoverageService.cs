@@ -1,6 +1,4 @@
 using System;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 using GeoServerDesktop.GeoServerClient.Models;
@@ -13,17 +11,16 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// 注：3.0.1 默认镜像未安装 structured coverage observer 扩展（相关路由 404），
     /// E5/E21 等形态基线维持不变，安装扩展后需按实测复核。
     /// </summary>
-    public class StructuredCoverageService
+    public class StructuredCoverageService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 StructuredCoverageService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public StructuredCoverageService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -35,7 +32,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>Coverage index information</returns>
         public async Task<StructuredCoverageIndex> GetIndexAsync(string workspace, string coverageStore, string coverage)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{workspace}/coveragestores/{coverageStore}/coverages/{coverage}/index.json");
+            var response = await Http.GetAsync($"/rest/workspaces/{workspace}/coveragestores/{coverageStore}/coverages/{coverage}/index.json");
             return JsonConvert.DeserializeObject<StructuredCoverageIndex>(response);
         }
 
@@ -49,11 +46,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task UpdateIndexAsync(string workspace, string coverageStore, string coverage, StructuredCoverageIndex index)
         {
-            var json = JsonConvert.SerializeObject(index);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PutAsync($"/rest/workspaces/{workspace}/coveragestores/{coverageStore}/coverages/{coverage}/index", content);
-            }
+            await PutJsonAsync($"/rest/workspaces/{workspace}/coveragestores/{coverageStore}/coverages/{coverage}/index", index, rawNulls: true);
         }
 
         /// <summary>
@@ -70,12 +63,12 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             var queryParams = new System.Collections.Generic.List<string>();
             // FIXED-E24：filter 为 CQL 表达式（含空格/&/>/中文），必须转义否则破坏查询串
-            if (!string.IsNullOrEmpty(filter)) queryParams.Add($"filter={Uri.EscapeDataString(filter)}");
+            if (!string.IsNullOrEmpty(filter)) queryParams.Add($"filter={Esc(filter)}");
             if (offset.HasValue) queryParams.Add($"offset={offset.Value}");
             if (limit.HasValue) queryParams.Add($"limit={limit.Value}");
 
             var queryString = queryParams.Count > 0 ? "?" + string.Join("&", queryParams) : "";
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{workspace}/coveragestores/{coverageStore}/coverages/{coverage}/index/granules.json{queryString}");
+            var response = await Http.GetAsync($"/rest/workspaces/{workspace}/coveragestores/{coverageStore}/coverages/{coverage}/index/granules.json{queryString}");
             return JsonConvert.DeserializeObject<GranuleListWrapper>(response);
         }
 
@@ -89,7 +82,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>Granule details</returns>
         public async Task<Granule> GetGranuleAsync(string workspace, string coverageStore, string coverage, string granuleId)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{workspace}/coveragestores/{coverageStore}/coverages/{coverage}/index/granules/{granuleId}.json");
+            var response = await Http.GetAsync($"/rest/workspaces/{workspace}/coveragestores/{coverageStore}/coverages/{coverage}/index/granules/{granuleId}.json");
             return JsonConvert.DeserializeObject<Granule>(response);
         }
 
@@ -103,7 +96,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteGranuleAsync(string workspace, string coverageStore, string coverage, string granuleId)
         {
-            await _httpClient.DeleteAsync($"/rest/workspaces/{workspace}/coveragestores/{coverageStore}/coverages/{coverage}/index/granules/{granuleId}");
+            await Http.DeleteAsync($"/rest/workspaces/{workspace}/coveragestores/{coverageStore}/coverages/{coverage}/index/granules/{granuleId}");
         }
 
         /// <summary>
@@ -117,11 +110,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task HarvestGranulesAsync(string workspace, string coverageStore, string coverage, string[] files)
         {
             var request = new { files = files };
-            var json = JsonConvert.SerializeObject(request);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PostAsync($"/rest/workspaces/{workspace}/coveragestores/{coverageStore}/coverages/{coverage}/index/granules", content);
-            }
+            await PostJsonAsync($"/rest/workspaces/{workspace}/coveragestores/{coverageStore}/coverages/{coverage}/index/granules", request, rawNulls: true);
         }
     }
 }

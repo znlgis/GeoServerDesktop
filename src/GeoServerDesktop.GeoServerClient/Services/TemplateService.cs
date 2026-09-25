@@ -1,27 +1,23 @@
 using System;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 using GeoServerDesktop.GeoServerClient.Models;
-using Newtonsoft.Json;
 
 namespace GeoServerDesktop.GeoServerClient.Services
 {
     /// <summary>
     /// Service for managing feature templates
     /// </summary>
-    public class TemplateService
+    public class TemplateService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 TemplateService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public TemplateService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -30,7 +26,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>List of templates</returns>
         public async Task<TemplateListWrapper> GetTemplatesAsync()
         {
-            var response = await _httpClient.GetAsync("/rest/templates.json");
+            var response = await Http.GetAsync("/rest/templates.json");
             // FIXED-E7：3.0.1 根为类全名 {"org.geoserver.rest.catalog.TemplateInfos":...}（空态值为 ""），
             // 直接反序列化取不到根；改用容错 Parse。
             return TemplateListWrapper.Parse(response);
@@ -43,7 +39,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>Template content</returns>
         public async Task<string> GetTemplateAsync(string templateName)
         {
-            return await _httpClient.GetAsync($"/rest/templates/{templateName}");
+            return await Http.GetAsync($"/rest/templates/{templateName}");
         }
 
         /// <summary>
@@ -54,10 +50,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task CreateTemplateAsync(string templateName, string content)
         {
-            using (var stringContent = new StringContent(content, Encoding.UTF8, "text/plain"))
-            {
-                await _httpClient.PostAsync($"/rest/templates/{templateName}", stringContent);
-            }
+            await PostContentAsync($"/rest/templates/{templateName}", TextContent(content, "text/plain"));
         }
 
         /// <summary>
@@ -67,7 +60,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteTemplateAsync(string templateName)
         {
-            await _httpClient.DeleteAsync($"/rest/templates/{templateName}");
+            await Http.DeleteAsync($"/rest/templates/{templateName}");
         }
     }
 }

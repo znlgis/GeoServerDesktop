@@ -12,17 +12,16 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// （Shapefile 目录 / GeoTIFF / PostGIS 表 → store + 图层，幂等）。
     /// 与集成测试 fixture 同源的发布形态（参数键名、最小请求体）。
     /// </summary>
-    public class ImportWizardService
+    public class ImportWizardService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 ImportWizardService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public ImportWizardService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -38,7 +37,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
             if (parameters == null) throw new ArgumentNullException(nameof(parameters));
 
             string probeStore = "_probe_pg_" + Guid.NewGuid().ToString("N").Substring(0, 8);
-            var dsSvc = new DataStoreService(_httpClient);
+            var dsSvc = new DataStoreService(Http);
             try
             {
                 await dsSvc.CreateDataStoreAsync(workspaceName, new DataStore
@@ -50,7 +49,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
                 });
 
                 // 触发真实读库：连接失败会在此抛出（5xx）。
-                var ftSvc = new FeatureTypeService(_httpClient);
+                var ftSvc = new FeatureTypeService(Http);
                 await ftSvc.GetFeatureTypesAsync(workspaceName, probeStore);
 
                 return new PostgisProbeResult { Success = true, Message = "连接可用" };
@@ -106,7 +105,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
             var result = NewResult(request);
             try
             {
-                var dsSvc = new DataStoreService(_httpClient);
+                var dsSvc = new DataStoreService(Http);
                 if (!await ExistsAsync(() => dsSvc.GetDataStoreAsync(request.Workspace, result.StoreName)))
                 {
                     await dsSvc.CreateDataStoreAsync(request.Workspace, new DataStore
@@ -118,7 +117,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
                     });
                 }
 
-                var ftSvc = new FeatureTypeService(_httpClient);
+                var ftSvc = new FeatureTypeService(Http);
                 if (!await ExistsAsync(() => ftSvc.GetFeatureTypeAsync(request.Workspace, result.StoreName, request.LayerName)))
                 {
                     await ftSvc.CreateFeatureTypeAsync(request.Workspace, result.StoreName, new FeatureType
@@ -153,7 +152,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
             var result = NewResult(request);
             try
             {
-                var csSvc = new CoverageStoreService(_httpClient);
+                var csSvc = new CoverageStoreService(Http);
                 if (!await ExistsAsync(() => csSvc.GetCoverageStoreAsync(request.Workspace, result.StoreName)))
                 {
                     await csSvc.CreateCoverageStoreAsync(request.Workspace, new CoverageStore
@@ -166,7 +165,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
                     });
                 }
 
-                var covSvc = new CoverageService(_httpClient);
+                var covSvc = new CoverageService(Http);
                 if (!await ExistsAsync(() => covSvc.GetCoverageAsync(request.Workspace, result.StoreName, request.LayerName)))
                 {
                     await covSvc.CreateCoverageAsync(request.Workspace, result.StoreName, new Coverage
@@ -203,7 +202,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
                 if (request.Postgis == null)
                     throw new ArgumentException("缺少 PostGIS 连接参数");
 
-                var dsSvc = new DataStoreService(_httpClient);
+                var dsSvc = new DataStoreService(Http);
                 if (!await ExistsAsync(() => dsSvc.GetDataStoreAsync(request.Workspace, result.StoreName)))
                 {
                     await dsSvc.CreateDataStoreAsync(request.Workspace, new DataStore
@@ -215,7 +214,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
                     });
                 }
 
-                var ftSvc = new FeatureTypeService(_httpClient);
+                var ftSvc = new FeatureTypeService(Http);
                 if (!await ExistsAsync(() => ftSvc.GetFeatureTypeAsync(request.Workspace, result.StoreName, request.LayerName)))
                 {
                     await ftSvc.CreateFeatureTypeAsync(request.Workspace, result.StoreName, new FeatureType

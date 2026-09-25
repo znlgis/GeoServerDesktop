@@ -9,17 +9,16 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for monitoring GeoServer requests
     /// </summary>
-    public class MonitoringService
+    public class MonitoringService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 MonitoringService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public MonitoringService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -28,7 +27,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>List of monitored requests</returns>
         public async Task<MonitorRequestListWrapper> GetRequestsAsync()
         {
-            var response = await _httpClient.GetAsync("/rest/monitor/requests.json");
+            var response = await Http.GetAsync("/rest/monitor/requests.json");
             // FIXED-E7：3.0.1 实测根为 {"org.geoserver.monitor.RequestDatas":{"org.geoserver.monitor.RequestData":[{name,href}]}}
             // （动态类名键、列表项仅摘要），直接反序列化取不到；改用手工 Parse。
             return MonitorRequestListWrapper.Parse(response);
@@ -42,7 +41,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>Monitoring statistics</returns>
         public async Task<MonitorStatistics> GetStatisticsAsync()
         {
-            var response = await _httpClient.GetAsync("/rest/monitor/statistics.json");
+            var response = await Http.GetAsync("/rest/monitor/statistics.json");
             return JsonConvert.DeserializeObject<MonitorStatistics>(response);
         }
     }

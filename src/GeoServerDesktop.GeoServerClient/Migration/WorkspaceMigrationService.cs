@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
+using GeoServerDesktop.GeoServerClient.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -27,7 +28,7 @@ namespace GeoServerDesktop.GeoServerClient.Migration
     /// ③ PUT/POST 请求体含 null 引用字段会触发 XStream NPE（500），回放前剥离 href/id/dateCreated/
     ///    dateModified/_default 等服务端字段；store/namespace 的限定名引用整体替换。
     /// </summary>
-    public class WorkspaceMigrationService
+    public class WorkspaceMigrationService : ServiceBase
     {
         private const string ManifestName = "manifest.json";
 
@@ -37,15 +38,14 @@ namespace GeoServerDesktop.GeoServerClient.Migration
             "href", "dateCreated", "dateModified", "_default",
         };
 
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 WorkspaceMigrationService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public WorkspaceMigrationService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         // ================= 导出 =================
@@ -74,7 +74,7 @@ namespace GeoServerDesktop.GeoServerClient.Migration
             // （部分部署/recurse 删除后会出现），导入端负责补建占位 URI。
             try
             {
-                var nsJson = await _httpClient.GetAsync("/rest/namespaces/" + Esc(workspaceName) + ".json");
+                var nsJson = await Http.GetAsync("/rest/namespaces/" + EscPath(workspaceName) + ".json");
                 var ns = Root(nsJson, "namespace");
                 if (ns != null)
                 {
@@ -94,12 +94,12 @@ namespace GeoServerDesktop.GeoServerClient.Migration
             var slds = new Dictionary<string, string>(StringComparer.Ordinal);
 
             // 数据存储 + 其下要素类型
-            foreach (var store in await ListRootAsync("/rest/workspaces/" + Esc(workspaceName) + "/datastores.json",
+            foreach (var store in await ListRootAsync("/rest/workspaces/" + EscPath(workspaceName) + "/datastores.json",
                 "dataStores", "dataStore", manifest, "datastores"))
             {
                 string name = (string)store["name"];
                 if (string.IsNullOrEmpty(name)) continue;
-                var detail = await GetDetailAsync("/rest/workspaces/" + Esc(workspaceName) + "/datastores/" + Esc(name) + ".json",
+                var detail = await GetDetailAsync("/rest/workspaces/" + EscPath(workspaceName) + "/datastores/" + EscPath(name) + ".json",
                     "dataStore", manifest, "dataStore " + name);
                 if (detail == null) continue;
                 manifest.DataStores.Add(new DataStoreEntry
@@ -110,13 +110,13 @@ namespace GeoServerDesktop.GeoServerClient.Migration
                 });
 
                 foreach (var ftRef in await ListRootAsync(
-                    "/rest/workspaces/" + Esc(workspaceName) + "/datastores/" + Esc(name) + "/featuretypes.json",
+                    "/rest/workspaces/" + EscPath(workspaceName) + "/datastores/" + EscPath(name) + "/featuretypes.json",
                     "featureTypes", "featureType", manifest, "featuretypes@" + name))
                 {
                     string ftName = (string)ftRef["name"];
                     if (string.IsNullOrEmpty(ftName)) continue;
                     var ft = await GetDetailAsync(
-                        "/rest/workspaces/" + Esc(workspaceName) + "/datastores/" + Esc(name) + "/featuretypes/" + Esc(ftName) + ".json",
+                        "/rest/workspaces/" + EscPath(workspaceName) + "/datastores/" + EscPath(name) + "/featuretypes/" + EscPath(ftName) + ".json",
                         "featureType", manifest, "featureType " + name + ":" + ftName);
                     if (ft == null) continue;
                     manifest.FeatureTypes.Add(new FeatureTypeEntry
@@ -130,12 +130,12 @@ namespace GeoServerDesktop.GeoServerClient.Migration
             }
 
             // 覆盖存储 + 其下覆盖度
-            foreach (var store in await ListRootAsync("/rest/workspaces/" + Esc(workspaceName) + "/coveragestores.json",
+            foreach (var store in await ListRootAsync("/rest/workspaces/" + EscPath(workspaceName) + "/coveragestores.json",
                 "coverageStores", "coverageStore", manifest, "coveragestores"))
             {
                 string name = (string)store["name"];
                 if (string.IsNullOrEmpty(name)) continue;
-                var detail = await GetDetailAsync("/rest/workspaces/" + Esc(workspaceName) + "/coveragestores/" + Esc(name) + ".json",
+                var detail = await GetDetailAsync("/rest/workspaces/" + EscPath(workspaceName) + "/coveragestores/" + EscPath(name) + ".json",
                     "coverageStore", manifest, "coverageStore " + name);
                 if (detail == null) continue;
                 manifest.CoverageStores.Add(new CoverageStoreEntry
@@ -147,13 +147,13 @@ namespace GeoServerDesktop.GeoServerClient.Migration
                 });
 
                 foreach (var covRef in await ListRootAsync(
-                    "/rest/workspaces/" + Esc(workspaceName) + "/coveragestores/" + Esc(name) + "/coverages.json",
+                    "/rest/workspaces/" + EscPath(workspaceName) + "/coveragestores/" + EscPath(name) + "/coverages.json",
                     "coverages", "coverage", manifest, "coverages@" + name))
                 {
                     string covName = (string)covRef["name"];
                     if (string.IsNullOrEmpty(covName)) continue;
                     var cov = await GetDetailAsync(
-                        "/rest/workspaces/" + Esc(workspaceName) + "/coveragestores/" + Esc(name) + "/coverages/" + Esc(covName) + ".json",
+                        "/rest/workspaces/" + EscPath(workspaceName) + "/coveragestores/" + EscPath(name) + "/coverages/" + EscPath(covName) + ".json",
                         "coverage", manifest, "coverage " + name + ":" + covName);
                     if (cov == null) continue;
                     manifest.Coverages.Add(new CoverageEntry
@@ -167,15 +167,15 @@ namespace GeoServerDesktop.GeoServerClient.Migration
             }
 
             // 工作空间样式（SLD 内容入包；导入端同名全局样式是否存在决定注册层，避免同名歧义）
-            foreach (var styleRef in await ListRootAsync("/rest/workspaces/" + Esc(workspaceName) + "/styles.json",
+            foreach (var styleRef in await ListRootAsync("/rest/workspaces/" + EscPath(workspaceName) + "/styles.json",
                 "styles", "style", manifest, "styles"))
             {
                 string name = (string)styleRef["name"];
                 if (string.IsNullOrEmpty(name)) continue;
                 var entry = new StyleEntry { Name = name, Global = false, Filename = name + ".sld" };
-                await CaptureSldAsync("/rest/workspaces/" + Esc(workspaceName) + "/styles/" + Esc(name) + ".sld",
+                await CaptureSldAsync("/rest/workspaces/" + EscPath(workspaceName) + "/styles/" + EscPath(name) + ".sld",
                     "styles/" + workspaceName + "_" + name + ".sld", entry, slds, manifest);
-                bool sameNameGlobal = await GetOrNullAsync("/rest/styles/" + Esc(name) + ".json", "style") != null;
+                bool sameNameGlobal = await GetOrNullAsync("/rest/styles/" + EscPath(name) + ".json", "style") != null;
                 entry.DedupSameNameGlobalStyle = sameNameGlobal;
                 if (sameNameGlobal)
                 {
@@ -184,7 +184,7 @@ namespace GeoServerDesktop.GeoServerClient.Migration
                     if (globalEntry == null)
                     {
                         globalEntry = new StyleEntry { Name = name, Global = true, Filename = name + ".sld" };
-                        await CaptureSldAsync("/rest/styles/" + Esc(name) + ".sld",
+                        await CaptureSldAsync("/rest/styles/" + EscPath(name) + ".sld",
                             "styles/" + name + ".sld", globalEntry, slds, manifest);
                         manifest.Styles.Add(globalEntry);
                     }
@@ -194,12 +194,12 @@ namespace GeoServerDesktop.GeoServerClient.Migration
 
             // 图层：默认样式绑定差异（图层资源由资源创建自动发布）
             string sourceUri = manifest.NamespaceUri;
-            foreach (var layerRef in await ListRootAsync("/rest/workspaces/" + Esc(workspaceName) + "/layers.json",
+            foreach (var layerRef in await ListRootAsync("/rest/workspaces/" + EscPath(workspaceName) + "/layers.json",
                 "layers", "layer", manifest, "layers"))
             {
                 string name = (string)layerRef["name"];
                 if (string.IsNullOrEmpty(name)) continue;
-                var detail = await GetDetailAsync("/rest/workspaces/" + Esc(workspaceName) + "/layers/" + Esc(name) + ".json",
+                var detail = await GetDetailAsync("/rest/workspaces/" + EscPath(workspaceName) + "/layers/" + EscPath(name) + ".json",
                     "layer", manifest, "layer " + name);
                 if (detail == null) continue;
                 var defaultStyle = detail["defaultStyle"] as JObject;
@@ -217,7 +217,7 @@ namespace GeoServerDesktop.GeoServerClient.Migration
                     if (globalEntry == null)
                     {
                         globalEntry = new StyleEntry { Name = styleName, Global = true, Filename = styleName + ".sld" };
-                        await CaptureSldAsync("/rest/styles/" + Esc(styleName) + ".sld",
+                        await CaptureSldAsync("/rest/styles/" + EscPath(styleName) + ".sld",
                             "styles/" + styleName + ".sld", globalEntry, slds, manifest);
                         manifest.Styles.Add(globalEntry);
                     }
@@ -232,12 +232,12 @@ namespace GeoServerDesktop.GeoServerClient.Migration
             }
 
             // 工作空间图层组
-            foreach (var lgRef in await ListRootAsync("/rest/workspaces/" + Esc(workspaceName) + "/layergroups.json",
+            foreach (var lgRef in await ListRootAsync("/rest/workspaces/" + EscPath(workspaceName) + "/layergroups.json",
                 "layerGroups", "layerGroup", manifest, "layergroups"))
             {
                 string name = (string)lgRef["name"];
                 if (string.IsNullOrEmpty(name)) continue;
-                var detail = await GetDetailAsync("/rest/workspaces/" + Esc(workspaceName) + "/layergroups/" + Esc(name) + ".json",
+                var detail = await GetDetailAsync("/rest/workspaces/" + EscPath(workspaceName) + "/layergroups/" + EscPath(name) + ".json",
                     "layerGroup", manifest, "layerGroup " + name);
                 if (detail == null) continue;
                 manifest.LayerGroups.Add(new LayerGroupEntry { Name = name, Raw = detail });
@@ -277,7 +277,7 @@ namespace GeoServerDesktop.GeoServerClient.Migration
             // 1) 工作空间（同时自动得到占位命名空间）
             await Step(result, "workspace", targetWs, async () =>
             {
-                bool exists = await ExistsAsync("/rest/workspaces/" + Esc(targetWs) + ".json");
+                bool exists = await ExistsAsync("/rest/workspaces/" + EscPath(targetWs) + ".json");
                 if (!exists)
                     await PostJsonAsync("/rest/workspaces", "workspace", new JObject { { "name", targetWs } });
                 else if (!request.OverwriteExisting)
@@ -288,7 +288,7 @@ namespace GeoServerDesktop.GeoServerClient.Migration
             // 2) 命名空间 URI 校正（保留源 URI 语义）
             await Step(result, "namespace", targetPrefix, async () =>
             {
-                var ns = await GetOrNullAsync("/rest/namespaces/" + Esc(targetPrefix) + ".json", "namespace");
+                var ns = await GetOrNullAsync("/rest/namespaces/" + EscPath(targetPrefix) + ".json", "namespace");
                 if (ns == null)
                 {
                     // 工作空间创建应已自动生成；仍缺失则显式创建
@@ -299,7 +299,7 @@ namespace GeoServerDesktop.GeoServerClient.Migration
                 string currentUri = (string)ns["uri"];
                 if (!string.Equals(currentUri, targetUri, StringComparison.Ordinal))
                 {
-                    await PutJsonAsync("/rest/namespaces/" + Esc(targetPrefix), "namespace",
+                    await PutJsonAsync("/rest/namespaces/" + EscPath(targetPrefix), "namespace",
                         new JObject { { "prefix", targetPrefix }, { "uri", targetUri } });
                 }
                 return null;
@@ -310,16 +310,16 @@ namespace GeoServerDesktop.GeoServerClient.Migration
             {
                 await Step(result, "dataStore", targetWs + ":" + entry.Name, async () =>
                 {
-                    string path = "/rest/workspaces/" + Esc(targetWs) + "/datastores/" + Esc(entry.Name) + ".json";
+                    string path = "/rest/workspaces/" + EscPath(targetWs) + "/datastores/" + EscPath(entry.Name) + ".json";
                     bool exists = await ExistsAsync(path);
                     if (exists && !request.OverwriteExisting) return ToSkipped("已存在");
                     var raw = Rewrite(entry.Raw, sourceWs, sourcePrefix, sourceUri, targetWs, targetPrefix, targetUri);
                     if (exists)
                     {
-                        await PutJsonAsync("/rest/workspaces/" + Esc(targetWs) + "/datastores/" + Esc(entry.Name), "dataStore", raw);
+                        await PutJsonAsync("/rest/workspaces/" + EscPath(targetWs) + "/datastores/" + EscPath(entry.Name), "dataStore", raw);
                         return null;
                     }
-                    await PostJsonAsync("/rest/workspaces/" + Esc(targetWs) + "/datastores", "dataStore", raw);
+                    await PostJsonAsync("/rest/workspaces/" + EscPath(targetWs) + "/datastores", "dataStore", raw);
                     return null;
                 });
             }
@@ -327,16 +327,16 @@ namespace GeoServerDesktop.GeoServerClient.Migration
             {
                 await Step(result, "coverageStore", targetWs + ":" + entry.Name, async () =>
                 {
-                    string path = "/rest/workspaces/" + Esc(targetWs) + "/coveragestores/" + Esc(entry.Name) + ".json";
+                    string path = "/rest/workspaces/" + EscPath(targetWs) + "/coveragestores/" + EscPath(entry.Name) + ".json";
                     bool exists = await ExistsAsync(path);
                     if (exists && !request.OverwriteExisting) return ToSkipped("已存在");
                     var raw = Rewrite(entry.Raw, sourceWs, sourcePrefix, sourceUri, targetWs, targetPrefix, targetUri);
                     if (exists)
                     {
-                        await PutJsonAsync("/rest/workspaces/" + Esc(targetWs) + "/coveragestores/" + Esc(entry.Name), "coverageStore", raw);
+                        await PutJsonAsync("/rest/workspaces/" + EscPath(targetWs) + "/coveragestores/" + EscPath(entry.Name), "coverageStore", raw);
                         return null;
                     }
-                    await PostJsonAsync("/rest/workspaces/" + Esc(targetWs) + "/coveragestores", "coverageStore", raw);
+                    await PostJsonAsync("/rest/workspaces/" + EscPath(targetWs) + "/coveragestores", "coverageStore", raw);
                     return null;
                 });
             }
@@ -351,8 +351,8 @@ namespace GeoServerDesktop.GeoServerClient.Migration
                         return ToFailed("归档缺少 SLD 内容（" + (entry.SldPath ?? "(无路径)") + "）");
                     string basePath = entry.Global
                         ? "/rest/styles"
-                        : "/rest/workspaces/" + Esc(targetWs) + "/styles";
-                    string getPath = basePath + "/" + Esc(entry.Name) + ".json";
+                        : "/rest/workspaces/" + EscPath(targetWs) + "/styles";
+                    string getPath = basePath + "/" + EscPath(entry.Name) + ".json";
                     bool exists = await ExistsAsync(getPath);
                     if (exists && !request.OverwriteExisting) return ToSkipped("已存在");
                     if (!exists)
@@ -365,7 +365,7 @@ namespace GeoServerDesktop.GeoServerClient.Migration
                     }
                     using (var content = new StringContent(sld, Encoding.UTF8, "application/vnd.ogc.sld+xml"))
                     {
-                        await _httpClient.PutAsync(basePath + "/" + Esc(entry.Name), content);
+                        await Http.PutAsync(basePath + "/" + EscPath(entry.Name), content);
                     }
                     return null;
                 });
@@ -377,8 +377,8 @@ namespace GeoServerDesktop.GeoServerClient.Migration
                 await Step(result, "featureType", targetWs + ":" + entry.Store + ":" + entry.Name, async () =>
                 {
                     string store = MapStore(entry.Store, sourceWs, targetWs);
-                    string basePath = "/rest/workspaces/" + Esc(targetWs) + "/datastores/" + Esc(store) + "/featuretypes";
-                    bool exists = await ExistsAsync(basePath + "/" + Esc(entry.Name) + ".json");
+                    string basePath = "/rest/workspaces/" + EscPath(targetWs) + "/datastores/" + EscPath(store) + "/featuretypes";
+                    bool exists = await ExistsAsync(basePath + "/" + EscPath(entry.Name) + ".json");
                     if (exists && !request.OverwriteExisting) return ToSkipped("已存在");
                     var raw = Rewrite(entry.Raw, sourceWs, sourcePrefix, sourceUri, targetWs, targetPrefix, targetUri);
                     RemovePath(raw, "namespace");
@@ -387,7 +387,7 @@ namespace GeoServerDesktop.GeoServerClient.Migration
                     RemovePath(raw, "href");
                     if (exists)
                     {
-                        await PutJsonAsync(basePath + "/" + Esc(entry.Name), "featureType", raw);
+                        await PutJsonAsync(basePath + "/" + EscPath(entry.Name), "featureType", raw);
                         return null;
                     }
                     await PostJsonAsync(basePath, "featureType", raw);
@@ -399,8 +399,8 @@ namespace GeoServerDesktop.GeoServerClient.Migration
                 await Step(result, "coverage", targetWs + ":" + entry.Store + ":" + entry.Name, async () =>
                 {
                     string store = MapStore(entry.Store, sourceWs, targetWs);
-                    string basePath = "/rest/workspaces/" + Esc(targetWs) + "/coveragestores/" + Esc(store) + "/coverages";
-                    bool exists = await ExistsAsync(basePath + "/" + Esc(entry.Name) + ".json");
+                    string basePath = "/rest/workspaces/" + EscPath(targetWs) + "/coveragestores/" + EscPath(store) + "/coverages";
+                    bool exists = await ExistsAsync(basePath + "/" + EscPath(entry.Name) + ".json");
                     if (exists && !request.OverwriteExisting) return ToSkipped("已存在");
                     var raw = Rewrite(entry.Raw, sourceWs, sourcePrefix, sourceUri, targetWs, targetPrefix, targetUri);
                     RemovePath(raw, "namespace");
@@ -408,7 +408,7 @@ namespace GeoServerDesktop.GeoServerClient.Migration
                     RemovePath(raw, "metadata");
                     if (exists)
                     {
-                        await PutJsonAsync(basePath + "/" + Esc(entry.Name), "coverage", raw);
+                        await PutJsonAsync(basePath + "/" + EscPath(entry.Name), "coverage", raw);
                         return null;
                     }
                     await PostJsonAsync(basePath, "coverage", raw);
@@ -434,7 +434,7 @@ namespace GeoServerDesktop.GeoServerClient.Migration
                         { "name", targetWs + ":" + layerShort },
                         { "defaultStyle", style },
                     };
-                    await PutJsonRaw("/rest/layers/" + Esc(targetWs + ":" + layerShort),
+                    await PutJsonRaw("/rest/layers/" + EscPath(targetWs + ":" + layerShort),
                         "{\"layer\":" + body.ToString(Formatting.None) + "}");
                     return null;
                 });
@@ -445,15 +445,15 @@ namespace GeoServerDesktop.GeoServerClient.Migration
             {
                 await Step(result, "layerGroup", targetWs + ":" + entry.Name, async () =>
                 {
-                    string basePath = "/rest/workspaces/" + Esc(targetWs) + "/layergroups";
-                    bool exists = await ExistsAsync(basePath + "/" + Esc(entry.Name) + ".json");
+                    string basePath = "/rest/workspaces/" + EscPath(targetWs) + "/layergroups";
+                    bool exists = await ExistsAsync(basePath + "/" + EscPath(entry.Name) + ".json");
                     if (exists && !request.OverwriteExisting) return ToSkipped("已存在");
                     var raw = Rewrite(entry.Raw, sourceWs, sourcePrefix, sourceUri, targetWs, targetPrefix, targetUri);
                     RemovePath(raw, "id");
                     RemovePath(raw, "uuid");
                     if (exists)
                     {
-                        await PutJsonAsync(basePath + "/" + Esc(entry.Name), "layerGroup", raw);
+                        await PutJsonAsync(basePath + "/" + EscPath(entry.Name), "layerGroup", raw);
                         return null;
                     }
                     await PostJsonAsync(basePath, "layerGroup", raw);
@@ -749,7 +749,7 @@ namespace GeoServerDesktop.GeoServerClient.Migration
         {
             try
             {
-                var json = await _httpClient.GetAsync("/rest/about/version.json");
+                var json = await Http.GetAsync("/rest/about/version.json");
                 var v = Root(json, "version");
                 return (string)(v?["release"] ?? v?["git"]);
             }
@@ -764,7 +764,7 @@ namespace GeoServerDesktop.GeoServerClient.Migration
         {
             try
             {
-                var json = await _httpClient.GetAsync(path);
+                var json = await Http.GetAsync(path);
                 var root = Root(json, listRoot);
                 return root?[itemKey] as JArray ?? new JArray();
             }
@@ -780,7 +780,7 @@ namespace GeoServerDesktop.GeoServerClient.Migration
         {
             try
             {
-                var json = await _httpClient.GetAsync(path);
+                var json = await Http.GetAsync(path);
                 return Root(json, itemKey);
             }
             catch (Exception ex)
@@ -795,7 +795,7 @@ namespace GeoServerDesktop.GeoServerClient.Migration
         {
             try
             {
-                var sld = await _httpClient.GetAsync(sldPath);
+                var sld = await Http.GetAsync(sldPath);
                 if (!string.IsNullOrEmpty(sld))
                 {
                     entry.SldPath = memberName;
@@ -816,7 +816,7 @@ namespace GeoServerDesktop.GeoServerClient.Migration
         {
             try
             {
-                var json = await _httpClient.GetAsync(path);
+                var json = await Http.GetAsync(path);
                 return Root(json, rootKey);
             }
             catch (GeoServerRequestException ex) when (ex.StatusCode == 404)
@@ -829,7 +829,7 @@ namespace GeoServerDesktop.GeoServerClient.Migration
         {
             try
             {
-                await _httpClient.GetAsync(getPath);
+                await Http.GetAsync(getPath);
                 return true;
             }
             catch (GeoServerRequestException ex) when (ex.StatusCode == 404)
@@ -852,7 +852,7 @@ namespace GeoServerDesktop.GeoServerClient.Migration
         {
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PostAsync(path, content);
+                await Http.PostAsync(path, content);
             }
         }
 
@@ -860,7 +860,7 @@ namespace GeoServerDesktop.GeoServerClient.Migration
         {
             using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PutAsync(path, content);
+                await Http.PutAsync(path, content);
             }
         }
 
@@ -871,7 +871,7 @@ namespace GeoServerDesktop.GeoServerClient.Migration
             return parsed[key] as JObject;
         }
 
-        private static string Esc(string value)
+        private static string EscPath(string value)
         {
             return Uri.EscapeDataString(value ?? string.Empty);
         }

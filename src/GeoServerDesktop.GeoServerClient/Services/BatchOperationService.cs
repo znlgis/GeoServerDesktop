@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 using GeoServerDesktop.GeoServerClient.Models;
-using Newtonsoft.Json;
 
 namespace GeoServerDesktop.GeoServerClient.Services
 {
@@ -23,17 +21,16 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// ④ DELETE 工作空间 recurse=true 级联回收其孤立命名空间（实测工作空间创建即自动建同名 namespace，
     ///    recurse 删除后 namespace 一并消失）。
     /// </summary>
-    public class BatchOperationService
+    public class BatchOperationService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 BatchOperationService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public BatchOperationService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -55,7 +52,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
                         defaultStyle = new { name = styleName },
                     },
                 };
-                await PutJsonAsync("/rest/layers/" + Uri.EscapeDataString(layer), body);
+                await PutJsonAsync("/rest/layers/" + Esc(layer), body);
             });
         }
 
@@ -125,8 +122,8 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             return RunAsync(qualifiedLayerNames, async layer =>
             {
-                await _httpClient.DeleteAsync(
-                    "/rest/layers/" + Uri.EscapeDataString(layer) + "?recurse=" + Lower(recurse));
+                await Http.DeleteAsync(
+                    "/rest/layers/" + Esc(layer) + "?recurse=" + Lower(recurse));
             });
         }
 
@@ -140,7 +137,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             return RunAsync(targets, async target =>
             {
-                await _httpClient.DeleteAsync(StylePath(target) + "?purge=" + Lower(purge));
+                await Http.DeleteAsync(StylePath(target) + "?purge=" + Lower(purge));
             });
         }
 
@@ -154,8 +151,8 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             return RunAsync(workspaceNames, async ws =>
             {
-                await _httpClient.DeleteAsync(
-                    "/rest/workspaces/" + Uri.EscapeDataString(ws) + "?recurse=" + Lower(recurse));
+                await Http.DeleteAsync(
+                    "/rest/workspaces/" + Esc(ws) + "?recurse=" + Lower(recurse));
             });
         }
 
@@ -167,10 +164,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
             {
                 if (string.IsNullOrEmpty(target.Workspace))
                     throw new ArgumentException("工作空间样式目标缺少工作空间名", nameof(target));
-                return "/rest/workspaces/" + Uri.EscapeDataString(target.Workspace)
-                    + "/styles/" + Uri.EscapeDataString(target.StyleName);
+                return "/rest/workspaces/" + Esc(target.Workspace)
+                    + "/styles/" + Esc(target.StyleName);
             }
-            return "/rest/styles/" + Uri.EscapeDataString(target.StyleName);
+            return "/rest/styles/" + Esc(target.StyleName);
         }
 
         private async Task PutStoreAsync(string workspace, string store, bool enabled, bool isCoverage)
@@ -178,26 +175,14 @@ namespace GeoServerDesktop.GeoServerClient.Services
             if (isCoverage)
             {
                 await PutJsonAsync(
-                    "/rest/workspaces/" + Uri.EscapeDataString(workspace) + "/coveragestores/" + Uri.EscapeDataString(store),
+                    "/rest/workspaces/" + Esc(workspace) + "/coveragestores/" + Esc(store),
                     new { coverageStore = new { enabled = enabled } });
             }
             else
             {
                 await PutJsonAsync(
-                    "/rest/workspaces/" + Uri.EscapeDataString(workspace) + "/datastores/" + Uri.EscapeDataString(store),
+                    "/rest/workspaces/" + Esc(workspace) + "/datastores/" + Esc(store),
                     new { dataStore = new { enabled = enabled } });
-            }
-        }
-
-        private async Task PutJsonAsync(string path, object body)
-        {
-            var json = JsonConvert.SerializeObject(body, new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore,
-            });
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PutAsync(path, content);
             }
         }
 

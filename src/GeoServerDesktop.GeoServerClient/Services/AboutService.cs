@@ -9,17 +9,16 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// 用于检索 GeoServer 系统信息的服务
     /// </summary>
-    public class AboutService
+    public class AboutService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 AboutService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public AboutService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -28,7 +27,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>版本信息，包括 GeoServer、GeoTools 和 GeoWebCache 版本</returns>
         public async Task<VersionInfoWrapper> GetVersionAsync()
         {
-            var response = await _httpClient.GetAsync("/rest/about/version.json");
+            var response = await Http.GetAsync("/rest/about/version.json");
             return JsonConvert.DeserializeObject<VersionInfoWrapper>(response);
         }
 
@@ -38,7 +37,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>所有已安装模块的清单信息</returns>
         public async Task<ManifestsWrapper> GetManifestsAsync()
         {
-            var response = await _httpClient.GetAsync("/rest/about/manifests.json");
+            var response = await Http.GetAsync("/rest/about/manifests.json");
             return JsonConvert.DeserializeObject<ManifestsWrapper>(response);
         }
 
@@ -48,7 +47,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>系统状态信息</returns>
         public async Task<SystemStatusWrapper> GetSystemStatusAsync()
         {
-            var response = await _httpClient.GetAsync("/rest/about/system-status.json");
+            var response = await Http.GetAsync("/rest/about/system-status.json");
             return JsonConvert.DeserializeObject<SystemStatusWrapper>(response);
         }
     }

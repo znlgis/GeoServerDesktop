@@ -8,17 +8,16 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for managing GeoServer resource files
     /// </summary>
-    public class ResourceService
+    public class ResourceService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 ResourceService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public ResourceService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -33,7 +32,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task<string> ListResourcesAsync(string resourcePath)
         {
             var path = string.IsNullOrEmpty(resourcePath) ? "/rest/resource" : $"/rest/resource/{resourcePath}";
-            return await _httpClient.GetAsync(path);
+            return await Http.GetAsync(path);
         }
 
         /// <summary>
@@ -52,7 +51,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
             if (string.IsNullOrWhiteSpace(resourcePath))
                 throw new ArgumentException("Resource path must not be empty", nameof(resourcePath));
 
-            return await _httpClient.GetAsync($"/rest/resource/{resourcePath}");
+            return await Http.GetAsync($"/rest/resource/{resourcePath}");
         }
 
         /// <summary>
@@ -71,7 +70,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
             using (var httpContent = new ByteArrayContent(content))
             {
                 httpContent.Headers.Add("Content-Type", contentType);
-                await _httpClient.PutAsync($"/rest/resource/{resourcePath}", httpContent);
+                await Http.PutAsync($"/rest/resource/{resourcePath}", httpContent);
             }
         }
 
@@ -85,7 +84,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// </remarks>
         public async Task DeleteResourceAsync(string resourcePath)
         {
-            await _httpClient.DeleteAsync($"/rest/resource/{resourcePath}");
+            await Http.DeleteAsync($"/rest/resource/{resourcePath}");
         }
     }
 }

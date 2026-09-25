@@ -1,27 +1,23 @@
 using System;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 using GeoServerDesktop.GeoServerClient.Models;
-using Newtonsoft.Json;
 
 namespace GeoServerDesktop.GeoServerClient.Services
 {
     /// <summary>
     /// 用于管理 GeoServer WMS 存储（级联 WMS）的服务
     /// </summary>
-    public class WMSStoreService
+    public class WMSStoreService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 WMSStoreService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public WMSStoreService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -31,8 +27,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>WMS 存储数组</returns>
         public async Task<WMSStore[]> GetWMSStoresAsync(string workspaceName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/wmsstores.json");
-            var wrapper = JsonConvert.DeserializeObject<WMSStoreListWrapper>(response);
+            var wrapper = await GetJsonAsync<WMSStoreListWrapper>($"/rest/workspaces/{Esc(workspaceName)}/wmsstores.json");
             return wrapper?.WMSStoreList?.WMSStores ?? Array.Empty<WMSStore>();
         }
 
@@ -44,8 +39,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>WMS 存储详细信息</returns>
         public async Task<WMSStore> GetWMSStoreAsync(string workspaceName, string wmsStoreName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/wmsstores/{Uri.EscapeDataString(wmsStoreName)}.json");
-            var wrapper = JsonConvert.DeserializeObject<WMSStoreWrapper>(response);
+            var wrapper = await GetJsonAsync<WMSStoreWrapper>($"/rest/workspaces/{Esc(workspaceName)}/wmsstores/{Esc(wmsStoreName)}.json");
             return wrapper?.WMSStore;
         }
 
@@ -58,11 +52,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task CreateWMSStoreAsync(string workspaceName, WMSStore wmsStore)
         {
             var wrapper = new { wmsStore = wmsStore };
-            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PostAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/wmsstores", content);
-            }
+            await PostJsonAsync($"/rest/workspaces/{Esc(workspaceName)}/wmsstores", wrapper);
         }
 
         /// <summary>
@@ -75,11 +65,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task UpdateWMSStoreAsync(string workspaceName, string wmsStoreName, WMSStore wmsStore)
         {
             var wrapper = new { wmsStore = wmsStore };
-            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PutAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/wmsstores/{Uri.EscapeDataString(wmsStoreName)}", content);
-            }
+            await PutJsonAsync($"/rest/workspaces/{Esc(workspaceName)}/wmsstores/{Esc(wmsStoreName)}", wrapper);
         }
 
         /// <summary>
@@ -92,8 +78,8 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task DeleteWMSStoreAsync(string workspaceName, string wmsStoreName, bool recurse = false)
         {
             var recurseValue = recurse ? "true" : "false";
-            var path = $"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/wmsstores/{Uri.EscapeDataString(wmsStoreName)}?recurse={recurseValue}";
-            await _httpClient.DeleteAsync(path);
+            var path = $"/rest/workspaces/{Esc(workspaceName)}/wmsstores/{Esc(wmsStoreName)}?recurse={recurseValue}";
+            await Http.DeleteAsync(path);
         }
     }
 }

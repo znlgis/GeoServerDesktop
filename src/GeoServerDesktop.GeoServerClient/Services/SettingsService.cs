@@ -1,6 +1,4 @@
 using System;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 using GeoServerDesktop.GeoServerClient.Models;
@@ -11,17 +9,16 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// 用于管理 GeoServer 全局设置的服务
     /// </summary>
-    public class SettingsService
+    public class SettingsService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 SettingsService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public SettingsService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -30,7 +27,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>全局设置</returns>
         public async Task<GlobalSettings> GetGlobalSettingsAsync()
         {
-            var response = await _httpClient.GetAsync("/rest/settings.json");
+            var response = await Http.GetAsync("/rest/settings.json");
             return JsonConvert.DeserializeObject<GlobalSettings>(response);
         }
 
@@ -41,11 +38,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task UpdateGlobalSettingsAsync(GlobalSettings settings)
         {
-            var json = JsonConvert.SerializeObject(settings, GeoServerJson.Request);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PutAsync("/rest/settings", content);
-            }
+            await PutJsonAsync("/rest/settings", settings);
         }
 
         /// <summary>
@@ -54,7 +47,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>联系信息</returns>
         public async Task<ContactInfoWrapper> GetContactInfoAsync()
         {
-            var response = await _httpClient.GetAsync("/rest/settings/contact.json");
+            var response = await Http.GetAsync("/rest/settings/contact.json");
             return JsonConvert.DeserializeObject<ContactInfoWrapper>(response);
         }
 
@@ -66,11 +59,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task UpdateContactInfoAsync(ContactInfo contact)
         {
             var wrapper = new { contact = contact };
-            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PutAsync("/rest/settings/contact", content);
-            }
+            await PutJsonAsync("/rest/settings/contact", wrapper);
         }
     }
 }

@@ -1,27 +1,23 @@
 using System;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 using GeoServerDesktop.GeoServerClient.Models;
-using Newtonsoft.Json;
 
 namespace GeoServerDesktop.GeoServerClient.Services
 {
     /// <summary>
     /// 用于管理 GeoServer 覆盖范围存储的服务 (raster data stores)
     /// </summary>
-    public class CoverageStoreService
+    public class CoverageStoreService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 CoverageStoreService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public CoverageStoreService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -31,8 +27,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>覆盖范围存储数组</returns>
         public async Task<CoverageStore[]> GetCoverageStoresAsync(string workspaceName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/coveragestores.json");
-            var wrapper = JsonConvert.DeserializeObject<CoverageStoreListWrapper>(response);
+            var wrapper = await GetJsonAsync<CoverageStoreListWrapper>($"/rest/workspaces/{Esc(workspaceName)}/coveragestores.json");
             return wrapper?.CoverageStoreList?.CoverageStores ?? Array.Empty<CoverageStore>();
         }
 
@@ -44,8 +39,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>覆盖范围存储详细信息</returns>
         public async Task<CoverageStore> GetCoverageStoreAsync(string workspaceName, string coverageStoreName)
         {
-            var response = await _httpClient.GetAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/coveragestores/{Uri.EscapeDataString(coverageStoreName)}.json");
-            var wrapper = JsonConvert.DeserializeObject<CoverageStoreWrapper>(response);
+            var wrapper = await GetJsonAsync<CoverageStoreWrapper>($"/rest/workspaces/{Esc(workspaceName)}/coveragestores/{Esc(coverageStoreName)}.json");
             return wrapper?.CoverageStore;
         }
 
@@ -58,11 +52,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task CreateCoverageStoreAsync(string workspaceName, CoverageStore coverageStore)
         {
             var wrapper = new { coverageStore = coverageStore };
-            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PostAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/coveragestores", content);
-            }
+            await PostJsonAsync($"/rest/workspaces/{Esc(workspaceName)}/coveragestores", wrapper);
         }
 
         /// <summary>
@@ -75,11 +65,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task UpdateCoverageStoreAsync(string workspaceName, string coverageStoreName, CoverageStore coverageStore)
         {
             var wrapper = new { coverageStore = coverageStore };
-            var json = JsonConvert.SerializeObject(wrapper, GeoServerJson.Request);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PutAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/coveragestores/{Uri.EscapeDataString(coverageStoreName)}", content);
-            }
+            await PutJsonAsync($"/rest/workspaces/{Esc(workspaceName)}/coveragestores/{Esc(coverageStoreName)}", wrapper);
         }
 
         /// <summary>
@@ -92,8 +78,8 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task DeleteCoverageStoreAsync(string workspaceName, string coverageStoreName, bool recurse = false)
         {
             var recurseValue = recurse ? "true" : "false";
-            var path = $"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/coveragestores/{Uri.EscapeDataString(coverageStoreName)}?recurse={recurseValue}";
-            await _httpClient.DeleteAsync(path);
+            var path = $"/rest/workspaces/{Esc(workspaceName)}/coveragestores/{Esc(coverageStoreName)}?recurse={recurseValue}";
+            await Http.DeleteAsync(path);
         }
 
         /// <summary>
@@ -106,11 +92,9 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task UploadCoverageFileAsync(string workspaceName, string coverageStoreName, byte[] fileContent, string extension)
         {
-            using (var content = new ByteArrayContent(fileContent))
-            {
-                content.Headers.Add("Content-Type", "application/octet-stream");
-                await _httpClient.PutAsync($"/rest/workspaces/{Uri.EscapeDataString(workspaceName)}/coveragestores/{Uri.EscapeDataString(coverageStoreName)}/file.{Uri.EscapeDataString(extension)}", content);
-            }
+            await PutContentAsync(
+                $"/rest/workspaces/{Esc(workspaceName)}/coveragestores/{Esc(coverageStoreName)}/file.{Esc(extension)}",
+                BytesContent(fileContent, "application/octet-stream"));
         }
     }
 }

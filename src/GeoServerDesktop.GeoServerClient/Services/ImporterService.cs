@@ -1,6 +1,5 @@
 using System;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 using GeoServerDesktop.GeoServerClient.Import;
@@ -12,17 +11,16 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for managing bulk data imports
     /// </summary>
-    public class ImporterService
+    public class ImporterService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 ImporterService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public ImporterService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -34,7 +32,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         {
             try
             {
-                await _httpClient.GetAsync("/rest/imports.json");
+                await Http.GetAsync("/rest/imports.json");
                 return new ImporterAvailability
                 {
                     State = ImporterAvailabilityState.Available,
@@ -86,11 +84,10 @@ namespace GeoServerDesktop.GeoServerClient.Services
                     targetStore = targetStore != null ? new { name = targetStore } : null
                 }
             };
-            var json = JsonConvert.SerializeObject(import, GeoServerJson.Request);
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            using (var content = JsonContent(import))
             {
-                var response = await _httpClient.PostAsync("/rest/imports", content);
-                return JsonConvert.DeserializeObject<ImportContextWrapper>(response);
+                var response = await Http.PostAsync("/rest/imports", content);
+                return Parse<ImportContextWrapper>(response);
             }
         }
 
@@ -101,7 +98,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>Import context</returns>
         public async Task<ImportContextWrapper> GetImportAsync(int importId)
         {
-            var response = await _httpClient.GetAsync($"/rest/imports/{importId}.json");
+            var response = await Http.GetAsync($"/rest/imports/{importId}.json");
             return JsonConvert.DeserializeObject<ImportContextWrapper>(response);
         }
 
@@ -112,7 +109,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteImportAsync(int importId)
         {
-            await _httpClient.DeleteAsync($"/rest/imports/{importId}");
+            await Http.DeleteAsync($"/rest/imports/{importId}");
         }
 
         /// <summary>
@@ -122,7 +119,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>List of tasks</returns>
         public async Task<string> GetImportTasksAsync(int importId)
         {
-            return await _httpClient.GetAsync($"/rest/imports/{importId}/tasks.json");
+            return await Http.GetAsync($"/rest/imports/{importId}/tasks.json");
         }
 
         /// <summary>
@@ -138,7 +135,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
             using (var content = new ByteArrayContent(data))
             {
                 content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(contentType);
-                await _httpClient.PutAsync($"/rest/imports/{importId}/tasks/{taskId}/data", content);
+                await Http.PutAsync($"/rest/imports/{importId}/tasks/{taskId}/data", content);
             }
         }
     }

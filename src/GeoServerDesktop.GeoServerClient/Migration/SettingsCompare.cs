@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
+using GeoServerDesktop.GeoServerClient.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -377,17 +378,16 @@ namespace GeoServerDesktop.GeoServerClient.Migration
     /// <summary>
     /// 设置比对服务：跨实例读取同域设置并产出差异；应用差异时以目标实例为基底合并勾选路径后整包 PUT。
     /// </summary>
-    public class SettingsCompareService
+    public class SettingsCompareService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 SettingsCompareService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public SettingsCompareService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>读取本实例指定域的设置原始 JSON。</summary>
@@ -395,7 +395,7 @@ namespace GeoServerDesktop.GeoServerClient.Migration
         /// <returns>原始 JSON。</returns>
         public Task<string> ReadRawAsync(SettingsDomain domain)
         {
-            return _httpClient.GetAsync(SettingsCompare.PathFor(domain));
+            return Http.GetAsync(SettingsCompare.PathFor(domain));
         }
 
         /// <summary>
@@ -406,7 +406,7 @@ namespace GeoServerDesktop.GeoServerClient.Migration
         public Task<string> ReadRawAtPathAsync(string getPath)
         {
             if (string.IsNullOrEmpty(getPath)) throw new ArgumentException("缺少路径", nameof(getPath));
-            return _httpClient.GetAsync(getPath);
+            return Http.GetAsync(getPath);
         }
 
         /// <summary>
@@ -421,7 +421,7 @@ namespace GeoServerDesktop.GeoServerClient.Migration
             using (var content = new StringContent(wrappedJson ?? throw new ArgumentNullException(nameof(wrappedJson)),
                 Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PutAsync(putPath, content);
+                await Http.PutAsync(putPath, content);
             }
         }
 
@@ -450,7 +450,7 @@ namespace GeoServerDesktop.GeoServerClient.Migration
             var payload = SettingsCompare.Apply(domain, sourceJson, targetJson, paths);
             using (var content = new StringContent(payload, Encoding.UTF8, "application/json"))
             {
-                await _httpClient.PutAsync(SettingsCompare.PutPathFor(domain), content);
+                await Http.PutAsync(SettingsCompare.PutPathFor(domain), content);
             }
         }
     }

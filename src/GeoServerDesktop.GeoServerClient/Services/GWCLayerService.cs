@@ -1,6 +1,4 @@
 using System;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 using GeoServerDesktop.GeoServerClient.Models;
@@ -11,17 +9,16 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// Service for managing GeoWebCache layers
     /// </summary>
-    public class GWCLayerService
+    public class GWCLayerService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 GWCLayerService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public GWCLayerService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -30,7 +27,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>List of cached layers</returns>
         public async Task<GWCLayerListWrapper> GetLayersAsync()
         {
-            var response = await _httpClient.GetAsync("/gwc/rest/layers.json");
+            var response = await Http.GetAsync("/gwc/rest/layers.json");
             return JsonConvert.DeserializeObject<GWCLayerListWrapper>(response);
         }
 
@@ -41,7 +38,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>Layer information</returns>
         public async Task<GWCLayer> GetLayerAsync(string layerName)
         {
-            var response = await _httpClient.GetAsync($"/gwc/rest/layers/{Uri.EscapeDataString(layerName)}.json");
+            var response = await Http.GetAsync($"/gwc/rest/layers/{Esc(layerName)}.json");
             // FIXED-E9：单体实测根为实现类名 {"GeoServerLayer":{...}}，动态键需手工解析
             return GWCLayer.ParseSingle(response);
         }
@@ -57,10 +54,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
             // FIXED-E12：GWC SeedController 实测 POST /gwc/rest/seed/{layer} 以 XML seedRequest 为体
             // （XStream 形态；zoomStart/zoomStop 必填）。truncate 同路由，仅 type=truncate。
             var xml = (seedRequest ?? new SeedRequest()).ToXmlBody();
-            using (var content = new StringContent(xml, Encoding.UTF8, "application/xml"))
-            {
-                await _httpClient.PostAsync($"/gwc/rest/seed/{Uri.EscapeDataString(layerName)}", content);
-            }
+            await PostContentAsync($"/gwc/rest/seed/{Esc(layerName)}", TextContent(xml, "application/xml"));
         }
 
         /// <summary>
@@ -72,10 +66,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
             // FIXED-E12：MassTruncateController 源码以 XStream DomDriver 读 XML（或 form）请求体，
             // 空 <massTruncateRequest/> 即触发全量清空；JSON {"truncateAll":true} 实测不被接受。
             var xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<massTruncateRequest/>";
-            using (var content = new StringContent(xml, Encoding.UTF8, "application/xml"))
-            {
-                await _httpClient.PostAsync("/gwc/rest/masstruncate", content);
-            }
+            await PostContentAsync("/gwc/rest/masstruncate", TextContent(xml, "application/xml"));
         }
     }
 }

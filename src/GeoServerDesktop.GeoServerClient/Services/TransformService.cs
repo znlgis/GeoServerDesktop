@@ -1,6 +1,4 @@
 using System;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 using GeoServerDesktop.GeoServerClient.Models;
@@ -13,17 +11,16 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// 注：3.0.1 默认镜像未安装 WPS/XSLT 转换扩展，/rest/transforms 实测 404——
     /// 列表模型基线（{"transforms":[...]}）维持不变（清单+基线不动）。
     /// </summary>
-    public class TransformService
+    public class TransformService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 TransformService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public TransformService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -32,7 +29,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>List of transforms</returns>
         public async Task<TransformListWrapper> GetTransformsAsync()
         {
-            var response = await _httpClient.GetAsync("/rest/transforms.json");
+            var response = await Http.GetAsync("/rest/transforms.json");
             return JsonConvert.DeserializeObject<TransformListWrapper>(response);
         }
 
@@ -43,7 +40,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>Transform content</returns>
         public async Task<string> GetTransformAsync(string transformName)
         {
-            return await _httpClient.GetAsync($"/rest/transforms/{transformName}");
+            return await Http.GetAsync($"/rest/transforms/{transformName}");
         }
 
         /// <summary>
@@ -54,10 +51,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task CreateTransformAsync(string transformName, string xsltContent)
         {
-            using (var content = new StringContent(xsltContent, Encoding.UTF8, "application/xslt+xml"))
-            {
-                await _httpClient.PostAsync($"/rest/transforms/{transformName}", content);
-            }
+            await PostContentAsync($"/rest/transforms/{transformName}", TextContent(xsltContent, "application/xslt+xml"));
         }
 
         /// <summary>
@@ -67,7 +61,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>表示异步操作的任务</returns>
         public async Task DeleteTransformAsync(string transformName)
         {
-            await _httpClient.DeleteAsync($"/rest/transforms/{transformName}");
+            await Http.DeleteAsync($"/rest/transforms/{transformName}");
         }
     }
 }

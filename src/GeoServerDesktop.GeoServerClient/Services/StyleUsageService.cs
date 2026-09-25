@@ -12,17 +12,16 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// 引用匹配：defaultStyle 的 href 含 "/workspaces/" 视为工作空间样式引用（不计入全局样式总览）；
     /// 否则按名字精确匹配全局样式（服务端资源名大小写敏感；在用样式删除有服务端 403 保护兜底）。
     /// </summary>
-    public class StyleUsageService
+    public class StyleUsageService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 StyleUsageService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public StyleUsageService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -31,8 +30,8 @@ namespace GeoServerDesktop.GeoServerClient.Services
         /// <returns>使用情况数组（含未引用样式；顺序与样式列表一致）。</returns>
         public async Task<StyleUsage[]> GetStyleUsageAsync()
         {
-            var styleSvc = new StyleService(_httpClient);
-            var layerSvc = new LayerService(_httpClient);
+            var styleSvc = new StyleService(Http);
+            var layerSvc = new LayerService(Http);
 
             var styles = await styleSvc.GetStylesAsync();
             var layers = await layerSvc.GetLayersAsync();

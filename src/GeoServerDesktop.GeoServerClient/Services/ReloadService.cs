@@ -1,6 +1,4 @@
 using System;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 
@@ -9,17 +7,16 @@ namespace GeoServerDesktop.GeoServerClient.Services
     /// <summary>
     /// 用于重新加载和重置 GeoServer 目录和配置的服务
     /// </summary>
-    public class ReloadService
+    public class ReloadService : ServiceBase
     {
-        private readonly IGeoServerHttpClient _httpClient;
 
         /// <summary>
         /// 初始化 ReloadService 类的新实例
         /// </summary>
         /// <param name="httpClient">用于 GeoServer 操作的 HTTP 客户端</param>
         public ReloadService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -35,10 +32,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
             // FIXED-E18：原 new StringContent("") 隐式 Content-Type 为 text/plain。
             // 实测 3.0.1：/rest/reload 对无体/text/plain/application/json 均回 200；
             // 此处显式声明 application/json 空体，与 REST 语义一致、不依赖服务器宽容度。
-            using (var content = new StringContent(string.Empty, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PostAsync("/rest/reload", content);
-            }
+            await PostContentAsync("/rest/reload", TextContent(string.Empty, "application/json"));
         }
 
         /// <summary>
@@ -55,10 +49,7 @@ namespace GeoServerDesktop.GeoServerClient.Services
         public async Task ResetAsync()
         {
             // FIXED-E18（同 ReloadCatalogAsync）：显式 application/json 空体。
-            using (var content = new StringContent(string.Empty, Encoding.UTF8, "application/json"))
-            {
-                await _httpClient.PostAsync("/rest/reset", content);
-            }
+            await PostContentAsync("/rest/reset", TextContent(string.Empty, "application/json"));
         }
     }
 }
