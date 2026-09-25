@@ -67,18 +67,15 @@ namespace GeoServerDesktop.App.ViewModels
         private ObservableCollection<MigrationStepItem> _importResults = new();
 
         /// <summary>状态消息</summary>
-        [ObservableProperty]
-        private string _statusMessage = string.Empty;
 
         /// <summary>是否正在加载</summary>
-        [ObservableProperty]
-        private bool _isLoading;
 
         /// <summary>
         /// 初始化 WorkspaceMigrationViewModel 类的新实例
         /// </summary>
         /// <param name="connectionService">GeoServer 连接服务</param>
         public WorkspaceMigrationViewModel(IGeoServerConnectionService connectionService)
+        : base(connectionService)
         {
             _connectionService = connectionService;
             StatusMessage = L.MigReady;
@@ -88,11 +85,7 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private async Task LoadAsync()
         {
-            if (!_connectionService.IsConnected)
-            {
-                StatusMessage = L.StatusPleaseConnect;
-                return;
-            }
+            if (!HasConnection()) return;
             IsLoading = true;
             try
             {
@@ -116,11 +109,7 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private async Task ExportAsync()
         {
-            if (!_connectionService.IsConnected)
-            {
-                StatusMessage = L.StatusPleaseConnect;
-                return;
-            }
+            if (!HasConnection()) return;
             if (string.IsNullOrEmpty(SelectedWorkspace))
             {
                 ExportStatus = L.MigStatusNeedWorkspace;
@@ -189,11 +178,7 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private async Task ImportAsync()
         {
-            if (!_connectionService.IsConnected)
-            {
-                StatusMessage = L.StatusPleaseConnect;
-                return;
-            }
+            if (!HasConnection()) return;
             if (string.IsNullOrWhiteSpace(ArchivePath) || !File.Exists(ArchivePath))
             {
                 StatusMessage = L.MigStatusNeedArchive;

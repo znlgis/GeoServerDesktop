@@ -56,18 +56,15 @@ namespace GeoServerDesktop.App.ViewModels
         private bool _cascadeDelete = true;
 
         /// <summary>状态消息</summary>
-        [ObservableProperty]
-        private string _statusMessage = string.Empty;
 
         /// <summary>是否正在加载</summary>
-        [ObservableProperty]
-        private bool _isLoading;
 
         /// <summary>
         /// 初始化 BatchOperationsViewModel 类的新实例
         /// </summary>
         /// <param name="connectionService">GeoServer 连接服务</param>
         public BatchOperationsViewModel(IGeoServerConnectionService connectionService)
+        : base(connectionService)
         {
             _connectionService = connectionService;
             StatusMessage = L.BatchReady;
@@ -86,11 +83,7 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private async Task LoadItemsAsync()
         {
-            if (!_connectionService.IsConnected)
-            {
-                StatusMessage = L.StatusPleaseConnect;
-                return;
-            }
+            if (!HasConnection()) return;
             IsLoading = true;
             try
             {
@@ -199,25 +192,15 @@ namespace GeoServerDesktop.App.ViewModels
             get { return Items.Where(i => i.IsSelected).Select(i => i.ToStoreTarget()).ToList(); }
         }
 
-        private async Task RunBatch(Func<Task<BatchResult>> op)
-        {
-            IsLoading = true;
-            try
+        private Task RunBatch(Func<Task<BatchResult>> op) => RunGuardedAsync(
+            async () =>
             {
                 var result = await op();
                 StatusMessage = result.Failed == 0
                     ? string.Format(L.BatchStatusAllOk, result.Succeeded)
                     : string.Format(L.BatchStatusPartial, result.Succeeded, result.Failed, result.FailureSummary);
-            }
-            catch (Exception ex)
-            {
-                StatusMessage = string.Format(L.BatchStatusFailed, ex.Message);
-            }
-            finally
-            {
-                IsLoading = false;
-            }
-        }
+            },
+            ex => string.Format(L.BatchStatusFailed, ex.Message));
 
         private async Task LoadWorkspacesAsync()
         {

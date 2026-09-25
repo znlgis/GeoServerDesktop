@@ -33,18 +33,15 @@ namespace GeoServerDesktop.App.ViewModels
         private bool _showUnusedOnly;
 
         /// <summary>状态消息</summary>
-        [ObservableProperty]
-        private string _statusMessage = string.Empty;
 
         /// <summary>是否正在加载</summary>
-        [ObservableProperty]
-        private bool _isLoading;
 
         /// <summary>
         /// 初始化 StyleLibraryViewModel 类的新实例
         /// </summary>
         /// <param name="connectionService">GeoServer 连接服务</param>
         public StyleLibraryViewModel(IGeoServerConnectionService connectionService)
+        : base(connectionService)
         {
             _connectionService = connectionService;
             StatusMessage = L.StyleLibReady;

@@ -47,12 +47,8 @@ namespace GeoServerDesktop.App.ViewModels
         };
 
         /// <summary>是否正在加载</summary>
-        [ObservableProperty]
-        private bool _isLoading;
 
         /// <summary>状态消息</summary>
-        [ObservableProperty]
-        private string _statusMessage = string.Empty;
 
         /// <summary>日志文件内容（尾部若干行）</summary>
         [ObservableProperty]
@@ -71,6 +67,7 @@ namespace GeoServerDesktop.App.ViewModels
         /// </summary>
         /// <param name="connectionService">GeoServer 连接服务</param>
         public LoggingViewModel(IGeoServerConnectionService connectionService)
+        : base(connectionService)
         {
             _connectionService = connectionService;
         }
@@ -81,11 +78,7 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private async Task LoadSettingsAsync()
         {
-            if (!_connectionService.IsConnected)
-            {
-                StatusMessage = L.StatusNotConnected;
-                return;
-            }
+            if (!HasConnection(L.StatusNotConnected)) return;
 
             IsLoading = true;
             StatusMessage = L.StatusLoadingLoggingSettings;
@@ -121,11 +114,7 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private async Task SaveSettingsAsync()
         {
-            if (!_connectionService.IsConnected)
-            {
-                StatusMessage = L.StatusNotConnected;
-                return;
-            }
+            if (!HasConnection(L.StatusNotConnected)) return;
 
             IsLoading = true;
             StatusMessage = L.StatusSavingLoggingSettings;
@@ -163,11 +152,7 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private async Task RefreshLogAsync()
         {
-            if (!_connectionService.IsConnected)
-            {
-                StatusMessage = L.StatusNotConnected;
-                return;
-            }
+            if (!HasConnection(L.StatusNotConnected)) return;
 
             IsLogLoading = true;
             StatusMessage = L.StatusLoadingLogFile;

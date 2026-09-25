@@ -23,18 +23,15 @@ namespace GeoServerDesktop.App.ViewModels
         private string? _selectedGridset;
 
         /// <summary>是否正在加载</summary>
-        [ObservableProperty]
-        private bool _isLoading;
 
         /// <summary>状态消息</summary>
-        [ObservableProperty]
-        private string _statusMessage = string.Empty;
 
         /// <summary>
         /// 初始化 GridsetsViewModel 类的新实例
         /// </summary>
         /// <param name="connectionService">GeoServer 连接服务</param>
         public GridsetsViewModel(IGeoServerConnectionService connectionService)
+        : base(connectionService)
         {
             _connectionService = connectionService;
         }
@@ -45,11 +42,7 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private async Task LoadGridsetsAsync()
         {
-            if (!_connectionService.IsConnected)
-            {
-                StatusMessage = L.StatusNotConnected;
-                return;
-            }
+            if (!HasConnection(L.StatusNotConnected)) return;
 
             IsLoading = true;
             StatusMessage = L.StatusLoadingGridsets;

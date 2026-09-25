@@ -39,18 +39,15 @@ namespace GeoServerDesktop.App.ViewModels
         private bool _verboseExceptions;
 
         /// <summary>是否正在加载</summary>
-        [ObservableProperty]
-        private bool _isLoading;
 
         /// <summary>状态消息</summary>
-        [ObservableProperty]
-        private string _statusMessage = string.Empty;
 
         /// <summary>
         /// 初始化 GlobalSettingsViewModel 类的新实例
         /// </summary>
         /// <param name="connectionService">GeoServer 连接服务</param>
         public GlobalSettingsViewModel(IGeoServerConnectionService connectionService)
+        : base(connectionService)
         {
             _connectionService = connectionService;
         }
@@ -61,11 +58,7 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private async Task LoadSettingsAsync()
         {
-            if (!_connectionService.IsConnected)
-            {
-                StatusMessage = L.StatusNotConnected;
-                return;
-            }
+            if (!HasConnection(L.StatusNotConnected)) return;
 
             IsLoading = true;
             StatusMessage = L.StatusLoadingGlobalSettings;
@@ -108,11 +101,7 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private async Task SaveSettingsAsync()
         {
-            if (!_connectionService.IsConnected)
-            {
-                StatusMessage = L.StatusNotConnected;
-                return;
-            }
+            if (!HasConnection(L.StatusNotConnected)) return;
 
             IsLoading = true;
             StatusMessage = L.StatusSavingGlobalSettings;

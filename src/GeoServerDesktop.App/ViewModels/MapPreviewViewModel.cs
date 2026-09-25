@@ -18,17 +18,7 @@ namespace GeoServerDesktop.App.ViewModels
         [ObservableProperty]
         private Map? _map;
 
-        /// <summary>
-        /// 状态消息（构造后经 InitializeMap 本地化赋值，见 E36 注释）
-        /// </summary>
-        [ObservableProperty]
-        private string _statusMessage = string.Empty;
 
-        /// <summary>
-        /// 是否正在加载
-        /// </summary>
-        [ObservableProperty]
-        private bool _isLoading;
 
         /// <summary>
         /// 当前图层

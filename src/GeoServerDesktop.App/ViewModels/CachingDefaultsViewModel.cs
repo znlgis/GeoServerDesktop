@@ -26,18 +26,15 @@ namespace GeoServerDesktop.App.ViewModels
         private int _defaultExpireClients;
 
         /// <summary>是否正在加载</summary>
-        [ObservableProperty]
-        private bool _isLoading;
 
         /// <summary>状态消息</summary>
-        [ObservableProperty]
-        private string _statusMessage = string.Empty;
 
         /// <summary>
         /// 初始化 CachingDefaultsViewModel 类的新实例
         /// </summary>
         /// <param name="connectionService">GeoServer 连接服务</param>
         public CachingDefaultsViewModel(IGeoServerConnectionService connectionService)
+        : base(connectionService)
         {
             _connectionService = connectionService;
         }
@@ -55,11 +52,7 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private Task LoadSettingsAsync()
         {
-            if (!_connectionService.IsConnected)
-            {
-                StatusMessage = L.StatusNotConnected;
-                return Task.CompletedTask;
-            }
+            if (!HasConnection(L.StatusNotConnected)) return Task.CompletedTask;
 
             StatusMessage = L.StatusGwcNotConfigurable;
             return Task.CompletedTask;
@@ -71,11 +64,7 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private Task SaveSettingsAsync()
         {
-            if (!_connectionService.IsConnected)
-            {
-                StatusMessage = L.StatusNotConnected;
-                return Task.CompletedTask;
-            }
+            if (!HasConnection(L.StatusNotConnected)) return Task.CompletedTask;
 
             StatusMessage = L.StatusGwcNotConfigurable;
             return Task.CompletedTask;

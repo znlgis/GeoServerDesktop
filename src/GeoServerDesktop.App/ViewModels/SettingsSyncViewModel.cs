@@ -49,12 +49,8 @@ namespace GeoServerDesktop.App.ViewModels
         private ObservableCollection<SettingsDiffEntry> _diffs = new();
 
         /// <summary>状态消息</summary>
-        [ObservableProperty]
-        private string _statusMessage = string.Empty;
 
         /// <summary>是否正在加载</summary>
-        [ObservableProperty]
-        private bool _isLoading;
 
         private SettingsDiffResult? _lastDiff;
 
@@ -63,6 +59,7 @@ namespace GeoServerDesktop.App.ViewModels
         /// </summary>
         /// <param name="connectionService">GeoServer 连接服务（当前连接即目标实例）</param>
         public SettingsSyncViewModel(IGeoServerConnectionService connectionService)
+        : base(connectionService)
         {
             _connectionService = connectionService;
             StatusMessage = L.SyncReady;
@@ -72,11 +69,7 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private async Task CompareAsync()
         {
-            if (!_connectionService.IsConnected)
-            {
-                StatusMessage = L.StatusPleaseConnect;
-                return;
-            }
+            if (!HasConnection()) return;
             if (string.IsNullOrWhiteSpace(SourceUrl))
             {
                 StatusMessage = L.SyncStatusNeedUrl;

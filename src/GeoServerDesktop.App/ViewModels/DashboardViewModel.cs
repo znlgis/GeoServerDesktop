@@ -52,17 +52,7 @@ namespace GeoServerDesktop.App.ViewModels
         [NotifyPropertyChangedFor(nameof(LayerCountText))]
         private int? _layerCount;
 
-        /// <summary>
-        /// 状态消息
-        /// </summary>
-        [ObservableProperty]
-        private string _statusMessage = string.Empty;
 
-        /// <summary>
-        /// 是否正在加载
-        /// </summary>
-        [ObservableProperty]
-        private bool _isLoading;
 
         /// <summary>
         /// 工作空间数速览文本（未加载时显示占位文本）
@@ -79,6 +69,7 @@ namespace GeoServerDesktop.App.ViewModels
         /// </summary>
         /// <param name="connectionService">GeoServer 连接服务</param>
         public DashboardViewModel(IGeoServerConnectionService connectionService)
+        : base(connectionService)
         {
             _connectionService = connectionService;
             _connectionService.ConnectionStatusChanged += OnConnectionStatusChanged;
@@ -118,11 +109,7 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private async Task RefreshAsync()
         {
-            if (!_connectionService.IsConnected)
-            {
-                StatusMessage = L.StatusNotConnected;
-                return;
-            }
+            if (!HasConnection(L.StatusNotConnected)) return;
 
             IsLoading = true;
             StatusMessage = L.StatusDashboardLoading;

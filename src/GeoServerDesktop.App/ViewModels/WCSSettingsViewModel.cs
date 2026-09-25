@@ -32,6 +32,7 @@ namespace GeoServerDesktop.App.ViewModels
         /// </summary>
         /// <param name="connectionService">GeoServer 连接服务</param>
         public WCSSettingsViewModel(IGeoServerConnectionService connectionService)
+        : base(connectionService)
         {
             _connectionService = connectionService;
         }
@@ -42,7 +43,7 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private async Task LoadSettingsAsync()
         {
-            if (!_connectionService.IsConnected) { StatusMessage = L.StatusNotConnected; return; }
+            if (!HasConnection(L.StatusNotConnected)) return;
             IsLoading = true;
             StatusMessage = L.StatusLoadingWcsSettings;
             try
@@ -74,7 +75,7 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private async Task SaveSettingsAsync()
         {
-            if (!_connectionService.IsConnected) { StatusMessage = L.StatusNotConnected; return; }
+            if (!HasConnection(L.StatusNotConnected)) return;
             IsLoading = true;
             StatusMessage = L.StatusSavingWcsSettings;
             try

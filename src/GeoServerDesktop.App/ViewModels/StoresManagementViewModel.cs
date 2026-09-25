@@ -64,23 +64,14 @@ namespace GeoServerDesktop.App.ViewModels
         [ObservableProperty]
         private bool _isCreateDialogVisible;
 
-        /// <summary>
-        /// 状态消息
-        /// </summary>
-        [ObservableProperty]
-        private string _statusMessage = string.Empty;
 
-        /// <summary>
-        /// 是否正在加载
-        /// </summary>
-        [ObservableProperty]
-        private bool _isLoading;
 
         /// <summary>
         /// 初始化 StoresManagementViewModel 类的新实例
         /// </summary>
         /// <param name="connectionService">GeoServer 连接服务</param>
         public StoresManagementViewModel(IGeoServerConnectionService connectionService)
+        : base(connectionService)
         {
             _connectionService = connectionService;
         }
@@ -91,11 +82,7 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private async Task LoadWorkspacesAsync()
         {
-            if (!_connectionService.IsConnected)
-            {
-                StatusMessage = L.StatusNotConnected;
-                return;
-            }
+            if (!HasConnection(L.StatusNotConnected)) return;
 
             IsLoading = true;
             StatusMessage = L.StatusLoadingWorkspaces;

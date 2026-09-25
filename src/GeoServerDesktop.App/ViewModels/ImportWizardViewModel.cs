@@ -30,8 +30,6 @@ namespace GeoServerDesktop.App.ViewModels
         private bool _isBusy;
 
         /// <summary>状态消息</summary>
-        [ObservableProperty]
-        private string _statusMessage = string.Empty;
 
         // ── 第 1 步：数据源 ──
 
@@ -116,6 +114,7 @@ namespace GeoServerDesktop.App.ViewModels
         /// </summary>
         /// <param name="connectionService">GeoServer 连接服务</param>
         public ImportWizardViewModel(IGeoServerConnectionService connectionService)
+        : base(connectionService)
         {
             _connectionService = connectionService;
         }
@@ -173,11 +172,7 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private async Task NextStepAsync()
         {
-            if (!_connectionService.IsConnected)
-            {
-                StatusMessage = L.StatusNotConnected;
-                return;
-            }
+            if (!HasConnection(L.StatusNotConnected)) return;
             if (CurrentStep == 1)
             {
                 if (IsPostgisSource)
@@ -246,11 +241,7 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private async Task LoadWorkspacesAsync()
         {
-            if (!_connectionService.IsConnected)
-            {
-                StatusMessage = L.StatusNotConnected;
-                return;
-            }
+            if (!HasConnection(L.StatusNotConnected)) return;
             try
             {
                 IsBusy = true;
@@ -282,11 +273,7 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private async Task ProbePostgisAsync()
         {
-            if (!_connectionService.IsConnected)
-            {
-                StatusMessage = L.StatusNotConnected;
-                return;
-            }
+            if (!HasConnection(L.StatusNotConnected)) return;
             if (string.IsNullOrWhiteSpace(SelectedWorkspace))
             {
                 ProbeMessage = L.WizardStatusNeedWorkspace;
@@ -366,11 +353,7 @@ namespace GeoServerDesktop.App.ViewModels
         [RelayCommand]
         private async Task PublishAsync()
         {
-            if (!_connectionService.IsConnected)
-            {
-                StatusMessage = L.StatusNotConnected;
-                return;
-            }
+            if (!HasConnection(L.StatusNotConnected)) return;
             if (string.IsNullOrWhiteSpace(SelectedWorkspace) || string.IsNullOrWhiteSpace(PublishName))
             {
                 StatusMessage = L.WizardStatusNeedWorkspace;

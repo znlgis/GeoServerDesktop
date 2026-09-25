@@ -45,11 +45,6 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isConnected;
 
-    /// <summary>
-    /// 状态消息
-    /// </summary>
-    [ObservableProperty]
-    private string _statusMessage = "Not connected";
 
     /// <summary>
     /// 切换中英文语言的命令
@@ -287,6 +282,8 @@ public partial class MainWindowViewModel : ViewModelBase
         _services = services ?? throw new System.ArgumentNullException(nameof(services));
         _connectionService = services.GetRequiredService<IGeoServerConnectionService>();
         _connectionService.ConnectionStatusChanged += OnConnectionStatusChanged;
+
+        StatusMessage = "Not connected"; // 初值保持原实现（未连接态英文提示）
 
         // 设置默认视图为欢迎页面
         _currentView = CreateWelcomeViewModel();
