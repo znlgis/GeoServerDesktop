@@ -62,15 +62,41 @@ GeoServerDesktop.App/
 
 ### GeoServer Client Library
 
-- **Service Layer Pattern**: Each major GeoServer resource (Workspaces, DataStores, Layers, Styles, LayerGroups) has its own service class
-- **Factory Pattern**: `GeoServerClientFactory` creates service instances with shared HTTP client
-- **Interface Abstraction**: `IGeoServerHttpClient` allows for dependency injection and testing
-- **RESTful Design**: All API calls follow GeoServer REST conventions
+- **Service Layer Pattern**: Each major GeoServer resource has its own service class
+- **`ServiceBase` (M5)**: every service inherits `ServiceBase` — it owns the HTTP client (ctor null-check),
+  `Esc()` path escaping, request-body builders (`JsonContent` / `JsonContentRaw` / `TextContent` /
+  `BytesContent`), `GetJsonAsync<T>` / `GetWrappedAsync` response unwrapping, and `Post/PutJsonAsync` /
+  `Post/PutContentAsync` senders. **Do not** hand-write `new StringContent(...)` blocks, inline
+  `Uri.EscapeDataString`, or direct `_httpClient` fields in services.
+- **Interface per service (M5)**: every service exposes an `IXxx` interface in `Interfaces/` (same namespace
+  as the implementation). `ServiceInterfaceParityTests` fails the build-time test run if a public service
+  method is missing from its interface (or an interface member drifts) — add the member to both.
+- **Null handling**: request bodies must omit nulls (`JsonContent`, i.e. `NullValueHandling.Ignore`) because
+  GeoServer 3.x XStream overwrites catalog objects with explicit nulls. Bodies historically sent with default
+  settings are kept via `rawNulls: true` — do not "clean them up" without a measured server baseline.
+- **Factory Pattern**: `GeoServerClientFactory.CreateXxxService()` still returns **concrete** types (public API
+  compatibility); interfaces exist for consumers, test doubles and plugin hosts.
+- **Public API compatibility**: this library ships on NuGet — new types are fine, changing/removing existing
+  signatures requires a major version bump.
 
 ### Avalonia Desktop App
 
 - **MVVM Pattern**: Strict separation between Views (XAML), ViewModels (logic), and Models (data)
-- **Dependency Injection**: Services are injected into ViewModels
+- **DI composition root (M5)**: `Composition.ServiceCollectionExtensions.AddGeoServerDesktopUi()` registers
+  `ISettingsService`, `IGeoServerConnectionService` and **every** ViewModel (singleton, so state survives
+  navigation). `App.axaml.cs` builds the container; `MainWindowViewModel` resolves sub-VMs lazily.
+  `CompositionTests` fails if any ViewModel is not registered.
+- **`ViewModelBase` (M5)**: provides `IsLoading`, `StatusMessage`, `HasConnection(message)` guard and
+  `RunGuardedAsync` / `RunConnectedGuardedAsync`. New view models that need GeoServer must take
+  `IGeoServerConnectionService` and pass it to `base(connectionService)`; do **not** re-declare
+  `IsLoading` / `StatusMessage` or hand-roll the connect guard. Prefer the guarded pipeline helpers over
+  repeating `IsLoading = true; try/catch/finally`.
+- **Consumers depend on abstractions (M5)**: `IGeoServerConnectionService` getters return `IXxx` interfaces,
+  so VMs are substitutable (see `ServiceSubstitutionTests`).
+- **Localization (M5)**: all UI strings live in `Resources/Strings.resx` (English neutral) +
+  `Resources/Strings.zh.resx` (Chinese satellite); `LocalizationService` properties are
+  `public string Foo => T(nameof(Foo));`. **Never** add new inline `T("en","zh")` literals — the legacy
+  overload is a compatibility shim only. `LocalizationResourceTests` guards key coverage and satellite loading.
 - **Tree View Navigation**: Left panel shows hierarchical resource structure
 - **Detail Panel**: Right panel shows selected resource details and operations
 
@@ -160,16 +186,29 @@ GeoServerDesktop.App/
 ### Adding a New GeoServer Resource Type
 
 1. Create model classes in `Models/` folder with JSON property mappings
-2. Create service class in `Services/` folder
-3. Add service creation method to `GeoServerClientFactory`
-4. Update app ViewModels to use the new service
+2. Create service class in `Services/` folder **inheriting `ServiceBase`** (ctor `: base(httpClient)`);
+   use `Esc` / `GetJsonAsync` / `Post/PutJsonAsync` / `TextContent` helpers instead of hand-rolled boilerplate
+3. Add the matching `IXxxService` interface under `Interfaces/` (same namespace) and put it on the class
+   declaration — `ServiceInterfaceParityTests` will fail otherwise
+4. Add a `CreateXxxService()` method to `GeoServerClientFactory` (concrete return type)
+5. Expose it through `IGeoServerConnectionService` (return the **interface**) and add the getter implementation
+6. Add L1 offline tests (`FakeHttpClient` URL/body/parse triple assertions) and, for real endpoints,
+   L2 integration tests plus a harness check; update `README` / `KNOWN-ISSUES` with any measured contract
 
 ### Adding a New View/ViewModel
 
-1. Create ViewModel in `ViewModels/` folder, inheriting from appropriate base
-2. Create corresponding .axaml view in `Views/` folder
-3. Register ViewModel with dependency injection
-4. Wire up navigation/commands
+1. Create ViewModel in `ViewModels/` folder inheriting `ViewModelBase`; if it needs GeoServer, take
+   `IGeoServerConnectionService` in the ctor and forward it with `: base(connectionService)`, then guard
+   commands with `HasConnection(...)` and run them through `RunGuardedAsync` / `RunConnectedGuardedAsync`
+   (do not re-declare `IsLoading` / `StatusMessage`)
+2. Add every UI string to `Resources/Strings.resx` **and** `Resources/Strings.zh.resx`, then expose
+   `public string Xxx => T(nameof(Xxx));` on `LocalizationService`
+3. Create the corresponding `.axaml` view + code-behind in `Views/` (ViewLocator maps by name convention)
+4. Register the ViewModel in `Composition.ServiceCollectionExtensions.AddGeoServerDesktopUi()`
+   (singleton) — `CompositionTests` fails if any ViewModel is unregistered
+5. Wire navigation: lazily-resolved property + `Show...Command` on `MainWindowViewModel`, and a nav button
+6. Add L4 headless command-flow tests (real connection + `VmRest` cross-check) — see
+   `Headless/BatchOperationsViewModelTests.cs` for the current pattern
 
 ## Things to Avoid
 
@@ -205,49 +244,64 @@ When generating code for this project:
 
 ## Example Service Implementation
 
+M5 pattern — `ServiceBase` owns the boilerplate, the interface is part of the service contract:
+
 ```csharp
+// Services/ResourceService.cs
+using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 using GeoServerDesktop.GeoServerClient.Models;
-using Newtonsoft.Json;
-using System.Threading.Tasks;
 
 namespace GeoServerDesktop.GeoServerClient.Services
 {
-    /// <summary>
-    /// Service for managing GeoServer resources
-    /// </summary>
-    public class ResourceService
+    /// <summary>Service for managing GeoServer resources.</summary>
+    public class ResourceService : ServiceBase, IResourceService
     {
-        private readonly IGeoServerHttpClient _httpClient;
-
-        /// <summary>
-        /// Initializes a new instance of the ResourceService class
-        /// </summary>
         /// <param name="httpClient">HTTP client for GeoServer operations</param>
         public ResourceService(IGeoServerHttpClient httpClient)
+            : base(httpClient)
         {
-            _httpClient = httpClient;
         }
 
-        /// <summary>
-        /// Gets a list of all resources
-        /// </summary>
         /// <returns>Array of resources</returns>
         public async Task<Resource[]> GetResourcesAsync()
         {
-            var response = await _httpClient.GetAsync("/rest/resources.json");
-            var wrapper = JsonConvert.DeserializeObject<ResourceListWrapper>(response);
-            return wrapper?.ResourceList?.Resources ?? new Resource[0];
+            var wrapper = await GetJsonAsync<ResourceListWrapper>("/rest/resources.json");
+            return wrapper?.ResourceList?.Resources ?? System.Array.Empty<Resource>();
         }
+
+        /// POST a JSON body (nulls omitted — required by GeoServer 3.x XStream)
+        public Task UploadAsync(string path, byte[] bytes) =>
+            PutContentAsync("/rest/resources/" + Esc(path), BytesContent(bytes, "application/octet-stream"));
+    }
+}
+
+// Interfaces/IResourceService.cs  (mirrors the public surface; parity enforced by ServiceInterfaceParityTests)
+namespace GeoServerDesktop.GeoServerClient.Services
+{
+    public interface IResourceService
+    {
+        Task<Resource[]> GetResourcesAsync();
+        Task UploadAsync(string path, byte[] bytes);
     }
 }
 ```
 
+Anti-patterns now rejected by review/tests: `private readonly IGeoServerHttpClient _httpClient;` fields,
+inline `Uri.EscapeDataString`, manual `JsonConvert.SerializeObject(..., GeoServerJson.Request)` +
+`new StringContent(...)` + `using` blocks in services, and service methods missing from their interface.
+
 ## Testing Considerations
 
-- Services should accept `IGeoServerHttpClient` interface for easy mocking
-- Keep business logic in services, not in HTTP client
-- ViewModels should accept service interfaces for testability
+- Services accept `IGeoServerHttpClient`; L1 tests use `RecordingFakeClient` (verb-ordered) or
+  `PathFakeClient` (path-keyed, for aggregation services) and assert URL / request body / parsed result as a triple
+- App view models are substitutable via `IGeoServerConnectionService` returning `IXxx` interfaces
+  (see `ServiceSubstitutionTests`); headless L4 tests run against the real GeoServer with `VmRest` cross-checks
+- Invariants enforced by tests: service↔interface parity, DI registration of every ViewModel,
+  localization key coverage + Chinese satellite loading
+- Data-independence rule: no dataset names, paths or expected values baked into tests — inject via
+  `GSD_TEST_DATA_DIR` / `GSD_REAL_DATA_DIR` and derive expectations from the data files themselves;
+  skip (with `SkipLog`) when the environment is absent
 
 ## Version Compatibility
 

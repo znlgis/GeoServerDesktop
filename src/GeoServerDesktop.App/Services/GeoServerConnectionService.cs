@@ -295,7 +295,7 @@ namespace GeoServerDesktop.App.Services
         /// 获取工作空间迁移服务（M4：导出/导入归档）
         /// </summary>
         /// <returns>WorkspaceMigrationService 实例</returns>
-        public GeoServerClient.Migration.WorkspaceMigrationService GetWorkspaceMigrationService()
+        public GeoServerClient.Migration.IWorkspaceMigrationService GetWorkspaceMigrationService()
         {
             EnsureConnected();
             return _factory!.CreateWorkspaceMigrationService();
@@ -305,7 +305,7 @@ namespace GeoServerDesktop.App.Services
         /// 获取设置比对服务（M4：设置同步，作用于当前连接=目标实例）
         /// </summary>
         /// <returns>SettingsCompareService 实例</returns>
-        public GeoServerClient.Migration.SettingsCompareService GetSettingsCompareService()
+        public GeoServerClient.Migration.ISettingsCompareService GetSettingsCompareService()
         {
             EnsureConnected();
             return _factory!.CreateSettingsCompareService();

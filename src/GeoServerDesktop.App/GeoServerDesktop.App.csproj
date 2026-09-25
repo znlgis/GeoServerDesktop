@@ -7,6 +7,9 @@
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <!-- M5：resx 本地化——主程序集持中性(英文)资源，中文走 zh 卫星 -->
     <NeutralResourcesLanguage>en</NeutralResourcesLanguage>
+    <!-- M5：桌面端版本与发布 RID（GitHub Release 三平台免安装包） -->
+    <Version>1.1.0</Version>
+    <RuntimeIdentifiers>win-x64;linux-x64;osx-arm64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>

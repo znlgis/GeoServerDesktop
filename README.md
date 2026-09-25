@@ -91,6 +91,18 @@ GeoServerDesktop 提供了一个现代化的跨平台桌面工具，通过 REST 
 - [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) 或更高版本
 - 运行中的 GeoServer 实例（用于测试）
 
+#### 下载桌面端（免安装包）
+
+无需安装 .NET SDK，从 [Releases](https://github.com/znlgis/GeoServerDesktop/releases) 下载对应平台的免安装包（自包含，含中英文资源）：
+
+| 平台 | 资产 |
+|---|---|
+| Windows x64 | `GeoServerDesktop-win-x64.zip` |
+| Linux x64 | `GeoServerDesktop-linux-x64.zip` |
+| macOS (Apple Silicon) | `GeoServerDesktop-osx-arm64.zip` |
+
+解压后运行 `GeoServerDesktop.App`（Windows 为 `.exe`）。Release 由 tag 触发的 CI 自动产出。
+
 #### 构建解决方案
 
 ```bash
@@ -199,7 +211,10 @@ GeoServerDesktop/
 dotnet add package GeoServerDesktop.GeoServerClient
 ```
 
-当前版本：**v1.0.3**（[NuGet.org](https://www.nuget.org/packages/GeoServerDesktop.GeoServerClient)）
+当前版本：**v1.1.0**（[NuGet.org](https://www.nuget.org/packages/GeoServerDesktop.GeoServerClient)）
+
+> v1.1.0（M5）：新增 `ServiceBase` 消除 REST 样板、49 个服务的 `IXxx` 接口面（公共 API 向后兼容，
+> 仍由 `GeoServerClientFactory` 返回具体类型）。版本随 `v*` tag 由 CI 自动发布。
 
 GeoServerClient 库可以独立用于您自己的项目：
 
@@ -515,7 +530,10 @@ Click the language toggle button in the top-right corner ("中文" / "English") 
 dotnet add package GeoServerDesktop.GeoServerClient
 ```
 
-Current version: **v1.0.3** ([NuGet.org](https://www.nuget.org/packages/GeoServerDesktop.GeoServerClient))
+Current version: **v1.1.0** ([NuGet.org](https://www.nuget.org/packages/GeoServerDesktop.GeoServerClient))
+
+> v1.1.0 (M5): new `ServiceBase` removes REST boilerplate; all 49 services now have `IXxx` interface
+> surfaces (backward compatible — `GeoServerClientFactory` still returns concrete types).
 
 The GeoServerClient library can be used independently in your own projects:
 

@@ -425,12 +425,12 @@ namespace GeoServerDesktop.GeoServerClient.Migration
             }
         }
 
-        /// <summary>读取两侧设置并比对（source/target 为两个实例上的本服务实例）。</summary>
+        /// <summary>读取两侧设置并比对（source/target 为两个实例上的本服务实例，按抽象接收便于替身注入）。</summary>
         /// <param name="source">源实例服务。</param>
         /// <param name="target">目标实例服务。</param>
         /// <param name="domain">域。</param>
         /// <returns>差异结果。</returns>
-        public static async Task<SettingsDiffResult> CompareAsync(SettingsCompareService source, SettingsCompareService target, SettingsDomain domain)
+        public static async Task<SettingsDiffResult> CompareAsync(ISettingsCompareService source, ISettingsCompareService target, SettingsDomain domain)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (target == null) throw new ArgumentNullException(nameof(target));

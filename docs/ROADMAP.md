@@ -12,7 +12,7 @@
 | M2 | 数据导入向导 | 已完成 |
 | M3 | SLD 编辑器 + 样式体系强化 | 已完成 |
 | M4 | 批量操作 + 导入/导出 + 设置同步 | 已完成 |
-| M5 | 架构收敛 + 版本发布 | 未开始 |
+| M5 | 架构收敛 + 版本发布 | 已完成 |
 
 ---
 
@@ -112,12 +112,63 @@
 
 ## M5（第 23–26 周）：架构收敛 + 版本发布
 
-1. **客户端库重构**：提取 `ServiceBase`（URL 构建/转义/包装反序列化/错误处理），45 个服务消除 200+ 处样板；服务接口化（供 VM 测试替身与未来插件系统）。保持公共 API 兼容，发 minor 版本。
-2. **App 重构**：引入 `Microsoft.Extensions.DependencyInjection`，`MainWindowViewModel` 改工厂/惰性创建子 VM；提取 Loading/Status/连接守卫管道；LocalizationService 迁移 resx（保留 T() 兼容层）。
-3. **发布**：GitHub Release 附三平台（win-x64/osx/linux）免安装包 + NuGet 客户端库新版本。
-4. **收尾**：插件系统技术验证原型，是否正式纳入视余量决定。
+> 原则 5「架构改动服务于功能」落地为**分五步、每步全量回归护航**的连续提交，不做大爆炸式重写。
 
-**验收**：重构后 453 用例 + harness 全绿不降级；三平台 Release 构建产物可运行。
+1. **客户端库样板消除**（`d18503c`）
+   - 新增 `ServiceBase`：HTTP 客户端持有与空值校验、`Esc` 转义、`JsonContent/JsonContentRaw/TextContent/BytesContent`
+     请求体构造、`GetJsonAsync/GetWrappedAsync` 反序列化解包、`Post/PutJsonAsync`、`Post/PutContentAsync`（发送后释放）、`Bool`。
+   - 49 个服务全量接入：消除 197 处 `_httpClient` 直调、170 处内联 `Uri.EscapeDataString`、53 处
+     手写「序列化 + StringContent + using」块、33 处 GET→反序列化两行样板、15 处文本/二进制体；
+     服务层不再直接引用 `Newtonsoft` / 内部 `GeoServerJson`。
+   - 语义零变更红线：`GeoServerJson.Request` 的 null-省略形态集中到 `JsonContent`；历史上以默认设置
+     （保留 null）发送的 StructuredCoverage 两端点显式标注 `rawNulls: true` 原样保留；
+     宽容转义（null→空串）改名 `EscPath` 避免遮蔽基类。
+2. **服务接口化**（`a6e976a`）
+   - `Interfaces/` 新增 **50 个服务接口 / 215 个成员**，签名与 XML 文档由实现类镜像生成；
+     实现类统一 `class Xxx : ServiceBase, IXxx`。
+   - 公共 API 完全兼容：`GeoServerClientFactory` 的 `CreateXxxService()` 仍返回具体类型（接口为实现面）。
+   - App 接缝 `IGeoServerConnectionService` 的 25 个服务 getter 全部改返回接口类型。
+   - 新增 `ServiceInterfaceParityTests`（离线反射）双向奇偶校验：服务↔接口存在性、成员与签名一致、
+     工厂返回类型实现接口、接口可见性与计数——防「加方法漏接口」。
+3. **App DI 与组合根**（`b26450e`）
+   - 引入 `Microsoft.Extensions.DependencyInjection`；`Composition.ServiceCollectionExtensions`
+     注册设置服务、连接服务与 24 个子 VM（单例，保留跨导航状态）。
+   - `MainWindowViewModel` 删除构造期 24 处 eager new，改「可空字段 + 惰性属性 + `Resolve<T>()`」；
+     双构造（无参自建默认容器 / 注入容器）。`App.axaml.cs` 成为组合根。
+   - 顺带清掉 M1 后遗留的死代码 `PlaceholderViewModel/PlaceholderView`。
+   - 新增 `CompositionTests`：容器可解析、24 子 VM 惰性单例与容器实例一致、
+     **每个 ViewModel 都必须注册**（新增 VM 漏注册即失败）、默认视图为仪表盘。
+4. **VM 样板收敛**（`3e214df`）
+   - `ViewModelBase` 承载 `IsLoading` / `StatusMessage`（替代 21+22 处重复声明）、`Connection` 与
+     `HasConnection(自定义未连接文案)` 守卫、`RunGuardedAsync/RunConnectedGuardedAsync` 加载管道。
+   - 34 处「未连接提示 + 返回」守卫块收敛为 `if (!HasConnection(...)) return;`（各自原文案保持不变：
+     导航级 `StatusPleaseConnect` 与命令级 `StatusNotConnected`）；21 个子 VM 构造改 `: base(connectionService)`。
+   - 旧 VM 命令体内 55 处 `IsLoading + try/catch/finally` 三段式**未做批量替换**（try 体内存在提前
+     `return` 的点位需逐点核对语义），管道已就位并在 `BatchOperationsViewModel` 落地为参考实现，
+     其余随后续功能改动就地收敛。
+5. **本地化迁移 resx**（`d3c44fc`）
+   - 634 条文案迁入 `Resources/Strings.resx`（英文中性）+ `Strings.zh.resx`（中文卫星），
+     key 即属性名，属性统一 `T(nameof(X))`；`T(en, zh)` 作为兼容层保留。
+   - 语言切换仍是进程内显式开关（不依赖 `CurrentUICulture`），查表时显式传文化；
+     `NeutralResourcesLanguage=en`，构建产出 `zh/GeoServerDesktop.App.resources.dll`。
+   - 迁移保真：一次性快照逐条比对 634 条 en/zh 完全一致（校验用例不入库）；
+     常态守护 `LocalizationResourceTests`：条目数不低于基线、每个属性可在资源表解析、
+     中文卫星确实加载（与英文差异 ≥92%）、`{n}` 占位符仍可 `string.Format`。
+6. **扩展点验证（规划「插件原型」的收敛式收尾）**
+   - `ServiceSubstitutionTests`：容器覆盖注册假 `ILayerService` 即可驱动真实 `LayersManagementViewModel`
+     完整命令流（零网络），并断言接缝 getter 全部返回抽象、外部容器可整体替换组合根——
+     这正是插件系统的前置条件。正式插件机制（外部程序集加载、清单、版本与沙箱）待有真实需求再立项。
+7. **版本发布**
+   - 库 `GeoServerDesktop.GeoServerClient` 与 App 版本号升至 **1.1.0**；tag `v1.1.0` 触发
+     `nuget-publish.yml`（NuGet 发布）与新增的 `release.yml`（win-x64 / linux-x64 / osx-arm64
+     三平台 self-contained 免安装包 → GitHub Release）。
+   - 三平台 publish 本地预验证通过（各约 100MB，包内含 `zh/` 卫星）；release.yml 内置
+     「可入口 + 卫星目录存在」断言，缺失即失败不产半成品 Release。
+
+**验收**：重构后用例数与 harness 全绿不降级；三平台 Release 构建产物可运行。
+—— 已实测：`dotnet test` **677 → 692**（净增 15：接口奇偶 4 + 组合根 4 + 资源守护 4 + 扩展点 3），
+0 失败 0 跳过，既有用例一条未降级；harness Pass=70 / Warn=2 / Fail=0 与 M4 基线完全一致；
+`dotnet format --verify-no-changes` 干净，解决方案构建 0 警告；三平台自包含 publish 本地全部成功。
 
 ---
 
