@@ -163,6 +163,21 @@ namespace GeoServerDesktop.Tests.Headless
         public static bool LayerExists(string ws, string layer) =>
             GetStatus($"/rest/workspaces/{Uri.EscapeDataString(ws)}/layers/{Uri.EscapeDataString(layer)}.json") == 200;
 
+        /// <summary>独立解析图层详情 defaultStyle 的 name/href（读取/解析失败返回 (null, null)）。</summary>
+        public static (string? name, string? href) LayerDefaultStyleRef(string ws, string layer)
+        {
+            var j = Get($"/rest/workspaces/{Uri.EscapeDataString(ws)}/layers/{Uri.EscapeDataString(layer)}.json");
+            if (string.IsNullOrEmpty(j)) return (null, null);
+            using var doc = JsonDocument.Parse(j);
+            if (doc.RootElement.TryGetProperty("layer", out var l) && l.TryGetProperty("defaultStyle", out var ds))
+            {
+                var name = ds.TryGetProperty("name", out var n) ? n.GetString() : null;
+                var href = ds.TryGetProperty("href", out var h) ? h.GetString() : null;
+                return (name, href);
+            }
+            return (null, null);
+        }
+
         /// <summary>要素类型（resource）是否存在。</summary>
         public static bool FeatureTypeExists(string ws, string store, string ft) =>
             GetStatus($"/rest/workspaces/{Uri.EscapeDataString(ws)}/datastores/{Uri.EscapeDataString(store)}/featuretypes/{Uri.EscapeDataString(ft)}.json") == 200;
