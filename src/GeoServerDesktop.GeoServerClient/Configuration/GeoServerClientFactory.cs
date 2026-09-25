@@ -70,6 +70,15 @@ namespace GeoServerDesktop.GeoServerClient.Configuration
         }
 
         /// <summary>
+        /// 创建新的 StyleUsageService 实例
+        /// </summary>
+        /// <returns>StyleUsageService 实例</returns>
+        public StyleUsageService CreateStyleUsageService()
+        {
+            return new StyleUsageService(GetHttpClient());
+        }
+
+        /// <summary>
         /// 创建新的 LayerGroupService 实例
         /// </summary>
         /// <returns>LayerGroupService 实例</returns>
