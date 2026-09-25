@@ -94,6 +94,28 @@ namespace GeoServerDesktop.Tests.Headless
                 Assert.Contains("{0}", L.StatusWorkspacesLoaded);
                 Assert.Contains("{0}", L.StatusWorkspaceCreated);
 
+                // M4（批量操作/迁移/设置同步）双语代表串：中英两态均断言（显式定语言态，避免前序用例语言残留）
+                if (IsChinese()) L.ToggleLanguage(); // → 英文
+                var m4Probes = new (Func<string> get, string en, string zh)[]
+                {
+                    (() => L.NavTools, "Tools", "工具"),
+                    (() => L.NavBatch, "Batch Operations", "批量操作"),
+                    (() => L.BatchApplyStyle, "Set Default Style", "批量改默认样式"),
+                    (() => L.NavMigration, "Workspace Import/Export", "工作空间迁移"),
+                    (() => L.MigOverwrite, "Overwrite existing resources", "覆盖已存在资源"),
+                    (() => L.NavSettingsSync, "Settings Sync", "设置同步"),
+                    (() => L.SyncStatusIdentical, "Settings are identical", "两侧设置一致，无差异"),
+                };
+                foreach (var p in m4Probes)
+                    Assert.Equal(p.en, p.get());
+                L.ToggleLanguage(); // → 中文
+                foreach (var p in m4Probes)
+                    Assert.Equal(p.zh, p.get());
+                L.ToggleLanguage(); // → 英文
+                foreach (var p in m4Probes)
+                    Assert.Equal(p.en, p.get());
+                if (originalChinese) L.ToggleLanguage(); // 恢复原始语言
+
                 // string.Format 能正确注入
                 Assert.Contains("7", string.Format(L.StatusWorkspacesLoaded, 7));
             }

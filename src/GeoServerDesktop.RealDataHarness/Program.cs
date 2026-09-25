@@ -8,7 +8,9 @@ using System.Text;
 using System.Threading;
 using GeoServerDesktop.GeoServerClient.Configuration;
 using GeoServerDesktop.GeoServerClient.Import;
+using GeoServerDesktop.GeoServerClient.Migration;
 using GeoServerDesktop.GeoServerClient.Models;
+using GeoServerDesktop.GeoServerClient.Services;
 using GeoServerDesktop.GeoServerClient.Sld;
 using GeoServerDesktop.Tests.Infrastructure;
 using GeoServerDesktop.Tests.RealData;
@@ -47,6 +49,9 @@ namespace GeoServerDesktop.RealDataHarness
                     RunPublication();
                     RunWizardPublishChecks();
                     RunStyleChecks();
+                    RunBatchChecks();
+                    RunMigrationChecks();
+                    RunSettingsSyncChecks();
                     RunServicePlaneChecks();
                     RunGwcChecks();
                 }
@@ -377,6 +382,243 @@ namespace GeoServerDesktop.RealDataHarness
             },
             Href = "",
         };
+
+        // ---------------- 3.8 批量操作路径（M4：BatchOperationService） ----------------
+        private static void RunBatchChecks()
+        {
+            Console.WriteLine("-- 批量操作路径（BatchOperationService）");
+            string ws = "gdtest_ws_hbatch";
+            string style = "gdtest_hbatch_style";
+            const string layer = "hbatch_poly";
+            try
+            {
+                using var f = new GeoServerClientFactory(GeoServerAvailability.Options());
+                var batch = f.CreateBatchOperationService();
+                try { f.CreateWorkspaceService().DeleteWorkspaceAsync(ws, true).GetAwaiter().GetResult(); } catch { }
+                f.CreateWorkspaceService().CreateWorkspaceAsync(ws).GetAwaiter().GetResult();
+
+                var pub = f.CreateImportWizardService().PublishShapefileAsync(new ImportSourceRequest
+                {
+                    Kind = ImportDataSourceKind.ShapefileDirectory,
+                    Workspace = ws,
+                    StoreName = "hbatch_ds",
+                    LayerName = layer,
+                    NativeName = "gdtest_poly",
+                    FileRef = "file:gdtest_data",
+                    Srs = "EPSG:4326",
+                }).GetAwaiter().GetResult();
+                Throw(Check.Cond(pub.Success, "Batch/publish", "批量夹具图层发布", pub.Message));
+                if (!pub.Success) return;
+
+                // 1) 批量改默认样式 → 裸 REST 复核（先备两个探针样式：一个绑定、一个保持未引用；
+                //    实测：绑定不存在的样式名会被服务端静默忽略而非报错）
+                const string bindStyle = "gdtest_hbatch_bind";
+                try { f.CreateStyleService().DeleteStyleAsync(bindStyle, true).GetAwaiter().GetResult(); } catch { }
+                f.CreateStyleService().CreateStyleAsync(bindStyle, SldBuilder.Build(PolygonDoc(bindStyle, "#FF0000"))).GetAwaiter().GetResult();
+                try { f.CreateStyleService().DeleteStyleAsync(style, true).GetAwaiter().GetResult(); } catch { }
+                f.CreateStyleService().CreateStyleAsync(style, SldBuilder.Build(PolygonDoc(style, "#00FF00"))).GetAwaiter().GetResult();
+                var rStyle = batch.SetLayersDefaultStyleAsync(new[] { ws + ":" + layer }, bindStyle).GetAwaiter().GetResult();
+                Throw(Check.Cond(rStyle.AllSucceeded, "Batch/set-style", "批量改默认样式成功", rStyle.FailureSummary));
+                var bound = OgcProbe.Get(TestEnv.RestBase + "/rest/workspaces/" + ws + "/layers/" + layer + ".json");
+                Throw(Check.Cond(bound.Ok && System.Text.Encoding.UTF8.GetString(bound.Bytes).Contains("\"" + bindStyle + "\""),
+                    "Batch/set-style-rest", "裸 REST 复核默认样式=" + bindStyle, "复核失败 HTTP " + bound.Status));
+
+                // 2) 存储批量禁用 → WMS GetCapabilities 不再列出该图层；启用恢复
+                var rOff = batch.SetStoresEnabledAsync(new[] { new BatchTarget { Workspace = ws, Name = "hbatch_ds" } }, false)
+                    .GetAwaiter().GetResult();
+                Throw(Check.Cond(rOff.AllSucceeded, "Batch/disable-store", "存储批量禁用成功", rOff.FailureSummary));
+                var capsOff = OgcProbe.Get(OgcProbe.Wms("request=GetCapabilities", "version=1.1.1"));
+                Throw(Check.Cond(!System.Text.Encoding.UTF8.GetString(capsOff.Bytes).Contains(ws + ":" + layer),
+                    "Batch/disable-wms", "禁用后 WMS 能力不含该图层", "GetCapabilities 仍列出"));
+                var rOn = batch.SetStoresEnabledAsync(new[] { new BatchTarget { Workspace = ws, Name = "hbatch_ds" } }, true)
+                    .GetAwaiter().GetResult();
+                var capsOn = OgcProbe.Get(OgcProbe.Wms("request=GetCapabilities", "version=1.1.1"));
+                Throw(Check.Cond(rOn.AllSucceeded && System.Text.Encoding.UTF8.GetString(capsOn.Bytes).Contains(ws + ":" + layer),
+                    "Batch/enable-wms", "启用后 WMS 能力恢复该图层", rOn.FailureSummary));
+
+                // 3) 部分成功语义：批量删样式 [引用中(403), 未引用(200)]
+                const string bindStyle2 = "gdtest_hbatch_bind";
+                var delTargets = new[] { BatchTarget.GlobalStyle(bindStyle2), BatchTarget.GlobalStyle(style) };
+                var rDel = batch.DeleteStylesAsync(delTargets, purge: true).GetAwaiter().GetResult();
+                Throw(Check.Cond(rDel.Succeeded == 1 && rDel.Failed == 1
+                        && rDel.Items[0].Message.Contains("403") && rDel.Items[1].Success,
+                    "Batch/partial", "引用中 403 + 未引用成功 的部分成功语义",
+                    "succeeded=" + rDel.Succeeded + " failed=" + rDel.Failed + " " + rDel.FailureSummary));
+                try
+                {
+                    f.CreateLayerService().UpdateLayerAsync(ws + ":" + layer,
+                        BuildLayerUpdate(f.CreateLayerService().GetLayerAsync(ws + ":" + layer).GetAwaiter().GetResult(), "polygon"))
+                        .GetAwaiter().GetResult();
+                    f.CreateStyleService().DeleteStyleAsync(bindStyle2, true).GetAwaiter().GetResult();
+                }
+                catch { }
+                try { f.CreateStyleService().DeleteStyleAsync(style, true).GetAwaiter().GetResult(); } catch { }
+
+                // 4) 批量删工作空间（级联）→ 404
+                var rWipe = batch.DeleteWorkspacesAsync(new[] { ws }, true).GetAwaiter().GetResult();
+                var gone = OgcProbe.Get(TestEnv.RestBase + "/rest/workspaces/" + ws + ".json");
+                Throw(Check.Cond(rWipe.AllSucceeded && gone.Status == 404, "Batch/delete-ws",
+                    "批量删除工作空间级联生效（404）", rWipe.FailureSummary + " HTTP " + gone.Status));
+            }
+            catch (Exception ex)
+            {
+                Check.Fail("Batch/crash", ex.GetType().Name + ": " + ex.Message);
+            }
+            finally
+            {
+                try
+                {
+                    using var f2 = new GeoServerClientFactory(GeoServerAvailability.Options());
+                    f2.CreateWorkspaceService().DeleteWorkspaceAsync(ws, true).GetAwaiter().GetResult();
+                }
+                catch { }
+            }
+        }
+
+        // ---------------- 3.9 迁移路径（M4：WorkspaceMigrationService，导出→清空→导入等价） ----------------
+        private static void RunMigrationChecks()
+        {
+            Console.WriteLine("-- 迁移路径（WorkspaceMigrationService：导出→清空→导入）");
+            string src = "gdtest_ws_hmig";
+            string tgt = "gdtest_ws_hmig2";
+            const string layer = "hmig_poly";
+            try
+            {
+                using var f = new GeoServerClientFactory(GeoServerAvailability.Options());
+                var mig = f.CreateWorkspaceMigrationService();
+                WipeWs(f, src); WipeWs(f, tgt);
+                f.CreateWorkspaceService().CreateWorkspaceAsync(src).GetAwaiter().GetResult();
+                var pub = f.CreateImportWizardService().PublishShapefileAsync(new ImportSourceRequest
+                {
+                    Kind = ImportDataSourceKind.ShapefileDirectory,
+                    Workspace = src,
+                    StoreName = "hmig_ds",
+                    LayerName = layer,
+                    NativeName = "gdtest_poly",
+                    FileRef = "file:gdtest_data",
+                    Srs = "EPSG:4326",
+                }).GetAwaiter().GetResult();
+                Throw(Check.Cond(pub.Success, "Mig/publish", "迁移夹具发布", pub.Message));
+                if (!pub.Success) return;
+
+                // 1) 导出：清单结构断言
+                var exp = mig.ExportWorkspaceAsync(src).GetAwaiter().GetResult();
+                int dbfCount = DbfHeader.Parse(Path.Combine(TestEnv.GeneratedDataDir, "gdtest_poly.dbf")).RecordCount;
+                Throw(Check.Cond(exp.Manifest.DataStores.Count == 1
+                        && exp.Manifest.FeatureTypes.Count == 1
+                        && exp.Manifest.FeatureTypes[0].NativeName == "gdtest_poly"
+                        && exp.Manifest.LayerBindings.Count == 1,
+                    "Mig/export-manifest", "清单含 1 存储/1 资源/1 绑定",
+                    "ds=" + exp.Manifest.DataStores.Count + " ft=" + exp.Manifest.FeatureTypes.Count));
+
+                // 2) 导入到新工作空间 → 资源等价
+                var imp = mig.ImportWorkspaceAsync(new WorkspaceImportRequest
+                {
+                    Archive = exp.Archive,
+                    TargetWorkspace = tgt,
+                }).GetAwaiter().GetResult();
+                Throw(Check.Cond(imp.Success, "Mig/import", "导入 " + tgt + " 全部步骤成功", imp.FailureSummary));
+                var srcLayers = LayerNames(f, src);
+                var tgtLayers = LayerNames(f, tgt);
+                Throw(Check.Cond(srcLayers.Length == tgtLayers.Length && srcLayers == string.Join(",", tgtLayers),
+                    "Mig/equivalence", "两侧图层清单等价 [" + srcLayers + "]", "tgt=[" + string.Join(",", tgtLayers) + "]"));
+                Throw(RealDataChecks.WfsHitsCount(tgt + ":" + layer, dbfCount, "mig-tgt"));
+
+                // 3) 导出→清空→导入还原（A→B→A'）
+                WipeWs(f, src);
+                var missing = OgcProbe.Get(TestEnv.RestBase + "/rest/workspaces/" + src + "/layers/" + layer + ".json");
+                Throw(Check.Cond(missing.Status == 404, "Mig/wiped", "清空后源图层 404", "HTTP " + missing.Status));
+                var back = mig.ImportWorkspaceAsync(new WorkspaceImportRequest { Archive = exp.Archive }).GetAwaiter().GetResult();
+                var restored = OgcProbe.Get(TestEnv.RestBase + "/rest/workspaces/" + src + "/layers/" + layer + ".json");
+                Throw(Check.Cond(back.Success && restored.Ok, "Mig/restore",
+                    "清空后导入还原（GET 200）", back.FailureSummary + " HTTP " + restored.Status));
+                Throw(RealDataChecks.WfsHitsCount(src + ":" + layer, dbfCount, "mig-restored"));
+            }
+            catch (Exception ex)
+            {
+                Check.Fail("Mig/crash", ex.GetType().Name + ": " + ex.Message);
+            }
+            finally
+            {
+                try
+                {
+                    using var f2 = new GeoServerClientFactory(GeoServerAvailability.Options());
+                    WipeWs(f2, src); WipeWs(f2, tgt);
+                }
+                catch { }
+            }
+        }
+
+        private static void WipeWs(GeoServerClientFactory f, string ws)
+        {
+            try { f.CreateWorkspaceService().DeleteWorkspaceAsync(ws, true).GetAwaiter().GetResult(); } catch { }
+        }
+
+        private static string LayerNames(GeoServerClientFactory f, string ws)
+        {
+            return string.Join(",", f.CreateLayerService().GetWorkspaceLayersAsync(ws).GetAwaiter().GetResult()
+                .Select(l => l.Name.Contains(":") ? l.Name.Substring(l.Name.IndexOf(':') + 1) : l.Name)
+                .OrderBy(n => n, StringComparer.Ordinal));
+        }
+
+        // ---------------- 3.10 设置同步（M4：SettingsCompare/Service，双连接读-比-应用-恢复） ----------------
+        private static void RunSettingsSyncChecks()
+        {
+            Console.WriteLine("-- 设置同步（SettingsCompare 双连接）");
+            string marker = "gdtest_hsync_" + Guid.NewGuid().ToString("N").Substring(0, 6);
+            try
+            {
+                using var a = new GeoServerClientFactory(GeoServerAvailability.Options());
+                using var b = new GeoServerClientFactory(GeoServerAvailability.Options());
+                var svcA = a.CreateSettingsCompareService();
+                var svcB = b.CreateSettingsCompareService();
+
+                var initial = SettingsCompareService.CompareAsync(svcA, svcB, SettingsDomain.Global).GetAwaiter().GetResult();
+                Throw(Check.Cond(initial.IsIdentical, "Sync/initial", "双连接初始无差异",
+                    string.Join("|", initial.Items.Select(i => i.Path))));
+
+                var original = svcA.ReadRawAsync(SettingsDomain.Global).GetAwaiter().GetResult();
+                try
+                {
+                    var parsed = Newtonsoft.Json.Linq.JObject.Parse(original);
+                    var contact = parsed["global"]["settings"]["contact"] as Newtonsoft.Json.Linq.JObject;
+                    contact["addressCity"] = marker;
+                    svcA.PutRawAsync("/rest/settings", parsed.ToString(Newtonsoft.Json.Formatting.None)).GetAwaiter().GetResult();
+
+                    var src = svcA.ReadRawAsync(SettingsDomain.Global).GetAwaiter().GetResult();
+                    // 构造"另一实例"基底（该键为旧值），验证差异发现 + 选择性应用合并语义
+                    var targetBase = Newtonsoft.Json.Linq.JObject.Parse(original);
+                    targetBase["global"]["settings"]["contact"]["addressCity"] = "OTHER-INSTANCE";
+                    var diff = SettingsCompare.Compare(SettingsDomain.Global, src, targetBase.ToString(Newtonsoft.Json.Formatting.None));
+                    var item = diff.Items.FirstOrDefault(i => i.Path.EndsWith("addressCity", StringComparison.Ordinal));
+                    Throw(Check.Cond(item != null && item.SourceValue.Contains(marker), "Sync/diff",
+                        "差异发现 addressCity=" + marker, "差异集=" + diff.Items.Count));
+
+                    if (item != null)
+                    {
+                        var payload = SettingsCompare.Apply(SettingsDomain.Global, src,
+                            targetBase.ToString(Newtonsoft.Json.Formatting.None), new[] { item.Path });
+                        var applied = Newtonsoft.Json.Linq.JObject.Parse(payload);
+                        Throw(Check.Cond(
+                            (string)applied["global"]["settings"]["contact"]["addressCity"] == marker &&
+                            Equals((bool?)applied["global"]["settings"]["verbose"], (bool?)targetBase["global"]["settings"]["verbose"]),
+                            "Sync/apply", "选择性应用合并：勾选路径覆写 + 未勾选键保留", "合并结果不符"));
+                    }
+                }
+                finally
+                {
+                    svcA.PutRawAsync("/rest/settings", original).GetAwaiter().GetResult();
+                }
+                var after = SettingsCompareService.CompareAsync(svcA, svcB, SettingsDomain.Global).GetAwaiter().GetResult();
+                Throw(Check.Cond(after.IsIdentical, "Sync/restore", "恢复后双连接再次无差异",
+                    string.Join("|", after.Items.Select(i => i.Path))));
+            }
+            catch (Exception ex)
+            {
+                Check.Fail("Sync/crash", ex.GetType().Name + ": " + ex.Message);
+            }
+        }
+
 
         // ---------------- 4. 服务面 ----------------
         private static void RunServicePlaneChecks()

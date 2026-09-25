@@ -74,6 +74,21 @@ namespace GeoServerDesktop.Tests.Headless
             vm.ShowDiskQuotaCommand.Execute(null); Assert.Same(vm.DiskQuotaViewModel, vm.CurrentView);
             vm.ShowSecuritySettingsCommand.Execute(null); Assert.Same(vm.SecuritySettingsViewModel, vm.CurrentView);
             vm.ShowUsersGroupsCommand.Execute(null); Assert.Same(vm.UsersGroupsRolesViewModel, vm.CurrentView);
+
+            // M4：批量操作/迁移/设置同步入口守卫与切换
+            // 先走未连接分支（同步命令，不触发后台加载，避免线程池竞态）
+            vm.IsConnected = false;
+            vm.ShowBatchOperationsCommand.Execute(null);
+            Assert.Equal(vm.L.StatusPleaseConnect, vm.StatusMessage);
+            vm.ShowWorkspaceMigrationCommand.Execute(null);
+            Assert.Equal(vm.L.StatusPleaseConnect, vm.StatusMessage);
+            vm.ShowSettingsSyncCommand.Execute(null);
+            Assert.Equal(vm.L.StatusPleaseConnect, vm.StatusMessage);
+
+            vm.IsConnected = true;
+            vm.ShowBatchOperationsCommand.Execute(null); Assert.Same(vm.BatchOperationsViewModel, vm.CurrentView);
+            vm.ShowWorkspaceMigrationCommand.Execute(null); Assert.Same(vm.WorkspaceMigrationViewModel, vm.CurrentView);
+            vm.ShowSettingsSyncCommand.Execute(null); Assert.Same(vm.SettingsSyncViewModel, vm.CurrentView);
         }
 
         [Fact]

@@ -63,6 +63,14 @@ namespace GeoServerDesktop.Tests.Headless
             return (int)resp.StatusCode;
         }
 
+        /// <summary>PUT JSON，返回状态码（M4：设置同步用例的源侧扰动）。</summary>
+        public static int PutJson(string path, string json)
+        {
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            using var resp = Http.PutAsync(Url(path), content).GetAwaiter().GetResult();
+            return (int)resp.StatusCode;
+        }
+
         /// <summary>DELETE，返回状态码。</summary>
         public static int Delete(string path)
         {

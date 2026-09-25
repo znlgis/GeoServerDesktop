@@ -76,7 +76,7 @@ public class SettingsCompareTests
         Assert.Equal("1", onlyTarget.TargetValue);
 
         // 目标独有子对象缺失键（contact 无 email 对应）不重复计
-        Assert.DoesNotContain(diff.Items, i => i.Path == "settings.contact" );
+        Assert.DoesNotContain(diff.Items, i => i.Path == "settings.contact");
     }
 
     [Fact]
