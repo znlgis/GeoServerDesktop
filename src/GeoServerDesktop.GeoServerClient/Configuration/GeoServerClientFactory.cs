@@ -79,6 +79,33 @@ namespace GeoServerDesktop.GeoServerClient.Configuration
         }
 
         /// <summary>
+        /// 创建新的 BatchOperationService 实例（M4：批量操作）
+        /// </summary>
+        /// <returns>BatchOperationService 实例</returns>
+        public BatchOperationService CreateBatchOperationService()
+        {
+            return new BatchOperationService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// 创建新的 WorkspaceMigrationService 实例（M4：工作空间导入/导出）
+        /// </summary>
+        /// <returns>WorkspaceMigrationService 实例</returns>
+        public Migration.WorkspaceMigrationService CreateWorkspaceMigrationService()
+        {
+            return new Migration.WorkspaceMigrationService(GetHttpClient());
+        }
+
+        /// <summary>
+        /// 创建新的 SettingsCompareService 实例（M4：设置比对/同步）
+        /// </summary>
+        /// <returns>SettingsCompareService 实例</returns>
+        public Migration.SettingsCompareService CreateSettingsCompareService()
+        {
+            return new Migration.SettingsCompareService(GetHttpClient());
+        }
+
+        /// <summary>
         /// 创建新的 LayerGroupService 实例
         /// </summary>
         /// <returns>LayerGroupService 实例</returns>
