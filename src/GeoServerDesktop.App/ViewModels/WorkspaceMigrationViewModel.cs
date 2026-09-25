@@ -262,15 +262,16 @@ namespace GeoServerDesktop.App.ViewModels
 
         private static string DescribeStatus(MigrationItemStatus status)
         {
+            // 静态上下文：不能复用基类实例属性 L，直接取本地化单例
+            var l = LocalizationService.Instance;
             switch (status)
             {
-                case MigrationItemStatus.Created: return L.MigStatusCreated;
-                case MigrationItemStatus.Updated: return L.MigStatusUpdated;
-                case MigrationItemStatus.Skipped: return L.MigStatusSkipped;
-                default: return L.MigStatusFailedItem;
+                case MigrationItemStatus.Created: return l.MigStatusCreated;
+                case MigrationItemStatus.Updated: return l.MigStatusUpdated;
+                case MigrationItemStatus.Skipped: return l.MigStatusSkipped;
+                default: return l.MigStatusFailedItem;
             }
         }
 
-        private static LocalizationService L => LocalizationService.Instance;
     }
 }

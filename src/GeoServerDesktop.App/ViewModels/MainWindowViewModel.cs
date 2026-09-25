@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GeoServerDesktop.App.Models;
 using GeoServerDesktop.App.Services;
+using Microsoft.Extensions.DependencyInjection;
 using GeoServerDesktop.GeoServerClient.Configuration;
 
 namespace GeoServerDesktop.App.ViewModels;
@@ -16,6 +17,9 @@ namespace GeoServerDesktop.App.ViewModels;
 public partial class MainWindowViewModel : ViewModelBase
 {
     private readonly IGeoServerConnectionService _connectionService;
+
+    /// <summary>应用服务容器（子 VM 惰性解析入口）</summary>
+    private readonly System.IServiceProvider? _services;
 
     /// <summary>
     /// GeoServer 服务器的基础 URL
@@ -69,149 +73,197 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private ResourceTreeNode? _selectedNode;
 
+
     /// <summary>
     /// 欢迎页仪表盘视图模型
     /// </summary>
-    [ObservableProperty]
-    private DashboardViewModel _dashboardViewModel;
+    private DashboardViewModel? _dashboardViewModel;
+    /// <summary>惰性解析（M5 DI）：首次访问时从容器取单例，保留跨导航状态。</summary>
+    public DashboardViewModel DashboardViewModel => _dashboardViewModel ??= Resolve<DashboardViewModel>();
+
 
     /// <summary>
     /// 地图预览视图模型
     /// </summary>
-    [ObservableProperty]
-    private MapPreviewViewModel _mapPreviewViewModel;
+    private MapPreviewViewModel? _mapPreviewViewModel;
+    /// <summary>惰性解析（M5 DI）：首次访问时从容器取单例，保留跨导航状态。</summary>
+    public MapPreviewViewModel MapPreviewViewModel => _mapPreviewViewModel ??= Resolve<MapPreviewViewModel>();
+
 
     /// <summary>
     /// 工作空间管理视图模型
     /// </summary>
-    [ObservableProperty]
-    private WorkspaceManagementViewModel _workspaceManagementViewModel;
+    private WorkspaceManagementViewModel? _workspaceManagementViewModel;
+    /// <summary>惰性解析（M5 DI）：首次访问时从容器取单例，保留跨导航状态。</summary>
+    public WorkspaceManagementViewModel WorkspaceManagementViewModel => _workspaceManagementViewModel ??= Resolve<WorkspaceManagementViewModel>();
+
 
     /// <summary>
     /// 样式管理视图模型
     /// </summary>
-    [ObservableProperty]
-    private StyleManagementViewModel _styleManagementViewModel;
+    private StyleManagementViewModel? _styleManagementViewModel;
+    /// <summary>惰性解析（M5 DI）：首次访问时从容器取单例，保留跨导航状态。</summary>
+    public StyleManagementViewModel StyleManagementViewModel => _styleManagementViewModel ??= Resolve<StyleManagementViewModel>();
+
 
     /// <summary>
     /// 数据存储管理视图模型
     /// </summary>
-    [ObservableProperty]
-    private StoresManagementViewModel _storesManagementViewModel;
+    private StoresManagementViewModel? _storesManagementViewModel;
+    /// <summary>惰性解析（M5 DI）：首次访问时从容器取单例，保留跨导航状态。</summary>
+    public StoresManagementViewModel StoresManagementViewModel => _storesManagementViewModel ??= Resolve<StoresManagementViewModel>();
+
 
     /// <summary>
     /// 图层管理视图模型
     /// </summary>
-    [ObservableProperty]
-    private LayersManagementViewModel _layersManagementViewModel;
+    private LayersManagementViewModel? _layersManagementViewModel;
+    /// <summary>惰性解析（M5 DI）：首次访问时从容器取单例，保留跨导航状态。</summary>
+    public LayersManagementViewModel LayersManagementViewModel => _layersManagementViewModel ??= Resolve<LayersManagementViewModel>();
+
 
     /// <summary>
     /// 图层组管理视图模型
     /// </summary>
-    [ObservableProperty]
-    private LayerGroupsManagementViewModel _layerGroupsManagementViewModel;
+    private LayerGroupsManagementViewModel? _layerGroupsManagementViewModel;
+    /// <summary>惰性解析（M5 DI）：首次访问时从容器取单例，保留跨导航状态。</summary>
+    public LayerGroupsManagementViewModel LayerGroupsManagementViewModel => _layerGroupsManagementViewModel ??= Resolve<LayerGroupsManagementViewModel>();
+
 
     /// <summary>
     /// 关于视图模型
     /// </summary>
-    [ObservableProperty]
-    private AboutViewModel _aboutViewModel;
+    private AboutViewModel? _aboutViewModel;
+    /// <summary>惰性解析（M5 DI）：首次访问时从容器取单例，保留跨导航状态。</summary>
+    public AboutViewModel AboutViewModel => _aboutViewModel ??= Resolve<AboutViewModel>();
+
 
     /// <summary>
     /// WMS 服务设置视图模型
     /// </summary>
-    [ObservableProperty]
-    private WMSSettingsViewModel _wmsSettingsViewModel;
+    private WMSSettingsViewModel? _wmsSettingsViewModel;
+    /// <summary>惰性解析（M5 DI）：首次访问时从容器取单例，保留跨导航状态。</summary>
+    public WMSSettingsViewModel WmsSettingsViewModel => _wmsSettingsViewModel ??= Resolve<WMSSettingsViewModel>();
+
 
     /// <summary>
     /// WFS 服务设置视图模型
     /// </summary>
-    [ObservableProperty]
-    private WFSSettingsViewModel _wfsSettingsViewModel;
+    private WFSSettingsViewModel? _wfsSettingsViewModel;
+    /// <summary>惰性解析（M5 DI）：首次访问时从容器取单例，保留跨导航状态。</summary>
+    public WFSSettingsViewModel WfsSettingsViewModel => _wfsSettingsViewModel ??= Resolve<WFSSettingsViewModel>();
+
 
     /// <summary>
     /// WCS 服务设置视图模型
     /// </summary>
-    [ObservableProperty]
-    private WCSSettingsViewModel _wcsSettingsViewModel;
+    private WCSSettingsViewModel? _wcsSettingsViewModel;
+    /// <summary>惰性解析（M5 DI）：首次访问时从容器取单例，保留跨导航状态。</summary>
+    public WCSSettingsViewModel WcsSettingsViewModel => _wcsSettingsViewModel ??= Resolve<WCSSettingsViewModel>();
+
 
     /// <summary>
     /// 全局设置视图模型
     /// </summary>
-    [ObservableProperty]
-    private GlobalSettingsViewModel _globalSettingsViewModel;
+    private GlobalSettingsViewModel? _globalSettingsViewModel;
+    /// <summary>惰性解析（M5 DI）：首次访问时从容器取单例，保留跨导航状态。</summary>
+    public GlobalSettingsViewModel GlobalSettingsViewModel => _globalSettingsViewModel ??= Resolve<GlobalSettingsViewModel>();
+
 
     /// <summary>
     /// 日志配置视图模型
     /// </summary>
-    [ObservableProperty]
-    private LoggingViewModel _loggingViewModel;
+    private LoggingViewModel? _loggingViewModel;
+    /// <summary>惰性解析（M5 DI）：首次访问时从容器取单例，保留跨导航状态。</summary>
+    public LoggingViewModel LoggingViewModel => _loggingViewModel ??= Resolve<LoggingViewModel>();
+
 
     /// <summary>
     /// 缓存默认设置视图模型
     /// </summary>
-    [ObservableProperty]
-    private CachingDefaultsViewModel _cachingDefaultsViewModel;
+    private CachingDefaultsViewModel? _cachingDefaultsViewModel;
+    /// <summary>惰性解析（M5 DI）：首次访问时从容器取单例，保留跨导航状态。</summary>
+    public CachingDefaultsViewModel CachingDefaultsViewModel => _cachingDefaultsViewModel ??= Resolve<CachingDefaultsViewModel>();
+
 
     /// <summary>
     /// 格网集管理视图模型
     /// </summary>
-    [ObservableProperty]
-    private GridsetsViewModel _gridsetsViewModel;
+    private GridsetsViewModel? _gridsetsViewModel;
+    /// <summary>惰性解析（M5 DI）：首次访问时从容器取单例，保留跨导航状态。</summary>
+    public GridsetsViewModel GridsetsViewModel => _gridsetsViewModel ??= Resolve<GridsetsViewModel>();
+
 
     /// <summary>
     /// 磁盘配额视图模型
     /// </summary>
-    [ObservableProperty]
-    private DiskQuotaViewModel _diskQuotaViewModel;
+    private DiskQuotaViewModel? _diskQuotaViewModel;
+    /// <summary>惰性解析（M5 DI）：首次访问时从容器取单例，保留跨导航状态。</summary>
+    public DiskQuotaViewModel DiskQuotaViewModel => _diskQuotaViewModel ??= Resolve<DiskQuotaViewModel>();
+
 
     /// <summary>
     /// 安全设置视图模型
     /// </summary>
-    [ObservableProperty]
-    private SecuritySettingsViewModel _securitySettingsViewModel;
+    private SecuritySettingsViewModel? _securitySettingsViewModel;
+    /// <summary>惰性解析（M5 DI）：首次访问时从容器取单例，保留跨导航状态。</summary>
+    public SecuritySettingsViewModel SecuritySettingsViewModel => _securitySettingsViewModel ??= Resolve<SecuritySettingsViewModel>();
+
 
     /// <summary>
     /// 用户/组/角色管理视图模型
     /// </summary>
-    [ObservableProperty]
-    private UsersGroupsRolesViewModel _usersGroupsRolesViewModel;
+    private UsersGroupsRolesViewModel? _usersGroupsRolesViewModel;
+    /// <summary>惰性解析（M5 DI）：首次访问时从容器取单例，保留跨导航状态。</summary>
+    public UsersGroupsRolesViewModel UsersGroupsRolesViewModel => _usersGroupsRolesViewModel ??= Resolve<UsersGroupsRolesViewModel>();
+
 
     /// <summary>
     /// 数据导入向导视图模型
     /// </summary>
-    [ObservableProperty]
-    private ImportWizardViewModel _importWizardViewModel;
+    private ImportWizardViewModel? _importWizardViewModel;
+    /// <summary>惰性解析（M5 DI）：首次访问时从容器取单例，保留跨导航状态。</summary>
+    public ImportWizardViewModel ImportWizardViewModel => _importWizardViewModel ??= Resolve<ImportWizardViewModel>();
+
 
     /// <summary>
     /// SLD 编辑器视图模型（M3）
     /// </summary>
-    [ObservableProperty]
-    private SldEditorViewModel _sldEditorViewModel;
+    private SldEditorViewModel? _sldEditorViewModel;
+    /// <summary>惰性解析（M5 DI）：首次访问时从容器取单例，保留跨导航状态。</summary>
+    public SldEditorViewModel SldEditorViewModel => _sldEditorViewModel ??= Resolve<SldEditorViewModel>();
+
 
     /// <summary>
     /// 样式库视图模型（M3）
     /// </summary>
-    [ObservableProperty]
-    private StyleLibraryViewModel _styleLibraryViewModel;
+    private StyleLibraryViewModel? _styleLibraryViewModel;
+    /// <summary>惰性解析（M5 DI）：首次访问时从容器取单例，保留跨导航状态。</summary>
+    public StyleLibraryViewModel StyleLibraryViewModel => _styleLibraryViewModel ??= Resolve<StyleLibraryViewModel>();
+
 
     /// <summary>
     /// 批量操作视图模型（M4）
     /// </summary>
-    [ObservableProperty]
-    private BatchOperationsViewModel _batchOperationsViewModel;
+    private BatchOperationsViewModel? _batchOperationsViewModel;
+    /// <summary>惰性解析（M5 DI）：首次访问时从容器取单例，保留跨导航状态。</summary>
+    public BatchOperationsViewModel BatchOperationsViewModel => _batchOperationsViewModel ??= Resolve<BatchOperationsViewModel>();
+
 
     /// <summary>
     /// 工作空间迁移视图模型（M4）
     /// </summary>
-    [ObservableProperty]
-    private WorkspaceMigrationViewModel _workspaceMigrationViewModel;
+    private WorkspaceMigrationViewModel? _workspaceMigrationViewModel;
+    /// <summary>惰性解析（M5 DI）：首次访问时从容器取单例，保留跨导航状态。</summary>
+    public WorkspaceMigrationViewModel WorkspaceMigrationViewModel => _workspaceMigrationViewModel ??= Resolve<WorkspaceMigrationViewModel>();
+
 
     /// <summary>
     /// 设置同步视图模型（M4）
     /// </summary>
-    [ObservableProperty]
-    private SettingsSyncViewModel _settingsSyncViewModel;
+    private SettingsSyncViewModel? _settingsSyncViewModel;
+    /// <summary>惰性解析（M5 DI）：首次访问时从容器取单例，保留跨导航状态。</summary>
+    public SettingsSyncViewModel SettingsSyncViewModel => _settingsSyncViewModel ??= Resolve<SettingsSyncViewModel>();
 
     /// <summary>
     /// 当前显示的视图
@@ -220,39 +272,35 @@ public partial class MainWindowViewModel : ViewModelBase
     private ViewModelBase? _currentView;
 
     /// <summary>
-    /// 初始化 MainWindowViewModel 类的新实例
+    /// 默认构造：自建组合根容器（设计期与无头测试入口）
     /// </summary>
-    public MainWindowViewModel()
+    public MainWindowViewModel() : this(Composition.AppServices.BuildDefault())
     {
-        _connectionService = new GeoServerConnectionService();
+    }
+
+    /// <summary>
+    /// 容器构造（M5 DI）：基础服务由容器注入，24 个子 VM 改为首次访问时惰性解析
+    /// </summary>
+    /// <param name="services">应用服务提供者</param>
+    public MainWindowViewModel(System.IServiceProvider services)
+    {
+        _services = services ?? throw new System.ArgumentNullException(nameof(services));
+        _connectionService = services.GetRequiredService<IGeoServerConnectionService>();
         _connectionService.ConnectionStatusChanged += OnConnectionStatusChanged;
-        _dashboardViewModel = new DashboardViewModel(_connectionService);
-        _mapPreviewViewModel = new MapPreviewViewModel();
-        _workspaceManagementViewModel = new WorkspaceManagementViewModel(_connectionService);
-        _styleManagementViewModel = new StyleManagementViewModel(_connectionService);
-        _storesManagementViewModel = new StoresManagementViewModel(_connectionService);
-        _layersManagementViewModel = new LayersManagementViewModel(_connectionService);
-        _layerGroupsManagementViewModel = new LayerGroupsManagementViewModel(_connectionService);
-        _aboutViewModel = new AboutViewModel(_connectionService);
-        _wmsSettingsViewModel = new WMSSettingsViewModel(_connectionService);
-        _wfsSettingsViewModel = new WFSSettingsViewModel(_connectionService);
-        _wcsSettingsViewModel = new WCSSettingsViewModel(_connectionService);
-        _globalSettingsViewModel = new GlobalSettingsViewModel(_connectionService);
-        _loggingViewModel = new LoggingViewModel(_connectionService);
-        _cachingDefaultsViewModel = new CachingDefaultsViewModel(_connectionService);
-        _gridsetsViewModel = new GridsetsViewModel(_connectionService);
-        _diskQuotaViewModel = new DiskQuotaViewModel(_connectionService);
-        _securitySettingsViewModel = new SecuritySettingsViewModel(_connectionService);
-        _usersGroupsRolesViewModel = new UsersGroupsRolesViewModel(_connectionService);
-        _importWizardViewModel = new ImportWizardViewModel(_connectionService);
-        _sldEditorViewModel = new SldEditorViewModel(_connectionService);
-        _styleLibraryViewModel = new StyleLibraryViewModel(_connectionService);
-        _batchOperationsViewModel = new BatchOperationsViewModel(_connectionService);
-        _workspaceMigrationViewModel = new WorkspaceMigrationViewModel(_connectionService);
-        _settingsSyncViewModel = new SettingsSyncViewModel(_connectionService);
 
         // 设置默认视图为欢迎页面
         _currentView = CreateWelcomeViewModel();
+    }
+
+    /// <summary>
+    /// 从容器解析子 VM 单例（M5 DI：替代构造期 eager new）
+    /// </summary>
+    /// <typeparam name="T">视图模型类型</typeparam>
+    /// <returns>容器内的单例实例</returns>
+    private T Resolve<T>() where T : ViewModelBase
+    {
+        var services = _services ?? throw new System.InvalidOperationException("服务容器未初始化，无法解析视图模型");
+        return services.GetRequiredService<T>();
     }
 
     /// <summary>

@@ -4,6 +4,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using GeoServerDesktop.App.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using GeoServerDesktop.App.Views;
 
 namespace GeoServerDesktop.App;
@@ -13,6 +14,9 @@ namespace GeoServerDesktop.App;
 /// </summary>
 public partial class App : Application
 {
+    /// <summary>应用服务容器（M5 组合根）</summary>
+    private System.IServiceProvider? _services;
+
     /// <summary>
     /// 初始化应用程序
     /// </summary>
@@ -31,9 +35,11 @@ public partial class App : Application
             // 避免 Avalonia 和 CommunityToolkit 的重复验证
             // 更多信息: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
+            // M5：组合根容器构建与主视图模型解析（子 VM 由容器按首次访问惰性取出）
+            _services = Composition.AppServices.BuildDefault();
             desktop.MainWindow = new MainWindow
             {
-                DataContext = new MainWindowViewModel(),
+                DataContext = _services.GetRequiredService<MainWindowViewModel>(),
             };
         }
 
