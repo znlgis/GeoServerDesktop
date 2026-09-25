@@ -2,7 +2,7 @@
 
 > **本文件是项目唯一的活路线图**，承接《GeoServerDesktop 功能总结与中期开发规划（2026-09）》
 > （`docs/GeoServerDesktop功能总结与中期开发规划.md`），随每次合入更新。
-> 最后更新：2026-09-25 ｜ 实测基线：GeoServer 3.0.1
+> 最后更新：2026-09-25 ｜ 实测基线：GeoServer 3.0.1 ｜ 当前发布：v1.1.0（NuGet + 三平台免安装包）
 
 ## 状态总览
 
@@ -169,6 +169,17 @@
 —— 已实测：`dotnet test` **677 → 692**（净增 15：接口奇偶 4 + 组合根 4 + 资源守护 4 + 扩展点 3），
 0 失败 0 跳过，既有用例一条未降级；harness Pass=70 / Warn=2 / Fail=0 与 M4 基线完全一致；
 `dotnet format --verify-no-changes` 干净，解决方案构建 0 警告；三平台自包含 publish 本地全部成功。
+
+**发布记录（v1.1.0）**：主干 CI 三 job 全绿（run 36125051306）→ 打 tag `v1.1.0` →
+`nuget-publish.yml` 发布 `GeoServerDesktop.GeoServerClient 1.1.0`（run 36125734923，
+NuGet 直查 HTTP 200，版本列表已含 1.1.0）；`release.yml` 产出 GitHub Release
+[GeoServerDesktop v1.1.0](https://github.com/znlgis/GeoServerDesktop/releases/tag/v1.1.0)
+（run 36125734922，四 job 全绿）含三平台免安装包：
+`GeoServerDesktop-win-x64.zip`（48.1 MB）、`GeoServerDesktop-linux-x64.zip`（44.7 MB）、
+`GeoServerDesktop-osx-arm64.zip`（46.1 MB），包内均含 `zh/` 中文卫星（workflow 内置断言）。
+
+至此中期规划 M1–M5 全部交付，Roadmap 无未勾项。后续工作：2.x 回归矩阵（第四节遗留）、
+正式插件机制（注入点已验证，待真实需求立项）、旧 VM 命令体 try/catch 三段式随功能改动就地收敛。
 
 ---
 
