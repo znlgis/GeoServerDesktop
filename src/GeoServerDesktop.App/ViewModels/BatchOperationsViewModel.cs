@@ -168,7 +168,8 @@ namespace GeoServerDesktop.App.ViewModels
                 case nameof(BatchScope.Workspace):
                     await RunBatch(async () => await _connectionService.GetBatchOperationService()
                         .DeleteWorkspacesAsync(items.Select(i => i.Name).ToList(), CascadeDelete));
-                    break;
+                    await LoadItemsAsync(); // 工作空间列表须整体刷新（含条目与筛选下拉）
+                    return;
                 default:
                     StatusMessage = L.BatchStatusDeleteUnsupported;
                     return;
@@ -232,7 +233,6 @@ namespace GeoServerDesktop.App.ViewModels
         {
             var wsFilter = SelectedWorkspace;
             var list = new List<BatchItem>();
-            var svc = _connectionService.GetBatchOperationService();
             switch (Scope)
             {
                 case nameof(BatchScope.Layer):
