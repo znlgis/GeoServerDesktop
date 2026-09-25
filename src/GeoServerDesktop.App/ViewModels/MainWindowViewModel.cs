@@ -6,8 +6,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GeoServerDesktop.App.Models;
 using GeoServerDesktop.App.Services;
-using Microsoft.Extensions.DependencyInjection;
 using GeoServerDesktop.GeoServerClient.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GeoServerDesktop.App.ViewModels;
 

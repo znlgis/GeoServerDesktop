@@ -1,6 +1,6 @@
-using Microsoft.Extensions.DependencyInjection;
 using GeoServerDesktop.App.Services;
 using GeoServerDesktop.App.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GeoServerDesktop.App.Composition;
 

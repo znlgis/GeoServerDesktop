@@ -4,8 +4,8 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using GeoServerDesktop.App.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
 using GeoServerDesktop.App.Views;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GeoServerDesktop.App;
 

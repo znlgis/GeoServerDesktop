@@ -1,0 +1,1952 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" /></xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <!-- 英文（中性/默认）文案表 —— M5 自 LocalizationService 硬编码 T(en, zh) 迁移而来，key 即属性名。 -->
+  <data name="LanguageToggleText" xml:space="preserve">
+    <value>中文</value>
+  </data>
+  <data name="LanguageToggleTooltip" xml:space="preserve">
+    <value>切换为中文</value>
+  </data>
+  <data name="AppHeaderSubtitle" xml:space="preserve">
+    <value>Administration</value>
+  </data>
+  <data name="LabelUrl" xml:space="preserve">
+    <value>URL:</value>
+  </data>
+  <data name="LabelUser" xml:space="preserve">
+    <value>User:</value>
+  </data>
+  <data name="LabelPassword" xml:space="preserve">
+    <value>Password:</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="Connected" xml:space="preserve">
+    <value>● Connected</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="NavAboutAndStatus" xml:space="preserve">
+    <value>About &amp; Status</value>
+  </data>
+  <data name="NavAboutGeoServer" xml:space="preserve">
+    <value>About GeoServer</value>
+  </data>
+  <data name="NavData" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="NavLayerPreview" xml:space="preserve">
+    <value>Layer Preview</value>
+  </data>
+  <data name="NavWorkspaces" xml:space="preserve">
+    <value>Workspaces</value>
+  </data>
+  <data name="NavStores" xml:space="preserve">
+    <value>Stores</value>
+  </data>
+  <data name="NavLayers" xml:space="preserve">
+    <value>Layers</value>
+  </data>
+  <data name="NavLayerGroups" xml:space="preserve">
+    <value>Layer Groups</value>
+  </data>
+  <data name="NavStyles" xml:space="preserve">
+    <value>Styles</value>
+  </data>
+  <data name="NavImportWizard" xml:space="preserve">
+    <value>Import Wizard</value>
+  </data>
+  <data name="NavServices" xml:space="preserve">
+    <value>Services</value>
+  </data>
+  <data name="NavSettings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="NavGlobal" xml:space="preserve">
+    <value>Global</value>
+  </data>
+  <data name="NavLogging" xml:space="preserve">
+    <value>Logging</value>
+  </data>
+  <data name="NavTileCaching" xml:space="preserve">
+    <value>Tile Caching</value>
+  </data>
+  <data name="NavCachingDefaults" xml:space="preserve">
+    <value>Caching Defaults</value>
+  </data>
+  <data name="NavGridsets" xml:space="preserve">
+    <value>Gridsets</value>
+  </data>
+  <data name="NavDiskQuota" xml:space="preserve">
+    <value>Disk Quota</value>
+  </data>
+  <data name="NavSecurity" xml:space="preserve">
+    <value>Security</value>
+  </data>
+  <data name="NavSecuritySettings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="NavUsersGroupsRoles" xml:space="preserve">
+    <value>Users, Groups, Roles</value>
+  </data>
+  <data name="ResourceTreeTitle" xml:space="preserve">
+    <value>Resources</value>
+  </data>
+  <data name="TreeWorkspaces" xml:space="preserve">
+    <value>Workspaces</value>
+  </data>
+  <data name="TreeDataStores" xml:space="preserve">
+    <value>Data Stores</value>
+  </data>
+  <data name="TreeLayers" xml:space="preserve">
+    <value>Layers</value>
+  </data>
+  <data name="TreeStyles" xml:space="preserve">
+    <value>Styles</value>
+  </data>
+  <data name="TreeLayerGroups" xml:space="preserve">
+    <value>Layer Groups</value>
+  </data>
+  <data name="DashboardTitle" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="DashboardWelcomeMessage" xml:space="preserve">
+    <value>Connect to a GeoServer instance using the login form above to begin managing your spatial data services.</value>
+  </data>
+  <data name="DashboardConnectionStatus" xml:space="preserve">
+    <value>Connection Status</value>
+  </data>
+  <data name="DashboardConnected" xml:space="preserve">
+    <value>Connected</value>
+  </data>
+  <data name="DashboardNotConnected" xml:space="preserve">
+    <value>Not connected</value>
+  </data>
+  <data name="DashboardGeoServerVersion" xml:space="preserve">
+    <value>GeoServer Version</value>
+  </data>
+  <data name="DashboardWorkspaces" xml:space="preserve">
+    <value>Workspaces</value>
+  </data>
+  <data name="DashboardLayers" xml:space="preserve">
+    <value>Layers</value>
+  </data>
+  <data name="DashboardRefreshToolTip" xml:space="preserve">
+    <value>Refresh dashboard overview</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>🔄 Refresh</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="SaveSettings" xml:space="preserve">
+    <value>Save Settings</value>
+  </data>
+  <data name="Load" xml:space="preserve">
+    <value>Load</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>Processing...</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="NameLabel" xml:space="preserve">
+    <value>Name:</value>
+  </data>
+  <data name="DescriptionLabel" xml:space="preserve">
+    <value>Description:</value>
+  </data>
+  <data name="TitleLabel" xml:space="preserve">
+    <value>Title:</value>
+  </data>
+  <data name="DeleteSelected" xml:space="preserve">
+    <value>Delete Selected</value>
+  </data>
+  <data name="EnabledLabel" xml:space="preserve">
+    <value>Enabled:</value>
+  </data>
+  <data name="WorkspaceLabel" xml:space="preserve">
+    <value>Workspace</value>
+  </data>
+  <data name="ServiceConfiguration" xml:space="preserve">
+    <value>Service Configuration</value>
+  </data>
+  <data name="ServiceInformation" xml:space="preserve">
+    <value>Service Information</value>
+  </data>
+  <data name="ServiceNameHint" xml:space="preserve">
+    <value>Service name</value>
+  </data>
+  <data name="ServiceTitleHint" xml:space="preserve">
+    <value>Service title</value>
+  </data>
+  <data name="ServiceAbstractHint" xml:space="preserve">
+    <value>Service abstract</value>
+  </data>
+  <data name="MaintainerHint" xml:space="preserve">
+    <value>Maintainer</value>
+  </data>
+  <data name="OnlineResourceUrlHint" xml:space="preserve">
+    <value>Online resource URL</value>
+  </data>
+  <data name="OnlineResourceLabel" xml:space="preserve">
+    <value>Online Resource:</value>
+  </data>
+  <data name="MaintainerLabel" xml:space="preserve">
+    <value>Maintainer:</value>
+  </data>
+  <data name="AbstractLabel" xml:space="preserve">
+    <value>Abstract:</value>
+  </data>
+  <data name="CiteCompliant" xml:space="preserve">
+    <value>CITE Compliant</value>
+  </data>
+  <data name="WorkspaceManagementTitle" xml:space="preserve">
+    <value>Workspace Management</value>
+  </data>
+  <data name="ReloadWorkspacesToolTip" xml:space="preserve">
+    <value>Reload workspaces</value>
+  </data>
+  <data name="ExistingWorkspaces" xml:space="preserve">
+    <value>Existing Workspaces</value>
+  </data>
+  <data name="CreateNewWorkspace" xml:space="preserve">
+    <value>Create New Workspace</value>
+  </data>
+  <data name="EnterWorkspaceNameHint" xml:space="preserve">
+    <value>Enter workspace name</value>
+  </data>
+  <data name="DeleteWorkspace" xml:space="preserve">
+    <value>Delete Workspace</value>
+  </data>
+  <data name="DeleteWorkspaceWarning" xml:space="preserve">
+    <value>Warning: This will delete the selected workspace.</value>
+  </data>
+  <data name="DataStoresTitle" xml:space="preserve">
+    <value>Data Stores</value>
+  </data>
+  <data name="DataStoresSubtitle" xml:space="preserve">
+    <value>Manage data store connections to vector and raster data sources</value>
+  </data>
+  <data name="AddStore" xml:space="preserve">
+    <value>+ Add Store</value>
+  </data>
+  <data name="SelectWorkspaceToViewStoresHint" xml:space="preserve">
+    <value>Select a workspace to view its data stores</value>
+  </data>
+  <data name="SelectWorkspaceToViewStores" xml:space="preserve">
+    <value>Select a workspace to view data stores</value>
+  </data>
+  <data name="AddDataStoreTitle" xml:space="preserve">
+    <value>Add Data Store</value>
+  </data>
+  <data name="DataStoreNameHint" xml:space="preserve">
+    <value>Data store name</value>
+  </data>
+  <data name="OptionalDescriptionHint" xml:space="preserve">
+    <value>Optional description</value>
+  </data>
+  <data name="LayersTitle" xml:space="preserve">
+    <value>Layers</value>
+  </data>
+  <data name="LayersSubtitle" xml:space="preserve">
+    <value>Manage published vector and raster layers</value>
+  </data>
+  <data name="PublishLayer" xml:space="preserve">
+    <value>+ Publish Layer</value>
+  </data>
+  <data name="SelectWorkspaceFilterLayersHint" xml:space="preserve">
+    <value>Select a workspace to filter layers</value>
+  </data>
+  <data name="SelectWorkspaceToViewLayers" xml:space="preserve">
+    <value>Select a workspace to view layers</value>
+  </data>
+  <data name="PublishNewLayerTitle" xml:space="preserve">
+    <value>Publish New Layer</value>
+  </data>
+  <data name="DataStoreLabel" xml:space="preserve">
+    <value>Data Store:</value>
+  </data>
+  <data name="LayerNameLabel" xml:space="preserve">
+    <value>Layer Name:</value>
+  </data>
+  <data name="NativeNameLabel" xml:space="preserve">
+    <value>Native Name:</value>
+  </data>
+  <data name="SrsLabel" xml:space="preserve">
+    <value>SRS:</value>
+  </data>
+  <data name="PublishedLayerNameHint" xml:space="preserve">
+    <value>Published layer name</value>
+  </data>
+  <data name="NativeNameHint" xml:space="preserve">
+    <value>Native name in data source (optional)</value>
+  </data>
+  <data name="PublishButton" xml:space="preserve">
+    <value>Publish</value>
+  </data>
+  <data name="EditButton" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="DefaultStyleLabel" xml:space="preserve">
+    <value>Default Style:</value>
+  </data>
+  <data name="ResourceLabel" xml:space="preserve">
+    <value>Resource:</value>
+  </data>
+  <data name="LayerGroupsTitle" xml:space="preserve">
+    <value>Layer Groups</value>
+  </data>
+  <data name="LayerGroupsSubtitle" xml:space="preserve">
+    <value>Manage layer groups to organize multiple layers together</value>
+  </data>
+  <data name="CreateLayerGroupButton" xml:space="preserve">
+    <value>➕ Create</value>
+  </data>
+  <data name="SelectWorkspaceFilterLayerGroupsHint" xml:space="preserve">
+    <value>Select a workspace to filter layer groups</value>
+  </data>
+  <data name="SelectWorkspaceToViewLayerGroups" xml:space="preserve">
+    <value>Select a workspace to view layer groups</value>
+  </data>
+  <data name="CreateLayerGroupTitle" xml:space="preserve">
+    <value>Create Layer Group</value>
+  </data>
+  <data name="NameRequiredLabel" xml:space="preserve">
+    <value>Name *</value>
+  </data>
+  <data name="EnterLayerGroupNameHint" xml:space="preserve">
+    <value>Enter layer group name</value>
+  </data>
+  <data name="EnterLayerGroupTitleHint" xml:space="preserve">
+    <value>Enter layer group title (optional)</value>
+  </data>
+  <data name="ModeLabel" xml:space="preserve">
+    <value>Mode:</value>
+  </data>
+  <data name="LayersCountLabel" xml:space="preserve">
+    <value>Layers:</value>
+  </data>
+  <data name="WorkspaceItemLabel" xml:space="preserve">
+    <value>Workspace:</value>
+  </data>
+  <data name="StyleManagementTitle" xml:space="preserve">
+    <value>Style Management</value>
+  </data>
+  <data name="ReloadStylesToolTip" xml:space="preserve">
+    <value>Reload styles</value>
+  </data>
+  <data name="ExistingStyles" xml:space="preserve">
+    <value>Existing Styles</value>
+  </data>
+  <data name="StyleNameHint" xml:space="preserve">
+    <value>Style name</value>
+  </data>
+  <data name="LoadSelected" xml:space="preserve">
+    <value>Load Selected</value>
+  </data>
+  <data name="SampleSld" xml:space="preserve">
+    <value>Sample SLD</value>
+  </data>
+  <data name="UploadUpdate" xml:space="preserve">
+    <value>Upload/Update</value>
+  </data>
+  <data name="SldContent" xml:space="preserve">
+    <value>SLD Content</value>
+  </data>
+  <data name="SldContentHint" xml:space="preserve">
+    <value>Enter SLD XML content here...</value>
+  </data>
+  <data name="MapPreviewTitle" xml:space="preserve">
+    <value>Map Preview</value>
+  </data>
+  <data name="ResetViewToolTip" xml:space="preserve">
+    <value>Reset view</value>
+  </data>
+  <data name="ClearLayerToolTip" xml:space="preserve">
+    <value>Clear current layer</value>
+  </data>
+  <data name="ResetButton" xml:space="preserve">
+    <value>🏠 Reset</value>
+  </data>
+  <data name="ClearButton" xml:space="preserve">
+    <value>🗑️ Clear</value>
+  </data>
+  <data name="MapPreviewDescription" xml:space="preserve">
+    <value>This view provides WMS layer preview capabilities.</value>
+  </data>
+  <data name="CurrentLayerWmsUrl" xml:space="preserve">
+    <value>Current Layer WMS URL:</value>
+  </data>
+  <data name="WmsUrlUsageHint" xml:space="preserve">
+    <value>You can use this URL in GIS applications like QGIS, ArcGIS, or web mapping libraries.</value>
+  </data>
+  <data name="HowToPreviewTitle" xml:space="preserve">
+    <value>How to Preview Layers:</value>
+  </data>
+  <data name="PreviewStep1" xml:space="preserve">
+    <value>1. Connect to a GeoServer instance</value>
+  </data>
+  <data name="PreviewStep2" xml:space="preserve">
+    <value>2. Select a layer from the resource tree</value>
+  </data>
+  <data name="PreviewStep3" xml:space="preserve">
+    <value>3. The WMS URL will be generated and displayed here</value>
+  </data>
+  <data name="PreviewStep4" xml:space="preserve">
+    <value>4. Use the URL in your preferred GIS client</value>
+  </data>
+  <data name="MapPreviewInfo" xml:space="preserve">
+    <value>WMS layer preview with URL generation for external GIS applications</value>
+  </data>
+  <data name="AboutGeoServerTitle" xml:space="preserve">
+    <value>About GeoServer</value>
+  </data>
+  <data name="AboutSubtitle" xml:space="preserve">
+    <value>System information and version details</value>
+  </data>
+  <data name="VersionInformation" xml:space="preserve">
+    <value>Version Information</value>
+  </data>
+  <data name="GeoServerVersionLabel" xml:space="preserve">
+    <value>GeoServer Version:</value>
+  </data>
+  <data name="GeoToolsVersionLabel" xml:space="preserve">
+    <value>GeoTools Version:</value>
+  </data>
+  <data name="GeoWebCacheVersionLabel" xml:space="preserve">
+    <value>GeoWebCache Version:</value>
+  </data>
+  <data name="GlobalSettingsTitle" xml:space="preserve">
+    <value>Global Settings</value>
+  </data>
+  <data name="LoadGlobalSettingsToolTip" xml:space="preserve">
+    <value>Load current global settings</value>
+  </data>
+  <data name="ContactInformation" xml:space="preserve">
+    <value>Contact Information</value>
+  </data>
+  <data name="ContactPersonLabel" xml:space="preserve">
+    <value>Contact Person:</value>
+  </data>
+  <data name="OrganizationLabel" xml:space="preserve">
+    <value>Organization:</value>
+  </data>
+  <data name="EmailLabel" xml:space="preserve">
+    <value>Email:</value>
+  </data>
+  <data name="ContactPersonHint" xml:space="preserve">
+    <value>Contact person name</value>
+  </data>
+  <data name="OrganizationNameHint" xml:space="preserve">
+    <value>Organization name</value>
+  </data>
+  <data name="EmailAddressHint" xml:space="preserve">
+    <value>Email address</value>
+  </data>
+  <data name="ServerConfiguration" xml:space="preserve">
+    <value>Server Configuration</value>
+  </data>
+  <data name="ProxyBaseUrlLabel" xml:space="preserve">
+    <value>Proxy Base URL:</value>
+  </data>
+  <data name="ProxyBaseUrlHint" xml:space="preserve">
+    <value>Proxy base URL</value>
+  </data>
+  <data name="VerboseExceptions" xml:space="preserve">
+    <value>Verbose Exceptions</value>
+  </data>
+  <data name="WmsSettingsTitle" xml:space="preserve">
+    <value>WMS Settings</value>
+  </data>
+  <data name="LoadWmsSettingsToolTip" xml:space="preserve">
+    <value>Load current WMS settings</value>
+  </data>
+  <data name="EnableWmsService" xml:space="preserve">
+    <value>Enable WMS Service</value>
+  </data>
+  <data name="WfsSettingsTitle" xml:space="preserve">
+    <value>WFS Settings</value>
+  </data>
+  <data name="LoadWfsSettingsToolTip" xml:space="preserve">
+    <value>Load current WFS settings</value>
+  </data>
+  <data name="EnableWfsService" xml:space="preserve">
+    <value>Enable WFS Service</value>
+  </data>
+  <data name="WfsParameters" xml:space="preserve">
+    <value>WFS Parameters</value>
+  </data>
+  <data name="MaxFeaturesLabel" xml:space="preserve">
+    <value>Max Features:</value>
+  </data>
+  <data name="ServiceLevelLabel" xml:space="preserve">
+    <value>Service Level:</value>
+  </data>
+  <data name="FeatureBounding" xml:space="preserve">
+    <value>Feature Bounding</value>
+  </data>
+  <data name="WcsSettingsTitle" xml:space="preserve">
+    <value>WCS Settings</value>
+  </data>
+  <data name="LoadWcsSettingsToolTip" xml:space="preserve">
+    <value>Load current WCS settings</value>
+  </data>
+  <data name="EnableWcsService" xml:space="preserve">
+    <value>Enable WCS Service</value>
+  </data>
+  <data name="WcsParameters" xml:space="preserve">
+    <value>WCS Parameters</value>
+  </data>
+  <data name="MaxInputMemoryLabel" xml:space="preserve">
+    <value>Max Input Memory (KB):</value>
+  </data>
+  <data name="MaxOutputMemoryLabel" xml:space="preserve">
+    <value>Max Output Memory (KB):</value>
+  </data>
+  <data name="SubsamplingEnabled" xml:space="preserve">
+    <value>Subsampling Enabled</value>
+  </data>
+  <data name="LoggingSettingsTitle" xml:space="preserve">
+    <value>Logging Settings</value>
+  </data>
+  <data name="LoadLoggingSettingsToolTip" xml:space="preserve">
+    <value>Load current logging settings</value>
+  </data>
+  <data name="LoggingConfiguration" xml:space="preserve">
+    <value>Logging Configuration</value>
+  </data>
+  <data name="LogLevelLabel" xml:space="preserve">
+    <value>Log Level:</value>
+  </data>
+  <data name="LogLocationLabel" xml:space="preserve">
+    <value>Log Location:</value>
+  </data>
+  <data name="LogFilePathHint" xml:space="preserve">
+    <value>Log file path</value>
+  </data>
+  <data name="StdOutLogging" xml:space="preserve">
+    <value>Log to Standard Output (stdout)</value>
+  </data>
+  <data name="EnableFileLogging" xml:space="preserve">
+    <value>Enable File Logging</value>
+  </data>
+  <data name="LogFileViewer" xml:space="preserve">
+    <value>Log File Viewer</value>
+  </data>
+  <data name="RefreshLogFile" xml:space="preserve">
+    <value>Refresh Log</value>
+  </data>
+  <data name="LogFileLocationLabel" xml:space="preserve">
+    <value>Log file:</value>
+  </data>
+  <data name="TileCachingDefaultsTitle" xml:space="preserve">
+    <value>Tile Caching Defaults</value>
+  </data>
+  <data name="LoadCachingDefaultsToolTip" xml:space="preserve">
+    <value>Load caching defaults</value>
+  </data>
+  <data name="DefaultCacheConfiguration" xml:space="preserve">
+    <value>Default Cache Configuration</value>
+  </data>
+  <data name="EnableTileCachingByDefault" xml:space="preserve">
+    <value>Enable Tile Caching by Default</value>
+  </data>
+  <data name="DefaultExpirySettings" xml:space="preserve">
+    <value>Default Expiry Settings</value>
+  </data>
+  <data name="CacheExpiryLabel" xml:space="preserve">
+    <value>Cache Expiry (seconds):</value>
+  </data>
+  <data name="ClientCacheExpiryLabel" xml:space="preserve">
+    <value>Client Cache Expiry (seconds):</value>
+  </data>
+  <data name="NoExpiryNote" xml:space="preserve">
+    <value>Set to 0 for no expiry.</value>
+  </data>
+  <data name="CachingNote" xml:space="preserve">
+    <value>Note: These are global defaults. Individual layer caching settings can be configured in Layer Management.</value>
+  </data>
+  <data name="DiskQuotaTitle" xml:space="preserve">
+    <value>Disk Quota</value>
+  </data>
+  <data name="LoadDiskQuotaToolTip" xml:space="preserve">
+    <value>Load current disk quota settings</value>
+  </data>
+  <data name="QuotaConfiguration" xml:space="preserve">
+    <value>Quota Configuration</value>
+  </data>
+  <data name="EnableDiskQuota" xml:space="preserve">
+    <value>Enable Disk Quota</value>
+  </data>
+  <data name="GlobalQuota" xml:space="preserve">
+    <value>Global Quota</value>
+  </data>
+  <data name="QuotaValueLabel" xml:space="preserve">
+    <value>Quota Value:</value>
+  </data>
+  <data name="DiskBlockSizeLabel" xml:space="preserve">
+    <value>Disk Block Size (B):</value>
+  </data>
+  <data name="CleanupFrequencyLabel" xml:space="preserve">
+    <value>Cleanup Frequency:</value>
+  </data>
+  <data name="GridsetsTitle" xml:space="preserve">
+    <value>Gridsets</value>
+  </data>
+  <data name="ReloadGridsetsToolTip" xml:space="preserve">
+    <value>Reload gridset list</value>
+  </data>
+  <data name="ExistingGridsets" xml:space="preserve">
+    <value>Existing Gridsets</value>
+  </data>
+  <data name="SelectedGridset" xml:space="preserve">
+    <value>Selected Gridset</value>
+  </data>
+  <data name="DeleteGridset" xml:space="preserve">
+    <value>Delete Gridset</value>
+  </data>
+  <data name="DeleteGridsetWarning" xml:space="preserve">
+    <value>Warning: Deleting a gridset may affect layers using it.</value>
+  </data>
+  <data name="SecuritySettingsTitle" xml:space="preserve">
+    <value>Security Settings</value>
+  </data>
+  <data name="LoadSecuritySettingsToolTip" xml:space="preserve">
+    <value>Load security settings</value>
+  </data>
+  <data name="AccessControlRules" xml:space="preserve">
+    <value>Access Control Rules</value>
+  </data>
+  <data name="InformationLabel" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="SecurityInfoText" xml:space="preserve">
+    <value>This page shows Access Control List (ACL) rules for GeoServer services and layers.</value>
+  </data>
+  <data name="SecurityFormatText" xml:space="preserve">
+    <value>Format: [resource] role =&gt; access level</value>
+  </data>
+  <data name="UsersGroupsRolesTitle" xml:space="preserve">
+    <value>Users, Groups, and Roles</value>
+  </data>
+  <data name="ReloadAllToolTip" xml:space="preserve">
+    <value>Reload all users, groups and roles</value>
+  </data>
+  <data name="UsersTab" xml:space="preserve">
+    <value>Users</value>
+  </data>
+  <data name="GroupsTab" xml:space="preserve">
+    <value>Groups</value>
+  </data>
+  <data name="RolesTab" xml:space="preserve">
+    <value>Roles</value>
+  </data>
+  <data name="UsersHeader" xml:space="preserve">
+    <value>Users</value>
+  </data>
+  <data name="GroupsHeader" xml:space="preserve">
+    <value>Groups</value>
+  </data>
+  <data name="RolesHeader" xml:space="preserve">
+    <value>Roles</value>
+  </data>
+  <data name="CreateUser" xml:space="preserve">
+    <value>Create User</value>
+  </data>
+  <data name="UsernameHint" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="PasswordHint" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="NewPasswordHint" xml:space="preserve">
+    <value>New password (leave blank to keep)</value>
+  </data>
+  <data name="CreateUserButton" xml:space="preserve">
+    <value>Create User</value>
+  </data>
+  <data name="DeleteUser" xml:space="preserve">
+    <value>Delete User</value>
+  </data>
+  <data name="DeleteSelectedUser" xml:space="preserve">
+    <value>Delete Selected User</value>
+  </data>
+  <data name="EditUser" xml:space="preserve">
+    <value>Edit User</value>
+  </data>
+  <data name="EnabledCheckbox" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="UpdateUser" xml:space="preserve">
+    <value>Update User</value>
+  </data>
+  <data name="CreateGroup" xml:space="preserve">
+    <value>Create Group</value>
+  </data>
+  <data name="GroupNameHint" xml:space="preserve">
+    <value>Group name</value>
+  </data>
+  <data name="CreateGroupButton" xml:space="preserve">
+    <value>Create Group</value>
+  </data>
+  <data name="DeleteGroup" xml:space="preserve">
+    <value>Delete Group</value>
+  </data>
+  <data name="DeleteSelectedGroup" xml:space="preserve">
+    <value>Delete Selected Group</value>
+  </data>
+  <data name="RolesReadOnly" xml:space="preserve">
+    <value>Roles (Read Only)</value>
+  </data>
+  <data name="RolesReadOnlyInfo" xml:space="preserve">
+    <value>Roles are read-only. Use the GeoServer REST API directly to create or delete roles.</value>
+  </data>
+  <data name="StatusReady" xml:space="preserve">
+    <value>Ready</value>
+  </data>
+  <data name="StatusNotConnected" xml:space="preserve">
+    <value>Not connected to GeoServer</value>
+  </data>
+  <data name="StatusConnecting" xml:space="preserve">
+    <value>Connecting...</value>
+  </data>
+  <data name="StatusConnectedSuccess" xml:space="preserve">
+    <value>Connected successfully</value>
+  </data>
+  <data name="StatusConnectionFailed" xml:space="preserve">
+    <value>Connection failed: {0}</value>
+  </data>
+  <data name="StatusDisconnected" xml:space="preserve">
+    <value>Disconnected</value>
+  </data>
+  <data name="StatusRefreshing" xml:space="preserve">
+    <value>Refreshing resources...</value>
+  </data>
+  <data name="StatusRefreshed" xml:space="preserve">
+    <value>Resources refreshed</value>
+  </data>
+  <data name="StatusRefreshFailed" xml:space="preserve">
+    <value>Failed to refresh: {0}</value>
+  </data>
+  <data name="StatusDashboardLoading" xml:space="preserve">
+    <value>Loading dashboard...</value>
+  </data>
+  <data name="StatusDashboardLoaded" xml:space="preserve">
+    <value>Dashboard loaded</value>
+  </data>
+  <data name="StatusDashboardLoadFailed" xml:space="preserve">
+    <value>Failed to load dashboard: {0}</value>
+  </data>
+  <data name="StatusAbout" xml:space="preserve">
+    <value>About GeoServer</value>
+  </data>
+  <data name="StatusLayerPreview" xml:space="preserve">
+    <value>Layer Preview</value>
+  </data>
+  <data name="StatusWorkspaces" xml:space="preserve">
+    <value>Workspaces</value>
+  </data>
+  <data name="StatusDataStores" xml:space="preserve">
+    <value>Data Stores</value>
+  </data>
+  <data name="StatusLayers" xml:space="preserve">
+    <value>Layers</value>
+  </data>
+  <data name="StatusLayerGroups" xml:space="preserve">
+    <value>Layer Groups</value>
+  </data>
+  <data name="StatusStyles" xml:space="preserve">
+    <value>Styles</value>
+  </data>
+  <data name="StatusWmsSettings" xml:space="preserve">
+    <value>WMS Settings</value>
+  </data>
+  <data name="StatusWfsSettings" xml:space="preserve">
+    <value>WFS Settings</value>
+  </data>
+  <data name="StatusWcsSettings" xml:space="preserve">
+    <value>WCS Settings</value>
+  </data>
+  <data name="StatusGlobalSettings" xml:space="preserve">
+    <value>Global Settings</value>
+  </data>
+  <data name="StatusLoggingSettings" xml:space="preserve">
+    <value>Logging Settings</value>
+  </data>
+  <data name="StatusTileCachingDefaults" xml:space="preserve">
+    <value>Tile Caching Defaults</value>
+  </data>
+  <data name="StatusGridsets" xml:space="preserve">
+    <value>Gridsets</value>
+  </data>
+  <data name="StatusDiskQuota" xml:space="preserve">
+    <value>Disk Quota</value>
+  </data>
+  <data name="StatusSecuritySettings" xml:space="preserve">
+    <value>Security Settings</value>
+  </data>
+  <data name="StatusUsersGroupsAndRoles" xml:space="preserve">
+    <value>Users, Groups, and Roles</value>
+  </data>
+  <data name="StatusPleaseConnect" xml:space="preserve">
+    <value>Please connect to GeoServer first</value>
+  </data>
+  <data name="StatusLoadingWorkspaces" xml:space="preserve">
+    <value>Loading workspaces...</value>
+  </data>
+  <data name="StatusWorkspacesLoaded" xml:space="preserve">
+    <value>Loaded {0} workspaces</value>
+  </data>
+  <data name="StatusWorkspaceNameRequired" xml:space="preserve">
+    <value>Workspace name is required</value>
+  </data>
+  <data name="StatusCreatingWorkspace" xml:space="preserve">
+    <value>Creating workspace '{0}'...</value>
+  </data>
+  <data name="StatusWorkspaceCreated" xml:space="preserve">
+    <value>Workspace '{0}' created successfully</value>
+  </data>
+  <data name="StatusWorkspaceCreateFailed" xml:space="preserve">
+    <value>Failed to create workspace: {0}</value>
+  </data>
+  <data name="StatusNoWorkspaceSelected" xml:space="preserve">
+    <value>No workspace selected</value>
+  </data>
+  <data name="StatusDeletingWorkspace" xml:space="preserve">
+    <value>Deleting workspace '{0}'...</value>
+  </data>
+  <data name="StatusWorkspaceDeleted" xml:space="preserve">
+    <value>Workspace '{0}' deleted successfully</value>
+  </data>
+  <data name="StatusWorkspaceDeleteFailed" xml:space="preserve">
+    <value>Failed to delete workspace: {0}</value>
+  </data>
+  <data name="StatusWorkspacesLoadFailed" xml:space="preserve">
+    <value>Failed to load workspaces: {0}</value>
+  </data>
+  <data name="StatusLoadingDataStores" xml:space="preserve">
+    <value>Loading data stores...</value>
+  </data>
+  <data name="StatusDataStoresLoaded" xml:space="preserve">
+    <value>Loaded {0} data stores for workspace '{1}'</value>
+  </data>
+  <data name="StatusNoDataStoreSelected" xml:space="preserve">
+    <value>No data store selected</value>
+  </data>
+  <data name="StatusDeletingDataStore" xml:space="preserve">
+    <value>Deleting data store '{0}'...</value>
+  </data>
+  <data name="StatusDataStoreDeleted" xml:space="preserve">
+    <value>Data store '{0}' deleted successfully</value>
+  </data>
+  <data name="StatusDataStoreDeleteFailed" xml:space="preserve">
+    <value>Failed to delete data store: {0}</value>
+  </data>
+  <data name="StatusDataStoreNameRequired" xml:space="preserve">
+    <value>Data store name is required</value>
+  </data>
+  <data name="StatusPleaseSelectWorkspace" xml:space="preserve">
+    <value>Please select a workspace first</value>
+  </data>
+  <data name="StatusCreatingDataStore" xml:space="preserve">
+    <value>Creating data store '{0}'...</value>
+  </data>
+  <data name="StatusDataStoreCreated" xml:space="preserve">
+    <value>Data store created successfully</value>
+  </data>
+  <data name="StatusDataStoreCreateFailed" xml:space="preserve">
+    <value>Failed to create data store: {0}</value>
+  </data>
+  <data name="StatusDataStoresLoadFailed" xml:space="preserve">
+    <value>Failed to load data stores: {0}</value>
+  </data>
+  <data name="StatusLoadingLayers" xml:space="preserve">
+    <value>Loading layers...</value>
+  </data>
+  <data name="StatusLayersLoaded" xml:space="preserve">
+    <value>Loaded {0} layers</value>
+  </data>
+  <data name="StatusNoLayerSelected" xml:space="preserve">
+    <value>No layer selected</value>
+  </data>
+  <data name="StatusDeletingLayer" xml:space="preserve">
+    <value>Deleting layer '{0}'...</value>
+  </data>
+  <data name="StatusLayerDeleted" xml:space="preserve">
+    <value>Layer '{0}' deleted successfully</value>
+  </data>
+  <data name="StatusLayerDeleteFailed" xml:space="preserve">
+    <value>Failed to delete layer: {0}</value>
+  </data>
+  <data name="StatusLayerNameRequired" xml:space="preserve">
+    <value>Layer name is required</value>
+  </data>
+  <data name="StatusPleaseSelectDataStore" xml:space="preserve">
+    <value>Please select a data store</value>
+  </data>
+  <data name="StatusPleaseSelectSpecificWorkspace" xml:space="preserve">
+    <value>Please select a specific workspace first</value>
+  </data>
+  <data name="StatusPublishingLayer" xml:space="preserve">
+    <value>Publishing layer '{0}'...</value>
+  </data>
+  <data name="StatusLayerPublished" xml:space="preserve">
+    <value>Layer published successfully</value>
+  </data>
+  <data name="StatusLayerPublishFailed" xml:space="preserve">
+    <value>Failed to publish layer: {0}</value>
+  </data>
+  <data name="StatusLayersLoadFailed" xml:space="preserve">
+    <value>Failed to load layers: {0}</value>
+  </data>
+  <data name="StatusLoadingLayerGroups" xml:space="preserve">
+    <value>Loading layer groups...</value>
+  </data>
+  <data name="StatusLayerGroupsLoaded" xml:space="preserve">
+    <value>Loaded {0} layer groups</value>
+  </data>
+  <data name="StatusLayerGroupNameRequired" xml:space="preserve">
+    <value>Layer group name is required</value>
+  </data>
+  <data name="StatusCreatingLayerGroup" xml:space="preserve">
+    <value>Creating layer group '{0}'...</value>
+  </data>
+  <data name="StatusLayerGroupCreated" xml:space="preserve">
+    <value>Layer group '{0}' created successfully</value>
+  </data>
+  <data name="StatusLayerGroupCreateFailed" xml:space="preserve">
+    <value>Failed to create layer group: {0}</value>
+  </data>
+  <data name="StatusNoLayerGroupSelected" xml:space="preserve">
+    <value>No layer group selected</value>
+  </data>
+  <data name="StatusDeletingLayerGroup" xml:space="preserve">
+    <value>Deleting layer group '{0}'...</value>
+  </data>
+  <data name="StatusLayerGroupDeleted" xml:space="preserve">
+    <value>Layer group '{0}' deleted successfully</value>
+  </data>
+  <data name="StatusLayerGroupDeleteFailed" xml:space="preserve">
+    <value>Failed to delete layer group: {0}</value>
+  </data>
+  <data name="StatusLayerGroupsLoadFailed" xml:space="preserve">
+    <value>Failed to load layer groups: {0}</value>
+  </data>
+  <data name="StatusLoadingSystemInfo" xml:space="preserve">
+    <value>Loading system information...</value>
+  </data>
+  <data name="StatusSystemInfoLoaded" xml:space="preserve">
+    <value>System information loaded successfully</value>
+  </data>
+  <data name="StatusSystemInfoLoadFailed" xml:space="preserve">
+    <value>Failed to load system information: {0}</value>
+  </data>
+  <data name="StatusLoadingWmsSettings" xml:space="preserve">
+    <value>Loading WMS settings...</value>
+  </data>
+  <data name="StatusWmsSettingsLoaded" xml:space="preserve">
+    <value>WMS settings loaded</value>
+  </data>
+  <data name="StatusWmsSettingsLoadFailed" xml:space="preserve">
+    <value>Failed to load WMS settings: {0}</value>
+  </data>
+  <data name="StatusSavingWmsSettings" xml:space="preserve">
+    <value>Saving WMS settings...</value>
+  </data>
+  <data name="StatusWmsSettingsSaved" xml:space="preserve">
+    <value>WMS settings saved successfully</value>
+  </data>
+  <data name="StatusWmsSettingsSaveFailed" xml:space="preserve">
+    <value>Failed to save WMS settings: {0}</value>
+  </data>
+  <data name="StatusLoadingWfsSettings" xml:space="preserve">
+    <value>Loading WFS settings...</value>
+  </data>
+  <data name="StatusWfsSettingsLoaded" xml:space="preserve">
+    <value>WFS settings loaded</value>
+  </data>
+  <data name="StatusWfsSettingsLoadFailed" xml:space="preserve">
+    <value>Failed to load WFS settings: {0}</value>
+  </data>
+  <data name="StatusSavingWfsSettings" xml:space="preserve">
+    <value>Saving WFS settings...</value>
+  </data>
+  <data name="StatusWfsSettingsSaved" xml:space="preserve">
+    <value>WFS settings saved successfully</value>
+  </data>
+  <data name="StatusWfsSettingsSaveFailed" xml:space="preserve">
+    <value>Failed to save WFS settings: {0}</value>
+  </data>
+  <data name="StatusLoadingWcsSettings" xml:space="preserve">
+    <value>Loading WCS settings...</value>
+  </data>
+  <data name="StatusWcsSettingsLoaded" xml:space="preserve">
+    <value>WCS settings loaded</value>
+  </data>
+  <data name="StatusWcsSettingsLoadFailed" xml:space="preserve">
+    <value>Failed to load WCS settings: {0}</value>
+  </data>
+  <data name="StatusSavingWcsSettings" xml:space="preserve">
+    <value>Saving WCS settings...</value>
+  </data>
+  <data name="StatusWcsSettingsSaved" xml:space="preserve">
+    <value>WCS settings saved successfully</value>
+  </data>
+  <data name="StatusWcsSettingsSaveFailed" xml:space="preserve">
+    <value>Failed to save WCS settings: {0}</value>
+  </data>
+  <data name="StatusLoadingGlobalSettings" xml:space="preserve">
+    <value>Loading global settings...</value>
+  </data>
+  <data name="StatusGlobalSettingsLoaded" xml:space="preserve">
+    <value>Global settings loaded</value>
+  </data>
+  <data name="StatusGlobalSettingsLoadFailed" xml:space="preserve">
+    <value>Failed to load settings: {0}</value>
+  </data>
+  <data name="StatusSavingGlobalSettings" xml:space="preserve">
+    <value>Saving global settings...</value>
+  </data>
+  <data name="StatusGlobalSettingsSaved" xml:space="preserve">
+    <value>Global settings saved successfully</value>
+  </data>
+  <data name="StatusGlobalSettingsSaveFailed" xml:space="preserve">
+    <value>Failed to save settings: {0}</value>
+  </data>
+  <data name="StatusLoadingLoggingSettings" xml:space="preserve">
+    <value>Loading logging settings...</value>
+  </data>
+  <data name="StatusLoggingSettingsLoaded" xml:space="preserve">
+    <value>Logging settings loaded</value>
+  </data>
+  <data name="StatusLoggingSettingsLoadFailed" xml:space="preserve">
+    <value>Failed to load logging settings: {0}</value>
+  </data>
+  <data name="StatusSavingLoggingSettings" xml:space="preserve">
+    <value>Saving logging settings...</value>
+  </data>
+  <data name="StatusLoggingSettingsSaved" xml:space="preserve">
+    <value>Logging settings saved successfully</value>
+  </data>
+  <data name="StatusLoggingSettingsSaveFailed" xml:space="preserve">
+    <value>Failed to save logging settings: {0}</value>
+  </data>
+  <data name="StatusLoadingLogFile" xml:space="preserve">
+    <value>Loading log file...</value>
+  </data>
+  <data name="StatusLogFileLoaded" xml:space="preserve">
+    <value>Log loaded: last {0} lines</value>
+  </data>
+  <data name="StatusLogFileLoadFailed" xml:space="preserve">
+    <value>Failed to load log file: {0}</value>
+  </data>
+  <data name="StatusLogFileUnresolvable" xml:space="preserve">
+    <value>Log location '{0}' is outside the data directory (cannot read via REST)</value>
+  </data>
+  <data name="StatusLoadingCachingDefaults" xml:space="preserve">
+    <value>Loading caching defaults...</value>
+  </data>
+  <data name="StatusCachingDefaultsLoaded" xml:space="preserve">
+    <value>Caching defaults loaded (configure per-layer settings in Layer Management)</value>
+  </data>
+  <data name="StatusCachingDefaultsLoadFailed" xml:space="preserve">
+    <value>Failed to load caching defaults: {0}</value>
+  </data>
+  <data name="StatusSavingCachingDefaults" xml:space="preserve">
+    <value>Saving caching defaults...</value>
+  </data>
+  <data name="StatusCachingDefaultsSaved" xml:space="preserve">
+    <value>Caching defaults saved successfully</value>
+  </data>
+  <data name="StatusCachingDefaultsSaveFailed" xml:space="preserve">
+    <value>Failed to save caching defaults: {0}</value>
+  </data>
+  <data name="StatusLoadingDiskQuota" xml:space="preserve">
+    <value>Loading disk quota settings...</value>
+  </data>
+  <data name="StatusDiskQuotaLoaded" xml:space="preserve">
+    <value>Disk quota settings loaded</value>
+  </data>
+  <data name="StatusDiskQuotaLoadFailed" xml:space="preserve">
+    <value>Failed to load disk quota settings: {0}</value>
+  </data>
+  <data name="StatusSavingDiskQuota" xml:space="preserve">
+    <value>Saving disk quota settings...</value>
+  </data>
+  <data name="StatusDiskQuotaSaved" xml:space="preserve">
+    <value>Disk quota settings saved successfully</value>
+  </data>
+  <data name="StatusDiskQuotaSaveFailed" xml:space="preserve">
+    <value>Failed to save disk quota settings: {0}</value>
+  </data>
+  <data name="StatusLoadingGridsets" xml:space="preserve">
+    <value>Loading gridsets...</value>
+  </data>
+  <data name="StatusGridsetsLoaded" xml:space="preserve">
+    <value>Loaded {0} gridsets</value>
+  </data>
+  <data name="StatusGridsetsLoadFailed" xml:space="preserve">
+    <value>Failed to load gridsets: {0}</value>
+  </data>
+  <data name="StatusNoGridsetSelected" xml:space="preserve">
+    <value>No gridset selected</value>
+  </data>
+  <data name="StatusDeletingGridset" xml:space="preserve">
+    <value>Deleting gridset '{0}'...</value>
+  </data>
+  <data name="StatusGridsetDeleted" xml:space="preserve">
+    <value>Gridset '{0}' deleted</value>
+  </data>
+  <data name="StatusGridsetDeleteFailed" xml:space="preserve">
+    <value>Failed to delete gridset: {0}</value>
+  </data>
+  <data name="StatusLoadingSecuritySettings" xml:space="preserve">
+    <value>Loading security settings...</value>
+  </data>
+  <data name="StatusSecuritySettingsLoaded" xml:space="preserve">
+    <value>Security settings loaded</value>
+  </data>
+  <data name="StatusSecuritySettingsLoadFailed" xml:space="preserve">
+    <value>Failed to load security settings: {0}</value>
+  </data>
+  <data name="StatusLoadingStyles" xml:space="preserve">
+    <value>Loading styles...</value>
+  </data>
+  <data name="StatusStylesLoaded" xml:space="preserve">
+    <value>Loaded {0} styles</value>
+  </data>
+  <data name="StatusStylesLoadFailed" xml:space="preserve">
+    <value>Failed to load styles: {0}</value>
+  </data>
+  <data name="StatusNoStyleSelected" xml:space="preserve">
+    <value>No style selected</value>
+  </data>
+  <data name="StatusLoadingStyleContent" xml:space="preserve">
+    <value>Loading style content...</value>
+  </data>
+  <data name="StatusStyleContentLoaded" xml:space="preserve">
+    <value>Style content loaded</value>
+  </data>
+  <data name="StatusStyleContentLoadFailed" xml:space="preserve">
+    <value>Failed to load style content: {0}</value>
+  </data>
+  <data name="StatusUploadingStyle" xml:space="preserve">
+    <value>Uploading style...</value>
+  </data>
+  <data name="StatusStyleUploaded" xml:space="preserve">
+    <value>Style uploaded successfully</value>
+  </data>
+  <data name="StatusStyleUploadFailed" xml:space="preserve">
+    <value>Failed to upload style: {0}</value>
+  </data>
+  <data name="StatusDeletingStyle" xml:space="preserve">
+    <value>Deleting style...</value>
+  </data>
+  <data name="StatusStyleDeleted" xml:space="preserve">
+    <value>Style deleted successfully</value>
+  </data>
+  <data name="StatusStyleDeleteFailed" xml:space="preserve">
+    <value>Failed to delete style: {0}</value>
+  </data>
+  <data name="StatusPreviewReady" xml:space="preserve">
+    <value>Preview ready for {0}</value>
+  </data>
+  <data name="StatusPreviewFailed" xml:space="preserve">
+    <value>Failed to preview layer: {0}</value>
+  </data>
+  <data name="StatusResourcesLoadFailed" xml:space="preserve">
+    <value>Failed to load resources: {0}</value>
+  </data>
+  <data name="StatusUsersLoadFailed" xml:space="preserve">
+    <value>Failed to load users: {0}</value>
+  </data>
+  <data name="StatusGroupsLoadFailed" xml:space="preserve">
+    <value>Failed to load groups: {0}</value>
+  </data>
+  <data name="StatusRolesLoadFailed" xml:space="preserve">
+    <value>Failed to load roles: {0}</value>
+  </data>
+  <data name="StatusLoadingAll" xml:space="preserve">
+    <value>Loading users, groups and roles...</value>
+  </data>
+  <data name="StatusUsernamePasswordRequired" xml:space="preserve">
+    <value>Username and password are required</value>
+  </data>
+  <data name="StatusCreatingUser" xml:space="preserve">
+    <value>Creating user '{0}'...</value>
+  </data>
+  <data name="StatusUserCreated" xml:space="preserve">
+    <value>User '{0}' created successfully</value>
+  </data>
+  <data name="StatusUserCreateFailed" xml:space="preserve">
+    <value>Failed to create user: {0}</value>
+  </data>
+  <data name="StatusNoUserSelected" xml:space="preserve">
+    <value>No user selected</value>
+  </data>
+  <data name="StatusDeletingUser" xml:space="preserve">
+    <value>Deleting user '{0}'...</value>
+  </data>
+  <data name="StatusUserDeleted" xml:space="preserve">
+    <value>User '{0}' deleted successfully</value>
+  </data>
+  <data name="StatusUserDeleteFailed" xml:space="preserve">
+    <value>Failed to delete user: {0}</value>
+  </data>
+  <data name="StatusUpdatingUser" xml:space="preserve">
+    <value>Updating user '{0}'...</value>
+  </data>
+  <data name="StatusUserUpdated" xml:space="preserve">
+    <value>User '{0}' updated successfully</value>
+  </data>
+  <data name="StatusUserUpdateFailed" xml:space="preserve">
+    <value>Failed to update user: {0}</value>
+  </data>
+  <data name="StatusGroupNameRequired" xml:space="preserve">
+    <value>Group name is required</value>
+  </data>
+  <data name="StatusCreatingGroup" xml:space="preserve">
+    <value>Creating group '{0}'...</value>
+  </data>
+  <data name="StatusGroupCreated" xml:space="preserve">
+    <value>Group '{0}' created successfully</value>
+  </data>
+  <data name="StatusGroupCreateFailed" xml:space="preserve">
+    <value>Failed to create group: {0}</value>
+  </data>
+  <data name="StatusNoGroupSelected" xml:space="preserve">
+    <value>No group selected</value>
+  </data>
+  <data name="StatusDeletingGroup" xml:space="preserve">
+    <value>Deleting group '{0}'...</value>
+  </data>
+  <data name="StatusGroupDeleted" xml:space="preserve">
+    <value>Group '{0}' deleted successfully</value>
+  </data>
+  <data name="StatusGroupDeleteFailed" xml:space="preserve">
+    <value>Failed to delete group: {0}</value>
+  </data>
+  <data name="StatusConnectVerifyFailed" xml:space="preserve">
+    <value>Connection verification failed: {0}</value>
+  </data>
+  <data name="StatusGwcNotConfigurable" xml:space="preserve">
+    <value>GWC caching defaults have no REST endpoint on GeoServer 3.0.1 and cannot be configured here.</value>
+  </data>
+  <data name="DataStoreDirectoryLabel" xml:space="preserve">
+    <value>Directory:</value>
+  </data>
+  <data name="DataStoreDirectoryHint" xml:space="preserve">
+    <value>Directory under data_dir, e.g. mydata (optional; defaults to store name)</value>
+  </data>
+  <data name="StatusAclRulesLoaded" xml:space="preserve">
+    <value>Loaded {0} ACL rules</value>
+  </data>
+  <data name="StatusNoAclRules" xml:space="preserve">
+    <value>No ACL rules found</value>
+  </data>
+  <data name="StatusStyleNameRequired" xml:space="preserve">
+    <value>Style name is required</value>
+  </data>
+  <data name="StatusSldContentRequired" xml:space="preserve">
+    <value>SLD content is required</value>
+  </data>
+  <data name="StatusLoadingStyleNamed" xml:space="preserve">
+    <value>Loading style '{0}'...</value>
+  </data>
+  <data name="StatusLoadedSldFor" xml:space="preserve">
+    <value>Loaded SLD for '{0}'</value>
+  </data>
+  <data name="StatusStyleLoadFailed" xml:space="preserve">
+    <value>Failed to load style: {0}</value>
+  </data>
+  <data name="StatusUploadingStyleNamed" xml:space="preserve">
+    <value>Uploading style '{0}'...</value>
+  </data>
+  <data name="StatusStyleUpdated" xml:space="preserve">
+    <value>Style '{0}' updated successfully</value>
+  </data>
+  <data name="StatusStyleCreated" xml:space="preserve">
+    <value>Style '{0}' created successfully</value>
+  </data>
+  <data name="StatusDeletingStyleNamed" xml:space="preserve">
+    <value>Deleting style '{0}'...</value>
+  </data>
+  <data name="StatusStyleDeletedNamed" xml:space="preserve">
+    <value>Style '{0}' deleted successfully</value>
+  </data>
+  <data name="StatusSampleSldCreated" xml:space="preserve">
+    <value>Sample SLD created</value>
+  </data>
+  <data name="StatusMapPreviewReady" xml:space="preserve">
+    <value>Map preview ready. WMS layer integration available.</value>
+  </data>
+  <data name="StatusMapInitialized" xml:space="preserve">
+    <value>Map initialized. Use LoadWmsLayerAsync to add layers.</value>
+  </data>
+  <data name="StatusPreparingLayer" xml:space="preserve">
+    <value>Preparing layer {0}...</value>
+  </data>
+  <data name="StatusWmsUrlGenerated" xml:space="preserve">
+    <value>WMS URL generated for: {0}. Click 'View WMS URL' to see the preview URL.</value>
+  </data>
+  <data name="StatusPreviewGenerateFailed" xml:space="preserve">
+    <value>Failed to generate preview: {0}</value>
+  </data>
+  <data name="StatusPreviewCleared" xml:space="preserve">
+    <value>Preview cleared</value>
+  </data>
+  <data name="StatusMapReadyForPreview" xml:space="preserve">
+    <value>Map ready for WMS layer preview</value>
+  </data>
+  <data name="WizardTitle" xml:space="preserve">
+    <value>Data Import Wizard</value>
+  </data>
+  <data name="WizardStepIndicator" xml:space="preserve">
+    <value>Step {0} / 3</value>
+  </data>
+  <data name="WizardStep1Title" xml:space="preserve">
+    <value>Step 1: Data Source</value>
+  </data>
+  <data name="WizardStep2Title" xml:space="preserve">
+    <value>Step 2: Target and Parameters</value>
+  </data>
+  <data name="WizardStep3Title" xml:space="preserve">
+    <value>Step 3: Publish</value>
+  </data>
+  <data name="WizardSourceKindLabel" xml:space="preserve">
+    <value>Source Type</value>
+  </data>
+  <data name="WizardKindShapefile" xml:space="preserve">
+    <value>Shapefile Directory</value>
+  </data>
+  <data name="WizardKindGeoTiff" xml:space="preserve">
+    <value>GeoTIFF File</value>
+  </data>
+  <data name="WizardKindPostgis" xml:space="preserve">
+    <value>PostGIS Table</value>
+  </data>
+  <data name="WizardFileRefLabel" xml:space="preserve">
+    <value>Server-side file reference</value>
+  </data>
+  <data name="WizardFileRefWatermark" xml:space="preserve">
+    <value>file:path relative to GeoServer data dir</value>
+  </data>
+  <data name="WizardNativeNameLabel" xml:space="preserve">
+    <value>Native name (file base / table)</value>
+  </data>
+  <data name="WizardPgHostLabel" xml:space="preserve">
+    <value>Host</value>
+  </data>
+  <data name="WizardPgPortLabel" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="WizardPgDatabaseLabel" xml:space="preserve">
+    <value>Database</value>
+  </data>
+  <data name="WizardPgUserLabel" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="WizardPgPasswordLabel" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="WizardProbeButton" xml:space="preserve">
+    <value>Test Connection</value>
+  </data>
+  <data name="WizardWorkspaceLabel" xml:space="preserve">
+    <value>Workspace</value>
+  </data>
+  <data name="WizardRefreshButton" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="WizardPublishNameLabel" xml:space="preserve">
+    <value>Publish Name</value>
+  </data>
+  <data name="WizardStoreNameLabel" xml:space="preserve">
+    <value>Store Name</value>
+  </data>
+  <data name="WizardSrsLabel" xml:space="preserve">
+    <value>SRS (optional)</value>
+  </data>
+  <data name="WizardLocalPreviewLabel" xml:space="preserve">
+    <value>Local path for preview (optional)</value>
+  </data>
+  <data name="WizardInspectButton" xml:space="preserve">
+    <value>Inspect</value>
+  </data>
+  <data name="WizardBackButton" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="WizardNextButton" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="WizardPublishButton" xml:space="preserve">
+    <value>Publish</value>
+  </data>
+  <data name="WizardRestartButton" xml:space="preserve">
+    <value>Start Over</value>
+  </data>
+  <data name="WizardResultLabel" xml:space="preserve">
+    <value>Result</value>
+  </data>
+  <data name="WizardStatusNeedFileRef" xml:space="preserve">
+    <value>Enter a file: reference first</value>
+  </data>
+  <data name="WizardStatusNeedNativeName" xml:space="preserve">
+    <value>Enter the native name</value>
+  </data>
+  <data name="WizardStatusNeedPgParams" xml:space="preserve">
+    <value>Enter host, database and user</value>
+  </data>
+  <data name="WizardStatusNeedWorkspace" xml:space="preserve">
+    <value>Select a workspace</value>
+  </data>
+  <data name="WizardStatusNeedPublishName" xml:space="preserve">
+    <value>Enter a publish name</value>
+  </data>
+  <data name="WizardStatusNeedLocalPath" xml:space="preserve">
+    <value>Enter a local path</value>
+  </data>
+  <data name="WizardPreviewNotFound" xml:space="preserve">
+    <value>Path not found</value>
+  </data>
+  <data name="WizardPreviewUnknown" xml:space="preserve">
+    <value>Unrecognized file type</value>
+  </data>
+  <data name="WizardPreviewShapefile" xml:space="preserve">
+    <value>Shapefile: {0} records, {1} fields, geometry {2}</value>
+  </data>
+  <data name="WizardPreviewGeoTiff" xml:space="preserve">
+    <value>GeoTIFF: {0} x {1}, CRS {2}</value>
+  </data>
+  <data name="WizardPreviewDirEntry" xml:space="preserve">
+    <value>{0}  ({1}, {2} B)</value>
+  </data>
+  <data name="WizardPublishSuccess" xml:space="preserve">
+    <value>Published: {0}</value>
+  </data>
+  <data name="WizardPublishFailed" xml:space="preserve">
+    <value>Publish failed: {0}</value>
+  </data>
+  <data name="WizardProbeOk" xml:space="preserve">
+    <value>Connection OK</value>
+  </data>
+  <data name="WizardProbeFailed" xml:space="preserve">
+    <value>Connection failed: {0}</value>
+  </data>
+  <data name="NavSldEditor" xml:space="preserve">
+    <value>SLD Editor</value>
+  </data>
+  <data name="SldEditorTitle" xml:space="preserve">
+    <value>SLD Style Editor</value>
+  </data>
+  <data name="SldEditorSubtitle" xml:space="preserve">
+    <value>Structured and source dual-mode editing with pre-apply validation and WMS preview</value>
+  </data>
+  <data name="SldEditorStyleSelectLabel" xml:space="preserve">
+    <value>Select a style to load</value>
+  </data>
+  <data name="SldEditorLoadButton" xml:space="preserve">
+    <value>Load</value>
+  </data>
+  <data name="SldEditorNewButton" xml:space="preserve">
+    <value>New Style</value>
+  </data>
+  <data name="SldEditorNameLabel" xml:space="preserve">
+    <value>Style name:</value>
+  </data>
+  <data name="SldEditorSaveButton" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="SldEditorValidateButton" xml:space="preserve">
+    <value>Validate</value>
+  </data>
+  <data name="SldEditorModeLabel" xml:space="preserve">
+    <value>Mode:</value>
+  </data>
+  <data name="SldEditorSwitchToSource" xml:space="preserve">
+    <value>Switch to Source XML</value>
+  </data>
+  <data name="SldEditorSwitchToStructured" xml:space="preserve">
+    <value>Switch to Structured</value>
+  </data>
+  <data name="SldEditorRulesLabel" xml:space="preserve">
+    <value>Rules</value>
+  </data>
+  <data name="SldEditorAddRuleButton" xml:space="preserve">
+    <value>Add Rule</value>
+  </data>
+  <data name="SldEditorRemoveRuleButton" xml:space="preserve">
+    <value>Remove Rule</value>
+  </data>
+  <data name="SldEditorRuleNameLabel" xml:space="preserve">
+    <value>Rule name (optional)</value>
+  </data>
+  <data name="SldEditorSymbolizerKindLabel" xml:space="preserve">
+    <value>Symbolizer</value>
+  </data>
+  <data name="SldEditorWellKnownNameLabel" xml:space="preserve">
+    <value>Mark shape (point)</value>
+  </data>
+  <data name="SldEditorSizeLabel" xml:space="preserve">
+    <value>Size (point)</value>
+  </data>
+  <data name="SldEditorFillColorLabel" xml:space="preserve">
+    <value>Fill color</value>
+  </data>
+  <data name="SldEditorFillOpacityLabel" xml:space="preserve">
+    <value>Fill opacity (0-1)</value>
+  </data>
+  <data name="SldEditorStrokeColorLabel" xml:space="preserve">
+    <value>Stroke color</value>
+  </data>
+  <data name="SldEditorStrokeWidthLabel" xml:space="preserve">
+    <value>Stroke width</value>
+  </data>
+  <data name="SldEditorFilterLabel" xml:space="preserve">
+    <value>Filter (optional)</value>
+  </data>
+  <data name="SldEditorFilterPropertyLabel" xml:space="preserve">
+    <value>Property</value>
+  </data>
+  <data name="SldEditorFilterOperatorLabel" xml:space="preserve">
+    <value>Operator</value>
+  </data>
+  <data name="SldEditorFilterValueLabel" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="SldEditorSourceLabel" xml:space="preserve">
+    <value>SLD source (XML)</value>
+  </data>
+  <data name="SldEditorPreviewSectionLabel" xml:space="preserve">
+    <value>Preview</value>
+  </data>
+  <data name="SldEditorPreviewLayerLabel" xml:space="preserve">
+    <value>Preview layer</value>
+  </data>
+  <data name="SldEditorPreviewButton" xml:space="preserve">
+    <value>Generate Preview URL</value>
+  </data>
+  <data name="SldEditorReady" xml:space="preserve">
+    <value>Ready. Load an existing style or create a new one.</value>
+  </data>
+  <data name="SldEditorStatusStylesLoaded" xml:space="preserve">
+    <value>Loaded {0} styles</value>
+  </data>
+  <data name="SldEditorStatusSelectStyle" xml:space="preserve">
+    <value>Select a style to load first</value>
+  </data>
+  <data name="SldEditorStatusStyleLoaded" xml:space="preserve">
+    <value>Style "{0}" loaded</value>
+  </data>
+  <data name="SldEditorStatusStyleLoadedWarn" xml:space="preserve">
+    <value>Style "{0}" loaded with warnings: {1}</value>
+  </data>
+  <data name="SldEditorStatusParseFailed" xml:space="preserve">
+    <value>Parse failed: {0}</value>
+  </data>
+  <data name="SldEditorStatusNewReady" xml:space="preserve">
+    <value>New style: enter a name and edit rules</value>
+  </data>
+  <data name="SldEditorStatusRuleAdded" xml:space="preserve">
+    <value>Rule added</value>
+  </data>
+  <data name="SldEditorStatusRuleRemoved" xml:space="preserve">
+    <value>Rule removed</value>
+  </data>
+  <data name="SldEditorStatusNoRuleSelected" xml:space="preserve">
+    <value>Select a rule first</value>
+  </data>
+  <data name="SldEditorStatusNeedName" xml:space="preserve">
+    <value>Enter a style name first</value>
+  </data>
+  <data name="SldEditorStatusSwitchedToSource" xml:space="preserve">
+    <value>Switched to source mode (XML regenerated from rules)</value>
+  </data>
+  <data name="SldEditorStatusSwitchedToStructured" xml:space="preserve">
+    <value>Switched to structured mode</value>
+  </data>
+  <data name="SldEditorStatusSwitchedWarn" xml:space="preserve">
+    <value>Switched to structured mode with warnings: {0}</value>
+  </data>
+  <data name="SldEditorStatusSwitchFailed" xml:space="preserve">
+    <value>Cannot switch to source: {0}</value>
+  </data>
+  <data name="SldEditorStatusValid" xml:space="preserve">
+    <value>Validation passed</value>
+  </data>
+  <data name="SldEditorStatusInvalid" xml:space="preserve">
+    <value>Validation failed: {0}</value>
+  </data>
+  <data name="SldEditorStatusSaved" xml:space="preserve">
+    <value>Style "{0}" saved</value>
+  </data>
+  <data name="SldEditorStatusSaveFailed" xml:space="preserve">
+    <value>Save failed: {0}</value>
+  </data>
+  <data name="SldEditorStatusLoadFailed" xml:space="preserve">
+    <value>Load failed: {0}</value>
+  </data>
+  <data name="SldEditorStatusNeedSaveForPreview" xml:space="preserve">
+    <value>Save the style before previewing</value>
+  </data>
+  <data name="SldEditorStatusNeedLayer" xml:space="preserve">
+    <value>Select a preview layer first</value>
+  </data>
+  <data name="SldEditorStatusPreviewReady" xml:space="preserve">
+    <value>Preview URL generated for {0}</value>
+  </data>
+  <data name="NavStyleLibrary" xml:space="preserve">
+    <value>Style Library</value>
+  </data>
+  <data name="StyleLibTitle" xml:space="preserve">
+    <value>Style Library</value>
+  </data>
+  <data name="StyleLibSubtitle" xml:space="preserve">
+    <value>Default-style bindings across all layers; unused styles can be cleaned up</value>
+  </data>
+  <data name="StyleLibRefreshButton" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="StyleLibUnusedOnly" xml:space="preserve">
+    <value>Unused only</value>
+  </data>
+  <data name="StyleLibDeleteButton" xml:space="preserve">
+    <value>Delete Selected</value>
+  </data>
+  <data name="StyleLibColumnStyle" xml:space="preserve">
+    <value>Style</value>
+  </data>
+  <data name="StyleLibColumnLayers" xml:space="preserve">
+    <value>Referenced by layers</value>
+  </data>
+  <data name="StyleLibUnused" xml:space="preserve">
+    <value>Unused</value>
+  </data>
+  <data name="StyleLibReady" xml:space="preserve">
+    <value>Ready</value>
+  </data>
+  <data name="StyleLibStatusLoaded" xml:space="preserve">
+    <value>Loaded {0} styles ({1} unused)</value>
+  </data>
+  <data name="StyleLibStatusLoadFailed" xml:space="preserve">
+    <value>Load failed: {0}</value>
+  </data>
+  <data name="StyleLibStatusSelectFirst" xml:space="preserve">
+    <value>Select a style first</value>
+  </data>
+  <data name="StyleLibStatusDeleteInUse" xml:space="preserve">
+    <value>Cannot delete: style is still referenced by layers</value>
+  </data>
+  <data name="StyleLibStatusDeleted" xml:space="preserve">
+    <value>Deleted style "{0}"</value>
+  </data>
+  <data name="StyleLibStatusDeleteFailed" xml:space="preserve">
+    <value>Delete failed: {0}</value>
+  </data>
+  <data name="NavTools" xml:space="preserve">
+    <value>Tools</value>
+  </data>
+  <data name="NavBatch" xml:space="preserve">
+    <value>Batch Operations</value>
+  </data>
+  <data name="BatchSubtitle" xml:space="preserve">
+    <value>Multi-select layers, styles, stores and workspaces; bulk set default style, enable/disable stores, cascade delete</value>
+  </data>
+  <data name="BatchScopeLabel" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="BatchWorkspaceLabel" xml:space="preserve">
+    <value>Workspace</value>
+  </data>
+  <data name="BatchRefresh" xml:space="preserve">
+    <value>Reload</value>
+  </data>
+  <data name="BatchToggleAll" xml:space="preserve">
+    <value>Select All / None</value>
+  </data>
+  <data name="BatchCascade" xml:space="preserve">
+    <value>Cascade (recurse/purge)</value>
+  </data>
+  <data name="BatchNewStyle" xml:space="preserve">
+    <value>New default style</value>
+  </data>
+  <data name="BatchApplyStyle" xml:space="preserve">
+    <value>Set Default Style</value>
+  </data>
+  <data name="BatchEnable" xml:space="preserve">
+    <value>Enable</value>
+  </data>
+  <data name="BatchDisable" xml:space="preserve">
+    <value>Disable</value>
+  </data>
+  <data name="BatchDelete" xml:space="preserve">
+    <value>Delete Selected</value>
+  </data>
+  <data name="BatchColumnName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="BatchColumnStyle" xml:space="preserve">
+    <value>Default Style</value>
+  </data>
+  <data name="BatchColumnType" xml:space="preserve">
+    <value>Kind</value>
+  </data>
+  <data name="BatchStatusNeedLayers" xml:space="preserve">
+    <value>Select layers first (type = Layer)</value>
+  </data>
+  <data name="BatchStatusNeedStyle" xml:space="preserve">
+    <value>Choose a new default style</value>
+  </data>
+  <data name="BatchStatusNeedStores" xml:space="preserve">
+    <value>Select stores first (type = Store). Layer-level enable/disable has no REST channel in GeoServer 3.0.1; toggling stores is the supported bulk switch</value>
+  </data>
+  <data name="BatchStatusNeedSelection" xml:space="preserve">
+    <value>Select items first</value>
+  </data>
+  <data name="BatchStatusDeleteUnsupported" xml:space="preserve">
+    <value>Bulk delete not supported for this type</value>
+  </data>
+  <data name="BatchReady" xml:space="preserve">
+    <value>Ready</value>
+  </data>
+  <data name="BatchStatusLoaded" xml:space="preserve">
+    <value>Loaded {0} items ({1} selected)</value>
+  </data>
+  <data name="BatchStatusAllOk" xml:space="preserve">
+    <value>All {0} items succeeded</value>
+  </data>
+  <data name="BatchStatusPartial" xml:space="preserve">
+    <value>Succeeded {0}, failed {1}: {2}</value>
+  </data>
+  <data name="BatchStatusFailed" xml:space="preserve">
+    <value>Batch operation failed: {0}</value>
+  </data>
+  <data name="NavMigration" xml:space="preserve">
+    <value>Workspace Import/Export</value>
+  </data>
+  <data name="MigSubtitle" xml:space="preserve">
+    <value>Export a workspace to an archive (JSON manifest + SLDs) and import it into another instance with dependency order</value>
+  </data>
+  <data name="MigExportGroup" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="MigImportGroup" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="MigExport" xml:space="preserve">
+    <value>Export Workspace</value>
+  </data>
+  <data name="MigSave" xml:space="preserve">
+    <value>Save Archive...</value>
+  </data>
+  <data name="MigBrowse" xml:space="preserve">
+    <value>Browse...</value>
+  </data>
+  <data name="MigImport" xml:space="preserve">
+    <value>Import Archive</value>
+  </data>
+  <data name="MigArchivePath" xml:space="preserve">
+    <value>Archive file</value>
+  </data>
+  <data name="MigTargetWs" xml:space="preserve">
+    <value>Target workspace (empty = source name)</value>
+  </data>
+  <data name="MigTargetPrefix" xml:space="preserve">
+    <value>Namespace prefix (empty = target ws)</value>
+  </data>
+  <data name="MigTargetUri" xml:space="preserve">
+    <value>Namespace URI (empty = source URI)</value>
+  </data>
+  <data name="MigOverwrite" xml:space="preserve">
+    <value>Overwrite existing resources</value>
+  </data>
+  <data name="MigColumnStep" xml:space="preserve">
+    <value>Step</value>
+  </data>
+  <data name="MigColumnTarget" xml:space="preserve">
+    <value>Target</value>
+  </data>
+  <data name="MigColumnStatus" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="MigColumnMessage" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="MigStatusCreated" xml:space="preserve">
+    <value>Created</value>
+  </data>
+  <data name="MigStatusUpdated" xml:space="preserve">
+    <value>Updated</value>
+  </data>
+  <data name="MigStatusSkipped" xml:space="preserve">
+    <value>Skipped</value>
+  </data>
+  <data name="MigStatusFailedItem" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="MigReady" xml:space="preserve">
+    <value>Ready</value>
+  </data>
+  <data name="MigStatusLoaded" xml:space="preserve">
+    <value>Loaded {0} workspaces</value>
+  </data>
+  <data name="MigExportDone" xml:space="preserve">
+    <value>Exported "{0}": {1} resources, {2} warnings, {3} bytes</value>
+  </data>
+  <data name="MigSaved" xml:space="preserve">
+    <value>Archive saved to {0}</value>
+  </data>
+  <data name="MigImportDone" xml:space="preserve">
+    <value>Import finished: {0} created, {1} skipped</value>
+  </data>
+  <data name="MigImportPartial" xml:space="preserve">
+    <value>Import had {0} failures: {1}</value>
+  </data>
+  <data name="MigStatusNeedWorkspace" xml:space="preserve">
+    <value>Select a workspace first</value>
+  </data>
+  <data name="MigStatusExportFirst" xml:space="preserve">
+    <value>Export a workspace first</value>
+  </data>
+  <data name="MigStatusNoPath" xml:space="preserve">
+    <value>No save path chosen</value>
+  </data>
+  <data name="MigStatusNeedArchive" xml:space="preserve">
+    <value>Choose an existing archive file</value>
+  </data>
+  <data name="MigStatusFailed" xml:space="preserve">
+    <value>Failed: {0}</value>
+  </data>
+  <data name="NavSettingsSync" xml:space="preserve">
+    <value>Settings Sync</value>
+  </data>
+  <data name="SyncSubtitle" xml:space="preserve">
+    <value>Compare settings between two connections and apply selected differences to the current instance</value>
+  </data>
+  <data name="SyncSourceGroup" xml:space="preserve">
+    <value>Source connection</value>
+  </data>
+  <data name="SyncUrl" xml:space="preserve">
+    <value>Source URL</value>
+  </data>
+  <data name="SyncUser" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="SyncPassword" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="SyncDomain" xml:space="preserve">
+    <value>Domain</value>
+  </data>
+  <data name="SyncCompare" xml:space="preserve">
+    <value>Compare</value>
+  </data>
+  <data name="SyncApply" xml:space="preserve">
+    <value>Apply Selected</value>
+  </data>
+  <data name="SyncColumnPath" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="SyncColumnSource" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="SyncColumnTarget" xml:space="preserve">
+    <value>Target (current)</value>
+  </data>
+  <data name="SyncColumnKind" xml:space="preserve">
+    <value>Kind</value>
+  </data>
+  <data name="SyncKindAdded" xml:space="preserve">
+    <value>Added</value>
+  </data>
+  <data name="SyncKindRemoved" xml:space="preserve">
+    <value>Removed</value>
+  </data>
+  <data name="SyncKindChanged" xml:space="preserve">
+    <value>Changed</value>
+  </data>
+  <data name="SyncReady" xml:space="preserve">
+    <value>Ready</value>
+  </data>
+  <data name="SyncStatusIdentical" xml:space="preserve">
+    <value>Settings are identical</value>
+  </data>
+  <data name="SyncStatusLoaded" xml:space="preserve">
+    <value>Found {0} differences</value>
+  </data>
+  <data name="SyncStatusApplied" xml:space="preserve">
+    <value>Applied {0} settings</value>
+  </data>
+  <data name="SyncStatusNeedUrl" xml:space="preserve">
+    <value>Enter the source instance URL</value>
+  </data>
+  <data name="SyncStatusCompareFirst" xml:space="preserve">
+    <value>Run a comparison first</value>
+  </data>
+  <data name="SyncStatusNeedSelection" xml:space="preserve">
+    <value>Select differences to apply</value>
+  </data>
+  <data name="SyncStatusFailed" xml:space="preserve">
+    <value>Failed: {0}</value>
+  </data>
+</root>

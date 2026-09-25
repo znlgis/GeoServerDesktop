@@ -1,0 +1,1952 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" /></xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <!-- 中文文案表 —— 与 Strings.resx 同 key，zh 文化卫星程序集。 -->
+  <data name="LanguageToggleText" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="LanguageToggleTooltip" xml:space="preserve">
+    <value>Switch to English</value>
+  </data>
+  <data name="AppHeaderSubtitle" xml:space="preserve">
+    <value>管理</value>
+  </data>
+  <data name="LabelUrl" xml:space="preserve">
+    <value>URL:</value>
+  </data>
+  <data name="LabelUser" xml:space="preserve">
+    <value>用户:</value>
+  </data>
+  <data name="LabelPassword" xml:space="preserve">
+    <value>密码:</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>登录</value>
+  </data>
+  <data name="Connected" xml:space="preserve">
+    <value>● 已连接</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>注销</value>
+  </data>
+  <data name="NavAboutAndStatus" xml:space="preserve">
+    <value>关于 &amp; 状态</value>
+  </data>
+  <data name="NavAboutGeoServer" xml:space="preserve">
+    <value>关于 GeoServer</value>
+  </data>
+  <data name="NavData" xml:space="preserve">
+    <value>数据</value>
+  </data>
+  <data name="NavLayerPreview" xml:space="preserve">
+    <value>图层预览</value>
+  </data>
+  <data name="NavWorkspaces" xml:space="preserve">
+    <value>工作空间</value>
+  </data>
+  <data name="NavStores" xml:space="preserve">
+    <value>数据存储</value>
+  </data>
+  <data name="NavLayers" xml:space="preserve">
+    <value>图层</value>
+  </data>
+  <data name="NavLayerGroups" xml:space="preserve">
+    <value>图层组</value>
+  </data>
+  <data name="NavStyles" xml:space="preserve">
+    <value>样式</value>
+  </data>
+  <data name="NavImportWizard" xml:space="preserve">
+    <value>数据导入向导</value>
+  </data>
+  <data name="NavServices" xml:space="preserve">
+    <value>服务</value>
+  </data>
+  <data name="NavSettings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="NavGlobal" xml:space="preserve">
+    <value>全局</value>
+  </data>
+  <data name="NavLogging" xml:space="preserve">
+    <value>日志</value>
+  </data>
+  <data name="NavTileCaching" xml:space="preserve">
+    <value>切片缓存</value>
+  </data>
+  <data name="NavCachingDefaults" xml:space="preserve">
+    <value>缓存默认值</value>
+  </data>
+  <data name="NavGridsets" xml:space="preserve">
+    <value>格网集</value>
+  </data>
+  <data name="NavDiskQuota" xml:space="preserve">
+    <value>磁盘配额</value>
+  </data>
+  <data name="NavSecurity" xml:space="preserve">
+    <value>安全</value>
+  </data>
+  <data name="NavSecuritySettings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="NavUsersGroupsRoles" xml:space="preserve">
+    <value>用户、组、角色</value>
+  </data>
+  <data name="ResourceTreeTitle" xml:space="preserve">
+    <value>资源</value>
+  </data>
+  <data name="TreeWorkspaces" xml:space="preserve">
+    <value>工作空间</value>
+  </data>
+  <data name="TreeDataStores" xml:space="preserve">
+    <value>数据存储</value>
+  </data>
+  <data name="TreeLayers" xml:space="preserve">
+    <value>图层</value>
+  </data>
+  <data name="TreeStyles" xml:space="preserve">
+    <value>样式</value>
+  </data>
+  <data name="TreeLayerGroups" xml:space="preserve">
+    <value>图层组</value>
+  </data>
+  <data name="DashboardTitle" xml:space="preserve">
+    <value>仪表盘</value>
+  </data>
+  <data name="DashboardWelcomeMessage" xml:space="preserve">
+    <value>使用上方的登录表单连接到 GeoServer 实例，开始管理您的空间数据服务。</value>
+  </data>
+  <data name="DashboardConnectionStatus" xml:space="preserve">
+    <value>连接状态</value>
+  </data>
+  <data name="DashboardConnected" xml:space="preserve">
+    <value>已连接</value>
+  </data>
+  <data name="DashboardNotConnected" xml:space="preserve">
+    <value>未连接</value>
+  </data>
+  <data name="DashboardGeoServerVersion" xml:space="preserve">
+    <value>GeoServer 版本</value>
+  </data>
+  <data name="DashboardWorkspaces" xml:space="preserve">
+    <value>工作空间</value>
+  </data>
+  <data name="DashboardLayers" xml:space="preserve">
+    <value>图层</value>
+  </data>
+  <data name="DashboardRefreshToolTip" xml:space="preserve">
+    <value>刷新仪表盘速览</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>🔄 刷新</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>创建</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="SaveSettings" xml:space="preserve">
+    <value>保存设置</value>
+  </data>
+  <data name="Load" xml:space="preserve">
+    <value>加载</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>操作</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>处理中...</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>加载中...</value>
+  </data>
+  <data name="NameLabel" xml:space="preserve">
+    <value>名称:</value>
+  </data>
+  <data name="DescriptionLabel" xml:space="preserve">
+    <value>描述:</value>
+  </data>
+  <data name="TitleLabel" xml:space="preserve">
+    <value>标题:</value>
+  </data>
+  <data name="DeleteSelected" xml:space="preserve">
+    <value>删除选中</value>
+  </data>
+  <data name="EnabledLabel" xml:space="preserve">
+    <value>已启用:</value>
+  </data>
+  <data name="WorkspaceLabel" xml:space="preserve">
+    <value>工作空间</value>
+  </data>
+  <data name="ServiceConfiguration" xml:space="preserve">
+    <value>服务配置</value>
+  </data>
+  <data name="ServiceInformation" xml:space="preserve">
+    <value>服务信息</value>
+  </data>
+  <data name="ServiceNameHint" xml:space="preserve">
+    <value>服务名称</value>
+  </data>
+  <data name="ServiceTitleHint" xml:space="preserve">
+    <value>服务标题</value>
+  </data>
+  <data name="ServiceAbstractHint" xml:space="preserve">
+    <value>服务摘要</value>
+  </data>
+  <data name="MaintainerHint" xml:space="preserve">
+    <value>维护者</value>
+  </data>
+  <data name="OnlineResourceUrlHint" xml:space="preserve">
+    <value>在线资源 URL</value>
+  </data>
+  <data name="OnlineResourceLabel" xml:space="preserve">
+    <value>在线资源:</value>
+  </data>
+  <data name="MaintainerLabel" xml:space="preserve">
+    <value>维护者:</value>
+  </data>
+  <data name="AbstractLabel" xml:space="preserve">
+    <value>摘要:</value>
+  </data>
+  <data name="CiteCompliant" xml:space="preserve">
+    <value>CITE 合规</value>
+  </data>
+  <data name="WorkspaceManagementTitle" xml:space="preserve">
+    <value>工作空间管理</value>
+  </data>
+  <data name="ReloadWorkspacesToolTip" xml:space="preserve">
+    <value>重新加载工作空间</value>
+  </data>
+  <data name="ExistingWorkspaces" xml:space="preserve">
+    <value>已有工作空间</value>
+  </data>
+  <data name="CreateNewWorkspace" xml:space="preserve">
+    <value>新建工作空间</value>
+  </data>
+  <data name="EnterWorkspaceNameHint" xml:space="preserve">
+    <value>输入工作空间名称</value>
+  </data>
+  <data name="DeleteWorkspace" xml:space="preserve">
+    <value>删除工作空间</value>
+  </data>
+  <data name="DeleteWorkspaceWarning" xml:space="preserve">
+    <value>警告：这将删除所选工作空间。</value>
+  </data>
+  <data name="DataStoresTitle" xml:space="preserve">
+    <value>数据存储</value>
+  </data>
+  <data name="DataStoresSubtitle" xml:space="preserve">
+    <value>管理矢量和栅格数据源的数据存储连接</value>
+  </data>
+  <data name="AddStore" xml:space="preserve">
+    <value>+ 添加存储</value>
+  </data>
+  <data name="SelectWorkspaceToViewStoresHint" xml:space="preserve">
+    <value>选择工作空间以查看数据存储</value>
+  </data>
+  <data name="SelectWorkspaceToViewStores" xml:space="preserve">
+    <value>请先选择工作空间</value>
+  </data>
+  <data name="AddDataStoreTitle" xml:space="preserve">
+    <value>添加数据存储</value>
+  </data>
+  <data name="DataStoreNameHint" xml:space="preserve">
+    <value>数据存储名称</value>
+  </data>
+  <data name="OptionalDescriptionHint" xml:space="preserve">
+    <value>可选描述</value>
+  </data>
+  <data name="LayersTitle" xml:space="preserve">
+    <value>图层</value>
+  </data>
+  <data name="LayersSubtitle" xml:space="preserve">
+    <value>管理已发布的矢量和栅格图层</value>
+  </data>
+  <data name="PublishLayer" xml:space="preserve">
+    <value>+ 发布图层</value>
+  </data>
+  <data name="SelectWorkspaceFilterLayersHint" xml:space="preserve">
+    <value>选择工作空间以过滤图层</value>
+  </data>
+  <data name="SelectWorkspaceToViewLayers" xml:space="preserve">
+    <value>请先选择工作空间</value>
+  </data>
+  <data name="PublishNewLayerTitle" xml:space="preserve">
+    <value>发布新图层</value>
+  </data>
+  <data name="DataStoreLabel" xml:space="preserve">
+    <value>数据存储:</value>
+  </data>
+  <data name="LayerNameLabel" xml:space="preserve">
+    <value>图层名称:</value>
+  </data>
+  <data name="NativeNameLabel" xml:space="preserve">
+    <value>原生名称:</value>
+  </data>
+  <data name="SrsLabel" xml:space="preserve">
+    <value>SRS:</value>
+  </data>
+  <data name="PublishedLayerNameHint" xml:space="preserve">
+    <value>发布图层名称</value>
+  </data>
+  <data name="NativeNameHint" xml:space="preserve">
+    <value>数据源中的原生名称（可选）</value>
+  </data>
+  <data name="PublishButton" xml:space="preserve">
+    <value>发布</value>
+  </data>
+  <data name="EditButton" xml:space="preserve">
+    <value>编辑</value>
+  </data>
+  <data name="DefaultStyleLabel" xml:space="preserve">
+    <value>默认样式:</value>
+  </data>
+  <data name="ResourceLabel" xml:space="preserve">
+    <value>资源:</value>
+  </data>
+  <data name="LayerGroupsTitle" xml:space="preserve">
+    <value>图层组</value>
+  </data>
+  <data name="LayerGroupsSubtitle" xml:space="preserve">
+    <value>管理图层组以将多个图层组织在一起</value>
+  </data>
+  <data name="CreateLayerGroupButton" xml:space="preserve">
+    <value>➕ 创建</value>
+  </data>
+  <data name="SelectWorkspaceFilterLayerGroupsHint" xml:space="preserve">
+    <value>选择工作空间以过滤图层组</value>
+  </data>
+  <data name="SelectWorkspaceToViewLayerGroups" xml:space="preserve">
+    <value>请先选择工作空间</value>
+  </data>
+  <data name="CreateLayerGroupTitle" xml:space="preserve">
+    <value>创建图层组</value>
+  </data>
+  <data name="NameRequiredLabel" xml:space="preserve">
+    <value>名称 *</value>
+  </data>
+  <data name="EnterLayerGroupNameHint" xml:space="preserve">
+    <value>输入图层组名称</value>
+  </data>
+  <data name="EnterLayerGroupTitleHint" xml:space="preserve">
+    <value>输入图层组标题（可选）</value>
+  </data>
+  <data name="ModeLabel" xml:space="preserve">
+    <value>模式:</value>
+  </data>
+  <data name="LayersCountLabel" xml:space="preserve">
+    <value>图层数:</value>
+  </data>
+  <data name="WorkspaceItemLabel" xml:space="preserve">
+    <value>工作空间:</value>
+  </data>
+  <data name="StyleManagementTitle" xml:space="preserve">
+    <value>样式管理</value>
+  </data>
+  <data name="ReloadStylesToolTip" xml:space="preserve">
+    <value>重新加载样式</value>
+  </data>
+  <data name="ExistingStyles" xml:space="preserve">
+    <value>已有样式</value>
+  </data>
+  <data name="StyleNameHint" xml:space="preserve">
+    <value>样式名称</value>
+  </data>
+  <data name="LoadSelected" xml:space="preserve">
+    <value>加载选中</value>
+  </data>
+  <data name="SampleSld" xml:space="preserve">
+    <value>示例 SLD</value>
+  </data>
+  <data name="UploadUpdate" xml:space="preserve">
+    <value>上传/更新</value>
+  </data>
+  <data name="SldContent" xml:space="preserve">
+    <value>SLD 内容</value>
+  </data>
+  <data name="SldContentHint" xml:space="preserve">
+    <value>在此输入 SLD XML 内容...</value>
+  </data>
+  <data name="MapPreviewTitle" xml:space="preserve">
+    <value>地图预览</value>
+  </data>
+  <data name="ResetViewToolTip" xml:space="preserve">
+    <value>重置视图</value>
+  </data>
+  <data name="ClearLayerToolTip" xml:space="preserve">
+    <value>清除当前图层</value>
+  </data>
+  <data name="ResetButton" xml:space="preserve">
+    <value>🏠 重置</value>
+  </data>
+  <data name="ClearButton" xml:space="preserve">
+    <value>🗑️ 清除</value>
+  </data>
+  <data name="MapPreviewDescription" xml:space="preserve">
+    <value>本视图提供 WMS 图层预览功能。</value>
+  </data>
+  <data name="CurrentLayerWmsUrl" xml:space="preserve">
+    <value>当前图层 WMS URL：</value>
+  </data>
+  <data name="WmsUrlUsageHint" xml:space="preserve">
+    <value>您可以在 QGIS、ArcGIS 等 GIS 应用或 Web 地图库中使用此 URL。</value>
+  </data>
+  <data name="HowToPreviewTitle" xml:space="preserve">
+    <value>如何预览图层：</value>
+  </data>
+  <data name="PreviewStep1" xml:space="preserve">
+    <value>1. 连接到 GeoServer 实例</value>
+  </data>
+  <data name="PreviewStep2" xml:space="preserve">
+    <value>2. 从资源树中选择图层</value>
+  </data>
+  <data name="PreviewStep3" xml:space="preserve">
+    <value>3. WMS URL 将在此处生成并显示</value>
+  </data>
+  <data name="PreviewStep4" xml:space="preserve">
+    <value>4. 在您偏好的 GIS 客户端中使用该 URL</value>
+  </data>
+  <data name="MapPreviewInfo" xml:space="preserve">
+    <value>WMS 图层预览，为外部 GIS 应用生成 URL</value>
+  </data>
+  <data name="AboutGeoServerTitle" xml:space="preserve">
+    <value>关于 GeoServer</value>
+  </data>
+  <data name="AboutSubtitle" xml:space="preserve">
+    <value>系统信息与版本详情</value>
+  </data>
+  <data name="VersionInformation" xml:space="preserve">
+    <value>版本信息</value>
+  </data>
+  <data name="GeoServerVersionLabel" xml:space="preserve">
+    <value>GeoServer 版本:</value>
+  </data>
+  <data name="GeoToolsVersionLabel" xml:space="preserve">
+    <value>GeoTools 版本:</value>
+  </data>
+  <data name="GeoWebCacheVersionLabel" xml:space="preserve">
+    <value>GeoWebCache 版本:</value>
+  </data>
+  <data name="GlobalSettingsTitle" xml:space="preserve">
+    <value>全局设置</value>
+  </data>
+  <data name="LoadGlobalSettingsToolTip" xml:space="preserve">
+    <value>加载当前全局设置</value>
+  </data>
+  <data name="ContactInformation" xml:space="preserve">
+    <value>联系信息</value>
+  </data>
+  <data name="ContactPersonLabel" xml:space="preserve">
+    <value>联系人:</value>
+  </data>
+  <data name="OrganizationLabel" xml:space="preserve">
+    <value>组织:</value>
+  </data>
+  <data name="EmailLabel" xml:space="preserve">
+    <value>电子邮件:</value>
+  </data>
+  <data name="ContactPersonHint" xml:space="preserve">
+    <value>联系人姓名</value>
+  </data>
+  <data name="OrganizationNameHint" xml:space="preserve">
+    <value>组织名称</value>
+  </data>
+  <data name="EmailAddressHint" xml:space="preserve">
+    <value>电子邮件地址</value>
+  </data>
+  <data name="ServerConfiguration" xml:space="preserve">
+    <value>服务器配置</value>
+  </data>
+  <data name="ProxyBaseUrlLabel" xml:space="preserve">
+    <value>代理基础 URL:</value>
+  </data>
+  <data name="ProxyBaseUrlHint" xml:space="preserve">
+    <value>代理基础 URL</value>
+  </data>
+  <data name="VerboseExceptions" xml:space="preserve">
+    <value>详细异常信息</value>
+  </data>
+  <data name="WmsSettingsTitle" xml:space="preserve">
+    <value>WMS 设置</value>
+  </data>
+  <data name="LoadWmsSettingsToolTip" xml:space="preserve">
+    <value>加载当前 WMS 设置</value>
+  </data>
+  <data name="EnableWmsService" xml:space="preserve">
+    <value>启用 WMS 服务</value>
+  </data>
+  <data name="WfsSettingsTitle" xml:space="preserve">
+    <value>WFS 设置</value>
+  </data>
+  <data name="LoadWfsSettingsToolTip" xml:space="preserve">
+    <value>加载当前 WFS 设置</value>
+  </data>
+  <data name="EnableWfsService" xml:space="preserve">
+    <value>启用 WFS 服务</value>
+  </data>
+  <data name="WfsParameters" xml:space="preserve">
+    <value>WFS 参数</value>
+  </data>
+  <data name="MaxFeaturesLabel" xml:space="preserve">
+    <value>最大要素数:</value>
+  </data>
+  <data name="ServiceLevelLabel" xml:space="preserve">
+    <value>服务级别:</value>
+  </data>
+  <data name="FeatureBounding" xml:space="preserve">
+    <value>要素边界</value>
+  </data>
+  <data name="WcsSettingsTitle" xml:space="preserve">
+    <value>WCS 设置</value>
+  </data>
+  <data name="LoadWcsSettingsToolTip" xml:space="preserve">
+    <value>加载当前 WCS 设置</value>
+  </data>
+  <data name="EnableWcsService" xml:space="preserve">
+    <value>启用 WCS 服务</value>
+  </data>
+  <data name="WcsParameters" xml:space="preserve">
+    <value>WCS 参数</value>
+  </data>
+  <data name="MaxInputMemoryLabel" xml:space="preserve">
+    <value>最大输入内存 (KB):</value>
+  </data>
+  <data name="MaxOutputMemoryLabel" xml:space="preserve">
+    <value>最大输出内存 (KB):</value>
+  </data>
+  <data name="SubsamplingEnabled" xml:space="preserve">
+    <value>启用子采样</value>
+  </data>
+  <data name="LoggingSettingsTitle" xml:space="preserve">
+    <value>日志设置</value>
+  </data>
+  <data name="LoadLoggingSettingsToolTip" xml:space="preserve">
+    <value>加载当前日志设置</value>
+  </data>
+  <data name="LoggingConfiguration" xml:space="preserve">
+    <value>日志配置</value>
+  </data>
+  <data name="LogLevelLabel" xml:space="preserve">
+    <value>日志级别:</value>
+  </data>
+  <data name="LogLocationLabel" xml:space="preserve">
+    <value>日志位置:</value>
+  </data>
+  <data name="LogFilePathHint" xml:space="preserve">
+    <value>日志文件路径</value>
+  </data>
+  <data name="StdOutLogging" xml:space="preserve">
+    <value>输出日志到标准输出 (stdout)</value>
+  </data>
+  <data name="EnableFileLogging" xml:space="preserve">
+    <value>启用文件日志</value>
+  </data>
+  <data name="LogFileViewer" xml:space="preserve">
+    <value>日志文件查看器</value>
+  </data>
+  <data name="RefreshLogFile" xml:space="preserve">
+    <value>刷新日志</value>
+  </data>
+  <data name="LogFileLocationLabel" xml:space="preserve">
+    <value>日志文件:</value>
+  </data>
+  <data name="TileCachingDefaultsTitle" xml:space="preserve">
+    <value>切片缓存默认值</value>
+  </data>
+  <data name="LoadCachingDefaultsToolTip" xml:space="preserve">
+    <value>加载缓存默认值</value>
+  </data>
+  <data name="DefaultCacheConfiguration" xml:space="preserve">
+    <value>默认缓存配置</value>
+  </data>
+  <data name="EnableTileCachingByDefault" xml:space="preserve">
+    <value>默认启用切片缓存</value>
+  </data>
+  <data name="DefaultExpirySettings" xml:space="preserve">
+    <value>默认过期设置</value>
+  </data>
+  <data name="CacheExpiryLabel" xml:space="preserve">
+    <value>缓存过期时间（秒）:</value>
+  </data>
+  <data name="ClientCacheExpiryLabel" xml:space="preserve">
+    <value>客户端缓存过期时间（秒）:</value>
+  </data>
+  <data name="NoExpiryNote" xml:space="preserve">
+    <value>设为 0 表示不过期。</value>
+  </data>
+  <data name="CachingNote" xml:space="preserve">
+    <value>注意：这些是全局默认值。各图层的缓存设置可在图层管理中单独配置。</value>
+  </data>
+  <data name="DiskQuotaTitle" xml:space="preserve">
+    <value>磁盘配额</value>
+  </data>
+  <data name="LoadDiskQuotaToolTip" xml:space="preserve">
+    <value>加载当前磁盘配额设置</value>
+  </data>
+  <data name="QuotaConfiguration" xml:space="preserve">
+    <value>配额配置</value>
+  </data>
+  <data name="EnableDiskQuota" xml:space="preserve">
+    <value>启用磁盘配额</value>
+  </data>
+  <data name="GlobalQuota" xml:space="preserve">
+    <value>全局配额</value>
+  </data>
+  <data name="QuotaValueLabel" xml:space="preserve">
+    <value>配额值:</value>
+  </data>
+  <data name="DiskBlockSizeLabel" xml:space="preserve">
+    <value>磁盘块大小 (B):</value>
+  </data>
+  <data name="CleanupFrequencyLabel" xml:space="preserve">
+    <value>清理频率:</value>
+  </data>
+  <data name="GridsetsTitle" xml:space="preserve">
+    <value>格网集</value>
+  </data>
+  <data name="ReloadGridsetsToolTip" xml:space="preserve">
+    <value>重新加载格网集列表</value>
+  </data>
+  <data name="ExistingGridsets" xml:space="preserve">
+    <value>已有格网集</value>
+  </data>
+  <data name="SelectedGridset" xml:space="preserve">
+    <value>已选格网集</value>
+  </data>
+  <data name="DeleteGridset" xml:space="preserve">
+    <value>删除格网集</value>
+  </data>
+  <data name="DeleteGridsetWarning" xml:space="preserve">
+    <value>警告：删除格网集可能影响使用它的图层。</value>
+  </data>
+  <data name="SecuritySettingsTitle" xml:space="preserve">
+    <value>安全设置</value>
+  </data>
+  <data name="LoadSecuritySettingsToolTip" xml:space="preserve">
+    <value>加载安全设置</value>
+  </data>
+  <data name="AccessControlRules" xml:space="preserve">
+    <value>访问控制规则</value>
+  </data>
+  <data name="InformationLabel" xml:space="preserve">
+    <value>信息</value>
+  </data>
+  <data name="SecurityInfoText" xml:space="preserve">
+    <value>本页显示 GeoServer 服务和图层的访问控制列表 (ACL) 规则。</value>
+  </data>
+  <data name="SecurityFormatText" xml:space="preserve">
+    <value>格式：[资源] 角色 =&gt; 访问级别</value>
+  </data>
+  <data name="UsersGroupsRolesTitle" xml:space="preserve">
+    <value>用户、组和角色</value>
+  </data>
+  <data name="ReloadAllToolTip" xml:space="preserve">
+    <value>重新加载所有用户、组和角色</value>
+  </data>
+  <data name="UsersTab" xml:space="preserve">
+    <value>用户</value>
+  </data>
+  <data name="GroupsTab" xml:space="preserve">
+    <value>组</value>
+  </data>
+  <data name="RolesTab" xml:space="preserve">
+    <value>角色</value>
+  </data>
+  <data name="UsersHeader" xml:space="preserve">
+    <value>用户</value>
+  </data>
+  <data name="GroupsHeader" xml:space="preserve">
+    <value>组</value>
+  </data>
+  <data name="RolesHeader" xml:space="preserve">
+    <value>角色</value>
+  </data>
+  <data name="CreateUser" xml:space="preserve">
+    <value>创建用户</value>
+  </data>
+  <data name="UsernameHint" xml:space="preserve">
+    <value>用户名</value>
+  </data>
+  <data name="PasswordHint" xml:space="preserve">
+    <value>密码</value>
+  </data>
+  <data name="NewPasswordHint" xml:space="preserve">
+    <value>新密码（留空则不修改）</value>
+  </data>
+  <data name="CreateUserButton" xml:space="preserve">
+    <value>创建用户</value>
+  </data>
+  <data name="DeleteUser" xml:space="preserve">
+    <value>删除用户</value>
+  </data>
+  <data name="DeleteSelectedUser" xml:space="preserve">
+    <value>删除选中用户</value>
+  </data>
+  <data name="EditUser" xml:space="preserve">
+    <value>编辑用户</value>
+  </data>
+  <data name="EnabledCheckbox" xml:space="preserve">
+    <value>已启用</value>
+  </data>
+  <data name="UpdateUser" xml:space="preserve">
+    <value>更新用户</value>
+  </data>
+  <data name="CreateGroup" xml:space="preserve">
+    <value>创建组</value>
+  </data>
+  <data name="GroupNameHint" xml:space="preserve">
+    <value>组名称</value>
+  </data>
+  <data name="CreateGroupButton" xml:space="preserve">
+    <value>创建组</value>
+  </data>
+  <data name="DeleteGroup" xml:space="preserve">
+    <value>删除组</value>
+  </data>
+  <data name="DeleteSelectedGroup" xml:space="preserve">
+    <value>删除选中组</value>
+  </data>
+  <data name="RolesReadOnly" xml:space="preserve">
+    <value>角色（只读）</value>
+  </data>
+  <data name="RolesReadOnlyInfo" xml:space="preserve">
+    <value>角色为只读。请直接使用 GeoServer REST API 创建或删除角色。</value>
+  </data>
+  <data name="StatusReady" xml:space="preserve">
+    <value>就绪</value>
+  </data>
+  <data name="StatusNotConnected" xml:space="preserve">
+    <value>未连接到 GeoServer</value>
+  </data>
+  <data name="StatusConnecting" xml:space="preserve">
+    <value>连接中...</value>
+  </data>
+  <data name="StatusConnectedSuccess" xml:space="preserve">
+    <value>连接成功</value>
+  </data>
+  <data name="StatusConnectionFailed" xml:space="preserve">
+    <value>连接失败: {0}</value>
+  </data>
+  <data name="StatusDisconnected" xml:space="preserve">
+    <value>已断开连接</value>
+  </data>
+  <data name="StatusRefreshing" xml:space="preserve">
+    <value>正在刷新资源...</value>
+  </data>
+  <data name="StatusRefreshed" xml:space="preserve">
+    <value>资源已刷新</value>
+  </data>
+  <data name="StatusRefreshFailed" xml:space="preserve">
+    <value>刷新失败: {0}</value>
+  </data>
+  <data name="StatusDashboardLoading" xml:space="preserve">
+    <value>正在加载仪表盘...</value>
+  </data>
+  <data name="StatusDashboardLoaded" xml:space="preserve">
+    <value>仪表盘已加载</value>
+  </data>
+  <data name="StatusDashboardLoadFailed" xml:space="preserve">
+    <value>加载仪表盘失败: {0}</value>
+  </data>
+  <data name="StatusAbout" xml:space="preserve">
+    <value>关于 GeoServer</value>
+  </data>
+  <data name="StatusLayerPreview" xml:space="preserve">
+    <value>图层预览</value>
+  </data>
+  <data name="StatusWorkspaces" xml:space="preserve">
+    <value>工作空间</value>
+  </data>
+  <data name="StatusDataStores" xml:space="preserve">
+    <value>数据存储</value>
+  </data>
+  <data name="StatusLayers" xml:space="preserve">
+    <value>图层</value>
+  </data>
+  <data name="StatusLayerGroups" xml:space="preserve">
+    <value>图层组</value>
+  </data>
+  <data name="StatusStyles" xml:space="preserve">
+    <value>样式</value>
+  </data>
+  <data name="StatusWmsSettings" xml:space="preserve">
+    <value>WMS 设置</value>
+  </data>
+  <data name="StatusWfsSettings" xml:space="preserve">
+    <value>WFS 设置</value>
+  </data>
+  <data name="StatusWcsSettings" xml:space="preserve">
+    <value>WCS 设置</value>
+  </data>
+  <data name="StatusGlobalSettings" xml:space="preserve">
+    <value>全局设置</value>
+  </data>
+  <data name="StatusLoggingSettings" xml:space="preserve">
+    <value>日志设置</value>
+  </data>
+  <data name="StatusTileCachingDefaults" xml:space="preserve">
+    <value>切片缓存默认值</value>
+  </data>
+  <data name="StatusGridsets" xml:space="preserve">
+    <value>格网集</value>
+  </data>
+  <data name="StatusDiskQuota" xml:space="preserve">
+    <value>磁盘配额</value>
+  </data>
+  <data name="StatusSecuritySettings" xml:space="preserve">
+    <value>安全设置</value>
+  </data>
+  <data name="StatusUsersGroupsAndRoles" xml:space="preserve">
+    <value>用户、组和角色</value>
+  </data>
+  <data name="StatusPleaseConnect" xml:space="preserve">
+    <value>请先连接到 GeoServer</value>
+  </data>
+  <data name="StatusLoadingWorkspaces" xml:space="preserve">
+    <value>正在加载工作空间...</value>
+  </data>
+  <data name="StatusWorkspacesLoaded" xml:space="preserve">
+    <value>已加载 {0} 个工作空间</value>
+  </data>
+  <data name="StatusWorkspaceNameRequired" xml:space="preserve">
+    <value>工作空间名称不能为空</value>
+  </data>
+  <data name="StatusCreatingWorkspace" xml:space="preserve">
+    <value>正在创建工作空间 '{0}'...</value>
+  </data>
+  <data name="StatusWorkspaceCreated" xml:space="preserve">
+    <value>工作空间 '{0}' 创建成功</value>
+  </data>
+  <data name="StatusWorkspaceCreateFailed" xml:space="preserve">
+    <value>创建工作空间失败: {0}</value>
+  </data>
+  <data name="StatusNoWorkspaceSelected" xml:space="preserve">
+    <value>未选择工作空间</value>
+  </data>
+  <data name="StatusDeletingWorkspace" xml:space="preserve">
+    <value>正在删除工作空间 '{0}'...</value>
+  </data>
+  <data name="StatusWorkspaceDeleted" xml:space="preserve">
+    <value>工作空间 '{0}' 删除成功</value>
+  </data>
+  <data name="StatusWorkspaceDeleteFailed" xml:space="preserve">
+    <value>删除工作空间失败: {0}</value>
+  </data>
+  <data name="StatusWorkspacesLoadFailed" xml:space="preserve">
+    <value>加载工作空间失败: {0}</value>
+  </data>
+  <data name="StatusLoadingDataStores" xml:space="preserve">
+    <value>正在加载数据存储...</value>
+  </data>
+  <data name="StatusDataStoresLoaded" xml:space="preserve">
+    <value>已加载工作空间 '{1}' 的 {0} 个数据存储</value>
+  </data>
+  <data name="StatusNoDataStoreSelected" xml:space="preserve">
+    <value>未选择数据存储</value>
+  </data>
+  <data name="StatusDeletingDataStore" xml:space="preserve">
+    <value>正在删除数据存储 '{0}'...</value>
+  </data>
+  <data name="StatusDataStoreDeleted" xml:space="preserve">
+    <value>数据存储 '{0}' 删除成功</value>
+  </data>
+  <data name="StatusDataStoreDeleteFailed" xml:space="preserve">
+    <value>删除数据存储失败: {0}</value>
+  </data>
+  <data name="StatusDataStoreNameRequired" xml:space="preserve">
+    <value>数据存储名称不能为空</value>
+  </data>
+  <data name="StatusPleaseSelectWorkspace" xml:space="preserve">
+    <value>请先选择工作空间</value>
+  </data>
+  <data name="StatusCreatingDataStore" xml:space="preserve">
+    <value>正在创建数据存储 '{0}'...</value>
+  </data>
+  <data name="StatusDataStoreCreated" xml:space="preserve">
+    <value>数据存储创建成功</value>
+  </data>
+  <data name="StatusDataStoreCreateFailed" xml:space="preserve">
+    <value>创建数据存储失败: {0}</value>
+  </data>
+  <data name="StatusDataStoresLoadFailed" xml:space="preserve">
+    <value>加载数据存储失败: {0}</value>
+  </data>
+  <data name="StatusLoadingLayers" xml:space="preserve">
+    <value>正在加载图层...</value>
+  </data>
+  <data name="StatusLayersLoaded" xml:space="preserve">
+    <value>已加载 {0} 个图层</value>
+  </data>
+  <data name="StatusNoLayerSelected" xml:space="preserve">
+    <value>未选择图层</value>
+  </data>
+  <data name="StatusDeletingLayer" xml:space="preserve">
+    <value>正在删除图层 '{0}'...</value>
+  </data>
+  <data name="StatusLayerDeleted" xml:space="preserve">
+    <value>图层 '{0}' 删除成功</value>
+  </data>
+  <data name="StatusLayerDeleteFailed" xml:space="preserve">
+    <value>删除图层失败: {0}</value>
+  </data>
+  <data name="StatusLayerNameRequired" xml:space="preserve">
+    <value>图层名称不能为空</value>
+  </data>
+  <data name="StatusPleaseSelectDataStore" xml:space="preserve">
+    <value>请选择数据存储</value>
+  </data>
+  <data name="StatusPleaseSelectSpecificWorkspace" xml:space="preserve">
+    <value>请先选择特定工作空间</value>
+  </data>
+  <data name="StatusPublishingLayer" xml:space="preserve">
+    <value>正在发布图层 '{0}'...</value>
+  </data>
+  <data name="StatusLayerPublished" xml:space="preserve">
+    <value>图层发布成功</value>
+  </data>
+  <data name="StatusLayerPublishFailed" xml:space="preserve">
+    <value>发布图层失败: {0}</value>
+  </data>
+  <data name="StatusLayersLoadFailed" xml:space="preserve">
+    <value>加载图层失败: {0}</value>
+  </data>
+  <data name="StatusLoadingLayerGroups" xml:space="preserve">
+    <value>正在加载图层组...</value>
+  </data>
+  <data name="StatusLayerGroupsLoaded" xml:space="preserve">
+    <value>已加载 {0} 个图层组</value>
+  </data>
+  <data name="StatusLayerGroupNameRequired" xml:space="preserve">
+    <value>图层组名称不能为空</value>
+  </data>
+  <data name="StatusCreatingLayerGroup" xml:space="preserve">
+    <value>正在创建图层组 '{0}'...</value>
+  </data>
+  <data name="StatusLayerGroupCreated" xml:space="preserve">
+    <value>图层组 '{0}' 创建成功</value>
+  </data>
+  <data name="StatusLayerGroupCreateFailed" xml:space="preserve">
+    <value>创建图层组失败: {0}</value>
+  </data>
+  <data name="StatusNoLayerGroupSelected" xml:space="preserve">
+    <value>未选择图层组</value>
+  </data>
+  <data name="StatusDeletingLayerGroup" xml:space="preserve">
+    <value>正在删除图层组 '{0}'...</value>
+  </data>
+  <data name="StatusLayerGroupDeleted" xml:space="preserve">
+    <value>图层组 '{0}' 删除成功</value>
+  </data>
+  <data name="StatusLayerGroupDeleteFailed" xml:space="preserve">
+    <value>删除图层组失败: {0}</value>
+  </data>
+  <data name="StatusLayerGroupsLoadFailed" xml:space="preserve">
+    <value>加载图层组失败: {0}</value>
+  </data>
+  <data name="StatusLoadingSystemInfo" xml:space="preserve">
+    <value>正在加载系统信息...</value>
+  </data>
+  <data name="StatusSystemInfoLoaded" xml:space="preserve">
+    <value>系统信息加载成功</value>
+  </data>
+  <data name="StatusSystemInfoLoadFailed" xml:space="preserve">
+    <value>加载系统信息失败: {0}</value>
+  </data>
+  <data name="StatusLoadingWmsSettings" xml:space="preserve">
+    <value>正在加载 WMS 设置...</value>
+  </data>
+  <data name="StatusWmsSettingsLoaded" xml:space="preserve">
+    <value>WMS 设置已加载</value>
+  </data>
+  <data name="StatusWmsSettingsLoadFailed" xml:space="preserve">
+    <value>加载 WMS 设置失败: {0}</value>
+  </data>
+  <data name="StatusSavingWmsSettings" xml:space="preserve">
+    <value>正在保存 WMS 设置...</value>
+  </data>
+  <data name="StatusWmsSettingsSaved" xml:space="preserve">
+    <value>WMS 设置保存成功</value>
+  </data>
+  <data name="StatusWmsSettingsSaveFailed" xml:space="preserve">
+    <value>保存 WMS 设置失败: {0}</value>
+  </data>
+  <data name="StatusLoadingWfsSettings" xml:space="preserve">
+    <value>正在加载 WFS 设置...</value>
+  </data>
+  <data name="StatusWfsSettingsLoaded" xml:space="preserve">
+    <value>WFS 设置已加载</value>
+  </data>
+  <data name="StatusWfsSettingsLoadFailed" xml:space="preserve">
+    <value>加载 WFS 设置失败: {0}</value>
+  </data>
+  <data name="StatusSavingWfsSettings" xml:space="preserve">
+    <value>正在保存 WFS 设置...</value>
+  </data>
+  <data name="StatusWfsSettingsSaved" xml:space="preserve">
+    <value>WFS 设置保存成功</value>
+  </data>
+  <data name="StatusWfsSettingsSaveFailed" xml:space="preserve">
+    <value>保存 WFS 设置失败: {0}</value>
+  </data>
+  <data name="StatusLoadingWcsSettings" xml:space="preserve">
+    <value>正在加载 WCS 设置...</value>
+  </data>
+  <data name="StatusWcsSettingsLoaded" xml:space="preserve">
+    <value>WCS 设置已加载</value>
+  </data>
+  <data name="StatusWcsSettingsLoadFailed" xml:space="preserve">
+    <value>加载 WCS 设置失败: {0}</value>
+  </data>
+  <data name="StatusSavingWcsSettings" xml:space="preserve">
+    <value>正在保存 WCS 设置...</value>
+  </data>
+  <data name="StatusWcsSettingsSaved" xml:space="preserve">
+    <value>WCS 设置保存成功</value>
+  </data>
+  <data name="StatusWcsSettingsSaveFailed" xml:space="preserve">
+    <value>保存 WCS 设置失败: {0}</value>
+  </data>
+  <data name="StatusLoadingGlobalSettings" xml:space="preserve">
+    <value>正在加载全局设置...</value>
+  </data>
+  <data name="StatusGlobalSettingsLoaded" xml:space="preserve">
+    <value>全局设置已加载</value>
+  </data>
+  <data name="StatusGlobalSettingsLoadFailed" xml:space="preserve">
+    <value>加载设置失败: {0}</value>
+  </data>
+  <data name="StatusSavingGlobalSettings" xml:space="preserve">
+    <value>正在保存全局设置...</value>
+  </data>
+  <data name="StatusGlobalSettingsSaved" xml:space="preserve">
+    <value>全局设置保存成功</value>
+  </data>
+  <data name="StatusGlobalSettingsSaveFailed" xml:space="preserve">
+    <value>保存设置失败: {0}</value>
+  </data>
+  <data name="StatusLoadingLoggingSettings" xml:space="preserve">
+    <value>正在加载日志设置...</value>
+  </data>
+  <data name="StatusLoggingSettingsLoaded" xml:space="preserve">
+    <value>日志设置已加载</value>
+  </data>
+  <data name="StatusLoggingSettingsLoadFailed" xml:space="preserve">
+    <value>加载日志设置失败: {0}</value>
+  </data>
+  <data name="StatusSavingLoggingSettings" xml:space="preserve">
+    <value>正在保存日志设置...</value>
+  </data>
+  <data name="StatusLoggingSettingsSaved" xml:space="preserve">
+    <value>日志设置保存成功</value>
+  </data>
+  <data name="StatusLoggingSettingsSaveFailed" xml:space="preserve">
+    <value>保存日志设置失败: {0}</value>
+  </data>
+  <data name="StatusLoadingLogFile" xml:space="preserve">
+    <value>正在加载日志文件...</value>
+  </data>
+  <data name="StatusLogFileLoaded" xml:space="preserve">
+    <value>日志已加载：尾部 {0} 行</value>
+  </data>
+  <data name="StatusLogFileLoadFailed" xml:space="preserve">
+    <value>加载日志文件失败: {0}</value>
+  </data>
+  <data name="StatusLogFileUnresolvable" xml:space="preserve">
+    <value>日志位置 '{0}' 不在数据目录内（无法通过 REST 读取）</value>
+  </data>
+  <data name="StatusLoadingCachingDefaults" xml:space="preserve">
+    <value>正在加载缓存默认值...</value>
+  </data>
+  <data name="StatusCachingDefaultsLoaded" xml:space="preserve">
+    <value>缓存默认值已加载（各图层设置可在图层管理中配置）</value>
+  </data>
+  <data name="StatusCachingDefaultsLoadFailed" xml:space="preserve">
+    <value>加载缓存默认值失败: {0}</value>
+  </data>
+  <data name="StatusSavingCachingDefaults" xml:space="preserve">
+    <value>正在保存缓存默认值...</value>
+  </data>
+  <data name="StatusCachingDefaultsSaved" xml:space="preserve">
+    <value>缓存默认值保存成功</value>
+  </data>
+  <data name="StatusCachingDefaultsSaveFailed" xml:space="preserve">
+    <value>保存缓存默认值失败: {0}</value>
+  </data>
+  <data name="StatusLoadingDiskQuota" xml:space="preserve">
+    <value>正在加载磁盘配额设置...</value>
+  </data>
+  <data name="StatusDiskQuotaLoaded" xml:space="preserve">
+    <value>磁盘配额设置已加载</value>
+  </data>
+  <data name="StatusDiskQuotaLoadFailed" xml:space="preserve">
+    <value>加载磁盘配额设置失败: {0}</value>
+  </data>
+  <data name="StatusSavingDiskQuota" xml:space="preserve">
+    <value>正在保存磁盘配额设置...</value>
+  </data>
+  <data name="StatusDiskQuotaSaved" xml:space="preserve">
+    <value>磁盘配额设置保存成功</value>
+  </data>
+  <data name="StatusDiskQuotaSaveFailed" xml:space="preserve">
+    <value>保存磁盘配额设置失败: {0}</value>
+  </data>
+  <data name="StatusLoadingGridsets" xml:space="preserve">
+    <value>正在加载格网集...</value>
+  </data>
+  <data name="StatusGridsetsLoaded" xml:space="preserve">
+    <value>已加载 {0} 个格网集</value>
+  </data>
+  <data name="StatusGridsetsLoadFailed" xml:space="preserve">
+    <value>加载格网集失败: {0}</value>
+  </data>
+  <data name="StatusNoGridsetSelected" xml:space="preserve">
+    <value>未选择格网集</value>
+  </data>
+  <data name="StatusDeletingGridset" xml:space="preserve">
+    <value>正在删除格网集 '{0}'...</value>
+  </data>
+  <data name="StatusGridsetDeleted" xml:space="preserve">
+    <value>格网集 '{0}' 已删除</value>
+  </data>
+  <data name="StatusGridsetDeleteFailed" xml:space="preserve">
+    <value>删除格网集失败: {0}</value>
+  </data>
+  <data name="StatusLoadingSecuritySettings" xml:space="preserve">
+    <value>正在加载安全设置...</value>
+  </data>
+  <data name="StatusSecuritySettingsLoaded" xml:space="preserve">
+    <value>安全设置已加载</value>
+  </data>
+  <data name="StatusSecuritySettingsLoadFailed" xml:space="preserve">
+    <value>加载安全设置失败: {0}</value>
+  </data>
+  <data name="StatusLoadingStyles" xml:space="preserve">
+    <value>正在加载样式...</value>
+  </data>
+  <data name="StatusStylesLoaded" xml:space="preserve">
+    <value>已加载 {0} 个样式</value>
+  </data>
+  <data name="StatusStylesLoadFailed" xml:space="preserve">
+    <value>加载样式失败: {0}</value>
+  </data>
+  <data name="StatusNoStyleSelected" xml:space="preserve">
+    <value>未选择样式</value>
+  </data>
+  <data name="StatusLoadingStyleContent" xml:space="preserve">
+    <value>正在加载样式内容...</value>
+  </data>
+  <data name="StatusStyleContentLoaded" xml:space="preserve">
+    <value>样式内容已加载</value>
+  </data>
+  <data name="StatusStyleContentLoadFailed" xml:space="preserve">
+    <value>加载样式内容失败: {0}</value>
+  </data>
+  <data name="StatusUploadingStyle" xml:space="preserve">
+    <value>正在上传样式...</value>
+  </data>
+  <data name="StatusStyleUploaded" xml:space="preserve">
+    <value>样式上传成功</value>
+  </data>
+  <data name="StatusStyleUploadFailed" xml:space="preserve">
+    <value>上传样式失败: {0}</value>
+  </data>
+  <data name="StatusDeletingStyle" xml:space="preserve">
+    <value>正在删除样式...</value>
+  </data>
+  <data name="StatusStyleDeleted" xml:space="preserve">
+    <value>样式删除成功</value>
+  </data>
+  <data name="StatusStyleDeleteFailed" xml:space="preserve">
+    <value>删除样式失败: {0}</value>
+  </data>
+  <data name="StatusPreviewReady" xml:space="preserve">
+    <value>图层 {0} 预览已就绪</value>
+  </data>
+  <data name="StatusPreviewFailed" xml:space="preserve">
+    <value>图层预览失败: {0}</value>
+  </data>
+  <data name="StatusResourcesLoadFailed" xml:space="preserve">
+    <value>加载资源失败: {0}</value>
+  </data>
+  <data name="StatusUsersLoadFailed" xml:space="preserve">
+    <value>加载用户失败: {0}</value>
+  </data>
+  <data name="StatusGroupsLoadFailed" xml:space="preserve">
+    <value>加载组失败: {0}</value>
+  </data>
+  <data name="StatusRolesLoadFailed" xml:space="preserve">
+    <value>加载角色失败: {0}</value>
+  </data>
+  <data name="StatusLoadingAll" xml:space="preserve">
+    <value>正在加载用户、组和角色...</value>
+  </data>
+  <data name="StatusUsernamePasswordRequired" xml:space="preserve">
+    <value>用户名和密码不能为空</value>
+  </data>
+  <data name="StatusCreatingUser" xml:space="preserve">
+    <value>正在创建用户 '{0}'...</value>
+  </data>
+  <data name="StatusUserCreated" xml:space="preserve">
+    <value>用户 '{0}' 创建成功</value>
+  </data>
+  <data name="StatusUserCreateFailed" xml:space="preserve">
+    <value>创建用户失败: {0}</value>
+  </data>
+  <data name="StatusNoUserSelected" xml:space="preserve">
+    <value>未选择用户</value>
+  </data>
+  <data name="StatusDeletingUser" xml:space="preserve">
+    <value>正在删除用户 '{0}'...</value>
+  </data>
+  <data name="StatusUserDeleted" xml:space="preserve">
+    <value>用户 '{0}' 删除成功</value>
+  </data>
+  <data name="StatusUserDeleteFailed" xml:space="preserve">
+    <value>删除用户失败: {0}</value>
+  </data>
+  <data name="StatusUpdatingUser" xml:space="preserve">
+    <value>正在更新用户 '{0}'...</value>
+  </data>
+  <data name="StatusUserUpdated" xml:space="preserve">
+    <value>用户 '{0}' 更新成功</value>
+  </data>
+  <data name="StatusUserUpdateFailed" xml:space="preserve">
+    <value>更新用户失败: {0}</value>
+  </data>
+  <data name="StatusGroupNameRequired" xml:space="preserve">
+    <value>组名称不能为空</value>
+  </data>
+  <data name="StatusCreatingGroup" xml:space="preserve">
+    <value>正在创建组 '{0}'...</value>
+  </data>
+  <data name="StatusGroupCreated" xml:space="preserve">
+    <value>组 '{0}' 创建成功</value>
+  </data>
+  <data name="StatusGroupCreateFailed" xml:space="preserve">
+    <value>创建组失败: {0}</value>
+  </data>
+  <data name="StatusNoGroupSelected" xml:space="preserve">
+    <value>未选择组</value>
+  </data>
+  <data name="StatusDeletingGroup" xml:space="preserve">
+    <value>正在删除组 '{0}'...</value>
+  </data>
+  <data name="StatusGroupDeleted" xml:space="preserve">
+    <value>组 '{0}' 删除成功</value>
+  </data>
+  <data name="StatusGroupDeleteFailed" xml:space="preserve">
+    <value>删除组失败: {0}</value>
+  </data>
+  <data name="StatusConnectVerifyFailed" xml:space="preserve">
+    <value>连接验证失败: {0}</value>
+  </data>
+  <data name="StatusGwcNotConfigurable" xml:space="preserve">
+    <value>GWC 默认设置在 GeoServer 3.0.1 无 REST 端点，暂不可配置。</value>
+  </data>
+  <data name="DataStoreDirectoryLabel" xml:space="preserve">
+    <value>数据目录:</value>
+  </data>
+  <data name="DataStoreDirectoryHint" xml:space="preserve">
+    <value>数据目录（相对 data_dir，可选；留空=与存储同名）</value>
+  </data>
+  <data name="StatusAclRulesLoaded" xml:space="preserve">
+    <value>已加载 {0} 条 ACL 规则</value>
+  </data>
+  <data name="StatusNoAclRules" xml:space="preserve">
+    <value>未找到 ACL 规则</value>
+  </data>
+  <data name="StatusStyleNameRequired" xml:space="preserve">
+    <value>样式名称不能为空</value>
+  </data>
+  <data name="StatusSldContentRequired" xml:space="preserve">
+    <value>SLD 内容不能为空</value>
+  </data>
+  <data name="StatusLoadingStyleNamed" xml:space="preserve">
+    <value>正在加载样式 '{0}'...</value>
+  </data>
+  <data name="StatusLoadedSldFor" xml:space="preserve">
+    <value>已加载样式 '{0}' 的 SLD</value>
+  </data>
+  <data name="StatusStyleLoadFailed" xml:space="preserve">
+    <value>加载样式失败: {0}</value>
+  </data>
+  <data name="StatusUploadingStyleNamed" xml:space="preserve">
+    <value>正在上传样式 '{0}'...</value>
+  </data>
+  <data name="StatusStyleUpdated" xml:space="preserve">
+    <value>样式 '{0}' 更新成功</value>
+  </data>
+  <data name="StatusStyleCreated" xml:space="preserve">
+    <value>样式 '{0}' 创建成功</value>
+  </data>
+  <data name="StatusDeletingStyleNamed" xml:space="preserve">
+    <value>正在删除样式 '{0}'...</value>
+  </data>
+  <data name="StatusStyleDeletedNamed" xml:space="preserve">
+    <value>样式 '{0}' 删除成功</value>
+  </data>
+  <data name="StatusSampleSldCreated" xml:space="preserve">
+    <value>示例 SLD 已创建</value>
+  </data>
+  <data name="StatusMapPreviewReady" xml:space="preserve">
+    <value>地图预览就绪，可使用 WMS 图层集成。</value>
+  </data>
+  <data name="StatusMapInitialized" xml:space="preserve">
+    <value>地图已初始化。使用 LoadWmsLayerAsync 添加图层。</value>
+  </data>
+  <data name="StatusPreparingLayer" xml:space="preserve">
+    <value>正在准备图层 {0}...</value>
+  </data>
+  <data name="StatusWmsUrlGenerated" xml:space="preserve">
+    <value>已生成 {0} 的 WMS URL。点击“查看 WMS URL”可预览地址。</value>
+  </data>
+  <data name="StatusPreviewGenerateFailed" xml:space="preserve">
+    <value>生成预览失败: {0}</value>
+  </data>
+  <data name="StatusPreviewCleared" xml:space="preserve">
+    <value>预览已清除</value>
+  </data>
+  <data name="StatusMapReadyForPreview" xml:space="preserve">
+    <value>地图已就绪，可进行 WMS 图层预览</value>
+  </data>
+  <data name="WizardTitle" xml:space="preserve">
+    <value>数据导入向导</value>
+  </data>
+  <data name="WizardStepIndicator" xml:space="preserve">
+    <value>第 {0} / 3 步</value>
+  </data>
+  <data name="WizardStep1Title" xml:space="preserve">
+    <value>第 1 步：选择数据源</value>
+  </data>
+  <data name="WizardStep2Title" xml:space="preserve">
+    <value>第 2 步：目标与参数</value>
+  </data>
+  <data name="WizardStep3Title" xml:space="preserve">
+    <value>第 3 步：发布</value>
+  </data>
+  <data name="WizardSourceKindLabel" xml:space="preserve">
+    <value>数据源类型</value>
+  </data>
+  <data name="WizardKindShapefile" xml:space="preserve">
+    <value>Shapefile 目录</value>
+  </data>
+  <data name="WizardKindGeoTiff" xml:space="preserve">
+    <value>GeoTIFF 文件</value>
+  </data>
+  <data name="WizardKindPostgis" xml:space="preserve">
+    <value>PostGIS 表</value>
+  </data>
+  <data name="WizardFileRefLabel" xml:space="preserve">
+    <value>服务器侧文件引用</value>
+  </data>
+  <data name="WizardFileRefWatermark" xml:space="preserve">
+    <value>file:相对 GeoServer data_dir 的路径</value>
+  </data>
+  <data name="WizardNativeNameLabel" xml:space="preserve">
+    <value>原始名称（文件基名 / 表名）</value>
+  </data>
+  <data name="WizardPgHostLabel" xml:space="preserve">
+    <value>主机</value>
+  </data>
+  <data name="WizardPgPortLabel" xml:space="preserve">
+    <value>端口</value>
+  </data>
+  <data name="WizardPgDatabaseLabel" xml:space="preserve">
+    <value>数据库</value>
+  </data>
+  <data name="WizardPgUserLabel" xml:space="preserve">
+    <value>用户</value>
+  </data>
+  <data name="WizardPgPasswordLabel" xml:space="preserve">
+    <value>密码</value>
+  </data>
+  <data name="WizardProbeButton" xml:space="preserve">
+    <value>测试连接</value>
+  </data>
+  <data name="WizardWorkspaceLabel" xml:space="preserve">
+    <value>工作空间</value>
+  </data>
+  <data name="WizardRefreshButton" xml:space="preserve">
+    <value>刷新</value>
+  </data>
+  <data name="WizardPublishNameLabel" xml:space="preserve">
+    <value>发布名</value>
+  </data>
+  <data name="WizardStoreNameLabel" xml:space="preserve">
+    <value>存储名</value>
+  </data>
+  <data name="WizardSrsLabel" xml:space="preserve">
+    <value>坐标参考系（可选）</value>
+  </data>
+  <data name="WizardLocalPreviewLabel" xml:space="preserve">
+    <value>本地预检路径（可选）</value>
+  </data>
+  <data name="WizardInspectButton" xml:space="preserve">
+    <value>解析</value>
+  </data>
+  <data name="WizardBackButton" xml:space="preserve">
+    <value>上一步</value>
+  </data>
+  <data name="WizardNextButton" xml:space="preserve">
+    <value>下一步</value>
+  </data>
+  <data name="WizardPublishButton" xml:space="preserve">
+    <value>发布</value>
+  </data>
+  <data name="WizardRestartButton" xml:space="preserve">
+    <value>重新开始</value>
+  </data>
+  <data name="WizardResultLabel" xml:space="preserve">
+    <value>结果</value>
+  </data>
+  <data name="WizardStatusNeedFileRef" xml:space="preserve">
+    <value>请先填写 file: 引用</value>
+  </data>
+  <data name="WizardStatusNeedNativeName" xml:space="preserve">
+    <value>请填写原始名称</value>
+  </data>
+  <data name="WizardStatusNeedPgParams" xml:space="preserve">
+    <value>请填写主机、数据库与用户</value>
+  </data>
+  <data name="WizardStatusNeedWorkspace" xml:space="preserve">
+    <value>请选择工作空间</value>
+  </data>
+  <data name="WizardStatusNeedPublishName" xml:space="preserve">
+    <value>请填写发布名</value>
+  </data>
+  <data name="WizardStatusNeedLocalPath" xml:space="preserve">
+    <value>请填写本地路径</value>
+  </data>
+  <data name="WizardPreviewNotFound" xml:space="preserve">
+    <value>路径不存在</value>
+  </data>
+  <data name="WizardPreviewUnknown" xml:space="preserve">
+    <value>无法识别的文件类型</value>
+  </data>
+  <data name="WizardPreviewShapefile" xml:space="preserve">
+    <value>Shapefile：{0} 条记录、{1} 个字段、几何类型 {2}</value>
+  </data>
+  <data name="WizardPreviewGeoTiff" xml:space="preserve">
+    <value>GeoTIFF：{0} x {1}，CRS {2}</value>
+  </data>
+  <data name="WizardPreviewDirEntry" xml:space="preserve">
+    <value>{0}（{1}，{2} B）</value>
+  </data>
+  <data name="WizardPublishSuccess" xml:space="preserve">
+    <value>发布成功：{0}</value>
+  </data>
+  <data name="WizardPublishFailed" xml:space="preserve">
+    <value>发布失败：{0}</value>
+  </data>
+  <data name="WizardProbeOk" xml:space="preserve">
+    <value>连接成功</value>
+  </data>
+  <data name="WizardProbeFailed" xml:space="preserve">
+    <value>连接失败：{0}</value>
+  </data>
+  <data name="NavSldEditor" xml:space="preserve">
+    <value>SLD 编辑器</value>
+  </data>
+  <data name="SldEditorTitle" xml:space="preserve">
+    <value>SLD 样式编辑器</value>
+  </data>
+  <data name="SldEditorSubtitle" xml:space="preserve">
+    <value>结构化与源码双模式编辑，应用前校验，WMS 预览</value>
+  </data>
+  <data name="SldEditorStyleSelectLabel" xml:space="preserve">
+    <value>选择要加载的样式</value>
+  </data>
+  <data name="SldEditorLoadButton" xml:space="preserve">
+    <value>加载</value>
+  </data>
+  <data name="SldEditorNewButton" xml:space="preserve">
+    <value>新建样式</value>
+  </data>
+  <data name="SldEditorNameLabel" xml:space="preserve">
+    <value>样式名：</value>
+  </data>
+  <data name="SldEditorSaveButton" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="SldEditorValidateButton" xml:space="preserve">
+    <value>校验</value>
+  </data>
+  <data name="SldEditorModeLabel" xml:space="preserve">
+    <value>模式：</value>
+  </data>
+  <data name="SldEditorSwitchToSource" xml:space="preserve">
+    <value>切换到源码</value>
+  </data>
+  <data name="SldEditorSwitchToStructured" xml:space="preserve">
+    <value>切换到结构化</value>
+  </data>
+  <data name="SldEditorRulesLabel" xml:space="preserve">
+    <value>规则列表</value>
+  </data>
+  <data name="SldEditorAddRuleButton" xml:space="preserve">
+    <value>添加规则</value>
+  </data>
+  <data name="SldEditorRemoveRuleButton" xml:space="preserve">
+    <value>删除规则</value>
+  </data>
+  <data name="SldEditorRuleNameLabel" xml:space="preserve">
+    <value>规则名（可选）</value>
+  </data>
+  <data name="SldEditorSymbolizerKindLabel" xml:space="preserve">
+    <value>符号化器</value>
+  </data>
+  <data name="SldEditorWellKnownNameLabel" xml:space="preserve">
+    <value>点形状（仅点）</value>
+  </data>
+  <data name="SldEditorSizeLabel" xml:space="preserve">
+    <value>尺寸（仅点）</value>
+  </data>
+  <data name="SldEditorFillColorLabel" xml:space="preserve">
+    <value>填充颜色</value>
+  </data>
+  <data name="SldEditorFillOpacityLabel" xml:space="preserve">
+    <value>填充不透明度（0-1）</value>
+  </data>
+  <data name="SldEditorStrokeColorLabel" xml:space="preserve">
+    <value>描边颜色</value>
+  </data>
+  <data name="SldEditorStrokeWidthLabel" xml:space="preserve">
+    <value>描边宽度</value>
+  </data>
+  <data name="SldEditorFilterLabel" xml:space="preserve">
+    <value>过滤条件（可选）</value>
+  </data>
+  <data name="SldEditorFilterPropertyLabel" xml:space="preserve">
+    <value>属性</value>
+  </data>
+  <data name="SldEditorFilterOperatorLabel" xml:space="preserve">
+    <value>操作符</value>
+  </data>
+  <data name="SldEditorFilterValueLabel" xml:space="preserve">
+    <value>值</value>
+  </data>
+  <data name="SldEditorSourceLabel" xml:space="preserve">
+    <value>SLD 源码（XML）</value>
+  </data>
+  <data name="SldEditorPreviewSectionLabel" xml:space="preserve">
+    <value>预览</value>
+  </data>
+  <data name="SldEditorPreviewLayerLabel" xml:space="preserve">
+    <value>预览图层</value>
+  </data>
+  <data name="SldEditorPreviewButton" xml:space="preserve">
+    <value>生成预览地址</value>
+  </data>
+  <data name="SldEditorReady" xml:space="preserve">
+    <value>就绪。请加载现有样式或新建。</value>
+  </data>
+  <data name="SldEditorStatusStylesLoaded" xml:space="preserve">
+    <value>已加载 {0} 个样式</value>
+  </data>
+  <data name="SldEditorStatusSelectStyle" xml:space="preserve">
+    <value>请先选择要加载的样式</value>
+  </data>
+  <data name="SldEditorStatusStyleLoaded" xml:space="preserve">
+    <value>已加载样式 "{0}"</value>
+  </data>
+  <data name="SldEditorStatusStyleLoadedWarn" xml:space="preserve">
+    <value>已加载样式 "{0}"，警告：{1}</value>
+  </data>
+  <data name="SldEditorStatusParseFailed" xml:space="preserve">
+    <value>解析失败：{0}</value>
+  </data>
+  <data name="SldEditorStatusNewReady" xml:space="preserve">
+    <value>新建样式：请填写名称并编辑规则</value>
+  </data>
+  <data name="SldEditorStatusRuleAdded" xml:space="preserve">
+    <value>已添加规则</value>
+  </data>
+  <data name="SldEditorStatusRuleRemoved" xml:space="preserve">
+    <value>已删除规则</value>
+  </data>
+  <data name="SldEditorStatusNoRuleSelected" xml:space="preserve">
+    <value>请先选择规则</value>
+  </data>
+  <data name="SldEditorStatusNeedName" xml:space="preserve">
+    <value>请先填写样式名</value>
+  </data>
+  <data name="SldEditorStatusSwitchedToSource" xml:space="preserve">
+    <value>已切换到源码模式（XML 由规则重新生成）</value>
+  </data>
+  <data name="SldEditorStatusSwitchedToStructured" xml:space="preserve">
+    <value>已切换到结构化模式</value>
+  </data>
+  <data name="SldEditorStatusSwitchedWarn" xml:space="preserve">
+    <value>已切换到结构化模式，警告：{0}</value>
+  </data>
+  <data name="SldEditorStatusSwitchFailed" xml:space="preserve">
+    <value>无法切换到源码：{0}</value>
+  </data>
+  <data name="SldEditorStatusValid" xml:space="preserve">
+    <value>校验通过</value>
+  </data>
+  <data name="SldEditorStatusInvalid" xml:space="preserve">
+    <value>校验未通过：{0}</value>
+  </data>
+  <data name="SldEditorStatusSaved" xml:space="preserve">
+    <value>样式 "{0}" 已保存</value>
+  </data>
+  <data name="SldEditorStatusSaveFailed" xml:space="preserve">
+    <value>保存失败：{0}</value>
+  </data>
+  <data name="SldEditorStatusLoadFailed" xml:space="preserve">
+    <value>加载失败：{0}</value>
+  </data>
+  <data name="SldEditorStatusNeedSaveForPreview" xml:space="preserve">
+    <value>请先保存样式再预览</value>
+  </data>
+  <data name="SldEditorStatusNeedLayer" xml:space="preserve">
+    <value>请先选择预览图层</value>
+  </data>
+  <data name="SldEditorStatusPreviewReady" xml:space="preserve">
+    <value>已生成 {0} 的预览地址</value>
+  </data>
+  <data name="NavStyleLibrary" xml:space="preserve">
+    <value>样式库</value>
+  </data>
+  <data name="StyleLibTitle" xml:space="preserve">
+    <value>样式库</value>
+  </data>
+  <data name="StyleLibSubtitle" xml:space="preserve">
+    <value>全部图层的默认样式绑定总览；未引用样式可清理</value>
+  </data>
+  <data name="StyleLibRefreshButton" xml:space="preserve">
+    <value>刷新</value>
+  </data>
+  <data name="StyleLibUnusedOnly" xml:space="preserve">
+    <value>仅显示未引用</value>
+  </data>
+  <data name="StyleLibDeleteButton" xml:space="preserve">
+    <value>删除选中</value>
+  </data>
+  <data name="StyleLibColumnStyle" xml:space="preserve">
+    <value>样式</value>
+  </data>
+  <data name="StyleLibColumnLayers" xml:space="preserve">
+    <value>引用图层</value>
+  </data>
+  <data name="StyleLibUnused" xml:space="preserve">
+    <value>未引用</value>
+  </data>
+  <data name="StyleLibReady" xml:space="preserve">
+    <value>就绪</value>
+  </data>
+  <data name="StyleLibStatusLoaded" xml:space="preserve">
+    <value>已加载 {0} 个样式（{1} 个未引用）</value>
+  </data>
+  <data name="StyleLibStatusLoadFailed" xml:space="preserve">
+    <value>加载失败：{0}</value>
+  </data>
+  <data name="StyleLibStatusSelectFirst" xml:space="preserve">
+    <value>请先选择样式</value>
+  </data>
+  <data name="StyleLibStatusDeleteInUse" xml:space="preserve">
+    <value>无法删除：样式仍被图层引用</value>
+  </data>
+  <data name="StyleLibStatusDeleted" xml:space="preserve">
+    <value>已删除样式 "{0}"</value>
+  </data>
+  <data name="StyleLibStatusDeleteFailed" xml:space="preserve">
+    <value>删除失败：{0}</value>
+  </data>
+  <data name="NavTools" xml:space="preserve">
+    <value>工具</value>
+  </data>
+  <data name="NavBatch" xml:space="preserve">
+    <value>批量操作</value>
+  </data>
+  <data name="BatchSubtitle" xml:space="preserve">
+    <value>多选图层/样式/存储/工作空间；批量改默认样式、启停存储、级联删除</value>
+  </data>
+  <data name="BatchScopeLabel" xml:space="preserve">
+    <value>资源类型</value>
+  </data>
+  <data name="BatchWorkspaceLabel" xml:space="preserve">
+    <value>工作空间</value>
+  </data>
+  <data name="BatchRefresh" xml:space="preserve">
+    <value>重新加载</value>
+  </data>
+  <data name="BatchToggleAll" xml:space="preserve">
+    <value>全选/全不选</value>
+  </data>
+  <data name="BatchCascade" xml:space="preserve">
+    <value>级联（recurse/purge）</value>
+  </data>
+  <data name="BatchNewStyle" xml:space="preserve">
+    <value>新默认样式</value>
+  </data>
+  <data name="BatchApplyStyle" xml:space="preserve">
+    <value>批量改默认样式</value>
+  </data>
+  <data name="BatchEnable" xml:space="preserve">
+    <value>批量启用</value>
+  </data>
+  <data name="BatchDisable" xml:space="preserve">
+    <value>批量禁用</value>
+  </data>
+  <data name="BatchDelete" xml:space="preserve">
+    <value>删除选中</value>
+  </data>
+  <data name="BatchColumnName" xml:space="preserve">
+    <value>名称</value>
+  </data>
+  <data name="BatchColumnStyle" xml:space="preserve">
+    <value>默认样式</value>
+  </data>
+  <data name="BatchColumnType" xml:space="preserve">
+    <value>类型</value>
+  </data>
+  <data name="BatchStatusNeedLayers" xml:space="preserve">
+    <value>请先勾选图层（类型=图层）</value>
+  </data>
+  <data name="BatchStatusNeedStyle" xml:space="preserve">
+    <value>请选择新默认样式</value>
+  </data>
+  <data name="BatchStatusNeedStores" xml:space="preserve">
+    <value>请先勾选存储（类型=存储）。GeoServer 3.0.1 图层无启停 REST 通道，存储级启停即为可用的批量开关</value>
+  </data>
+  <data name="BatchStatusNeedSelection" xml:space="preserve">
+    <value>请先勾选条目</value>
+  </data>
+  <data name="BatchStatusDeleteUnsupported" xml:space="preserve">
+    <value>该类型不支持批量删除</value>
+  </data>
+  <data name="BatchReady" xml:space="preserve">
+    <value>就绪</value>
+  </data>
+  <data name="BatchStatusLoaded" xml:space="preserve">
+    <value>已加载 {0} 条（选中 {1}）</value>
+  </data>
+  <data name="BatchStatusAllOk" xml:space="preserve">
+    <value>{0} 项全部成功</value>
+  </data>
+  <data name="BatchStatusPartial" xml:space="preserve">
+    <value>成功 {0} 项，失败 {1} 项：{2}</value>
+  </data>
+  <data name="BatchStatusFailed" xml:space="preserve">
+    <value>批量操作失败：{0}</value>
+  </data>
+  <data name="NavMigration" xml:space="preserve">
+    <value>工作空间迁移</value>
+  </data>
+  <data name="MigSubtitle" xml:space="preserve">
+    <value>将工作空间导出为归档（JSON 清单 + SLD），并按依赖顺序导入到目标实例</value>
+  </data>
+  <data name="MigExportGroup" xml:space="preserve">
+    <value>导出</value>
+  </data>
+  <data name="MigImportGroup" xml:space="preserve">
+    <value>导入</value>
+  </data>
+  <data name="MigExport" xml:space="preserve">
+    <value>导出工作空间</value>
+  </data>
+  <data name="MigSave" xml:space="preserve">
+    <value>保存归档...</value>
+  </data>
+  <data name="MigBrowse" xml:space="preserve">
+    <value>浏览...</value>
+  </data>
+  <data name="MigImport" xml:space="preserve">
+    <value>导入归档</value>
+  </data>
+  <data name="MigArchivePath" xml:space="preserve">
+    <value>归档文件</value>
+  </data>
+  <data name="MigTargetWs" xml:space="preserve">
+    <value>目标工作空间（留空沿用源名）</value>
+  </data>
+  <data name="MigTargetPrefix" xml:space="preserve">
+    <value>命名空间前缀（留空同目标名）</value>
+  </data>
+  <data name="MigTargetUri" xml:space="preserve">
+    <value>命名空间 URI（留空沿用源 URI）</value>
+  </data>
+  <data name="MigOverwrite" xml:space="preserve">
+    <value>覆盖已存在资源</value>
+  </data>
+  <data name="MigColumnStep" xml:space="preserve">
+    <value>步骤</value>
+  </data>
+  <data name="MigColumnTarget" xml:space="preserve">
+    <value>目标</value>
+  </data>
+  <data name="MigColumnStatus" xml:space="preserve">
+    <value>状态</value>
+  </data>
+  <data name="MigColumnMessage" xml:space="preserve">
+    <value>说明</value>
+  </data>
+  <data name="MigStatusCreated" xml:space="preserve">
+    <value>已创建</value>
+  </data>
+  <data name="MigStatusUpdated" xml:space="preserve">
+    <value>已更新</value>
+  </data>
+  <data name="MigStatusSkipped" xml:space="preserve">
+    <value>已跳过</value>
+  </data>
+  <data name="MigStatusFailedItem" xml:space="preserve">
+    <value>失败</value>
+  </data>
+  <data name="MigReady" xml:space="preserve">
+    <value>就绪</value>
+  </data>
+  <data name="MigStatusLoaded" xml:space="preserve">
+    <value>已加载 {0} 个工作空间</value>
+  </data>
+  <data name="MigExportDone" xml:space="preserve">
+    <value>已导出 "{0}"：{1} 项资源，{2} 条警告，{3} 字节</value>
+  </data>
+  <data name="MigSaved" xml:space="preserve">
+    <value>归档已保存到 {0}</value>
+  </data>
+  <data name="MigImportDone" xml:space="preserve">
+    <value>导入完成：创建 {0} 项，跳过 {1} 项</value>
+  </data>
+  <data name="MigImportPartial" xml:space="preserve">
+    <value>导入出现 {0} 项失败：{1}</value>
+  </data>
+  <data name="MigStatusNeedWorkspace" xml:space="preserve">
+    <value>请先选择要导出的工作空间</value>
+  </data>
+  <data name="MigStatusExportFirst" xml:space="preserve">
+    <value>请先执行导出</value>
+  </data>
+  <data name="MigStatusNoPath" xml:space="preserve">
+    <value>未选择保存路径</value>
+  </data>
+  <data name="MigStatusNeedArchive" xml:space="preserve">
+    <value>请选择存在的归档文件</value>
+  </data>
+  <data name="MigStatusFailed" xml:space="preserve">
+    <value>失败：{0}</value>
+  </data>
+  <data name="NavSettingsSync" xml:space="preserve">
+    <value>设置同步</value>
+  </data>
+  <data name="SyncSubtitle" xml:space="preserve">
+    <value>比对两个连接间的设置差异，选择性应用到当前实例</value>
+  </data>
+  <data name="SyncSourceGroup" xml:space="preserve">
+    <value>源连接</value>
+  </data>
+  <data name="SyncUrl" xml:space="preserve">
+    <value>源实例 URL</value>
+  </data>
+  <data name="SyncUser" xml:space="preserve">
+    <value>用户</value>
+  </data>
+  <data name="SyncPassword" xml:space="preserve">
+    <value>密码</value>
+  </data>
+  <data name="SyncDomain" xml:space="preserve">
+    <value>设置域</value>
+  </data>
+  <data name="SyncCompare" xml:space="preserve">
+    <value>比对差异</value>
+  </data>
+  <data name="SyncApply" xml:space="preserve">
+    <value>应用勾选项</value>
+  </data>
+  <data name="SyncColumnPath" xml:space="preserve">
+    <value>路径</value>
+  </data>
+  <data name="SyncColumnSource" xml:space="preserve">
+    <value>源值</value>
+  </data>
+  <data name="SyncColumnTarget" xml:space="preserve">
+    <value>目标值（当前）</value>
+  </data>
+  <data name="SyncColumnKind" xml:space="preserve">
+    <value>类型</value>
+  </data>
+  <data name="SyncKindAdded" xml:space="preserve">
+    <value>源新增</value>
+  </data>
+  <data name="SyncKindRemoved" xml:space="preserve">
+    <value>源删除</value>
+  </data>
+  <data name="SyncKindChanged" xml:space="preserve">
+    <value>变更</value>
+  </data>
+  <data name="SyncReady" xml:space="preserve">
+    <value>就绪</value>
+  </data>
+  <data name="SyncStatusIdentical" xml:space="preserve">
+    <value>两侧设置一致，无差异</value>
+  </data>
+  <data name="SyncStatusLoaded" xml:space="preserve">
+    <value>发现 {0} 项差异</value>
+  </data>
+  <data name="SyncStatusApplied" xml:space="preserve">
+    <value>已应用 {0} 项设置</value>
+  </data>
+  <data name="SyncStatusNeedUrl" xml:space="preserve">
+    <value>请填写源实例 URL</value>
+  </data>
+  <data name="SyncStatusCompareFirst" xml:space="preserve">
+    <value>请先执行比对</value>
+  </data>
+  <data name="SyncStatusNeedSelection" xml:space="preserve">
+    <value>请勾选要应用的差异项</value>
+  </data>
+  <data name="SyncStatusFailed" xml:space="preserve">
+    <value>失败：{0}</value>
+  </data>
+</root>
