@@ -1,14 +1,15 @@
 # 已知问题与兼容性清单（Known Issues）
 
 > 本文件承接《GeoServerDesktop 功能总结与中期开发规划（2026-09）》§2.1 / §2.2 基线清单，随每次合入更新。
-> 最后更新：2026-09-25 ｜ 实测基线：GeoServer 3.0.1
+> 最后更新：2026-09-26 ｜ 实测基线：GeoServer 3.0.1 ｜ 已回归版本：2.28.0
 
 ## 一、兼容性总览
 
 | 版本 | 状态 |
 |---|---|
 | GeoServer 3.0.1 | **实测基线**：四层测试套件（L1–L4）与真实数据 harness 全量通过 |
-| GeoServer 2.20+ | **预期兼容**，尚未完整实测；差异与注意事项见第四节 |
+| GeoServer 2.28.0 | **已实测（2026-09-26）**：数据面与 3.0.1 结论一致；差异见第四节（栅格 WMTS、monitor 路径、GWC diskquota 等） |
+| GeoServer 2.20+ | **预期兼容**，未逐版本实测；已知差异模式见第四节 |
 
 ## 二、服务端不支持项（3.0.1 无对应 REST 端点）
 
@@ -39,25 +40,45 @@
 - **无 `GET /rest/workspaces/{ws}/namespace` 反查端点**——M4 迁移按命名约定 `prefix=workspaceName` +
   `GET /rest/namespaces/{prefix}.json` 探测；新建工作空间自动生成占位命名空间 `uri=http://{ws}`。
 - **`DELETE /rest/workspaces/{ws}?recurse=true` 级联回收孤立命名空间**（实测 3.0.1 与其 namespace 一并 404）。
+- **自定义投影（`.prj` 无 EPSG 权威码）图层的 GeoJSON 输出不可靠**（3.0.1 与 2.28 均实测）：服务端写完要素后在流尾部抛
+  `Cannot invoke "String.indexOf(String)" because "identifier" is null`，响应成为「JSON 前缀 + XML 异常」或被截断，
+  **要素静默丢失**；同一请求显式带 `srsName=EPSG:4326` 即完整。CQL 空间过滤在该类图层上同样触发。
+  真实数据几何面因此走 **GML 通道**（原生坐标、响应完整），判据用拓扑保持（唯一顶点集/包络/部件数）。
+- **EPSG:4326 图层的裸 CQL 几何字面量按 (lat,lon) 解释**：`INTERSECTS(the_geom,POINT(lon lat))` 静默漏检，
+  必须写成 `SRID=4326;POINT(lon lat)`；请求级 `BBOX` 需带 `,EPSG:4326` 后缀才按 (lon,lat)。
+  生成过滤器/预览链接时务必显式声明（harness `Axis/*` 钉住该契约）。
+- **缺 `.cpg` 声明的非 ASCII 属性表**：GeoTools 只认 `.cpg`，无声明则按平台默认 ISO-8859-1 解码，
+  中文属性在 WFS 侧变乱码（服务端解码契约，客户端不能代为改正）。客户端职责是发布前告知（见 E42）。
+- **`resultType=hits` 时即使指定 `outputFormat=application/json` 仍返回 GML**（计数解析按文本取 `numberMatched`）。
+- **WCS 2.0.1 `DescribeCoverage` 的 `gmlcov:rangeType` 内 `swe:DataRecord` 为空**：波段数/波段名不经 WCS 元数据宣告，
+  须经 `GetCoverage` 输出核对（本轮以 3 波段 Byte 与 Int16 瓦片栅格逐点验证）。
 - **服务级 WMS/WFS/WCS/WMTS 设置为平铺字段**（如 `/rest/services/wms/settings.json` 根 `wms` 下直接
   `enabled/title/...`，无 `service` 包装）——M4 设置比对按实测形态扁平化。
 - **工作空间级 WMS 设置 `/rest/services/wms/workspaces/{ws}/settings` 仅在服务端已注册时存在**——
   未注册的工作空间返回 404（非产品缺陷；M4 SettingsSyncIT 采用环境自适应发现，全无则 SkipLog 登记）。
 
-## 四、2.x 兼容性差异（预期兼容，待回归验证）
+## 四、2.x 兼容性差异（已于 2026-09-26 实测 GeoServer 2.28.0）
 
-客户端最初基于 2.28.x 规范构建，后按 3.0.1 实测契约完成对齐（见 `docs/testing-report.md`）。
-以下为按 3.0.1 固化、在 2.x 上可能不同的行为点；完整回归前请留意：
+矩阵做法：同一份数据目录、同一套真实数据检查（harness 扩展段 + L1–L4）跑 `docker.osgeo.org/geoserver:2.28.0`，
+与 3.0.1 同口径逐项比对。
 
-| 领域 | 3.0.1 实测契约 | 2.x 注意事项 |
+| 领域 | 3.0.1 实测契约 | 2.28.0 实测结果 |
 |---|---|---|
-| styles 创建 | `Accept` 需含 `text/plain`（否则 500） | 2.x 无此要求，附加头预期无害 |
-| 安全域路由 | 按 3.0.1 控制器路由与包装（authfilters / authproviders 形态、users / groups 数组等） | 2.x 路由与包装可能不同 |
-| GlobalSettings 根键 | `{"global": ...}` | 2.x 可能为其他根键，读取可能为空 |
-| GWC 域形态 | layers / gridsets / blobstores 为纯 JSON 数组；seed / truncate 为 XML | 2.x 包装可能不同 |
-| 工作空间预览 | 3.0 移除 `/{ws}/ows` | 2.x 仍可用旧策略 |
+| 数据面（属性/几何/编码/栅格/分页/负路径） | 见第三节各契约 | **一致**（Warn 集合与 3.0.1 逐项相同；本轮客户端修复在 2.x/3.x 语义一致） |
+| 栅格 WMTS | coverage 瓦片可取 | **`GetTile` 返回 400**（GWC 1.28 未把该 coverage 注册为可瓦片图层）→ 唯一新增失败 |
+| styles 创建 | `Accept` 需含 `text/plain` | 2.x 无此要求；附加头无害（实测不报错） |
+| featureType 创建请求体 | 容忍恒定携带的 `"attributes"` 包装体 | **直接 500** → 写出侧已禁止（`FeatureTypeAttributeConverter.CanWrite => false`，E45） |
+| shapefile 目录存储连接参数 | 多余 `namespace` 参数会让非 ASCII 基名解析为 schema 前缀而失败（向导模板本就只给 `url`） | 同 3.0.1（一致行为） |
+| monitor 请求列表 | 路由可用 | **404**（路径不同，客户端该服务在 2.x 上不可用） |
+| GWC diskquota | XML 形态已对齐 3.0.1 | 形态不同（既有 IT 按 3.0.1 钉值，在 2.28 失败） |
+| `/rest/about/version` | 按 3.0.1 字面钉值 | 返回 2.28.0（既有 IT 的基线断言按版本失败，属预期钉值） |
+| 工作空间级 `/{ws}/ows` | 3.0 已移除 | 2.x 仍在（客户端已按 3.0 适配，不依赖旧端点） |
 
-> 2.x 回归矩阵（2.20 / 2.24 / 2.28 实测）为后续工作项；发现问题时按「实测真值」方法论同步更新本清单与测试基线。
+**跨版本测试的两条硬约束**（踩过的坑，写在这里避免复现）：
+
+1. 不要把 3.0.1 的 data_dir 直接复制给 2.x——配置版本漂移会产生大量 500 假信号，必须用该版本自己初始化的空 data_dir。
+2. 跨版本夹具只走产品自身的发布路径（`ImportWizardService`），不要手拼 store/featureType 参数；
+   手拼路径曾把「测试路径差异」伪装成「产品缺陷」。
 
 ## 五、使用与维护
 

@@ -28,9 +28,24 @@ namespace GeoServerDesktop.RealDataHarness
     /// </summary>
     public static class Program
     {
+        /// <summary>--only 段过滤器（可多次或逗号分隔）：只跑命中的检查段。空=全跑。</summary>
+        private static readonly HashSet<string> OnlyTags = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        private static bool Want(string tag) => OnlyTags.Count == 0 || OnlyTags.Contains(tag);
+
+        /// <summary>分步跟踪：让 stdout 成为心跳，挂在哪一步一目了然。</summary>
+        private static void Step(string what) => Console.WriteLine("   · " + what);
+
         private static int Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
+            for (int i = 0; i + 1 < args.Length; i++)
+            {
+                if (args[i] != "--only" && args[i] != "-t") continue;
+                foreach (var t in args[i + 1].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    OnlyTags.Add(t.Trim());
+            }
+            if (OnlyTags.Count > 0) Console.WriteLine("段过滤：--only " + string.Join(",", OnlyTags));
             Check.Reset();
 
             Console.WriteLine("== GeoServerDesktop RealData Harness ==");
@@ -42,24 +57,29 @@ namespace GeoServerDesktop.RealDataHarness
             var fixture = new GeoServerFixture();
             try
             {
-                RunEnvChecks();
-                RunDataIntegrityChecks();
+                if (Want("env")) RunEnvChecks();
+                if (Want("data")) RunDataIntegrityChecks();
                 if (GeoServerAvailability.IsGeoServerReachable)
                 {
-                    RunPublication();
-                    RunWizardPublishChecks();
-                    RunStyleChecks();
-                    RunBatchChecks();
-                    RunMigrationChecks();
-                    RunSettingsSyncChecks();
-                    RunServicePlaneChecks();
-                    RunGwcChecks();
+                    if (Want("pub")) RunPublication();
+                    if (Want("wizard")) RunWizardPublishChecks();
+                    if (Want("style")) RunStyleChecks();
+                    if (Want("batch")) RunBatchChecks();
+                    if (Want("mig")) RunMigrationChecks();
+                    if (Want("sync")) RunSettingsSyncChecks();
+                    if (Want("plane")) RunServicePlaneChecks();
+                    if (Want("gwc")) RunGwcChecks();
                 }
                 else
                 {
                     Check.Warn("Harness/GeoServer", "GeoServer 不可达，服务面检查全部跳过");
                 }
-                if (!string.IsNullOrEmpty(TestEnv.RealDataDir)) RunExternalRealData();
+                if (Want("ext")) RunExtendedFidelityChecks();
+                if (Want("raster")) RunRasterChecks();
+                if (Want("extdata") && !string.IsNullOrEmpty(TestEnv.RealDataDir)) RunExternalRealData();
+                if (Want("extfid") && !string.IsNullOrEmpty(TestEnv.RealDataDir)) RunExternalFidelityChecks();
+                if (Want("audit")) RunResidueAudit();
+                if (Want("diag")) RunDiagnosticDump();
             }
             catch (Exception ex)
             {
@@ -67,7 +87,8 @@ namespace GeoServerDesktop.RealDataHarness
             }
             finally
             {
-                try { fixture.Dispose(); } catch { }
+                // GSD_KEEP=1：跳过孤儿兜底清理，保留现场供手工复现（诊断真实数据服务面行为时用）
+                if (!ExtendedFixture.Keep) { try { fixture.Dispose(); } catch { } }
             }
 
             return ReportAndExit();
@@ -265,6 +286,16 @@ namespace GeoServerDesktop.RealDataHarness
             catch (Exception ex)
             {
                 Check.Fail("Wizard/crash", ex.GetType().Name + ": " + ex.Message);
+            }
+            finally
+            {
+                // 段内自清理：早前只在下一次运行开头删，导致 harness 跑完后服务器残留 gdtest_ws_wiz
+                try
+                {
+                    using var fz = new GeoServerClientFactory(GeoServerAvailability.Options());
+                    fz.CreateWorkspaceService().DeleteWorkspaceAsync(ws, true).GetAwaiter().GetResult();
+                }
+                catch { }
             }
         }
 
@@ -789,6 +820,368 @@ namespace GeoServerDesktop.RealDataHarness
                     Enabled = true,
                 }).GetAwaiter().GetResult();
             }
+        }
+
+        // ---------------- 3.11 扩展真实数据集保真（字段类型/编码/几何形态/规模/转义/负路径） ----------------
+        private static void RunExtendedFidelityChecks()
+        {
+            Console.WriteLine("-- 扩展真实数据集保真（gdtest_vec / gdtest_vol / gdtest_bad）");
+            if (!GeoServerAvailability.IsGeoServerReachable)
+            { Check.Warn("ExtFix", "GeoServer 不可达，扩展保真检查跳过"); return; }
+            if (!ExtendedFixture.DataPresent)
+            { Check.Warn("ExtFix", "扩展数据集缺失：请先运行 tests/testdata/generate_testdata.py（生成 gdtest_vec/img/vol/bad）"); return; }
+
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            using var fx = new ExtendedFixture();
+            var sets = ExtendedFixture.Sets().Where(s => !s.IsCoverage).ToList();
+            try
+            {
+                fx.EnsureWorkspace();
+                foreach (var s in sets)
+                {
+                    if (s.DirKey == "bad") continue;                     // 脏数据在负路径段处理
+                    var r = fx.EnsurePublished(s);
+                    Check.Cond(r.Success, "ExtFix/publish:" + s.LayerName, "发布成功 " + s.LayerName, r.Message);
+                }
+                Console.WriteLine("   发布 " + fx.PublishTimings.Count + " 个数据集，累计 "
+                                  + (int)sw.Elapsed.TotalSeconds + "s");
+
+                var byName = sets.ToDictionary(s => s.LayerName);
+                var types = byName["gdtest_x_types"];
+                var utf8 = byName["gdtest_x_enc_utf8"];
+                var gbkCpg = byName["gdtest_x_enc_gbk_cpg"];
+                var gbkNo = byName["gdtest_x_enc_gbk_nocpg"];
+                var points = byName["gdtest_x_points"];
+                var polyz = byName["gdtest_x_polyz"];
+                var selfint = byName["gdtest_x_selfint"];
+                var empty = byName["gdtest_x_empty"];
+                var huge = byName["gdtest_x_huge"];
+                var cjk = byName["湖泊 与 水库"];
+                var pts20k = byName["gdtest_x_pts20k"];
+
+                // 1) 逐字段属性保真（文本/整型/浮点/日期/逻辑型/NULL）
+                Step("Attrs/types");
+                Throw(RealDataFidelity.AttributesAllFields(ExtendedFixture.VecDir, "gdtest_types", types.Qualified, "types"));
+                // 2) DBF 编码三变体：声明/探测真值 + 归因
+                Step("Attrs/enc-utf8");
+                Throw(RealDataFidelity.AttributesAllFields(ExtendedFixture.VecDir, "enc_utf8", utf8.Qualified, "enc-utf8"));
+                Throw(RealDataFidelity.AttributesAllFields(ExtendedFixture.VecDir, "enc_gbk_cpg", gbkCpg.Qualified, "enc-gbk+cpg"));
+                Step("Enc/gbk-nocpg 基线");
+                Throw(RealDataFidelity.EncodingRiskBaseline(ExtendedFixture.VecDir, "enc_gbk_nocpg", gbkNo.Qualified, "gbk-nocpg", expectRisk: true));
+                Throw(RealDataFidelity.EncodingRiskBaseline(ExtendedFixture.VecDir, "enc_utf8", utf8.Qualified, "utf8-cpg", expectRisk: false));
+                Throw(RealDataFidelity.EncodingRiskBaseline(ExtendedFixture.VecDir, "enc_gbk_cpg", gbkCpg.Qualified, "gbk-cpg", expectRisk: false));
+                // 3) 几何形态
+                Step("NullGeom/points");
+                Throw(RealDataFidelity.NullGeometryHandling(ExtendedFixture.VecDir, "gdtest_points", points.Qualified, "points"));
+                Step("Z/polyz");
+                Throw(RealDataFidelity.ZDimensionPreserved(ExtendedFixture.VecDir, "gdtest_polyz", polyz.Qualified, "polyz"));
+                Step("SelfInt/selfint");
+                Throw(RealDataFidelity.SelfIntersectionPreserved(ExtendedFixture.VecDir, "gdtest_selfint", selfint.Qualified, "selfint"));
+                Step("Empty/empty");
+                Throw(RealDataFidelity.EmptyLayerBehavior(ExtendedFixture.VecDir, "gdtest_empty", empty.Qualified, "empty"));
+                Step("Verts/huge");
+                Throw(RealDataFidelity.VertexCountParity(ExtendedFixture.VecDir, "gdtest_huge", huge.Qualified, "huge"));
+                Step("Spatial/huge");
+                Throw(RealDataFidelity.SpatialPredicatesMatch(ExtendedFixture.VecDir, "gdtest_huge", huge.Qualified, "huge"));
+                Step("Spatial/types");
+                Throw(RealDataFidelity.SpatialPredicatesMatch(ExtendedFixture.VecDir, "gdtest_types", types.Qualified, "types"));
+                // 4) CJK / 含空格图层名全链路
+                Step("CjkChain");
+                Throw(RealDataFidelity.CjkNameChain(ExtendedFixture.VecDir, "湖泊 与 水库", cjk.Qualified, "cjk-layer"));
+                // 5) 大表分页与计时基线
+                Step("Paging/pts20k");
+                Throw(RealDataFidelity.PagingConsistency(ExtendedFixture.VolDir, "gdtest_pts20k", pts20k.Qualified, "pts20k"));
+                Step("Timing/pts20k");
+                Throw(RealDataFidelity.TimingBaseline(pts20k.Qualified,
+                                    DbfHeader.Parse(System.IO.Path.Combine(ExtendedFixture.VolDir, "gdtest_pts20k.dbf")).RecordCount, "pts20k"));
+                // 6) 重投影自洽（原生 4326 → 3857 + 能力表 LL bbox）
+                Step("Reproj/huge");
+                Throw(RealDataFidelity.ReprojectionConsistency(ExtendedFixture.VecDir, "gdtest_huge", huge.Qualified, "huge"));
+                Step("NativeBbox");
+                Throw(RealDataFidelity.NativeBboxMatchesShpHeader(ExtendedFixture.VecDir, "gdtest_types",
+                    ExtendedFixture.Ws, ExtendedFixture.StoreFor("vec"), types.LayerName, "types"));
+                Throw(RealDataFidelity.NativeBboxMatchesShpHeader(ExtendedFixture.VolDir, "gdtest_pts20k",
+                    ExtendedFixture.Ws, ExtendedFixture.StoreFor("vol"), pts20k.LayerName, "pts20k"));
+
+                Step("Reproj/pts20k(4490)");
+                // EPSG:4490（CGCS2000 地理坐标）与 4326 基准近乎一致：只核对范围自洽，不要求数值差异
+                Throw(RealDataFidelity.ReprojectionConsistency(ExtendedFixture.VolDir, "gdtest_pts20k", pts20k.Qualified, "pts20k",
+                    nativeCrs: "EPSG:4326", targetCrs: "EPSG:4490", expectTransform: false));
+                Step("Axis/contract");
+                Throw(RealDataFidelity.SpatialLiteralAxisOrderContract(ExtendedFixture.VecDir, "gdtest_huge", huge.Qualified, "huge"));
+                // 7) 负路径：脏数据必须可诊断失败；脏目录中的合法对必须可发布
+                foreach (var s in ExtendedFixture.Sets().Where(x => x.ExpectFailure))
+                {
+                    Step("Neg/" + s.BaseName);
+                    Throw(RealDataFidelity.DiagnosableFailure(fx, s, s.BaseName));
+                }
+                // 缺 .prj 但数据本身合法：允许发布，但客户端预检必须把"投影未声明"报出来
+                foreach (var s in ExtendedFixture.Sets().Where(x => x.BaseName == "bd_noprj"))
+                {
+                    Step("NoPrj/" + s.BaseName);
+                    Throw(RealDataFidelity.MissingPrjSurfaced(s.HostDir, s.BaseName, "noprj"));
+                }
+                foreach (var s in ExtendedFixture.Sets().Where(x => x.BaseName == "bd_valid"))
+                {
+                    Step("Pos/" + s.BaseName);
+                    Throw(RealDataFidelity.PositiveControlInDirtyDir(fx, s, "bd_valid"));
+                }
+            }
+            catch (Exception ex)
+            {
+                Check.Fail("ExtFix/crash", ex.GetType().Name + ": " + ex.Message);
+            }
+            finally
+            {
+                if (!ExtendedFixture.Keep) ExtendedFixture.Wipe(fx.Factory);
+                else Console.WriteLine("   GSD_KEEP=1：保留 " + ExtendedFixture.Ws + " 供手工复现");
+            }
+        }
+
+        // ---------------- 3.12 外部真实数据泛化保真（GSD_REAL_DATA_DIR，期望值全部来自文件本体） ----------------
+        private static void RunExternalFidelityChecks()
+        {
+            var dir = TestEnv.RealDataDir;
+            if (string.IsNullOrEmpty(dir) || !System.IO.Directory.Exists(dir)) return;
+            Console.WriteLine("-- 外部真实数据泛化保真");
+            var ref0 = DataEnv.HostPathToDataDirRef(dir);
+            if (ref0 == null) { Check.Warn("ExtFid", "外部数据目录不在容器 data_dir 挂载内，泛化保真跳过"); return; }
+            var pairs = DataEnv.DiscoverShapefilePairs(dir);
+            if (pairs.Count == 0) { Check.Warn("ExtFid", "未发现成对 .shp/.dbf"); return; }
+
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            using var f = new GeoServerClientFactory(GeoServerAvailability.Options());
+            try
+            {
+                ExternalRealData.EnsureWorkspace(f);
+                int done = 0;
+                foreach (var (shp, dbf) in pairs)
+                {
+                    string name = System.IO.Path.GetFileNameWithoutExtension(shp);
+                    string layer = ExternalRealData.Ws + ":" + name;
+                    Step("ExtFid/" + name);
+                    // 一律经产品向导发布（不手拼 store 参数：实测多给一个 namespace 项就会让
+                    // 服务端匹配不到 CJK 基名，报 “no attributes were specified”）
+                    var pubDiag = ExternalRealData.PublishViaWizard(f, ref0, name);
+                    if (Check.Cond(pubDiag == null, "ExtFid/publish:" + name, "真实数据层经向导发布可用（" + layer + "）",
+                        "该真实数据层未能发布/回读：" + pubDiag).Status != CheckStatus.Pass) continue;
+                    var hostDir = System.IO.Path.GetDirectoryName(shp);
+                    // 自定义投影真实数据的 GeoJSON 流完整性契约（服务端缺陷基线 + 规避路径证据）
+                    Throw(RealDataFidelity.GeoJsonStreamIntegrity(hostDir, name, layer, name));
+                    // 逐字段属性保真（中文 DBF：.cpg 或字节探测推导真值）；显式 CRS 规避截断
+                    Throw(RealDataFidelity.AttributesAllFields(hostDir, name, layer, name, maxRecords: 120,
+                        srsName: "EPSG:4326", encodingBaselineAsWarn: true));
+                    // 几何保真：自定义投影图层的 GeoJSON 会被服务端截断（见 JsonStream 契约），
+                    // 几何面因此走 GML 通道（原生坐标、完整响应），判据对环闭合/Multi* 归一不敏感
+                    Throw(RealDataFidelity.GeometryParityViaGml(hostDir, name, layer, name));
+                    // 空间谓词一致性（派生内点 → 本地判定集合 == 服务命中集合）
+                    // 真实数据多为投影系（自定义 CRS 无 EPSG 权威码）→ 用原生字面量形式
+                    Throw(RealDataFidelity.SpatialPredicatesMatch(hostDir, name, layer, name, keyField: null,
+                        geographicLiteral: false, assertBbox: false));
+                    Throw(RealDataFidelity.NativeBboxMatchesShpHeader(hostDir, name, ExternalRealData.Ws,
+                        ExternalRealData.Store, name, name));
+                    // 重投影自洽（自定义投影 → 4326 落全球范围 + 能力表 LL bbox 一致）
+                    Throw(RealDataFidelity.ReprojectionConsistency(hostDir, name, layer, name,
+                        nativeCrs: "(native)", targetCrs: "EPSG:4326", nativeGeographic: false,
+                        fallbackSrsName: "EPSG:4326"));
+                    done++;
+                }
+                Check.Pass("ExtFid/swept", $"泛化保真覆盖 {done}/{pairs.Count} 个真实 shapefile（累计 {sw.ElapsedMilliseconds}ms）");
+            }
+            catch (Exception ex)
+            {
+                Check.Fail("ExtFid/crash", ex.GetType().Name + ": " + ex.Message);
+            }
+            finally
+            {
+                if (!ExtendedFixture.Keep) ExternalRealData.Wipe(f);
+                else Console.WriteLine("   GSD_KEEP=1：保留 " + ExternalRealData.Ws + " 供手工复现");
+            }
+        }
+
+        // ---------------- 4. 真实栅格保真（多波段/整型/nodata/瓦片+概览/CJK 名） ----------------
+        private static void RunRasterChecks()
+        {
+            Console.WriteLine("-- 栅格真实数据保真（gdtest_img）");
+            if (!GeoServerAvailability.IsGeoServerReachable) { Check.Warn("Raster", "GeoServer 不可达，跳过"); return; }
+            if (!System.IO.Directory.Exists(ExtendedFixture.ImgDir))
+            { Check.Warn("Raster", "栅格数据集缺失：请先运行 tests/testdata/generate_testdata.py"); return; }
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            using var fx = new ExtendedFixture();
+            try
+            {
+                fx.EnsureWorkspace();
+                foreach (var s in ExtendedFixture.Sets().Where(x => x.IsCoverage))
+                {
+                    Step("Raster/publish " + s.LayerName);
+                    var r = fx.EnsurePublished(s);
+                    Check.Cond(r.Success, "Raster/publish:" + s.LayerName, "栅格发布成功 " + s.LayerName, r.Message);
+                    if (!r.Success) continue;
+                    var tif = System.IO.Path.Combine(s.HostDir, s.BaseName);
+                    Step("Raster/formula " + s.BaseName);
+                    Throw(RealDataRaster.SourceMatchesFormula(tif, s.LayerName, (px, py, b) => RasterFormula(s.BaseName, px, py, b)));
+                    Step("Raster/rest " + s.BaseName);
+                    Throw(RealDataRaster.CoverageRestMetadata(tif, ExtendedFixture.Ws,
+                        ExtendedFixture.CoverageStoreFor(s), s.LayerName, s.LayerName));
+                    Step("Raster/wcs-desc " + s.BaseName);
+                    Throw(RealDataRaster.WcsDescribeMatchesSource(tif, s.Qualified, s.LayerName));
+                    Step("Raster/wcs-pix " + s.BaseName);
+                    Throw(RealDataRaster.WcsPixelsMatchSource(tif, s.Qualified, s.LayerName));
+                    Step("Raster/wms " + s.BaseName);
+                    Throw(RealDataRaster.WmsRasterRenders(tif, s.Qualified, s.LayerName));
+                    Step("Raster/wmts " + s.BaseName);
+                    Throw(RealDataRaster.WmtsRasterTile(s.Qualified, s.LayerName));
+                }
+                Console.WriteLine("   栅格段累计 " + (int)sw.Elapsed.TotalSeconds + "s");
+            }
+            catch (Exception ex) { Check.Fail("Raster/crash", ex.GetType().Name + ": " + ex.Message); }
+            finally { if (!ExtendedFixture.Keep) ExtendedFixture.Wipe(fx.Factory); }
+        }
+
+        /// <summary>栅格像元生成公式（与 tests/testdata/generate_testdata_extra.py 同源；仅用于数据完整性核对）。</summary>
+        private static double RasterFormula(string tifName, int px, int py, int band)
+        {
+            if (tifName == "gdtest_rgb.tif")
+            {
+                if (band == 1) return (px * 3 + py) % 251 + 1;
+                if (band == 2) return (px + py * 5) % 241 + 10;
+                if (px < 8 && py < 6) return 0;
+                return (px * py) % 200 + 50;
+            }
+            if (tifName == "gdtest_int16.tif")
+                return px < 10 && py < 10 ? -9999 : (px * py) % 3000 - 500;
+            return (px * 2 + py * 3) % 256;                       // 中文 栅格.tif
+        }
+
+        private static string SanitizeTag(string name)
+        {
+            var sb = new StringBuilder();
+            foreach (var c in name) sb.Append(char.IsLetterOrDigit(c) || c == '_' ? c : '_');
+            return sb.ToString();
+        }
+
+        // ---------------- 5. 残留审计（删除路径的真实数据检验） ----------------
+        private static void RunResidueAudit()
+        {
+            Console.WriteLine("-- 残留审计（gdtest_* 孤儿资源）");
+            if (!GeoServerAvailability.IsGeoServerReachable) { Check.Warn("Audit", "GeoServer 不可达，跳过"); return; }
+            const string Shared = "gdtest_ws_e2e";
+            var probs = new List<string>();
+
+            var wsList = JsonNames(TestEnv.RestBase + "/rest/workspaces.json", "workspaces", "workspace");
+            var orphans = wsList.Where(n => n.StartsWith("gdtest", StringComparison.OrdinalIgnoreCase) && n != Shared
+                                          && !n.EndsWith("_e2e", StringComparison.OrdinalIgnoreCase)).ToList();
+            Check.Cond(orphans.Count == 0, "Audit/workspaces",
+                $"工作空间无残留（共 {wsList.Count} 个，仅保留共享夹具 {Shared}）",
+                "残留工作空间：" + string.Join(",", orphans));
+
+            // 共享 e2e 夹具（gdtest_ws_e2e / gdtest_red_e2e）按设计跨进程复用，不算残留
+            var styles = JsonNames(TestEnv.RestBase + "/rest/styles.json", "styles", "style")
+                .Where(n => n.StartsWith("gdtest", StringComparison.OrdinalIgnoreCase)
+                            && !n.EndsWith("_e2e", StringComparison.OrdinalIgnoreCase)).ToList();
+            Check.Cond(styles.Count == 0, "Audit/styles", "无 gdtest 样式残留（共享 e2e 夹具除外）", "残留样式：" + string.Join(",", styles));
+
+            var layers = JsonNames(TestEnv.RestBase + "/rest/layers.json", "layers", "layer")
+                .Where(n => n.Contains("gdtest_x") || n.StartsWith("gdtest_wiz", StringComparison.OrdinalIgnoreCase)
+                            || n.StartsWith("hbatch_", StringComparison.OrdinalIgnoreCase) || n.StartsWith("hmig_", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+            Check.Cond(layers.Count == 0, "Audit/layers", "无扩展/向导/批量/迁移临时图层残留", "残留图层：" + string.Join(",", layers));
+
+            // 用户域与 GWC：本轮 harness 不写用户，若残留即为泄漏
+            var users = JsonNames(TestEnv.RestBase + "/rest/security/users/", "users", "user")
+                .Where(n => n.StartsWith("gdtest", StringComparison.OrdinalIgnoreCase)).ToList();
+            Check.Cond(users.Count == 0, "Audit/users", "无 gdtest 用户残留", "残留用户：" + string.Join(",", users));
+
+            // 数据目录侧：本轮生成的 layergroups/gwc 缓存孤儿目录（仅统计，不判定——服务端会保留已发布层的缓存）
+            var gwcDir = DataEnv.GwcDir;
+            if (System.IO.Directory.Exists(gwcDir))
+            {
+                var dirs = System.IO.Directory.GetDirectories(gwcDir)
+                    .Select(System.IO.Path.GetFileName)
+                    .Where(n => n.StartsWith("gdtest_ws_x", StringComparison.OrdinalIgnoreCase)
+                                || n.StartsWith("gdtest_ext", StringComparison.OrdinalIgnoreCase)
+                                || n.StartsWith("gdtest_ws_wiz", StringComparison.OrdinalIgnoreCase)
+                                || n.StartsWith("gdtest_ws_hbatch", StringComparison.OrdinalIgnoreCase)
+                                || n.StartsWith("gdtest_ws_hmig", StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+                Check.Cond(dirs.Count == 0, "Audit/gwc-cache",
+                    "已删除图层在宿主 GWC 目录无缓存残留目录",
+                    "GWC 残留目录：" + string.Join(",", dirs));
+            }
+        }
+
+        private static List<string> JsonNames(string url, string root, string item)
+        {
+            var list = new List<string>();
+            try
+            {
+                var r = OgcProbe.Get(url);
+                if (!r.Ok || r.Text == null) return list;
+                using var doc = System.Text.Json.JsonDocument.Parse(r.Text);
+                if (doc.RootElement.TryGetProperty(root, out var g) && g.ValueKind == System.Text.Json.JsonValueKind.Object
+                    && g.TryGetProperty(item, out var arr) && arr.ValueKind == System.Text.Json.JsonValueKind.Array)
+                    foreach (var e in arr.EnumerateArray())
+                        if (e.TryGetProperty("name", out var n)) list.Add(n.GetString() ?? "");
+            }
+            catch { }
+            return list;
+        }
+
+        // ---------------- 诊断段（--only diag）：把服务侧响应原文完整落盘，避免 shell/截断误导 ----------------
+        private static void RunDiagnosticDump()
+        {
+            Console.WriteLine("-- 诊断（服务响应原文）");
+            var dir = TestEnv.RealDataDir;
+            if (string.IsNullOrEmpty(dir) || !System.IO.Directory.Exists(dir))
+            { Check.Warn("Diag", "未提供 GSD_REAL_DATA_DIR"); return; }
+            var ref0 = DataEnv.HostPathToDataDirRef(dir);
+            var pairs = DataEnv.DiscoverShapefilePairs(dir);
+            using var f = new GeoServerClientFactory(GeoServerAvailability.Options());
+            var sb = new StringBuilder();
+            try
+            {
+                ExternalRealData.EnsureWorkspace(f);
+                foreach (var (shp, dbf) in pairs.Take(3))
+                {
+                    string name = System.IO.Path.GetFileNameWithoutExtension(shp);
+                    string layer = ExternalRealData.Ws + ":" + name;
+                    sb.AppendLine("###### " + name);
+                    sb.AppendLine("publish: " + (ExternalRealData.PublishViaWizard(f, ref0, name) ?? "OK"));
+                    var rest = OgcProbe.Get(TestEnv.RestBase + "/rest/workspaces/" + ExternalRealData.Ws
+                        + "/datastores/" + ExternalRealData.Store + "/featuretypes.json");
+                    sb.AppendLine("store fts: " + Trim(rest.Text, 400));
+                    var ft = OgcProbe.Get(TestEnv.RestBase + "/rest/workspaces/" + ExternalRealData.Ws
+                        + "/datastores/" + ExternalRealData.Store + "/featuretypes/" + Uri.EscapeDataString(name) + ".json");
+                    sb.AppendLine("ft GET " + ft.Status + ": " + Trim(ft.Text, 700));
+                    var hits = OgcProbe.Get(OgcProbe.Wfs("request=GetFeature", "version=2.0.0", "resultType=hits",
+                        "outputFormat=application/json", "typeName=" + layer, "count=1"));
+                    sb.AppendLine("HITS " + hits.Status + " ct=" + hits.ContentType + ": " + Trim(hits.Text, 700));
+                    var full = OgcProbe.Get(OgcProbe.Wfs("request=GetFeature", "version=2.0.0",
+                        "outputFormat=application/json", "typeName=" + layer, "count=120"));
+                    sb.AppendLine("FULL " + full.Status + " len=" + (full.Bytes?.Length ?? -1) + ": " + Trim(full.Text, 400));
+                    var v11 = OgcProbe.Get(OgcProbe.Wfs("request=GetFeature", "version=1.1.1",
+                        "outputFormat=application/json", "typeName=" + layer, "maxFeatures=2"));
+                    sb.AppendLine("V111 " + v11.Status + ": " + Trim(v11.Text, 400));
+                    var lyr = OgcProbe.Get(TestEnv.RestBase + "/rest/layers/" + Uri.EscapeDataString(layer) + ".json");
+                    sb.AppendLine("LAYER GET " + lyr.Status + ": " + Trim(lyr.Text, 300));
+                    sb.AppendLine();
+                }
+            }
+            catch (Exception ex) { sb.AppendLine("EX " + ex); }
+            finally
+            {
+                if (!ExtendedFixture.Keep) ExternalRealData.Wipe(f);
+            }
+            string dumpPath = Path.Combine(Path.GetTempPath(), "gsd_diag_dump.txt");
+            try { File.WriteAllText(dumpPath, sb.ToString(), Encoding.UTF8); Console.WriteLine("   诊断输出：" + dumpPath); }
+            catch (Exception ex) { Console.WriteLine(sb.ToString()); Console.WriteLine("写文件失败：" + ex.Message); }
+        }
+
+        private static string Trim(string s, int n)
+        {
+            if (s == null) return "(null)";
+            s = s.Replace('\r', ' ').Replace('\n', ' ');
+            return s.Length > n ? s.Substring(0, n) + "..." : s;
         }
 
         // ---------------- 汇总 ----------------

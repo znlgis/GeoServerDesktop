@@ -82,7 +82,9 @@ jobs:
     - name: Start GeoServer + PostGIS containers
       run: |
         docker network create gsd-ci
-        mkdir -p "$GITHUB_WORKSPACE/gdtest_data" "$GITHUB_WORKSPACE/gwc"
+        mkdir -p "$GITHUB_WORKSPACE/gdtest_data" "$GITHUB_WORKSPACE/gwc" \
+                 "$GITHUB_WORKSPACE/gdtest_vec" "$GITHUB_WORKSPACE/gdtest_img" \
+                 "$GITHUB_WORKSPACE/gdtest_vol" "$GITHUB_WORKSPACE/gdtest_bad"
         docker run -d --name postgis --network gsd-ci \
           -e POSTGRES_PASSWORD=postgres \
           -p 5432:5432 \
@@ -97,6 +99,10 @@ jobs:
           -p 8765:8080 \
           -v "$GITHUB_WORKSPACE/gdtest_data:/data/geoserver/data_dir/gdtest_data" \
           -v "$GITHUB_WORKSPACE/gwc:/data/geoserver/data_dir/gwc" \
+          -v "$GITHUB_WORKSPACE/gdtest_vec:/data/geoserver/data_dir/gdtest_vec" \
+          -v "$GITHUB_WORKSPACE/gdtest_img:/data/geoserver/data_dir/gdtest_img" \
+          -v "$GITHUB_WORKSPACE/gdtest_vol:/data/geoserver/data_dir/gdtest_vol" \
+          -v "$GITHUB_WORKSPACE/gdtest_bad:/data/geoserver/data_dir/gdtest_bad" \
           kartoza/geoserver:3.0.1
 
     - name: Install GDAL (ogr2ogr / gdal_translate)
@@ -132,10 +138,14 @@ jobs:
         # 将 gdtest_data/gwc 属主改为容器用户，导致本步骤（runner 用户）无法写入。
         # 先恢复 runner 属主再生成；生成后放宽权限位，确保容器内 GeoServer 与 runner 两侧都可读写
         # （含 shapefile 的 .qix 索引写入）。
-        sudo chown -R "$(id -u):$(id -g)" "$GITHUB_WORKSPACE/gdtest_data" "$GITHUB_WORKSPACE/gwc"
+        sudo chown -R "$(id -u):$(id -g)" "$GITHUB_WORKSPACE/gdtest_data" "$GITHUB_WORKSPACE/gwc" \
+          "$GITHUB_WORKSPACE/gdtest_vec" "$GITHUB_WORKSPACE/gdtest_img" \
+          "$GITHUB_WORKSPACE/gdtest_vol" "$GITHUB_WORKSPACE/gdtest_bad"
         python3 tests/testdata/generate_testdata.py || echo "::warning::test data generation failed; data-dependent checks will skip"
         bash tests/testdata/load_postgis.sh || echo "::warning::PostGIS load failed; PostGIS-backed checks will skip"
-        sudo chmod -R a+rwX "$GITHUB_WORKSPACE/gdtest_data" "$GITHUB_WORKSPACE/gwc"
+        sudo chmod -R a+rwX "$GITHUB_WORKSPACE/gdtest_data" "$GITHUB_WORKSPACE/gwc" \
+          "$GITHUB_WORKSPACE/gdtest_vec" "$GITHUB_WORKSPACE/gdtest_img" \
+          "$GITHUB_WORKSPACE/gdtest_vol" "$GITHUB_WORKSPACE/gdtest_bad"
 
     - name: L2 integration tests (real GeoServer REST)
       run: dotnet test src/GeoServerDesktop.Tests/GeoServerDesktop.Tests.csproj --configuration Release --no-build --filter "FullyQualifiedName~Tests.Integration"

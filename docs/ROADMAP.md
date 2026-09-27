@@ -16,6 +16,29 @@
 
 ---
 
+## M6（2026-09-26）：真实数据测试强化 + 跨版本矩阵
+
+**目标**：把测试重心从 REST 契约面推进到真实数据的属性/几何/编码/规模/损坏形态，并给 2.x 兼容性一个实测结论。
+
+- [x] 扩展确定性测试数据（`generate_testdata_extra.py`，写入同级目录不动既有基线）：字段类型全覆盖（Date/Logical/宽文本/NULL）、
+      **DBF 编码三变体**、Point+NULL 几何、PolygonZ、自相交、0 记录、4001 顶点/环、CJK 与含空格基名、
+      多波段/Int16 瓦片+概览/CJK 名栅格、2 万点大表、7 类脏数据
+- [x] 新增独立解析器（不经 GDAL/JTS）：`DbfTable`（编码感知 + 按类型归一）、`GeometryDerive`（奇偶内点/部件/面积/顶点集）、
+      `TiffSample`（多波段/整型/瓦片/nodata）
+- [x] 保真检查族 `RealDataFidelity` / `RealDataRaster`：逐字段属性、编码归因、NULL 几何、Z 维、自相交、0 记录、
+      顶点与拓扑保持、空间谓词、分页、原生 bbox、栅格逐点、CJK 图层名全链路、脏数据可诊断失败、残留审计、计时基线
+- [x] harness 段过滤 `--only`（可逗号分隔）+ 分步心跳 + `GSD_KEEP` 现场保留 + `--only diag` 响应原文落盘
+- [x] **修复 4 项客户端缺陷**：E42 编码/投影声明预检、E43 损坏数据发布闸门、E44 发布后回读校验（2xx ≠ 可用）、
+      E45 FeatureType 属性面模型（写侧只读，避免 2.28 直接 500 的多余包装体）
+- [x] 固化 6 类服务端契约（GeoJSON 流截断、CQL 轴序、无 .cpg 解码降级、hits 返回 GML、WCS rangeType 空、REST nativeCRS 对象形态）
+- [x] GeoServer 2.28.0 跨版本矩阵（结论：数据面一致；栅格 WMTS/monitor/GWC diskquota 差异与两条跨版本夹具硬约束入档）
+- [x] CI：integration job 挂载扩展数据目录，真实数据检查在 CI 内同样执行
+
+**验收**：`dotnet test` 743/743 全绿（基线 692，+51）；harness 挂真实数据 **Pass=263 / Warn=54 / Fail=0**（基线 134/2/0）；
+2.28 同口径 Pass=126 / Warn=52 / Fail=3（差异仅栅格 WMTS，Warn 集合与 3.0.1 逐项一致）。详见 `docs/testing-report.md` 第二轮。
+
+---
+
 ## M1（第 1–4 周）：工程化地基 + 快速补缺
 
 **目标**：让日常开发有回归保障，补掉最小的用户可见洞。

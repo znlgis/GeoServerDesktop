@@ -70,3 +70,111 @@ dotnet run --project src/GeoServerDesktop.RealDataHarness
 
 新增：`src/GeoServerDesktop.Tests`（Unit/Integration/RealData+RealDataTests/Headless/Infrastructure，共约 90 文件）、`src/GeoServerDesktop.RealDataHarness`、`tests/testdata/*`、本报告。
 修改（修复轮）：GeoServerClient 全 45 服务序列化/路径/包装（Models/{Security,GeoWebCache,ServiceSettings,Settings,DataStore,FeatureType,…}、Services 全域、Http/GeoServerJson.cs 新增）；App：StoresManagement/MainWindow/CachingDefaults/SecuritySettings/Style/MapPreview/GlobalSettings 各 VM + LocalizationService + StoresManagementView.axaml + SettingsService 注入点；`GeoServerDesktop.sln`（+2 工程）。
+
+---
+
+# 第二轮：真实数据强化测试（2026-09-26）
+
+被测环境不变（GeoServer 3.0.1 + PostGIS 17.5/3.5.2 + .NET 8），本轮把测试重心从"REST 契约面"推进到
+**真实数据的属性/几何/编码/规模/损坏形态**，并补做 GeoServer 2.28.0 跨版本矩阵。
+
+## 一、结果总览
+
+| 项 | 上一轮基线 | 本轮 | 变化 |
+|---|---|---|---|
+| `dotnet test` 全量（L1+L2+L3+L4） | 692 通过 | **743 通过 / 0 失败** | +51 例 |
+| 控制台 harness（无外部真实数据） | Pass=70 Warn=2 Fail=0 | **Pass=263 Warn=54 Fail=0**（挂真实数据全段，退出码 0） | +193 检查 |
+| harness（同口径 4 段，3.0.1） | — | Pass=129 Warn=52 Fail=0 | 基准 |
+| harness（同口径 4 段，2.28.0） | — | Pass=126 Warn=52 **Fail=3**（仅栅格 WMTS） | Warn 集合逐项相同 |
+
+54 项 Warn 全部是**有证据的服务端契约**（见第四节），不是待修的客户端缺陷。
+
+## 二、新增真实测试数据（确定性、数据无关）
+
+`tests/testdata/generate_testdata.py` 现会一并调用 `generate_testdata_extra.py`，把扩展数据写入
+挂载根下的同级目录（**不改动既有 gdtest_data**，因此既有 L1–L4 基线不受影响）：
+
+| 目录 | 覆盖形态 |
+|---|---|
+| `gdtest_vec` | 字段类型全覆盖（String/Integer/Real/**Date**/**Logical**/254 宽文本/**NULL**）；**DBF 编码三变体**（UTF-8+.cpg / GBK+.cpg / GBK 无 .cpg，同逻辑内容）；Point+**NULL 几何**；PolygonZ；**自相交 bowtie**；**0 记录**层；**4001 顶点/环**×3；**CJK 与含空格基名** |
+| `gdtest_img` | 3 波段 Byte + nodata 块；Int16 **瓦片化 + 外部概览 + 统计**；**CJK 含空格文件名**栅格 |
+| `gdtest_vol` | 2 万点大表（分页 / 计时基线） |
+| `gdtest_bad` | 缺 .dbf、SHP/DBF 记录数不符、非法 .prj、缺 .prj、SHP 截断、只有 .dbf、以及同目录合法正对照 |
+
+PostGIS 侧 `load_postgis.sh` 追加加载 `gdtest_types`、`gdtest_pts`（2 万点）。
+所有期望值仍由文件本体独立推导（新增 `DbfTable`、`GeometryDerive`、`TiffSample` 三个纯解析器，不经 GDAL/JTS）。
+
+## 三、本轮发现并已修复的客户端缺陷（按推荐全部处理）
+
+- **E42 shapefile 属性编码/投影声明无预检**：GeoServer 读属性表只认 `.cpg`（无声明则按平台默认
+  ISO-8859-1），缺声明的中文数据发布后属性面**静默乱码**。库层 `GeoFileInspector` 新增
+  `CpgEncoding / DbfHasNonAscii / DbfLooksUtf8 / EncodingRisk / CrsRisk / Warnings` 与纯函数
+  `IsValidUtf8 / ScanDbfTextBytes / EvaluateEncodingRisk / EvaluateCrsRisk`（无新增依赖）；
+  向导第 1/2 步预检与发布结果都会把风险呈现到用户可见文案（新增中英 resx 键）。
+- **E43 损坏 shapefile 被报"发布成功"**：实测 GeoServer 对缺 .dbf、SHP 头长与实际不符、DBF 记录数不符、
+  .prj 非法 WKT 一律返回 201，缺陷要等服务查询才暴露。新增 `ShapefileIntegrityRisk`（全部 O(1) 文件头判据）
+  与 `ImportSourceRequest.LocalSourcePath` 发布前闸门：**阻断级问题直接失败并给出原因**，
+  非阻断项进 `PublishResult.Warnings/PreflightErrors`。
+- **E44 发布 2xx ≠ 图层可用**：真实数据实测——服务端匹配不到磁盘文件时会接受请求却建出**只有几何字段的
+  空要素类型**（REST 里资源存在、WFS 无数据）。`PublishShapefileAsync` 增加发布后回读校验
+  （存在 + 启用 + 属性面含业务字段），失败时返回可诊断原因。
+- **E45 FeatureType 模型缺属性面**：新增 `Attributes/FeatureAttributeInfo` 与
+  `FeatureTypeAttributeConverter`（读 `{"attribute":[…]}`/裸数组/单对象/缺省）。
+  写侧显式 `CanWrite => false`：自定义 WriteJson 会抢在 `NullValueHandling.Ignore` 之前执行，
+  使创建请求恒定携带 `attributes` 包装体——**实测 GeoServer 2.28 对该形态直接 500**（3.0.1 容忍）。
+
+测试基线：以上四项均有 L1（离线矩阵）、L4（预检到达用户文案，断言取与语言无关的证据串）、
+L3/harness（真实文件 + 真实实例）三层覆盖；`ResidueCheckTests` 与 harness `Audit` 段验证零残留。
+
+## 四、真实数据暴露的服务端契约（固化为 Warn 基线，非客户端缺陷）
+
+1. **无 `.cpg` 的非 ASCII DBF** → 服务端按 ISO-8859-1 解码，WFS 属性面为乱码（`ÄÏ³äÊÐ` ⇄ 南充市）。
+   客户端无法代为改正，只能预检告知（E42）。
+2. **`.prj` 无 EPSG 权威码（自定义投影）图层的 GeoJSON 输出不可靠**：写完要素后流尾部 NPE
+   （`Cannot invoke "String.indexOf(String)" because "identifier" is null`），响应变成
+   *JSON 前缀 + XML 异常* 或被直接掐断（解析失败），**要素静默丢失**；同一请求带
+   `srsName=EPSG:4326` 即完整。CQL 空间过滤在该类图层上同样触发此缺陷。
+   harness 以 `JsonStream/*` 固化，并把几何面改走 **GML 通道**（原生坐标、响应完整）。
+3. **EPSG:4326 图层的裸 CQL 几何字面量按 (lat,lon) 解释**：`INTERSECTS(the_geom,POINT(lon lat))`
+   静默漏检，`SRID=4326;POINT(lon lat)` 才按 (lon,lat)；请求级 `BBOX` 需带 `,EPSG:4326` 后缀。
+   由 `Axis/*` 契约项钉住（客户端生成过滤器/预览 URL 时必须显式声明）。
+4. **`resultType=hits` 时即使指定 `outputFormat=application/json` 也返回 GML**（既有计数逻辑按文本解析，符合预期）。
+5. **WCS 2.0.1 DescribeCoverage 的 `gmlcov:rangeType` 内 `swe:DataRecord` 为空**：波段数/波段名不经
+   WCS 元数据宣告，必须由 GetCoverage 输出核对（本轮即以此法验证 3 波段 Byte 与 Int16 瓦片栅格逐点一致）。
+6. **`grid`/`nativeCRS` 形态**：REST coverage 的 `nativeCRS` 是对象 `{"@class":"projected","$":"WKT…"}`
+   （历史缺陷：按字符串解析恒空），`grid.range.high` 给网格尺寸、`grid.crs` 给 EPSG。
+
+## 五、几何保真判据的方法学结论
+
+逐点顶点计数**不是**稳定契约：服务端会把 Polygon 归一为 MultiPolygon、补齐环闭合点、合并重复点。
+真实数据的几何面因此采用**拓扑保持**判据（唯一顶点集合 + 包络框 + 部件数，对环起点旋转与闭合不敏感），
+逐点严格比对只保留给自己构造、已声明 EPSG 的数据集（用于证明"服务未静默抽稀"）。
+
+## 六、GeoServer 2.28.0 兼容矩阵（KNOWN-ISSUES 第四节"待回归"→ 已实测）
+
+用同一份数据目录、同一套检查在 `docker.osgeo.org/geoserver:2.28.0` 上重跑：
+
+- **数据面结论一致**：Warn 集合与 3.0.1 逐项相同（编码降级、GeoJSON 流契约、CQL 轴序、WCS rangeType 等），
+  说明本轮客户端修复在 2.x/3.x 上语义一致。
+- **唯一新增失败**：栅格图层的 WMTS `GetTile` 返回 400（GWC 1.28 未把该 coverage 注册为可瓦片图层）→
+  矢量/栅格 WMTS 能力在 2.x 需按实测重新对齐。
+- **REST 契约面已定位差异**（3.0.1 基线的显式钉值，非缺陷）：`/rest/about/version` 版本字面量、
+  monitor 请求列表路径（2.28 为 404）、GWC diskquota XML 形态。
+- **跨版本测试夹具注意**：把 3.0.1 的 data_dir 直接复制给 2.28 会因配置版本漂移产生大量 500 假信号，
+  必须用**该版本自己初始化的空 data_dir**；此外 namespace 连接参数与 `attributes` 包装体在 2.28 上的
+  严格性差异已在 E45 中记录。
+
+## 七、复现命令（更新）
+
+```bash
+# 数据生成（含扩展数据集；需 OSGeo4W 或 gdal-bin + numpy）
+python tests/testdata/generate_testdata.py && bash tests/testdata/load_postgis.sh
+# 全量（L1–L4；服务器/数据缺失自动跳过并登记 SkipLog）
+dotnet test src/GeoServerDesktop.Tests
+# 真实数据 harness（Fail>0 → 退出码 1）；支持段过滤与现场保留
+dotnet run --project src/GeoServerDesktop.RealDataHarness
+GSD_REAL_DATA_DIR="<挂载内真实数据目录>" dotnet run --project src/GeoServerDesktop.RealDataHarness -- --only ext,raster,extfid,audit
+GSD_KEEP=1 ... --only diag        # 把服务响应原文落盘（定位用）
+```
+CI 的 integration job 已挂载 `gdtest_vec/gdtest_img/gdtest_vol/gdtest_bad`，扩展检查在 CI 内同样真实执行。
+
