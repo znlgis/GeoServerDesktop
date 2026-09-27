@@ -56,7 +56,16 @@ namespace GeoServerDesktop.Tests.RealData
         public static string BadDir => Path.Combine(DataEnv.ContainerDataRoot, "gdtest_bad");
         public static string ImgDir => Path.Combine(DataEnv.ContainerDataRoot, "gdtest_img");
 
-        public static bool DataPresent => Directory.Exists(VecDir) && Directory.Exists(ImgDir);
+        /// <summary>
+        /// 扩展数据是否真的可用：必须看到代表性文件——CI 会预先 mkdir 挂载点，
+        /// 只看目录存在会把“数据未生成”误判成“数据在但发布失败”，伪装成产品缺陷。
+        /// </summary>
+        public static bool DataPresent =>
+            File.Exists(Path.Combine(VecDir, "gdtest_types.shp"))
+            && File.Exists(Path.Combine(VecDir, "gdtest_huge.shp"))
+            && File.Exists(Path.Combine(ImgDir, "gdtest_rgb.tif"))
+            && File.Exists(Path.Combine(VolDir, "gdtest_pts20k.shp"))
+            && File.Exists(Path.Combine(BadDir, "bd_valid.shp"));
 
         /// <summary>调试保留：GSD_KEEP=1 时不清理扩展夹具（手工复现定位用）。</summary>
         public static bool Keep => TestEnv.Env("GSD_KEEP", "0") == "1";

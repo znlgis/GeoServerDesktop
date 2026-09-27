@@ -106,7 +106,7 @@ jobs:
           kartoza/geoserver:3.0.1
 
     - name: Install GDAL (ogr2ogr / gdal_translate)
-      run: sudo apt-get update && sudo apt-get install -y gdal-bin
+      run: sudo apt-get update && sudo apt-get install -y gdal-bin python3-gdal python3-numpy
 
     - name: Restore + build (Release)
       run: |

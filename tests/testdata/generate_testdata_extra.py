@@ -29,7 +29,11 @@ import shutil
 import struct
 import sys
 
-from osgeo import gdal, ogr, osr
+try:
+    from osgeo import gdal, ogr, osr
+except ImportError as exc:                                # CI/最小环境缺 GDAL Python 绑定：跳过扩展数据集
+    print("SKIP 扩展数据集生成（缺 GDAL Python 绑定：%s）；安装：apt install python3-gdal python3-numpy 或 OSGeo4W" % exc)
+    sys.exit(0)
 
 gdal.UseExceptions()
 ogr.UseExceptions()
