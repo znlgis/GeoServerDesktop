@@ -1475,6 +1475,11 @@
   <data name="WizardPreviewShapefile" xml:space="preserve">
     <value>Shapefile：{0} 条记录、{1} 个字段、几何类型 {2}</value>
   </data>
+  <data name="WizardPreviewWarnings" xml:space="preserve">
+    <value>{0}
+【预检提示】
+{1}</value>
+  </data>
   <data name="WizardPreviewGeoTiff" xml:space="preserve">
     <value>GeoTIFF：{0} x {1}，CRS {2}</value>
   </data>
@@ -1486,6 +1491,10 @@
   </data>
   <data name="WizardPublishFailed" xml:space="preserve">
     <value>发布失败：{0}</value>
+  </data>
+  <data name="WizardPublishNotes" xml:space="preserve">
+    <value>{0}
+【提示】{1}</value>
   </data>
   <data name="WizardProbeOk" xml:space="preserve">
     <value>连接成功</value>

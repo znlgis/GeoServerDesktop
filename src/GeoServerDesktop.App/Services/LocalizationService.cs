@@ -1545,6 +1545,9 @@ public class LocalizationService : ObservableObject
     /// <summary>预检：Shapefile 摘要模板 {0}=记录数 {1}=字段数 {2}=类型名</summary>
     public string WizardPreviewShapefile => T(nameof(WizardPreviewShapefile));
 
+    /// <summary>预检提示附加模板 {0}=预检文本 {1}=风险清单</summary>
+    public string WizardPreviewWarnings => T(nameof(WizardPreviewWarnings));
+
     /// <summary>预检：GeoTIFF 摘要模板 {0}=宽 {1}=高 {2}=CRS</summary>
     public string WizardPreviewGeoTiff => T(nameof(WizardPreviewGeoTiff));
 
@@ -1556,6 +1559,9 @@ public class LocalizationService : ObservableObject
 
     /// <summary>发布失败模板 {0}=消息</summary>
     public string WizardPublishFailed => T(nameof(WizardPublishFailed));
+
+    /// <summary>发布结果附加提示（预检/告警）{0}=结果 {1}=提示串</summary>
+    public string WizardPublishNotes => T(nameof(WizardPublishNotes));
 
     /// <summary>探测成功</summary>
     public string WizardProbeOk => T(nameof(WizardProbeOk));

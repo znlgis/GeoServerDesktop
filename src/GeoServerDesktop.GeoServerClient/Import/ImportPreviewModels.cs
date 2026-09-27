@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace GeoServerDesktop.GeoServerClient.Import
@@ -88,15 +89,112 @@ namespace GeoServerDesktop.GeoServerClient.Import
         /// <summary>是否存在 .prj。</summary>
         public bool HasPrj { get; set; }
 
+        /// <summary>SHP 头声明的文件长度（字节）。</summary>
+        public long ShpHeaderFileLengthBytes { get; set; }
+
+        /// <summary>SHP 实际文件长度（字节）。</summary>
+        public long ShpActualFileLengthBytes { get; set; }
+
+        /// <summary>DBF 头声明的记录数。</summary>
+        public int DbfHeaderRecordCount { get; set; }
+
+        /// <summary>DBF 按“头长 + 记录长”可容纳的记录数（与声明数不符即属性表与几何不同步）。</summary>
+        public int DbfRecordsBySize { get; set; }
+
+        /// <summary>.prj 存在且结构可解析（括号配平、以已知 WKT 关键字开头）。</summary>
+        public bool PrjParseable { get; set; }
+
+        /// <summary>数据完整性风险（结构性缺陷：缺表/长度不符/记录数不符/投影文件非法）。</summary>
+        public ShapefileIntegrityRisk IntegrityRisk { get; set; }
+
         /// <summary>是否存在 .cpg。</summary>
         public bool HasCpg { get; set; }
+
+        /// <summary>.cpg 声明的编码名（内容规范化后大写；无 .cpg 或为空时为 null）。</summary>
+        public string CpgEncoding { get; set; }
+
+        /// <summary>属性表文本字节中是否出现非 ASCII（&gt;=0x80）字节。</summary>
+        public bool DbfHasNonAscii { get; set; }
+
+        /// <summary>属性表文本字节是否是合法 UTF-8（仅在 DbfHasNonAscii 时有意义）。</summary>
+        public bool DbfLooksUtf8 { get; set; }
+
+        /// <summary>属性编码风险等级（服务端解码结果依赖 .cpg 声明，风险须在发布前告知用户）。</summary>
+        public DbfEncodingRisk EncodingRisk { get; set; }
+
+        /// <summary>投影声明风险（缺 .prj 或 .prj 无法识别 EPSG 时非 None）。</summary>
+        public CrsDeclarationRisk CrsRisk { get; set; }
+
+        /// <summary>人类可读告警（中文默认文案；无风险为空列表。UI 可据风险枚举本地化重写）。</summary>
+        public List<string> Warnings { get; set; }
 
         /// <summary>初始化 ShapefilePreview。</summary>
         public ShapefilePreview()
         {
             Fields = new List<DbfFieldInfo>();
+            Warnings = new List<string>();
             RecordCount = -1;
         }
+    }
+
+    /// <summary>
+    /// DBF 属性编码风险。GeoServer/GeoTools 读 shapefile 属性表时只认 .cpg（无声明则按平台默认
+    /// ISO-8859-1 解码），因此「含中文等非 ASCII 文本但缺 .cpg」的数据发布后属性面会静默变乱码——
+    /// 属服务端解码契约，客户端无法代为改正，只能在预检阶段显式告知（M2 向导预检项）。
+    /// </summary>
+    public enum DbfEncodingRisk
+    {
+        /// <summary>无风险（纯 ASCII，或 .cpg 已声明）。</summary>
+        None = 0,
+
+        /// <summary>缺 .cpg、含非 ASCII 且字节非法 UTF-8：几乎必为 GBK/GB2312 等本地编码，服务端将乱码。</summary>
+        UndeclaredNonUtf8 = 1,
+
+        /// <summary>缺 .cpg、含非 ASCII 但字节合法 UTF-8：多数环境可正常读出，但建议显式声明以消除歧义。</summary>
+        UndeclaredUtf8Bytes = 2,
+
+        /// <summary>.cpg 声明了客户端无法识别的编码名：按平台默认解码的风险须提示用户确认。</summary>
+        UnknownCpgDeclaration = 3,
+    }
+
+    /// <summary>
+    /// Shapefile 数据完整性风险。GeoServer 对结构性损坏的 shapefile **不会在发布时拒绝**
+    /// （REST 建 featureType 一律 201），缺陷要等服务查询/出图才暴露——所以客户端必须在发布前把关，
+    /// 否则用户拿到的是“发布成功但图层不可用”。判定全部由文件头 O(1) 推导，不做全量扫描。
+    /// </summary>
+    [Flags]
+    public enum ShapefileIntegrityRisk
+    {
+        /// <summary>无结构性问题。</summary>
+        None = 0,
+
+        /// <summary>缺 .dbf 属性表：图层可建但无属性面，WFS 属性/GetFeatureInfo 不可用。</summary>
+        MissingDbf = 1,
+
+        /// <summary>缺 .shx 索引：仍可读，但空间过滤退化为全量扫描（性能风险，非致命）。</summary>
+        MissingShx = 2,
+
+        /// <summary>SHP 头声明长度与实际文件长度不符：文件被截断或头被改写。</summary>
+        ShpLengthMismatch = 4,
+
+        /// <summary>DBF 头声明记录数与按记录长可容纳的记录数不符：属性表与几何不同步。</summary>
+        DbfRecordCountMismatch = 8,
+
+        /// <summary>.prj 存在但内容不是可解析的 WKT。</summary>
+        PrjUnparseable = 16,
+    }
+
+    /// <summary>投影（.prj）声明风险：缺 .prj 或无法解析出 EPSG 时，服务端只能按经纬度处理或发布失败。</summary>
+    public enum CrsDeclarationRisk
+    {
+        /// <summary>已声明且可识别。</summary>
+        None = 0,
+
+        /// <summary>缺 .prj 文件。</summary>
+        MissingPrj = 1,
+
+        /// <summary>有 .prj 但内容非法或不含可识别的 EPSG 权威码（自定义投影）。</summary>
+        UnrecognizedPrj = 2,
     }
 
     /// <summary>导入向导：DBF 字段描述。</summary>

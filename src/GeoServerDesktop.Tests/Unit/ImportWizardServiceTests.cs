@@ -152,6 +152,7 @@ public class ImportWizardServiceTests
     {
         _fake.RespondGetThrows(new GeoServerRequestException("nf", 404, ""));   // datastore 不存在
         _fake.RespondGetThrows(new GeoServerRequestException("nf", 404, ""));   // featuretype 不存在
+        _fake.RespondGet(FtWithAttributes("poly"));                              // 发布后回读校验
 
         var r = await _svc.PublishShapefileAsync(ShapefileRequest());
 
@@ -179,6 +180,7 @@ public class ImportWizardServiceTests
     {
         _fake.Enqueue("GET", "{}");                                             // datastore 已存在
         _fake.RespondGetThrows(new GeoServerRequestException("nf", 404, ""));   // featuretype 不存在
+        _fake.RespondGet(FtWithAttributes("poly"));                              // 发布后回读校验
 
         var r = await _svc.PublishShapefileAsync(ShapefileRequest());
 
@@ -193,6 +195,7 @@ public class ImportWizardServiceTests
     {
         _fake.RespondGetThrows(new GeoServerRequestException("nf", 404, ""));
         _fake.RespondGetThrows(new GeoServerRequestException("nf", 404, ""));
+        _fake.RespondGet(FtWithAttributes("wiz_poly"));                          // 发布后回读校验
 
         var r = await _svc.PublishShapefileAsync(new ImportSourceRequest
         {
@@ -209,6 +212,69 @@ public class ImportWizardServiceTests
         Assert.Equal("wiz_poly", (string?)ftBody["featureType"]!["name"]);
         Assert.Equal("gdtest_poly", (string?)ftBody["featureType"]!["nativeName"]);
     }
+
+    [Fact]
+    public async Task PublishShapefile_VerifyEmptyAttributes_ReportsDiagnosableFailure()
+    {
+        // E45：GeoServer 在存储侧匹配不到磁盘文件时仍会接受创建；只判 2xx 会让向导误报“发布成功”
+        _fake.RespondGetThrows(new GeoServerRequestException("nf", 404, ""));
+        _fake.RespondGetThrows(new GeoServerRequestException("nf", 404, ""));
+        _fake.RespondGet("{\"featureType\":{\"name\":\"poly\",\"enabled\":true}}");
+
+        var r = await _svc.PublishShapefileAsync(ShapefileRequest());
+
+        Assert.False(r.Success);
+        Assert.Contains("属性面", r.Message);
+        Assert.Contains("poly", r.Message);
+    }
+
+    [Fact]
+    public async Task PublishShapefile_VerifyGeometryOnly_ReportsDiagnosableFailure()
+    {
+        _fake.RespondGetThrows(new GeoServerRequestException("nf", 404, ""));
+        _fake.RespondGetThrows(new GeoServerRequestException("nf", 404, ""));
+        _fake.RespondGet("{\"featureType\":{\"name\":\"poly\",\"enabled\":true,"
+            + "\"attributes\":{\"attribute\":[{\"name\":\"the_geom\"}]}}}");
+
+        var r = await _svc.PublishShapefileAsync(ShapefileRequest());
+
+        Assert.False(r.Success);
+        Assert.Contains("只有几何字段", r.Message);
+    }
+
+    [Fact]
+    public async Task PublishShapefile_VerifyReadbackThrows_ReportsDiagnosableFailure()
+    {
+        _fake.RespondGetThrows(new GeoServerRequestException("nf", 404, ""));
+        _fake.RespondGetThrows(new GeoServerRequestException("nf", 404, ""));
+        _fake.RespondGetThrows(new GeoServerRequestException("boom", 500, ""));
+
+        var r = await _svc.PublishShapefileAsync(ShapefileRequest());
+
+        Assert.False(r.Success);
+        Assert.Contains("回读失败", r.Message);
+    }
+
+    [Fact]
+    public async Task PublishShapefile_AlreadyPublished_SkipsCreateAndStillVerifies()
+    {
+        _fake.Enqueue("GET", "{}");                                              // datastore 已存在
+        _fake.RespondGet(FtWithAttributes("poly"));                              // featuretype 已存在
+        _fake.RespondGet(FtWithAttributes("poly"));                              // 回读校验
+
+        var r = await _svc.PublishShapefileAsync(ShapefileRequest());
+
+        Assert.True(r.Success, r.Message);
+        Assert.DoesNotContain(_fake.Requests, x => x.Method == "POST" && x.Path.EndsWith("/featuretypes"));
+    }
+
+    private static string FtWithAttributes(string name) =>
+        "{\"featureType\":{\"name\":\"" + name + "\",\"nativeName\":\"" + name + "\",\"enabled\":true,"
+        + "\"nativeBoundingBox\":{\"minx\":0,\"miny\":0,\"maxx\":11,\"maxy\":6,\"crs\":\"EPSG:4326\"},"
+        + "\"attributes\":{\"attribute\":["
+        + "{\"name\":\"the_geom\",\"binding\":\"org.locationtech.jts.geom.Polygon\"},"
+        + "{\"name\":\"NAME\",\"binding\":\"java.lang.String\",\"length\":40},"
+        + "{\"name\":\"ID\",\"binding\":\"java.lang.Integer\"}]}}}";
 
     [Fact]
     public async Task PublishShapefile_ExistsProbeFails_PropagatesError()

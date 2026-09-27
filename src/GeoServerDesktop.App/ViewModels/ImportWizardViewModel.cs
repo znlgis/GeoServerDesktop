@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
@@ -312,11 +313,27 @@ namespace GeoServerDesktop.App.ViewModels
                 if (Directory.Exists(LocalPreviewPath))
                 {
                     var sb = new StringBuilder();
+                    var dirWarnings = new List<string>();
                     foreach (var entry in GeoFileInspector.BrowseDirectory(LocalPreviewPath))
                     {
                         sb.AppendLine(string.Format(L.WizardPreviewDirEntry, entry.Name, KindText(entry.Kind), entry.SizeBytes));
+                        // 目录形态也要给出数据风险（用户常常只选目录，不逐个选文件）
+                        try
+                        {
+                            if (entry.Kind == ImportDataSourceKind.ShapefileFile)
+                            {
+                                var sp = GeoFileInspector.InspectShapefile(entry.FullPath);
+                                if (sp.Warnings != null && sp.Warnings.Count > 0)
+                                    dirWarnings.Add(entry.Name + ": " + string.Join(" / ", sp.Warnings));
+                            }
+                        }
+                        catch
+                        {
+                            /* 目录内损坏项不阻断浏览；其风险由发布预检拦下 */
+                        }
                     }
                     PreviewText = sb.ToString().TrimEnd();
+                    if (dirWarnings.Count > 0) PreviewText = WithPreviewWarnings(PreviewText, dirWarnings);
                 }
                 else if (File.Exists(LocalPreviewPath))
                 {
@@ -325,6 +342,7 @@ namespace GeoServerDesktop.App.ViewModels
                     {
                         var p = GeoFileInspector.InspectShapefile(LocalPreviewPath);
                         PreviewText = string.Format(L.WizardPreviewShapefile, p.RecordCount, p.Fields.Count, p.ShapeTypeName);
+                        PreviewText = WithPreviewWarnings(PreviewText, p.Warnings);
                     }
                     else if (kind == ImportDataSourceKind.GeoTiffFile)
                     {
@@ -368,6 +386,11 @@ namespace GeoServerDesktop.App.ViewModels
                 ResultMessage = result.Success
                     ? string.Format(L.WizardPublishSuccess, result.QualifiedName)
                     : string.Format(L.WizardPublishFailed, result.Message);
+                var notes = new List<string>();
+                if (result.PreflightErrors != null) notes.AddRange(result.PreflightErrors);
+                if (result.Warnings != null) notes.AddRange(result.Warnings);
+                if (notes.Count > 0)
+                    ResultMessage = string.Format(L.WizardPublishNotes, ResultMessage, string.Join(" / ", notes));
                 StatusMessage = ResultMessage;
             }
             catch (Exception ex)
@@ -424,6 +447,8 @@ namespace GeoServerDesktop.App.ViewModels
                 NativeName = string.IsNullOrWhiteSpace(NativeName) ? PublishName : NativeName,
                 StoreName = string.IsNullOrWhiteSpace(StoreName) ? PublishName : StoreName,
                 Srs = string.IsNullOrWhiteSpace(Srs) ? null : Srs,
+                // 本地副本可得时交给库层做发布前预检：服务端对损坏数据一律 201，只有客户端能拦
+                LocalSourcePath = string.IsNullOrWhiteSpace(LocalPreviewPath) ? null : LocalPreviewPath.Trim(),
             };
             if (IsPostgisSource)
             {
@@ -441,6 +466,13 @@ namespace GeoServerDesktop.App.ViewModels
                 req.FileRef = FileRef;
             }
             return req;
+        }
+
+        /// <summary>把预检风险附加到预检文本末尾（无风险时原样返回，不产生空提示行）。</summary>
+        private string WithPreviewWarnings(string baseText, IList<string> warnings)
+        {
+            if (warnings == null || warnings.Count == 0) return baseText;
+            return string.Format(L.WizardPreviewWarnings, baseText, string.Join(Environment.NewLine, warnings));
         }
 
         private string KindText(ImportDataSourceKind kind)

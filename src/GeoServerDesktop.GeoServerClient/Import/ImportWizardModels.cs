@@ -77,6 +77,19 @@ namespace GeoServerDesktop.GeoServerClient.Import
 
         /// <summary>说明（失败原因或成功提示）。</summary>
         public string Message { get; set; }
+
+        /// <summary>非阻断告警：发布成功但仍须告知用户的风险（属性编码/投影声明/缺 .shx 等）。无告警时为空列表。</summary>
+        public List<string> Warnings { get; set; }
+
+        /// <summary>本地预检发现的阻断级数据问题（仅在传入 LocalSourcePath 时填充；服务端不会拒绝这些数据）。</summary>
+        public List<string> PreflightErrors { get; set; }
+
+        /// <summary>初始化 PublishResult。</summary>
+        public PublishResult()
+        {
+            Warnings = new List<string>();
+            PreflightErrors = new List<string>();
+        }
     }
 
     /// <summary>导入向导：Importer 扩展可用性状态。</summary>
@@ -134,6 +147,14 @@ namespace GeoServerDesktop.GeoServerClient.Import
 
         /// <summary>PostGIS 连接参数（Kind=PostGIS 时使用）。</summary>
         public PostgisConnectionParameters Postgis { get; set; }
+
+        /// <summary>
+        /// 本地数据路径（可选，指向 .shp 或 shapefile 所在目录）。FileRef 是服务器侧 data_dir 引用，
+        /// 而实测 GeoServer 对结构性损坏的 shapefile 一律接受（featureType POST 返回 201），缺陷要到
+        /// 服务查询/出图才暴露。调用方持有本地副本时传入本字段，客户端即可在发布前完成完整性与编码预检。
+        /// 为空则跳过预检（纯远程数据源场景）。
+        /// </summary>
+        public string LocalSourcePath { get; set; }
     }
 
     /// <summary>导入向导：模板与便捷构造。</summary>

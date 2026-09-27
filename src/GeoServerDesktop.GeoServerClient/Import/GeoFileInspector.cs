@@ -58,9 +58,14 @@ namespace GeoServerDesktop.GeoServerClient.Import
             int fileCode = (header[0] << 24) | (header[1] << 16) | (header[2] << 8) | header[3];
             if (fileCode != 9994) throw new InvalidDataException("非法 SHP 文件（file code != 9994）: " + shpPath);
 
+            // SHP 头 24-27 为文件长度（16 位字，大端）：与实际大小比较即可判定截断/头被改写，无需扫描记录
+            int headerWords = (header[24] << 24) | (header[25] << 16) | (header[26] << 8) | header[27];
+
             var preview = new ShapefilePreview
             {
                 ShpPath = shpPath,
+                ShpHeaderFileLengthBytes = (long)headerWords * 2,
+                ShpActualFileLengthBytes = new FileInfo(shpPath).Length,
                 ShapeType = BitConverter.ToInt32(header, 32),
                 MinX = BitConverter.ToDouble(header, 36),
                 MinY = BitConverter.ToDouble(header, 44),
@@ -75,7 +80,9 @@ namespace GeoServerDesktop.GeoServerClient.Import
             string dbfPath = Path.Combine(dir, baseName + ".dbf");
             string prjPath = Path.Combine(dir, baseName + ".prj");
             preview.HasShx = File.Exists(Path.Combine(dir, baseName + ".shx"));
-            preview.HasCpg = File.Exists(Path.Combine(dir, baseName + ".cpg"));
+            string cpgPath = Path.Combine(dir, baseName + ".cpg");
+            preview.HasCpg = File.Exists(cpgPath);
+            preview.CpgEncoding = preview.HasCpg ? ReadCpgEncodingName(cpgPath) : null;
             preview.HasDbf = File.Exists(dbfPath);
             preview.HasPrj = File.Exists(prjPath);
 
@@ -91,6 +98,16 @@ namespace GeoServerDesktop.GeoServerClient.Import
                 {
                     preview.RecordCount = -1;   // 字段/记录数解析失败不阻断（头解析为主）
                 }
+                try
+                {
+                    int byHeader, bySize;
+                    if (TryDbfRecordCounts(dbfPath, out byHeader, out bySize))
+                    {
+                        preview.DbfHeaderRecordCount = byHeader;
+                        preview.DbfRecordsBySize = bySize;
+                    }
+                }
+                catch (Exception) { /* 记录数核对失败不阻断，由其它信号反映 */ }
             }
 
             if (preview.HasPrj)
@@ -98,6 +115,7 @@ namespace GeoServerDesktop.GeoServerClient.Import
                 try
                 {
                     string wkt = File.ReadAllText(prjPath, Encoding.UTF8).Trim();
+                    preview.PrjParseable = IsParseableWkt(wkt);
                     preview.EpsgCode = ExtractEpsgCode(wkt);
                     var m = CrsNameRegex.Match(wkt);
                     if (m.Success) preview.ProjectionName = m.Groups[1].Value;
@@ -108,7 +126,290 @@ namespace GeoServerDesktop.GeoServerClient.Import
                 }
             }
 
+            // 属性编码与投影声明风险：解码契约由服务端决定，客户端无法代为改正，须在预检阶段显式告知
+            if (preview.HasDbf)
+            {
+                try
+                {
+                    bool nonAscii, validUtf8;
+                    ScanDbfTextBytes(dbfPath, out nonAscii, out validUtf8);
+                    preview.DbfHasNonAscii = nonAscii;
+                    preview.DbfLooksUtf8 = validUtf8;
+                    preview.EncodingRisk = EvaluateEncodingRisk(nonAscii, validUtf8, preview.CpgEncoding);
+                }
+                catch (Exception)
+                {
+                    preview.EncodingRisk = DbfEncodingRisk.None;   // 属性表读不动时不额外报编码风险
+                }
+            }
+            preview.CrsRisk = EvaluateCrsRisk(preview.HasPrj, preview.EpsgCode, preview.ProjectionName);
+            preview.IntegrityRisk = EvaluateIntegrityRisk(preview);
+            FillPreviewWarnings(preview);
+
             return preview;
+        }
+
+        /// <summary>
+        /// 读 .cpg 声明的编码名（去控制字符、大写规范化；部分写手用 "936"/"gb2312" 等别名）。
+        /// </summary>
+        public static string ReadCpgEncodingName(string cpgPath)
+        {
+            try
+            {
+                var bytes = File.ReadAllBytes(cpgPath);
+                var sb = new StringBuilder(bytes.Length);
+                foreach (var b in bytes)
+                {
+                    if (b == 0x00 || b == 0x0D || b == 0x0A || b == 0x20) continue;
+                    sb.Append((char)b);
+                }
+                var text = sb.ToString().Trim();
+                return text.Length == 0 ? null : text.ToUpperInvariant();
+            }
+            catch { return null; }
+        }
+
+        /// <summary>
+        /// 扫描 .dbf 属性区文本字段（C/V）字节：是否含非 ASCII、是否整体合法 UTF-8。
+        /// 大表只扫前 <paramref name="maxRecords"/> 条（足以判定编码族属，避免全量 IO）。
+        /// </summary>
+        public static void ScanDbfTextBytes(string dbfPath, out bool nonAscii, out bool validUtf8, int maxRecords = 200)
+        {
+            nonAscii = false;
+            validUtf8 = true;
+            using (var fs = new FileStream(dbfPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                if (fs.Length < 32) return;
+                var head = new byte[32];
+                ReadExactly(fs, head, 0, 32);
+                int recordCount = BitConverter.ToInt32(head, 4);
+                int headerLength = BitConverter.ToInt16(head, 8);
+                int recordLength = BitConverter.ToInt16(head, 10);
+                if (headerLength < 33 || recordLength <= 0 || headerLength >= fs.Length) return;
+
+                int fieldArea = headerLength - 33;                  // 减去 0x0D 终止位
+                if (fieldArea <= 0 || fieldArea % 32 != 0) return;
+                int fieldCount = fieldArea / 32;
+                var fdesc = new byte[fieldArea];
+                fs.Position = 32;
+                ReadExactly(fs, fdesc, 0, fieldArea);
+
+                var textFields = new List<int[]>();                 // [数据区内偏移, 宽度]
+                int cursor = 0;
+                for (int i = 0; i < fieldCount; i++)
+                {
+                    char type = (char)fdesc[i * 32 + 11];
+                    int len = fdesc[i * 32 + 16];
+                    if (type == 'C' || type == 'V') textFields.Add(new[] { cursor, len });
+                    cursor += len;
+                }
+                if (textFields.Count == 0) return;
+
+                int take = Math.Max(1, Math.Min(maxRecords, recordCount));
+                var rec = new byte[recordLength];
+                int sampled = 0;
+                for (int r = 0; r < take; r++)
+                {
+                    long pos = headerLength + (long)r * recordLength;
+                    if (pos + recordLength > fs.Length) break;
+                    fs.Position = pos;
+                    ReadExactly(fs, rec, 0, recordLength);
+                    sampled++;
+                    if (rec[0] == 0x2A) continue;                   // 逻辑删除记录不参与判定
+                    foreach (var fl in textFields)
+                    {
+                        for (int i = 0; i < fl[1] && fl[0] + i < recordLength; i++)
+                            if (rec[fl[0] + i] >= 0x80) nonAscii = true;
+                    }
+                }
+                if (sampled == 0 || !nonAscii) return;
+
+                // 整体 UTF-8 合法性：逐记录、逐文本字段判定（跨字段/跨记录不拼接，避免误判连续序列）
+                validUtf8 = true;
+                fs.Position = headerLength;
+                for (int r = 0; r < sampled; r++)
+                {
+                    int got = fs.Read(rec, 0, recordLength);
+                    if (got < recordLength) break;
+                    foreach (var fl in textFields)
+                    {
+                        if (!IsValidUtf8(rec, fl[0] + 1, fl[1]))    // +1 跳过删除标记
+                        {
+                            validUtf8 = false;
+                            break;
+                        }
+                    }
+                    if (!validUtf8) break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 字节区间是否为合法 UTF-8（严格：拒绝过长编码、代理区码位、越界码位与散落续字节；0x00/ASCII 视为填充）。
+        /// GBK 双字节序列绝大多数会在前导字节判定处失败，因此可作为“非 UTF-8”的可靠信号。
+        /// </summary>
+        public static bool IsValidUtf8(byte[] bytes, int offset, int length)
+        {
+            if (bytes == null) return true;
+            int end = Math.Min(offset + length, bytes.Length);
+            int i = offset;
+            while (i < end)
+            {
+                byte b = bytes[i];
+                if (b == 0x00 || b < 0x80) { i++; continue; }
+                int extra, min;
+                if ((b & 0xE0) == 0xC0) { extra = 1; min = 0x80; }
+                else if ((b & 0xF0) == 0xE0) { extra = 2; min = 0x800; }
+                else if ((b & 0xF8) == 0xF0) { extra = 3; min = 0x10000; }
+                else return false;                                  // 落单续字节 / 非法前导
+                if (i + extra >= end) return false;                 // 截断序列
+                int cp = b & (0x7F >> extra);
+                for (int k = 1; k <= extra; k++)
+                {
+                    byte c = bytes[i + k];
+                    if ((c & 0xC0) != 0x80) return false;
+                    cp = (cp << 6) | (c & 0x3F);
+                }
+                if (cp < min || cp > 0x10FFFF) return false;        // 过长编码/越界
+                if (cp >= 0xD800 && cp <= 0xDFFF) return false;     // 代理区
+                i += extra + 1;
+            }
+            return true;
+        }
+
+        /// <summary>编码风险判定（纯函数，便于单测）。</summary>
+        public static DbfEncodingRisk EvaluateEncodingRisk(bool nonAscii, bool validUtf8, string cpgEncoding)
+        {
+            if (!nonAscii) return DbfEncodingRisk.None;             // 纯 ASCII：任何解码都安全
+            if (!string.IsNullOrEmpty(cpgEncoding))
+                return KnownCpg(cpgEncoding) ? DbfEncodingRisk.None : DbfEncodingRisk.UnknownCpgDeclaration;
+            return validUtf8 ? DbfEncodingRisk.UndeclaredUtf8Bytes : DbfEncodingRisk.UndeclaredNonUtf8;
+        }
+
+        private static bool KnownCpg(string cpg)
+        {
+            var n = cpg.Replace("-", "").Replace("_", "").ToUpperInvariant();
+            foreach (var k in new[] { "UTF8", "GBK", "GB2312", "GB18030", "CP936", "BIG5", "ISO88591", "88591",
+                                      "LATIN1", "WINDOWS1252", "CP1252", "UTF16LE", "UCS2LE", "ASCII", "EUC" })
+                if (n.IndexOf(k, StringComparison.Ordinal) >= 0) return true;
+            return false;
+        }
+
+        /// <summary>投影声明风险判定（纯函数，便于单测）。</summary>
+        public static CrsDeclarationRisk EvaluateCrsRisk(bool hasPrj, string epsgCode, string projectionName)
+        {
+            if (!hasPrj) return CrsDeclarationRisk.MissingPrj;
+            if (!string.IsNullOrEmpty(epsgCode)) return CrsDeclarationRisk.None;
+            return CrsDeclarationRisk.UnrecognizedPrj;
+        }
+
+        private static void FillPreviewWarnings(ShapefilePreview p)
+        {
+            if (p == null || p.Warnings == null) return;
+            p.Warnings.Clear();
+            foreach (var err in IntegrityErrors(p)) p.Warnings.Add(err);
+            if ((p.IntegrityRisk & ShapefileIntegrityRisk.MissingShx) != 0)
+                p.Warnings.Add("缺少 .shx 索引：数据仍可读，但空间过滤会退化为全量扫描（大文件建议重建索引）。");
+            switch (p.EncodingRisk)
+            {
+                case DbfEncodingRisk.UndeclaredNonUtf8:
+                    p.Warnings.Add("属性表含非 ASCII 文本、缺 .cpg 声明且字节非合法 UTF-8（多为 GBK/GB2312）。"
+                        + "GeoServer 按平台默认 ISO-8859-1 解码，中文属性会变乱码——请补 .cpg（内容如 GBK）或转存 UTF-8 后再发布。");
+                    break;
+                case DbfEncodingRisk.UndeclaredUtf8Bytes:
+                    p.Warnings.Add("属性表含非 ASCII 文本但缺 .cpg 声明（字节为合法 UTF-8）。"
+                        + "多数环境可正常读出，建议显式补 .cpg（内容 UTF-8）以消除解码歧义。");
+                    break;
+                case DbfEncodingRisk.UnknownCpgDeclaration:
+                    p.Warnings.Add(".cpg 声明的编码 [" + p.CpgEncoding + "] 无法识别，服务端可能按默认编码解码，请确认属性值读回正确。");
+                    break;
+            }
+            switch (p.CrsRisk)
+            {
+                case CrsDeclarationRisk.MissingPrj:
+                    p.Warnings.Add("缺少 .prj 投影定义：发布时须显式声明 SRS，否则服务端按数据推断，坐标系转换与出图范围不可靠。");
+                    break;
+                case CrsDeclarationRisk.UnrecognizedPrj:
+                    p.Warnings.Add(".prj 存在但无法解析出 EPSG 权威码（自定义投影）：服务端可用其 WKT，但跨服务重投影需自行确认基准。");
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// DBF 头声明记录数 vs 按“头长 + 定长记录”实际可容纳的记录数（O(1)）。
+        /// 二者不符即属性表被截断/头被改写/与几何不同步——服务端发布时不会报错，必须由客户端拦下。
+        /// </summary>
+        public static bool TryDbfRecordCounts(string dbfPath, out int headerRecordCount, out int recordsBySize)
+        {
+            headerRecordCount = -1;
+            recordsBySize = -1;
+            var fi = new FileInfo(dbfPath);
+            if (fi.Length < 32) return false;
+            var head = new byte[32];
+            using (var fs = new FileStream(dbfPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                ReadExactly(fs, head, 0, 32);
+            headerRecordCount = BitConverter.ToInt32(head, 4);
+            int headerLength = BitConverter.ToInt16(head, 8);
+            int recordLength = BitConverter.ToInt16(head, 10);
+            if (headerLength < 33 || recordLength <= 0) return false;
+            long dataBytes = Math.Max(0, fi.Length - headerLength - 1);      // 末尾 0x1A 终止符
+            recordsBySize = (int)(dataBytes / recordLength);
+            return true;
+        }
+
+        /// <summary>WKT 结构粗校验：以已知关键字开头且括号配平（足以拦下被截断/乱写的 .prj）。</summary>
+        public static bool IsParseableWkt(string wkt)
+        {
+            if (string.IsNullOrWhiteSpace(wkt)) return false;
+            string t = wkt.Trim();
+            string[] keys = { "PROJCS", "GEOGCS", "LOCAL_CS", "COMPD_CS", "VERT_CS", "GEOCCS", "PROJCCS", "GEOGCCS" };
+            bool startsOk = false;
+            foreach (var k in keys) if (t.StartsWith(k, StringComparison.OrdinalIgnoreCase)) { startsOk = true; break; }
+            if (!startsOk) return false;
+            int depth = 0;
+            for (int i = 0; i < t.Length; i++)
+            {
+                char c = t[i];
+                if (c == '[') depth++;
+                else if (c == ']')
+                {
+                    depth--;
+                    if (depth < 0) return false;
+                }
+            }
+            return depth == 0;
+        }
+
+        /// <summary>结构性完整性风险判定（纯函数，便于单测；全部输入来自文件头）。</summary>
+        public static ShapefileIntegrityRisk EvaluateIntegrityRisk(ShapefilePreview p)
+        {
+            if (p == null) return ShapefileIntegrityRisk.None;
+            ShapefileIntegrityRisk r = ShapefileIntegrityRisk.None;
+            if (!p.HasDbf) r |= ShapefileIntegrityRisk.MissingDbf;
+            if (!p.HasShx) r |= ShapefileIntegrityRisk.MissingShx;
+            if (p.ShpActualFileLengthBytes != p.ShpHeaderFileLengthBytes) r |= ShapefileIntegrityRisk.ShpLengthMismatch;
+            if (p.DbfHeaderRecordCount >= 0 && p.DbfRecordsBySize >= 0 && p.DbfHeaderRecordCount != p.DbfRecordsBySize)
+                r |= ShapefileIntegrityRisk.DbfRecordCountMismatch;
+            if (p.HasPrj && !p.PrjParseable) r |= ShapefileIntegrityRisk.PrjUnparseable;
+            return r;
+        }
+
+        /// <summary>阻断级完整性诊断（缺表/长度不符/记录数不符/投影文件非法）。</summary>
+        public static IList<string> IntegrityErrors(ShapefilePreview p)
+        {
+            var list = new List<string>();
+            if (p == null) return list;
+            if ((p.IntegrityRisk & ShapefileIntegrityRisk.MissingDbf) != 0)
+                list.Add("缺少 .dbf 属性表：GeoServer 仍会接受发布（返回 201），但图层无属性面，WFS 属性/GetFeatureInfo 不可用。");
+            if ((p.IntegrityRisk & ShapefileIntegrityRisk.ShpLengthMismatch) != 0)
+                list.Add("SHP 头声明长度 " + p.ShpHeaderFileLengthBytes + " 字节与实际 " + p.ShpActualFileLengthBytes
+                    + " 字节不符：文件被截断或头被改写，几何读取将不完整。");
+            if ((p.IntegrityRisk & ShapefileIntegrityRisk.DbfRecordCountMismatch) != 0)
+                list.Add("DBF 头声明记录数 " + p.DbfHeaderRecordCount + " 与按记录长可容纳的 " + p.DbfRecordsBySize
+                    + " 条不符：属性表与几何不同步。");
+            if ((p.IntegrityRisk & ShapefileIntegrityRisk.PrjUnparseable) != 0)
+                list.Add(".prj 内容不是可解析的 WKT（关键字非法或括号不配平）。");
+            return list;
         }
 
         /// <summary>从 .prj WKT 文本提取 EPSG 代码（优先取最后一个 AUTHORITY["EPSG",...] / ID["EPSG",...]，即最外层坐标系的权威码）。</summary>

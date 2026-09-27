@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -96,6 +97,110 @@ namespace GeoServerDesktop.GeoServerClient.Models
         /// </summary>
         [JsonProperty("href")]
         public string Href { get; set; }
+
+        /// <summary>
+        /// 属性面（几何字段 + 业务字段）。GeoServer 返回形态为 {"attribute":[{...},...]}，
+        /// 由 <see cref="FeatureTypeAttributeConverter"/> 兼容“包装对象 / 裸数组 / 单对象 / 缺省”。
+        /// 发布后校验依赖它判断服务端是否真的解析出数据：实测原始名未匹配到磁盘文件时属性面为空，
+        /// 而只判 HTTP 2xx 会让调用方误以为发布成功。
+        /// </summary>
+        [JsonProperty("attributes")]
+        [JsonConverter(typeof(FeatureTypeAttributeConverter))]
+        public List<FeatureAttributeInfo> Attributes { get; set; }
+    }
+
+    /// <summary>
+    /// 要素类型的单个属性（字段）描述
+    /// </summary>
+    public class FeatureAttributeInfo
+    {
+        /// <summary>
+        /// 字段名（几何字段通常为 the_geom）
+        /// </summary>
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Java 绑定类型（如 java.lang.String、org.locationtech.jts.geom.MultiPolygon）
+        /// </summary>
+        [JsonProperty("binding")]
+        public string Binding { get; set; }
+
+        /// <summary>
+        /// 是否可为空
+        /// </summary>
+        [JsonProperty("nillable")]
+        public bool? Nillable { get; set; }
+
+        /// <summary>
+        /// 最小出现次数
+        /// </summary>
+        [JsonProperty("minOccurs")]
+        public int? MinOccurs { get; set; }
+
+        /// <summary>
+        /// 最大出现次数
+        /// </summary>
+        [JsonProperty("maxOccurs")]
+        public int? MaxOccurs { get; set; }
+
+        /// <summary>
+        /// 字符字段长度
+        /// </summary>
+        [JsonProperty("length")]
+        public int? Length { get; set; }
+    }
+
+    /// <summary>
+    /// 把 GeoServer 的 {"attribute":[...]} 包装形态读成 List，写回时保持同一包装形态
+    /// </summary>
+    public class FeatureTypeAttributeConverter : JsonConverter
+    {
+        /// <summary>
+        /// 是否支持该类型
+        /// </summary>
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(List<FeatureAttributeInfo>);
+        }
+
+        /// <summary>
+        /// 只负责读取：写出必须交回默认序列化器。
+        /// 自定义 WriteJson 会抢在 NullValueHandling.Ignore 之前执行，导致创建请求里
+        /// 恒定带上 "attributes" 包装体——实测 GeoServer 2.28 对该形态直接 500（3.0.1 容忍），
+        /// 属跨版本兼容风险，故此处不允许写。
+        /// </summary>
+        public override bool CanWrite => false;
+
+        /// <summary>
+        /// 读取属性面
+        /// </summary>
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            if (reader.TokenType == JsonToken.Null) return null;
+            var token = JToken.Load(reader);
+            if (token.Type == JTokenType.Array) return token.ToObject<List<FeatureAttributeInfo>>(serializer);
+            if (token.Type == JTokenType.Object)
+            {
+                var inner = token["attribute"];
+                if (inner == null || inner.Type == JTokenType.Null)
+                    return new List<FeatureAttributeInfo> { token.ToObject<FeatureAttributeInfo>(serializer) };
+                if (inner.Type == JTokenType.Array) return inner.ToObject<List<FeatureAttributeInfo>>(serializer);
+                return new List<FeatureAttributeInfo> { inner.ToObject<FeatureAttributeInfo>(serializer) };
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 写入属性面（保持 attribute 包装）
+        /// </summary>
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            writer.WriteStartObject();
+            writer.WritePropertyName("attribute");
+            serializer.Serialize(writer, value);
+            writer.WriteEndObject();
+        }
     }
 
     /// <summary>
