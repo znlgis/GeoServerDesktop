@@ -114,4 +114,11 @@ manifest = {
 }
 with open(os.path.join(OUT, "manifest.json"), "w", encoding="utf-8") as f:
     json.dump(manifest, f, ensure_ascii=False, indent=2)
+
+# ---------------- 扩展数据集（字段类型/DBF 编码/几何形态/栅格/规模/脏数据） ----------------
+# 独立脚本、写入 OUT 的同级目录（gdtest_vec / gdtest_img / gdtest_vol / gdtest_bad），
+# 不改变 gdtest_data 既有文件，故不影响既有 L1/L2/L3 基线。
+extra = os.path.join(os.path.dirname(os.path.abspath(__file__)), "generate_testdata_extra.py")
+sh('python "%s" "%s"' % (extra, OUT))
+
 print("generated in", OUT)

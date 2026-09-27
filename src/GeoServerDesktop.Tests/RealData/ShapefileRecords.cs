@@ -75,6 +75,42 @@ namespace GeoServerDesktop.Tests.RealData
                         rec.Rings.Add(r);
                     }
                 }
+                else if (rec.ShapeType == 1 || rec.ShapeType == 4)
+                {
+                    // Point(1)/MultiPoint(4)：Point = x,y（16 字节）；MultiPoint = numPoints + 点数组
+                    if (rec.ShapeType == 1)
+                    {
+                        double x = BitConverter.ToDouble(bytes, contentStart + 4);
+                        double y = BitConverter.ToDouble(bytes, contentStart + 12);
+                        var ring = new Ring { Xs = new[] { x }, Ys = new[] { y }, MinX = x, MaxX = x, MinY = y, MaxY = y };
+                        rec.MinX = x; rec.MaxX = x; rec.MinY = y; rec.MaxY = y;
+                        rec.Rings.Add(ring);
+                    }
+                    else
+                    {
+                        int numPoints = BitConverter.ToInt32(bytes, contentStart + 4);
+                        rec.MinX = BitConverter.ToDouble(bytes, contentStart + 8);
+                        rec.MinY = BitConverter.ToDouble(bytes, contentStart + 16);
+                        rec.MaxX = BitConverter.ToDouble(bytes, contentStart + 24);
+                        rec.MaxY = BitConverter.ToDouble(bytes, contentStart + 32);
+                        var xs = new double[numPoints]; var ys = new double[numPoints];
+                        for (int k = 0; k < numPoints; k++)
+                        {
+                            xs[k] = BitConverter.ToDouble(bytes, contentStart + 40 + k * 16);
+                            ys[k] = BitConverter.ToDouble(bytes, contentStart + 48 + k * 16);
+                        }
+                        var ring = new Ring { Xs = xs, Ys = ys };
+                        for (int k = 0; k < numPoints; k++)
+                        {
+                            if (xs[k] < ring.MinX) ring.MinX = xs[k];
+                            if (xs[k] > ring.MaxX) ring.MaxX = xs[k];
+                            if (ys[k] < ring.MinY) ring.MinY = ys[k];
+                            if (ys[k] > ring.MaxY) ring.MaxY = ys[k];
+                        }
+                        rec.Rings.Add(ring);
+                    }
+                }
+
                 list.Add(rec);
                 pos = contentStart + contentLen;
                 _ = recNo;
