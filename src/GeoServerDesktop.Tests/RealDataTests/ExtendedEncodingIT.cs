@@ -17,10 +17,12 @@ namespace GeoServerDesktop.Tests.RealDataTests
         public static void GeoFileInspector_OnExtendedFixtureFiles()
         {
             var root = DataEnv.ContainerDataRoot;
+            // 可用性以代表性文件为准：CI 会为挂载预先 mkdir，只看目录存在会把
+            // “数据未生成”误判成断言失败（伪装成产品缺陷）。
             var vec = Path.Combine(root, "gdtest_vec");
-            if (!Directory.Exists(vec))
+            if (!ExtendedFixture.DataPresent)
             {
-                SkipLog.Skip("扩展数据集未生成（" + vec + "）");
+                SkipLog.Skip("扩展数据集未生成或缺文件（" + vec + "）");
                 return;
             }
             var gbkNo = GeoFileInspector.InspectShapefile(Path.Combine(vec, "enc_gbk_nocpg.shp"));

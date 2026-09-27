@@ -192,7 +192,7 @@ def gen_polyz():
         pts = []
         for k, (x, y) in enumerate([(0, 0), (1, 0), (1, 1), (0, 1), (0, 0)]):
             pts.append("%g %g %g" % (x + i * 2, y, base_z + k * 5))
-        wkt = "POLYGONZ((%s))" % ",".join(pts)
+        wkt = "POLYGON Z((%s))" % ",".join(pts)
         feat_from(ly, wkt, {"NAME": "polyz_%02d" % i, "ID": 600 + i,
                             "ZMIN": base_z, "ZMAX": base_z + 20})
     ds.FlushCache(); ds = None
