@@ -45,13 +45,13 @@ namespace GeoServerDesktop.Tests.RealData
     /// </summary>
     public sealed class DbfTable
     {
-        private static bool _codePagesRegistered;
-
-        private static void EnsureCodePages()
+        /// <summary>
+        /// 代码页提供者（GBK/CP936/Windows-1252）在类型初始化时注册一次；
+        /// RegisterProvider 幂等，无需额外状态标记。
+        /// </summary>
+        static DbfTable()
         {
-            if (_codePagesRegistered) return;
             try { Encoding.RegisterProvider(CodePagesEncodingProvider.Instance); } catch { }
-            _codePagesRegistered = true;
         }
 
         public string Path { get; private set; } = "";
@@ -138,7 +138,6 @@ namespace GeoServerDesktop.Tests.RealData
 
         public static Encoding GetEncoding(string? name)
         {
-            EnsureCodePages();
             try { return Encoding.GetEncoding(name ?? "ISO-8859-1"); }
             catch { return Encoding.GetEncoding("ISO-8859-1"); }
         }
@@ -151,7 +150,6 @@ namespace GeoServerDesktop.Tests.RealData
             bool anyHigh = all.Any(b => b >= 0x80);
             if (!anyHigh) return "ISO-8859-1";
             if (DecodesStrict(Encoding.UTF8, all)) return "UTF-8";
-            EnsureCodePages();
             try
             {
                 var gbk = Encoding.GetEncoding("GBK", EncoderFallback.ReplacementFallback, new DecoderExceptionFallback());

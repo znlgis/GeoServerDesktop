@@ -38,7 +38,7 @@ public class ExtendedFidelityIT : GeoServerTestBase
         {
             var s = Ext("gdtest_x_types");
             var r = fx.EnsurePublished(s);
-            Check.ThrowOnFail(Check.Cond(r.Success, "IT/publish:types", "ok", r.Message));
+            Check.ThrowOnFail(Check.Cond(r.Success, "IT/publish:types", "ok", "发布失败：" + (r.Message ?? "(无原因)")));
             Check.ThrowOnFail(RealDataFidelity.AttributesAllFields(ExtendedFixture.VecDir, "gdtest_types",
                 s.Qualified, "types"));
             Check.ThrowOnFail(RealDataFidelity.NativeBboxMatchesShpHeader(ExtendedFixture.VecDir, "gdtest_types",
@@ -74,7 +74,8 @@ public class ExtendedFidelityIT : GeoServerTestBase
         try
         {
             var s = Ext("gdtest_x_points");
-            Check.ThrowOnFail(Check.Cond(fx.EnsurePublished(s).Success, "IT/publish:points", "ok", "发布失败"));
+            var pr = fx.EnsurePublished(s);
+            Check.ThrowOnFail(Check.Cond(pr.Success, "IT/publish:points", "ok", "发布失败：" + (pr.Message ?? "（无原因）")));
             Check.ThrowOnFail(RealDataFidelity.NullGeometryHandling(ExtendedFixture.VecDir, "gdtest_points", s.Qualified, "points"));
         }
         finally { if (!ExtendedFixture.Keep) ExtendedFixture.Wipe(fx.Factory); }
@@ -88,7 +89,8 @@ public class ExtendedFidelityIT : GeoServerTestBase
         try
         {
             var s = Ext("gdtest_x_polyz");
-            Check.ThrowOnFail(Check.Cond(fx.EnsurePublished(s).Success, "IT/publish:polyz", "ok", "发布失败"));
+            var pr = fx.EnsurePublished(s);
+            Check.ThrowOnFail(Check.Cond(pr.Success, "IT/publish:polyz", "ok", "发布失败：" + (pr.Message ?? "（无原因）")));
             Check.ThrowOnFail(RealDataFidelity.ZDimensionPreserved(ExtendedFixture.VecDir, "gdtest_polyz", s.Qualified, "polyz"));
         }
         finally { if (!ExtendedFixture.Keep) ExtendedFixture.Wipe(fx.Factory); }
@@ -102,7 +104,8 @@ public class ExtendedFidelityIT : GeoServerTestBase
         try
         {
             var s = Ext("gdtest_x_selfint");
-            Check.ThrowOnFail(Check.Cond(fx.EnsurePublished(s).Success, "IT/publish:selfint", "ok", "发布失败"));
+            var pr = fx.EnsurePublished(s);
+            Check.ThrowOnFail(Check.Cond(pr.Success, "IT/publish:selfint", "ok", "发布失败：" + (pr.Message ?? "（无原因）")));
             Check.ThrowOnFail(RealDataFidelity.SelfIntersectionPreserved(ExtendedFixture.VecDir, "gdtest_selfint", s.Qualified, "selfint"));
         }
         finally { if (!ExtendedFixture.Keep) ExtendedFixture.Wipe(fx.Factory); }
@@ -116,7 +119,8 @@ public class ExtendedFidelityIT : GeoServerTestBase
         try
         {
             var s = Ext("gdtest_x_empty");
-            Check.ThrowOnFail(Check.Cond(fx.EnsurePublished(s).Success, "IT/publish:empty", "ok", "发布失败"));
+            var pr = fx.EnsurePublished(s);
+            Check.ThrowOnFail(Check.Cond(pr.Success, "IT/publish:empty", "ok", "发布失败：" + (pr.Message ?? "（无原因）")));
             Check.ThrowOnFail(RealDataFidelity.EmptyLayerBehavior(ExtendedFixture.VecDir, "gdtest_empty", s.Qualified, "empty"));
         }
         finally { if (!ExtendedFixture.Keep) ExtendedFixture.Wipe(fx.Factory); }
@@ -130,7 +134,8 @@ public class ExtendedFidelityIT : GeoServerTestBase
         try
         {
             var s = Ext("gdtest_x_huge");
-            Check.ThrowOnFail(Check.Cond(fx.EnsurePublished(s).Success, "IT/publish:huge", "ok", "发布失败"));
+            var pr = fx.EnsurePublished(s);
+            Check.ThrowOnFail(Check.Cond(pr.Success, "IT/publish:huge", "ok", "发布失败：" + (pr.Message ?? "（无原因）")));
             Check.ThrowOnFail(RealDataFidelity.VertexCountParity(ExtendedFixture.VecDir, "gdtest_huge", s.Qualified, "huge"));
             Check.ThrowOnFail(RealDataFidelity.SpatialPredicatesMatch(ExtendedFixture.VecDir, "gdtest_huge", s.Qualified, "huge"));
             Check.ThrowOnFail(RealDataFidelity.ReprojectionConsistency(ExtendedFixture.VecDir, "gdtest_huge", s.Qualified, "huge"));
@@ -146,7 +151,8 @@ public class ExtendedFidelityIT : GeoServerTestBase
         try
         {
             var s = Ext("gdtest_x_huge");
-            Check.ThrowOnFail(Check.Cond(fx.EnsurePublished(s).Success, "IT/publish:huge", "ok", "发布失败"));
+            var pr = fx.EnsurePublished(s);
+            Check.ThrowOnFail(Check.Cond(pr.Success, "IT/publish:huge", "ok", "发布失败：" + (pr.Message ?? "（无原因）")));
             var r = RealDataFidelity.SpatialLiteralAxisOrderContract(ExtendedFixture.VecDir, "gdtest_huge", s.Qualified, "huge");
             // 契约项本身允许 Pass/Warn（服务端轴序行为），但不得是 Fail
             Assert.NotEqual(CheckStatus.Fail, r.Status);
@@ -162,7 +168,8 @@ public class ExtendedFidelityIT : GeoServerTestBase
         try
         {
             var s = Ext("湖泊 与 水库");
-            Check.ThrowOnFail(Check.Cond(fx.EnsurePublished(s).Success, "IT/publish:cjk", "ok", "发布失败"));
+            var pr = fx.EnsurePublished(s);
+            Check.ThrowOnFail(Check.Cond(pr.Success, "IT/publish:cjk", "ok", "发布失败：" + (pr.Message ?? "（无原因）")));
             Check.ThrowOnFail(RealDataFidelity.CjkNameChain(ExtendedFixture.VecDir, "湖泊 与 水库", s.Qualified, "cjk-layer"));
         }
         finally { if (!ExtendedFixture.Keep) ExtendedFixture.Wipe(fx.Factory); }
@@ -176,7 +183,8 @@ public class ExtendedFidelityIT : GeoServerTestBase
         try
         {
             var s = Ext("gdtest_x_pts20k");
-            Check.ThrowOnFail(Check.Cond(fx.EnsurePublished(s).Success, "IT/publish:pts20k", "ok", "发布失败"));
+            var pr = fx.EnsurePublished(s);
+            Check.ThrowOnFail(Check.Cond(pr.Success, "IT/publish:pts20k", "ok", "发布失败：" + (pr.Message ?? "（无原因）")));
             Check.ThrowOnFail(RealDataFidelity.PagingConsistency(ExtendedFixture.VolDir, "gdtest_pts20k", s.Qualified, "pts20k"));
             int total = DbfHeader.Parse(Path.Combine(ExtendedFixture.VolDir, "gdtest_pts20k.dbf")).RecordCount;
             var timing = RealDataFidelity.TimingBaseline(s.Qualified, total, "pts20k");
@@ -219,7 +227,7 @@ public class ExtendedFidelityIT : GeoServerTestBase
             foreach (var s in ExtendedFixture.Sets().Where(x => x.IsCoverage))
             {
                 var r = fx.EnsurePublished(s);
-                Check.ThrowOnFail(Check.Cond(r.Success, "IT/publish:" + s.LayerName, "ok", r.Message));
+                Check.ThrowOnFail(Check.Cond(r.Success, "IT/publish:" + s.LayerName, "ok", "发布失败：" + (r.Message ?? "(无原因)")));
                 if (!r.Success) continue;
                 var tif = Path.Combine(s.HostDir, s.BaseName);
                 Check.ThrowOnFail(RealDataRaster.SourceMatchesFormula(tif, s.LayerName,
