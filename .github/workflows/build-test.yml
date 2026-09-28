@@ -61,8 +61,8 @@ jobs:
     timeout-minutes: 40
     env:
       GSD_GEOSERVER_URL: "http://localhost:8765/geoserver"
-      GSD_TEST_DATA_DIR: ${{ github.workspace }}/gdtest_data
-      GSD_CONTAINER_DATA_DIR: ${{ github.workspace }}
+      GSD_TEST_DATA_DIR: ${{ github.workspace }}/gsdata/gdtest_data
+      GSD_CONTAINER_DATA_DIR: ${{ github.workspace }}/gsdata
       GSD_TEST_PG_HOST: "127.0.0.1"
       GSD_TEST_PG_PORT: "5432"
       GSD_TEST_PG_DB: "postgres"
@@ -82,27 +82,21 @@ jobs:
     - name: Start GeoServer + PostGIS containers
       run: |
         docker network create gsd-ci
-        mkdir -p "$GITHUB_WORKSPACE/gdtest_data" "$GITHUB_WORKSPACE/gwc" \
-                 "$GITHUB_WORKSPACE/gdtest_vec" "$GITHUB_WORKSPACE/gdtest_img" \
-                 "$GITHUB_WORKSPACE/gdtest_vol" "$GITHUB_WORKSPACE/gdtest_bad"
+        # data_dir 必须整体挂载：kartoza 镜像把 /data/geoserver/data_dir 声明为 VOLUME，
+        # 在它下面再挂子目录不会生效——CI 里表现为宿主侧有数据、容器侧 0 条目，
+        # 服务端报 “no attributes were specified / Failed to create reader”。
+        mkdir -p "$GITHUB_WORKSPACE/gsdata"
         docker run -d --name postgis --network gsd-ci \
           -e POSTGRES_PASSWORD=postgres \
           -p 5432:5432 \
           postgis/postgis:17-3.5
-        # GEOSERVER_DATA_DIR 必须与下方挂载路径一致：kartoza/geoserver:3.0.1 镜像默认
-        # data_dir 为 /opt/geoserver/data_dir，若不显式覆盖，GeoServer 将看不到 gdtest_data。
         docker run -d --name geoserver --network gsd-ci \
           -e SAMPLE_DATA=true \
           -e GEOSERVER_ADMIN_PASSWORD=geoserver \
           -e GEOSERVER_DATA_DIR=/data/geoserver/data_dir \
           -e GEOWEBCACHE_CACHE_DIR=/data/geoserver/data_dir/gwc \
           -p 8765:8080 \
-          -v "$GITHUB_WORKSPACE/gdtest_data:/data/geoserver/data_dir/gdtest_data" \
-          -v "$GITHUB_WORKSPACE/gwc:/data/geoserver/data_dir/gwc" \
-          -v "$GITHUB_WORKSPACE/gdtest_vec:/data/geoserver/data_dir/gdtest_vec" \
-          -v "$GITHUB_WORKSPACE/gdtest_img:/data/geoserver/data_dir/gdtest_img" \
-          -v "$GITHUB_WORKSPACE/gdtest_vol:/data/geoserver/data_dir/gdtest_vol" \
-          -v "$GITHUB_WORKSPACE/gdtest_bad:/data/geoserver/data_dir/gdtest_bad" \
+          -v "$GITHUB_WORKSPACE/gsdata:/data/geoserver/data_dir" \
           kartoza/geoserver:3.0.1
 
     - name: Install GDAL (ogr2ogr / gdal_translate)
@@ -138,15 +132,11 @@ jobs:
         # 将 gdtest_data/gwc 属主改为容器用户，导致本步骤（runner 用户）无法写入。
         # 先恢复 runner 属主再生成；生成后放宽权限位，确保容器内 GeoServer 与 runner 两侧都可读写
         # （含 shapefile 的 .qix 索引写入）。
-        sudo chown -R "$(id -u):$(id -g)" "$GITHUB_WORKSPACE/gdtest_data" "$GITHUB_WORKSPACE/gwc" \
-          "$GITHUB_WORKSPACE/gdtest_vec" "$GITHUB_WORKSPACE/gdtest_img" \
-          "$GITHUB_WORKSPACE/gdtest_vol" "$GITHUB_WORKSPACE/gdtest_bad"
+        sudo chown -R "$(id -u):$(id -g)" "$GITHUB_WORKSPACE/gsdata"
         python3 tests/testdata/generate_testdata.py || echo "::warning::test data generation failed; data-dependent checks will skip"
         bash tests/ci-realdata-diagnostics.sh
         bash tests/testdata/load_postgis.sh || echo "::warning::PostGIS load failed; PostGIS-backed checks will skip"
-        sudo chmod -R a+rwX "$GITHUB_WORKSPACE/gdtest_data" "$GITHUB_WORKSPACE/gwc" \
-          "$GITHUB_WORKSPACE/gdtest_vec" "$GITHUB_WORKSPACE/gdtest_img" \
-          "$GITHUB_WORKSPACE/gdtest_vol" "$GITHUB_WORKSPACE/gdtest_bad"
+        sudo chmod -R a+rwX "$GITHUB_WORKSPACE/gsdata"
 
     - name: L2 integration tests (real GeoServer REST)
       run: dotnet test src/GeoServerDesktop.Tests/GeoServerDesktop.Tests.csproj --configuration Release --no-build --filter "FullyQualifiedName~Tests.Integration"
@@ -176,7 +166,7 @@ jobs:
       if: failure()
       run: |
         echo "=== 1. host: gwc tree ==="
-        ls -laR "$GITHUB_WORKSPACE/gwc" 2>&1 | head -150 || true
+        ls -laR "$GITHUB_WORKSPACE/gsdata/gwc" 2>&1 | head -150 || true
         echo
         echo "=== 2. container: java process user ==="
         docker exec geoserver bash -c "ps -eo user,pid,comm | grep -i java | head -5" 2>&1 || true
@@ -196,7 +186,7 @@ jobs:
         echo "--- task status ---"
         curl -s -u admin:geoserver "http://localhost:8765/geoserver/gwc/rest/seed/gdtest_ws_e2e%3Agdtest_poly.json" | head -c 400; echo
         echo "--- host files ---"
-        ls -la "$GITHUB_WORKSPACE/gwc/gdtest_ws_e2e_gdtest_poly" 2>&1 | head -20 || true
+        ls -la "$GITHUB_WORKSPACE/gsdata/gwc/gdtest_ws_e2e_gdtest_poly" 2>&1 | head -20 || true
         echo "--- container files ---"
         docker exec geoserver bash -c "find /data/geoserver/data_dir/gwc/gdtest_ws_e2e_gdtest_poly -type f 2>/dev/null | head -15; echo COUNT:; find /data/geoserver/data_dir/gwc/gdtest_ws_e2e_gdtest_poly -type f 2>/dev/null | wc -l" 2>&1 || true
         echo "=== 7. geoserver.log GWC/seed/error ==="

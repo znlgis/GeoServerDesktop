@@ -5,12 +5,13 @@
 set -u
 
 WS="${GITHUB_WORKSPACE:-$(pwd)}"
+GS_HOST="$WS/gsdata"
 GS_DATA="${GS_CONTAINER_DATA_DIR:-/data/geoserver/data_dir}"
 
 echo "=== host: 扩展数据集清单 ==="
 for d in gdtest_vec gdtest_img gdtest_vol gdtest_bad; do
-  count=$(ls "$WS/$d" 2>/dev/null | wc -l | tr -d ' ')
-  sample=$(ls "$WS/$d" 2>/dev/null | head -3 | paste -sd ' ' -)
+  count=$(ls "$GS_HOST/$d" 2>/dev/null | wc -l | tr -d ' ')
+  sample=$(ls "$GS_HOST/$d" 2>/dev/null | head -3 | paste -sd ' ' -)
   echo "$d: ${count} 个条目; 样例: ${sample:-（空）}"
 done
 
