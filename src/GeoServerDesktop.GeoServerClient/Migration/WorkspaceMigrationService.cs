@@ -876,15 +876,6 @@ namespace GeoServerDesktop.GeoServerClient.Migration
             return Uri.EscapeDataString(value ?? string.Empty);
         }
 
-        private static string Describe(Exception ex)
-        {
-            var gs = ex as GeoServerRequestException;
-            if (gs == null) return ex.Message;
-            var text = gs.ResponseContent;
-            if (string.IsNullOrWhiteSpace(text)) return "HTTP " + gs.StatusCode;
-            text = text.Trim();
-            return "HTTP " + gs.StatusCode + "：" + (text.Length > 200 ? text.Substring(0, 200) + "…" : text);
-        }
 
         // ================= 步骤执行 =================
 

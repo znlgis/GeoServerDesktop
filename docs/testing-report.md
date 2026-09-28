@@ -82,12 +82,12 @@ dotnet run --project src/GeoServerDesktop.RealDataHarness
 
 | 项 | 上一轮基线 | 本轮 | 变化 |
 |---|---|---|---|
-| `dotnet test` 全量（L1+L2+L3+L4） | 692 通过 | **743 通过 / 0 失败** | +51 例 |
+| `dotnet test` 全量（L1+L2+L3+L4） | 692 通过 | **752 通过 / 0 失败** | +60 例 |
 | 控制台 harness（无外部真实数据） | Pass=70 Warn=2 Fail=0 | **Pass=263 Warn=54 Fail=0**（挂真实数据全段，退出码 0） | +193 检查 |
 | harness（同口径 4 段，3.0.1） | — | Pass=129 Warn=52 Fail=0 | 基准 |
 | harness（同口径 4 段，2.28.0） | — | Pass=126 Warn=52 **Fail=3**（仅栅格 WMTS） | Warn 集合逐项相同 |
 
-54 项 Warn 全部是**有证据的服务端契约**（见第四节），不是待修的客户端缺陷。
+54 项 Warn（分段复跑时为 47/5 两级）全部是**有证据的服务端契约**（见第四节），不是待修的客户端缺陷。
 
 ## 二、新增真实测试数据（确定性、数据无关）
 
@@ -123,7 +123,13 @@ PostGIS 侧 `load_postgis.sh` 追加加载 `gdtest_types`、`gdtest_pts`（2 万
   写侧显式 `CanWrite => false`：自定义 WriteJson 会抢在 `NullValueHandling.Ignore` 之前执行，
   使创建请求恒定携带 `attributes` 包装体——**实测 GeoServer 2.28 对该形态直接 500**（3.0.1 容忍）。
 
-测试基线：以上四项均有 L1（离线矩阵）、L4（预检到达用户文案，断言取与语言无关的证据串）、
+- **E46 服务端 HTML 错误页被原样抛给用户**：GeoServer 并非总是返回自身 JSON/XML——容器层（Tomcat）会直接给出
+  HTML 错误页，早前实现把整页 HTML 截断 200 字塞进 `Message`，用户读不懂且真正原因（藏在 `<p><b>Message</b> …`）被丢掉。
+  新增基类统一实现 `ServiceBase.Describe`（JSON 取 detail/message/error/title 并还原转义、OGC XML 取 ExceptionText、
+  HTML 抽取 Message 段并去标签折叠空白、无 body 只留状态码、超长加省略号），同时消掉
+  `ImportWizardService` / `BatchOperationService` / `WorkspaceMigrationService` 三处重复的私有 `Describe`。
+
+测试基线：以上各项均有 L1（离线矩阵）、L4（预检到达用户文案，断言取与语言无关的证据串）、
 L3/harness（真实文件 + 真实实例）三层覆盖；`ResidueCheckTests` 与 harness `Audit` 段验证零残留。
 
 ## 四、真实数据暴露的服务端契约（固化为 Warn 基线，非客户端缺陷）

@@ -437,12 +437,6 @@ namespace GeoServerDesktop.GeoServerClient.Services
             }
         }
 
-        private static string Describe(Exception ex)
-        {
-            var gs = ex as GeoServerRequestException;
-            if (gs != null) return "HTTP " + gs.StatusCode + "：" + Summarize(gs);
-            return ex.Message;
-        }
 
         private static string Summarize(GeoServerRequestException ex)
         {

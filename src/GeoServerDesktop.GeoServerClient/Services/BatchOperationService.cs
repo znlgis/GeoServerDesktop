@@ -208,15 +208,6 @@ namespace GeoServerDesktop.GeoServerClient.Services
             return result;
         }
 
-        private static string Describe(Exception ex)
-        {
-            var gs = ex as GeoServerRequestException;
-            if (gs == null) return ex.Message;
-            var text = gs.ResponseContent;
-            if (string.IsNullOrWhiteSpace(text)) return "HTTP " + gs.StatusCode;
-            text = TrimOneLine(text);
-            return "HTTP " + gs.StatusCode + "：" + text;
-        }
 
         private static string TrimOneLine(string text)
         {

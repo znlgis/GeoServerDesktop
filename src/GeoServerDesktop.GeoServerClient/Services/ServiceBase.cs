@@ -1,6 +1,7 @@
 using System;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GeoServerDesktop.GeoServerClient.Http;
 using Newtonsoft.Json;
@@ -213,6 +214,77 @@ namespace GeoServerDesktop.GeoServerClient.Services
             {
                 await Http.PutAsync(path, content);
             }
+        }
+
+        /// <summary>
+        /// 把 GeoServer 响应转成一句可读的失败原因。
+        /// 实测服务端并非总返回 GeoServer 的 JSON/XML：容器层（Tomcat）会直接给出 HTML 错误页，
+        /// 把整页 HTML 扔给用户既不可读也浪费长度，因此按形态摘要：
+        ///  - GeoServer JSON：取 detail / message / error / title；
+        ///  - OGC XML：取 ExceptionText；
+        ///  - HTML：优先取 &lt;p&gt;&lt;b&gt;Message&lt;/b&gt; 之后的内容，否则去标签折叠空白。
+        /// </summary>
+        /// <param name="ex">待摘要的异常。</param>
+        /// <returns>形如 HTTP 400：Trying to create new feature type … 的单行原因。</returns>
+        protected static string Describe(Exception ex)
+        {
+            var gs = ex as GeoServerRequestException;
+            if (gs == null) return ex == null ? "" : ex.Message;
+            string text = gs.ResponseContent;
+            if (string.IsNullOrWhiteSpace(text)) return "HTTP " + gs.StatusCode;
+            string body = SummarizeResponseBody(text);
+            if (body.Length == 0) body = Collapse(text);
+            if (body.Length > 300) body = body.Substring(0, 300) + "\u2026";
+            return "HTTP " + gs.StatusCode + "：" + body;
+        }
+
+        /// <summary>按响应形态摘出原因文本（见 <see cref="Describe"/>）。</summary>
+        private static string SummarizeResponseBody(string text)
+        {
+            string t = (text ?? "").Trim();
+            if (t.Length == 0) return "";
+            if (t[0] == '{')
+            {
+                // GeoServer 的 JSON 错误体优先取 detail/message/error/title
+                try
+                {
+                    var jo = Newtonsoft.Json.Linq.JObject.Parse(t);
+                    foreach (var key in new[] { "detail", "message", "error", "title" })
+                    {
+                        var v = jo[key];
+                        if (v != null && v.Type == Newtonsoft.Json.Linq.JTokenType.String)
+                        {
+                            string val = (string)v;
+                            if (!string.IsNullOrWhiteSpace(val)) return Collapse(val);
+                        }
+                    }
+                }
+                catch (Exception) { /* 非法 JSON 退回原文明细 */ }
+                return "";
+            }
+            if (t[0] == '<')
+            {
+                bool html = t.IndexOf("<html", StringComparison.OrdinalIgnoreCase) >= 0
+                         || t.IndexOf("<!doctype", StringComparison.OrdinalIgnoreCase) >= 0;
+                if (!html)
+                {
+                    var et = Regex.Match(t, "<(?:[\\w]+:)?ExceptionText[^>]*>([\\s\\S]*?)</(?:[\\w]+:)?ExceptionText>");
+                    if (et.Success) return Collapse(System.Net.WebUtility.HtmlDecode(Regex.Replace(et.Groups[1].Value, "<[^>]*>", " ")));
+                    return "";
+                }
+                var msg = Regex.Match(t, "<p>\\s*<b>\\s*Message\\s*</b>([\\s\\S]*?)</p>", RegexOptions.IgnoreCase);
+                string picked = msg.Success ? msg.Groups[1].Value : t;
+                string clean = Collapse(System.Net.WebUtility.HtmlDecode(Regex.Replace(picked, "<[^>]*>", " ")));
+                if (clean.Length == 0) clean = Collapse(System.Net.WebUtility.HtmlDecode(Regex.Replace(t, "<[^>]*>", " ")));
+                return clean;
+            }
+            return "";
+        }
+
+        private static string Collapse(string value)
+        {
+            if (string.IsNullOrEmpty(value)) return "";
+            return Regex.Replace(value, "\\s+", " ").Trim();
         }
 
         /// <summary>布尔查询参数的 GeoServer 形态（小写 true/false）。</summary>

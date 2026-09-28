@@ -49,6 +49,8 @@
   生成过滤器/预览链接时务必显式声明（harness `Axis/*` 钉住该契约）。
 - **缺 `.cpg` 声明的非 ASCII 属性表**：GeoTools 只认 `.cpg`，无声明则按平台默认 ISO-8859-1 解码，
   中文属性在 WFS 侧变乱码（服务端解码契约，客户端不能代为改正）。客户端职责是发布前告知（见 E42）。
+- **服务端错误未必是 GeoServer 的 JSON/XML**：容器层（Tomcat）会直接返回 HTML 错误页；客户端已统一按形态摘要成
+  一行可读原因（`ServiceBase.Describe`，E46），调用方不应再自行拼接 `ResponseContent`。
 - **`resultType=hits` 时即使指定 `outputFormat=application/json` 仍返回 GML**（计数解析按文本取 `numberMatched`）。
 - **WCS 2.0.1 `DescribeCoverage` 的 `gmlcov:rangeType` 内 `swe:DataRecord` 为空**：波段数/波段名不经 WCS 元数据宣告，
   须经 `GetCoverage` 输出核对（本轮以 3 波段 Byte 与 Int16 瓦片栅格逐点验证）。
