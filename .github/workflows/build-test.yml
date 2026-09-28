@@ -142,18 +142,7 @@ jobs:
           "$GITHUB_WORKSPACE/gdtest_vec" "$GITHUB_WORKSPACE/gdtest_img" \
           "$GITHUB_WORKSPACE/gdtest_vol" "$GITHUB_WORKSPACE/gdtest_bad"
         python3 tests/testdata/generate_testdata.py || echo "::warning::test data generation failed; data-dependent checks will skip"
-        # 双侧清单：主生成器会吞掉扩展脚本的输出，光看退出码不足以证明数据真的可被 GeoServer 读到
-        echo "=== host: 扩展数据集清单 ==="
-        for d in gdtest_vec gdtest_img gdtest_vol gdtest_bad; do
-          echo "$d: $(ls "$GITHUB_WORKSPACE/$d" 2>/dev/null | wc -l) 文件; 代表文件: $(ls "$GITHUB_WORKSPACE/$d" 2>/dev/null | head -3 | tr '
-' ' ')"
-        done
-        echo "=== container: GeoServer 视角 ==="
-        docker exec geoserver bash -c 'for d in gdtest_vec gdtest_img gdtest_vol gdtest_bad; do
-            p=/data/geoserver/data_dir/$d
-            echo "$d: $(ls "$p" 2>/dev/null | wc -l) 文件; 属主/权限: $(stat -c "%U:%G %A" "$p" 2>/dev/null)"
-          done
-          echo "以 geoserver 用户实际读一个 .shp 头: $(head -c 4 /data/geoserver/data_dir/gdtest_vec/gdtest_types.shp 2>&1 | xxd -p | head -1)"' || true
+        bash tests/ci-realdata-diagnostics.sh
         bash tests/testdata/load_postgis.sh || echo "::warning::PostGIS load failed; PostGIS-backed checks will skip"
         sudo chmod -R a+rwX "$GITHUB_WORKSPACE/gdtest_data" "$GITHUB_WORKSPACE/gwc" \
           "$GITHUB_WORKSPACE/gdtest_vec" "$GITHUB_WORKSPACE/gdtest_img" \
